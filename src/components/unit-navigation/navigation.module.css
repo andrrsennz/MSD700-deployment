@@ -1,0 +1,207 @@
+.sideSection {
+    width: 12vw;
+    height: 20vh;
+    padding-top: 10px;
+    margin-left: 25px;
+    /* left: 25px; */
+}
+
+.sideSection .greetings {
+    width: 240px;
+    height: 57px;
+    background-color: #0567A6;
+    border: 2px solid #60E3D5;
+    border-radius: 20px;
+    padding: 10px;
+
+    display: flex;
+    align-items: center;
+    /* Vertically align content */
+
+    margin-bottom: 20px;
+}
+
+.sideSection .greetings img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    /* Add some spacing between img and text */
+}
+
+.sideSection .greetings p {
+    margin: 0;
+    /* Remove default margin for <p> element */
+    font-family: 'Inter', sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 27px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #FFFFFF;
+}
+
+.sideSection .menu {
+    width: 240px;
+    height: 259px;
+    padding: 10px;
+
+    background-color: #D0E1E7;
+    border: 2px solid #0C98B4;
+    border-radius: 30px;
+    display: flex;
+
+    flex-direction: column;
+    justify-content: space-around;
+
+    /* padding-top: 10px;
+    padding-bottom: 10px; */
+
+    box-shadow: -10px 10px 4px 0px #00000040;
+}
+
+.menu .buttonLink {
+    display: flex;
+    /* flex-direction: column; */
+    justify-content: start;
+    padding-left: 10px;
+}
+
+.sideSection .menu div a {
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 53px;
+    background-color: #0567A6;
+    border: 2px solid #60E3D5;
+    border-radius: 20px;
+
+    display: flex;
+    align-items: center;
+
+    font-family: 'Inter', sans-serif;
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 23px;
+    letter-spacing: 0em;
+
+    color: #FFFFFF;
+
+    text-decoration: none;
+}
+
+.sideSection .menu div p {
+    justify-self: start;
+}
+
+.sideSection .menu img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+
+.active a {
+    background-color: #60E3D5 !important;
+}
+
+.sideSection .menu div a:hover {
+    cursor: pointer;
+    background-color: #60E3D5 !important;
+    border: 2px solid #0567A6;
+}
+
+/* Center Section */
+.centerSection {
+    width: 60%;
+    padding-top: 15px;
+    
+    display: flex;
+    gap: 20px;
+
+    z-index: 10;
+}
+
+.centerSection .menu {
+    height: 57px;
+    /* margin-left: auto; */
+    padding-right: 15px;
+    background-color: #0C98B4;
+    border: 3px solid #60E3D5;
+    border-radius: 15px;
+}
+
+
+.centerSection .menu select {
+    background-color: #0C98B4;
+    /* border: 3px solid #60E3D5; */
+    border: none;
+    
+
+    height: 57px;
+    padding: 10px;
+
+    color: #FFFFFF;
+
+    font-family: 'Inter';
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 23px;
+    letter-spacing: 0em;
+    text-align: center;
+
+}
+
+.centerSection .menu option {
+    background-color: #ECF4F6;
+    color: #0567A6;
+    font-size: 10px;
+}
+
+.centerSection .greetings {
+    width: 240px;
+    height: 57px;
+    background-color: #0567A6;
+    border: 2px solid #60E3D5;
+    border-radius: 20px;
+    padding: 10px;
+
+    display: flex;
+    align-items: center;
+    /* Vertically align content */
+
+    margin-bottom: 20px;
+}
+
+.centerSection .greetings img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    /* Add some spacing between img and text */
+}
+
+.centerSection .greetings p {
+    margin: 0;
+    /* Remove default margin for <p> element */
+    font-family: 'Inter', sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 27px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #FFFFFF;
+}
+
+
+@media (min-width: 1440px) {
+    .centerSection {
+        display: none;
+    }
+}
+
+@media (max-width: 1439px) {
+    .sideSection {
+        margin-left: 0;
+        display: none;
+    }
+
+}
