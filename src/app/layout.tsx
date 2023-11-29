@@ -1,6 +1,7 @@
 // import Providers from '@/redux/provider';
 import './globals.css';
 import { Inter } from 'next/font/google';
+import Script from 'next/script';
 import React, { ReactNode } from 'react';
 
 // Assuming the Inter font is correctly linked in your project
@@ -20,6 +21,8 @@ export default function RootLayout({ children }: RootLayoutProps): JSX.Element {
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Script src="https://code.createjs.com/1.0.0/createjs.min.js" strategy="beforeInteractive" />
+      
       </head>
       <body className={inter.className} suppressHydrationWarning={true}>
         {/* <Providers> */}
