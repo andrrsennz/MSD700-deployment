@@ -7,6 +7,7 @@ import Footer from "../../../components/footer/footer";
 import MapSaving from "../../../components/map-saving/mapSaving";
 import ConfirmSaving from "../../../components/confirm-saving-mapping/confirmSaving";
 import Script from "next/script";
+import axios from "axios";
 
 interface MappingProps { }
 
@@ -17,7 +18,8 @@ export default function Mapping(props: MappingProps): JSX.Element {
         useState<boolean>(false);
     const [savingConfirmDialog, setSavingConfirmDialog] = useState<boolean>(false);
     const [isChecked, setIsChecked] = useState<boolean>(false);
-    const [status, setStatus] = useState<string>("On Progress");
+    const [status, setStatus] = useState<string>("Idle");
+    const [backendUrl, setBackendUrl] = useState<string>("http://localhost:5000/api/mapping");
 
     const onConfirmButtonClick = (): void => {
         setShowConfirmClosePageDialog(true);
@@ -36,7 +38,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
     };
 
     const changeStatus = (newStatus: string): void => {
-        isChecked === false ? setStatus(newStatus) : setStatus("Idle");
+        isChecked === true ? setStatus(newStatus) : setStatus("Idle");
     };
 
     const onConfirmSaveMappingButtonClick = (): void => {
@@ -45,7 +47,6 @@ export default function Mapping(props: MappingProps): JSX.Element {
 
     const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>): void => {
         setIsChecked(event.target.checked);
-        isChecked === false ? changeStatus("Idle") : "";
     };
 
     const mapRef = useRef<HTMLDivElement>(null);
@@ -134,7 +135,26 @@ export default function Mapping(props: MappingProps): JSX.Element {
                             <div
                                 className={`${styles.playButton} ${status == "On Progress" ? styles.buttonActive : ""
                                     }`}
-                                onClick={() => changeStatus("On Progress")}
+                                onClick={() => {
+                                    if (isChecked) {
+                                        console.log("Play request sent");
+                                        axios.post(backendUrl, {
+                                            start: true,
+                                            pause: false,
+                                            stop: false
+                                        })
+                                        .then(function (response) {
+                                            console.log(response);
+                                            changeStatus("On Progress");
+                                        })
+                                        .catch(function (error) {
+                                            console.log(error);
+                                            alert("Start error. Please try again.")
+                                        });
+                                    } else {
+                                        alert("Please turn on the LIDAR before mapping.");
+                                    }
+                                }}
                             >
                                 <p>Play</p>
                                 <img src="/icons/3.svg" alt="" />
@@ -142,24 +162,63 @@ export default function Mapping(props: MappingProps): JSX.Element {
                             <div
                                 className={`${styles.pauseButton} ${status == "Idle" ? styles.buttonActive : ""
                                     }`}
-                                onClick={() => changeStatus("Idle")}
+                                onClick={() => {
+                                    if (isChecked) {          
+                                        console.log("Pause request sent");       
+                                        axios.post(backendUrl, {
+                                            start: false,
+                                            pause: true,
+                                            stop: false
+                                        })
+                                        .then(function (response) {
+                                            console.log(response);
+                                            changeStatus("Paused");
+                                        })
+                                        .catch(function (error) {
+                                            console.log(error);
+                                            alert("Pause error. Please try again.")
+                                        });
+                                    } else {
+                                        alert("Please turn on the LIDAR before mapping.");
+                                    }
+                                }}
                             >
                                 <p>Pause</p>
                                 <img src="/icons/1.svg" alt="" />
                             </div>
                             <div
                                 className={styles.stopButton}
-                                onClick={onConfirmMappingButtonClick}
+                                onClick={() => {
+                                    if (isChecked) {
+                                        console.log("Stop request sent");
+                                        axios.post(backendUrl, {
+                                            start: false,
+                                            pause: false,
+                                            stop: true
+                                        })
+                                        .then(function (response) {
+                                            console.log(response);
+                                            changeStatus("Idle");
+                                            alert("Map saved successfully.")
+                                        })
+                                        .catch(function (error) {
+                                            console.log(error);
+                                            alert("Stop error. Please try again.")
+                                        });
+                                    }
+                                    else {
+                                        alert("Please turn on the LIDAR before mapping.");
+                                    }
+                                }}
                             >
                                 <p>Stop</p>
                                 <img src="/icons/2.svg" alt="" />
                             </div>
                             <div className={styles.settingsButton}>
                                 <img src="/icons/Setting.svg" alt="" />
-                                <p>Please turn on the LiDAR before mapping.</p>
+                                <p>Please turn on the LIDAR before mapping.</p>
                             </div>
                         </div>
-
                         <div className={styles.centerDiv} id="map">
                             {/* <img src="/icons/Frame.svg" alt="" /> */}
                         </div>
