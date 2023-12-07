@@ -7,12 +7,13 @@ import Footer from '../../../components/footer/footer';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import ConfirmDelete from '../../../components/confirm-delete/confirmDelete';
+import axios from 'axios';
 
 interface DataItem {
     map_name: string;
-    date_modified: string;
+    modified_time: string;
     file_type: string;
-    size: string;
+    file_size: string;
 }
 
 export default function Database(): JSX.Element {
@@ -47,9 +48,15 @@ export default function Database(): JSX.Element {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await fetch('/data.json');
-                const jsonData = await response.json();
-                setData(jsonData.data);
+                const response_axios = await axios.get("http://localhost:5000/api/pgm_data");
+                const data = response_axios.data.data;
+                // console.log(data);
+                setData(data);
+
+                // const response = await fetch('/data.json');
+                // const jsonData = await response.json();
+                // console.log(jsonData.data)
+                // setData(jsonData.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -59,8 +66,8 @@ export default function Database(): JSX.Element {
 
     function sortByDate(data: DataItem[], sortDateOrder: 'asc' | 'desc'): DataItem[] {
         return data.sort((a, b) => {
-            const dateA = new Date(a.date_modified);
-            const dateB = new Date(b.date_modified);
+            const dateA = new Date(a.modified_time);
+            const dateB = new Date(b.modified_time);
 
             if (sortDateOrder === "asc") {
                 if (dateA < dateB) {
@@ -263,7 +270,7 @@ export default function Database(): JSX.Element {
                                             </div>
                                         </th>
                                         <th>File Type</th>
-                                        <th>Size</th>
+                                        <th>File Size</th>
                                         <th className={styles.selectedMap}>Selected Map to Load</th>
                                         <th>Delete</th>
                                     </tr>
@@ -274,9 +281,9 @@ export default function Database(): JSX.Element {
                                         <tr key={index}>
                                             <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                                             <td>{item.map_name}</td>
-                                            <td>{item.date_modified}</td>
+                                            <td>{item.modified_time}</td>
                                             <td>{item.file_type}</td>
-                                            <td>{item.size}</td>
+                                            <td>{item.file_size}</td>
                                             <td className={`${styles.dark} `}>
                                                 <div className={`${styles.inputContainer}`}>
                                                     <input
