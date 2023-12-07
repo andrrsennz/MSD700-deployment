@@ -51,11 +51,27 @@ export default function Mapping(props: MappingProps): JSX.Element {
     const mapRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+
+
         function init() {
             // Connect to ROS.
             const ROSLIB = (window as any).ROSLIB;
             const ros = new ROSLIB.Ros({
                 url: 'ws://10.147.17.198:9090',
+            });
+
+            // Handle ROS connection errors
+            ros.on('error', (error: Error) => {
+                console.error('Error connecting to ROS:', error);
+                // You can handle the error here, such as displaying a message to the user.
+                // For example:
+                // showErrorMessage('Failed to connect to ROS. Please check the connection.');
+            });
+
+            // Handle ROS connection closure
+            ros.on('close', () => {
+                console.log('Connection to ROS is closed.');
+                // You can handle connection closure here if needed.
             });
 
             // Create the main viewer.
@@ -65,17 +81,22 @@ export default function Mapping(props: MappingProps): JSX.Element {
                 height: mapRef.current?.clientHeight || 650,
             });
 
-            // Setup the map client.
-            const gridClient = new (window as any).ROS2D.OccupancyGridClient({
-                ros: ros,
-                rootObject: viewer.scene,
-            });
-            // Scale the canvas to fit to the map
-            gridClient.on('change', () => {
-                viewer.scaleToDimensions(gridClient.currentGrid.width, gridClient.currentGrid.height);
-                viewer.shift(-25, -25);
+            // Setup the map client if ROS is connected
+            ros.on('connection', () => {
+                const gridClient = new (window as any).ROS2D.OccupancyGridClient({
+                    ros: ros,
+                    rootObject: viewer.scene,
+                });
+
+                // Scale the canvas to fit the map
+                gridClient.on('change', () => {
+                    viewer.scaleToDimensions(gridClient.currentGrid.width, gridClient.currentGrid.height);
+                    viewer.shift(-25, -25);
+                });
             });
         }
+
+
 
         // Call init on component mount
         init();

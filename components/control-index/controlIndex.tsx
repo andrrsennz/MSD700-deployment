@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ConfirmElement from "../../components/confirm-element/confirmElement";
 import Navigation from "../../components/unit-navigation/navigation";
 import styles from "./controlIndex.module.css";
@@ -46,6 +46,59 @@ export default function Mapping() {
     isChecked === false ? changeStatus("Idle") : "";
   };
 
+  const mapRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Connect to ROS.
+    const ROSLIB = (window as any).ROSLIB;
+    const ros = new ROSLIB.Ros({
+      url: 'ws://10.147.17.198:9090',
+    });
+
+    // Handle ROS connection errors
+    ros.on('error', (error: Error) => {
+      console.error('Error connecting to ROS:', error);
+      // You can handle the error here, such as displaying a message to the user.
+      // For example:
+      // showErrorMessage('Failed to connect to ROS. Please check the connection.');
+    });
+
+    // Handle ROS connection closure
+    ros.on('close', () => {
+      console.log('Connection to ROS is closed.');
+      // You can handle connection closure here if needed.
+    });
+
+    // Create the main viewer.
+    const viewer = new (window as any).ROS2D.Viewer({
+      divID: 'map',
+      width: mapRef.current?.clientWidth || 1070,
+      height: mapRef.current?.clientHeight || 670,
+    });
+
+
+    var zoomView = new (window as any).ROS2D.ZoomView({
+      rootObject: viewer.scene
+    });
+
+    // Setup the map client.
+    var gridClient = new (window as any).NAV2D.OccupancyGridClientNav({
+      ros: ros,
+      rootObject: viewer.scene,
+      viewer: viewer,
+      withOrientation: true
+    });
+
+    // Setup the map client if ROS is connected
+    ros.on('connection', () => {
+      console.log('Connected to websocket server.');
+    });
+    
+
+  }, []);
+
+  const zoomMap = () => { }
+
   return (
     <>
       {" "}
@@ -65,9 +118,8 @@ export default function Mapping() {
         <div className={styles.parents}>
           <div className={styles.statusSection}>
             <div
-              className={`${styles.status} ${
-                status === "Idle" ? styles.idle : ""
-              }`}
+              className={`${styles.status} ${status === "Idle" ? styles.idle : ""
+                }`}
             >
               <img src="/icons/information-circle-svgrepo-com.svg" alt="" />
               <p>
@@ -83,18 +135,16 @@ export default function Mapping() {
             <div className={styles.topDiv}>
               <p>Run the Prototype</p>
               <div
-                className={`${styles.playButton} ${
-                  status === "On Progress" ? styles.buttonActive : ""
-                }`}
+                className={`${styles.playButton} ${status === "On Progress" ? styles.buttonActive : ""
+                  }`}
                 onClick={() => changeStatus("On Progress")}
               >
                 <p>Play</p>
                 <img src="/icons/3.svg" alt="" />
               </div>
               <div
-                className={`${styles.pauseButton} ${
-                  status === "Idle" ? styles.buttonActive : ""
-                }`}
+                className={`${styles.pauseButton} ${status === "Idle" ? styles.buttonActive : ""
+                  }`}
                 onClick={() => changeStatus("Idle")}
               >
                 <p>Pause</p>
@@ -110,17 +160,28 @@ export default function Mapping() {
               <div className={styles.settingsButton}>
                 <img src="/icons/information-circle-svgrepo-com (1).svg" alt="" />
                 <p>
-                  Double-click to add the pinpoint <br/> Double-click again to remove
+                  Double-click to add the pinpoint <br /> Double-click again to remove
                   the pinpoint
                 </p>
               </div>
             </div>
 
-            <div className={styles.centerDiv}>
-              <img src="/icons/Frame.svg" alt="" />
+            <div className={styles.centerDiv} id="map">
+              <div className={styles.buttonNavigation}>
+                <div className={styles.zoomIn} onClick={zoomMap}>
+                  <img src="/icons/zoomin.svg" alt="" />
+                </div>
+                <div className={styles.zoomOut}>
+                  <img src="/icons/zoomout.svg" alt="" />
+                </div>
+                <div className={styles.restart}>
+                  <img src="/icons/reset.svg" alt="" />
+                </div>
+              </div>
+              {/* <img src="/icons/Frame.svg" alt="" /> */}
             </div>
           </div>
-          <Footer />
+          <Footer status={false} />
         </div>
       </div>
     </>

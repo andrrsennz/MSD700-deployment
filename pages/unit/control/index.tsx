@@ -55,12 +55,18 @@ const Control: React.FC = () => {
               <Navigation />
             </div>
             <ControlNonIndex />
-            <Footer status={false /* or false */}/>
+            <Footer status={false /* or false */} />
           </div>
         </div>
       ) : (
         <ControlIndex />
       )}
+
+      <Script src="/script/Nav2D.js" strategy="beforeInteractive" />
+      <Script src="/script/roslib.js" strategy="beforeInteractive" />
+      <Script src="/script/eventemitter2.min.js" strategy="beforeInteractive" />
+      <Script src="/script/easeljs.js" strategy="beforeInteractive" />
+      <Script src="/script/ros2d.js" strategy="beforeInteractive" />
     </>
   );
 };
