@@ -35,7 +35,7 @@ export default function Mapping() {
   };
 
   const changeStatus = (newStatus: string) => {
-    isChecked === false ? setStatus(newStatus) : setStatus("Idle");
+    isChecked === true ? setStatus(newStatus) : setStatus("Idle");
   };
 
   const onConfirmSaveMappingButtonClick = () => {
@@ -97,7 +97,7 @@ export default function Mapping() {
     // Connect to ROS.
     const ROSLIB = (window as any).ROSLIB;
     const ros = new ROSLIB.Ros({
-      url: 'ws://10.147.17.198:9090',
+      url: 'ws://localhost:9090',
     });
 
     // Handle ROS connection errors
@@ -221,7 +221,27 @@ export default function Mapping() {
               <div
                 className={`${styles.playButton} ${status === "On Progress" ? styles.buttonActive : ""
                   }`}
-                onClick={() => changeStatus("On Progress")}
+                onClick={() => {
+                  if (isChecked) {
+                    console.log("Play request sent");
+                    axios.post(`${backendUrl}/api/mapping`, {
+                      start: true,
+                      pause: false,
+                      stop: false
+                    })
+                    .then(function (response) {
+                      console.log(response);
+                      changeStatus("On Progress");
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        alert("Start error. Please try again.")
+                    });
+                  }
+                  else {
+                    alert("Please enable LIDAR first.")
+                  }
+                }}
               >
                 <p>Play</p>
                 <img src="/icons/3.svg" alt="" />
@@ -229,14 +249,56 @@ export default function Mapping() {
               <div
                 className={`${styles.pauseButton} ${status === "Idle" ? styles.buttonActive : ""
                   }`}
-                onClick={() => changeStatus("Idle")}
+                onClick={(() => {
+                  if (isChecked) {
+                    console.log("Pause request sent");
+                    axios.post(`${backendUrl}/api/mapping`, {
+                      start: false,
+                      pause: true,
+                      stop: false
+                    })
+                    .then(function (response) {
+                      console.log(response);
+                      changeStatus("Paused");
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        alert("Pause error. Please try again.")
+                    });
+                    } else {
+                      alert("Please enable LIDAR first.")
+                    }
+                  })}
               >
                 <p>Pause</p>
                 <img src="/icons/1.svg" alt="" />
               </div>
               <div
                 className={styles.stopButton}
-                onClick={onConfirmMappingButtonClick}
+                onClick={() => {
+                  if (isChecked) {
+                    /*for now the logic is the same as pause because sending stop
+                      because sending stop will save the map to the robot
+                      also, the API should be a path planning API not exploration
+                      mapping API.*/
+                    axios.post(`${backendUrl}/api/mapping`, {
+                      start: false,
+                      pause: true,
+                      stop: false
+                    })
+                    .then(function (response) {
+                      console.log(response);
+                      changeStatus("Idle");
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        alert("Stop error. Please try again.")
+                    });
+                    console.log("Stop request sent");
+                  } else {
+                    alert("Please enable LIDAR first.")
+                  }
+                }}
               >
                 <p>Return Home</p>
                 <img src="/icons/Home.svg" alt="" />
