@@ -19,7 +19,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
     const [savingConfirmDialog, setSavingConfirmDialog] = useState<boolean>(false);
     const [isChecked, setIsChecked] = useState<boolean>(false);
     const [status, setStatus] = useState<string>("Idle");
-    const [backendUrl, setBackendUrl] = useState<string>("http://localhost:5000/api/mapping");
+    const [backendUrl, setBackendUrl] = useState<string>("http://localhost:5000");
 
     const onConfirmButtonClick = (): void => {
         setShowConfirmClosePageDialog(true);
@@ -47,6 +47,27 @@ export default function Mapping(props: MappingProps): JSX.Element {
 
     const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>): void => {
         setIsChecked(event.target.checked);
+        if (event.target.checked) {
+            axios.post(`${backendUrl}/api/lidar`, {
+                enable: true
+            })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        } else {
+            axios.post(`${backendUrl}/api/lidar`, {
+                enable: false
+            })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        }
     };
 
     const mapRef = useRef<HTMLDivElement>(null);
@@ -87,6 +108,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
                 const gridClient = new (window as any).ROS2D.OccupancyGridClient({
                     ros: ros,
                     rootObject: viewer.scene,
+                    continuous: true,
                 });
 
                 // Scale the canvas to fit the map
@@ -159,7 +181,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                 onClick={() => {
                                     if (isChecked) {
                                         console.log("Play request sent");
-                                        axios.post(backendUrl, {
+                                        axios.post(`${backendUrl}/api/mapping`, {
                                             start: true,
                                             pause: false,
                                             stop: false
@@ -186,7 +208,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                 onClick={() => {
                                     if (isChecked) {          
                                         console.log("Pause request sent");       
-                                        axios.post(backendUrl, {
+                                        axios.post(`${backendUrl}/api/mapping`, {
                                             start: false,
                                             pause: true,
                                             stop: false
@@ -212,7 +234,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                 onClick={() => {
                                     if (isChecked) {
                                         console.log("Stop request sent");
-                                        axios.post(backendUrl, {
+                                        axios.post(`${backendUrl}/api/mapping`, {
                                             start: false,
                                             pause: false,
                                             stop: true
