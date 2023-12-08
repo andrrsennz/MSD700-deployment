@@ -73,56 +73,61 @@ export default function Mapping(props: MappingProps): JSX.Element {
     const mapRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        // Connect to ROS.
+        const ROSLIB = (window as any).ROSLIB;
+        const ros = new ROSLIB.Ros({
+            url: 'ws://10.147.17.198:9090',
+        });
 
+        // Handle ROS connection errors
+        ros.on('error', (error: Error) => {
+            console.error('Error connecting to ROS:', error);
+            // You can handle the error here, such as displaying a message to the user.
+            // For example:
+            // showErrorMessage('Failed to connect to ROS. Please check the connection.');
+        });
 
-        function init() {
-            // Connect to ROS.
-            const ROSLIB = (window as any).ROSLIB;
-            const ros = new ROSLIB.Ros({
-                url: 'ws://10.147.17.198:9090',
+        // Handle ROS connection closure
+        ros.on('close', () => {
+            console.log('Connection to ROS is closed.');
+            // You can handle connection closure here if needed.
+        });
+
+        // Create the main viewer.
+        const viewer = new (window as any).ROS2D.Viewer({
+            divID: 'map',
+            width: mapRef.current?.clientWidth || 1050,
+            height: mapRef.current?.clientHeight || 650,
+        });
+
+        // Setup the map client if ROS is connected
+        ros.on('connection', () => {
+            const gridClient = new (window as any).ROS2D.OccupancyGridClient({
+                ros: ros,
+                rootObject: viewer.scene,
+                // continuous: true,
             });
 
-            // Handle ROS connection errors
-            ros.on('error', (error: Error) => {
-                console.error('Error connecting to ROS:', error);
-                // You can handle the error here, such as displaying a message to the user.
-                // For example:
-                // showErrorMessage('Failed to connect to ROS. Please check the connection.');
+            // Scale the canvas to fit the map
+            gridClient.on('change', () => {
+                viewer.scaleToDimensions(gridClient.currentGrid.width, gridClient.currentGrid.height);
+                viewer.shift(-25, -25);
             });
-
-            // Handle ROS connection closure
-            ros.on('close', () => {
-                console.log('Connection to ROS is closed.');
-                // You can handle connection closure here if needed.
+        });
+        
+        return () => {
+            // clean up when exiting the page
+            ros.close();
+            axios.post(`${backendUrl}/api/lidar`, {
+                enable: false
+            })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
             });
-
-            // Create the main viewer.
-            const viewer = new (window as any).ROS2D.Viewer({
-                divID: 'map',
-                width: mapRef.current?.clientWidth || 1050,
-                height: mapRef.current?.clientHeight || 650,
-            });
-
-            // Setup the map client if ROS is connected
-            ros.on('connection', () => {
-                const gridClient = new (window as any).ROS2D.OccupancyGridClient({
-                    ros: ros,
-                    rootObject: viewer.scene,
-                    continuous: true,
-                });
-
-                // Scale the canvas to fit the map
-                gridClient.on('change', () => {
-                    viewer.scaleToDimensions(gridClient.currentGrid.width, gridClient.currentGrid.height);
-                    viewer.shift(-25, -25);
-                });
-            });
-        }
-
-
-
-        // Call init on component mount
-        init();
+        };
     }, []);
 
     return (
