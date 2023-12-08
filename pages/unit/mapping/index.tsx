@@ -49,7 +49,8 @@ export default function Mapping(props: MappingProps): JSX.Element {
         setIsChecked(event.target.checked);
         if (event.target.checked) {
             axios.post(`${backendUrl}/api/lidar`, {
-                enable: true
+                enable: true,
+                use_own_map: false
             })
             .then(function (response) {
                 console.log(response);
@@ -59,7 +60,8 @@ export default function Mapping(props: MappingProps): JSX.Element {
             });
         } else {
             axios.post(`${backendUrl}/api/lidar`, {
-                enable: false
+                enable: false,
+                use_own_map: false
             })
             .then(function (response) {
                 console.log(response);
@@ -119,7 +121,8 @@ export default function Mapping(props: MappingProps): JSX.Element {
             // clean up when exiting the page
             ros.close();
             axios.post(`${backendUrl}/api/lidar`, {
-                enable: false
+                enable: false,
+                use_own_map: false
             })
             .then(function (response) {
                 console.log(response);

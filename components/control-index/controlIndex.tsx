@@ -6,6 +6,7 @@ import CloseButton from "../../components/close-button/closeButton";
 import Footer from "../../components/footer/footer";
 import MapSaving from "../../components/map-saving/mapSaving";
 import ConfirmSaving from "../../components/confirm-saving-mapping/confirmSaving";
+import axios from "axios";
 
 export default function Mapping() {
   const [showConfirmClosePageDialog, setShowConfirmClosePageDialog] =
@@ -14,7 +15,8 @@ export default function Mapping() {
     useState<boolean>(false);
   const [savingConfirmDialog, setSavingConfirmDialog] = useState<boolean>(false);
   const [isChecked, setIsChecked] = useState<boolean>(false);
-  const [status, setStatus] = useState<string>("On Progress");
+  const [status, setStatus] = useState<string>("Idle");
+  const [backendUrl, setBackendUrl] = useState<string>("http://localhost:5000");
 
   const onConfirmButtonClick = () => {
     setShowConfirmClosePageDialog(true);
@@ -43,7 +45,50 @@ export default function Mapping() {
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // Update the state with the new checkbox value
     setIsChecked(event.target.checked);
-    isChecked === false ? changeStatus("Idle") : "";
+    // isChecked === false ? changeStatus("Idle") : "";
+    if (event.target.checked) {
+        axios.post(`${backendUrl}/api/set_own_map`, {
+          enable: true,
+          map_name: localStorage.getItem("mapName")
+        }).then(function(response) {
+          console.log(response);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+
+        axios.post(`${backendUrl}/api/lidar`, {
+            enable: true,
+            use_own_map: true
+        })
+        .then(function (response) {
+            console.log(response);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    } else {
+        axios.post(`${backendUrl}/api/set_own_map`, {
+          enable: false,
+          map_name: ''
+        }).then(function(response) {
+          console.log(response);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+
+        axios.post(`${backendUrl}/api/lidar`, {
+            enable: false,
+            use_own_map: false
+        })
+        .then(function (response) {
+            console.log(response);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
   };
 
   const mapRef = useRef<HTMLDivElement>(null);
@@ -93,6 +138,31 @@ export default function Mapping() {
     ros.on('connection', () => {
       console.log('Connected to websocket server.');
     });
+
+    return () => {
+      //clean up when exiting page
+      ros.close();
+      axios.post(`${backendUrl}/api/set_own_map`, {
+        enable: false,
+        map_name: ''
+      }).then(function(response) {
+        console.log(response);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+
+      axios.post(`${backendUrl}/api/lidar`, {
+          enable: false,
+          use_own_map: false
+      })
+      .then(function (response) {
+          console.log(response);
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
+    }
     
 
   }, []);
@@ -125,6 +195,20 @@ export default function Mapping() {
               <p>
                 Status : <span>{status}</span>
               </p>
+            </div>
+            <div className={styles.lidar}>
+              <p>LIDAR</p>
+            </div>
+            <div className={styles.lidarButton}>
+                <label className={styles.toggleSwitch}>
+                    <input
+                        type="checkbox"
+                        className={styles.toggleInput}
+                        checked={isChecked}
+                        onChange={handleCheckboxChange}
+                    />
+                    <span className={styles.slider}></span>
+                </label>
             </div>
           </div>
           <CloseButton onClick={onConfirmButtonClick} />
