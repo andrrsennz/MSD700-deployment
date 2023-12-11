@@ -45,30 +45,49 @@ export default function Mapping(props: MappingProps): JSX.Element {
         setSavingConfirmDialog(true);
     };
 
+    const setLidar = (enable: boolean, use_own_map: boolean): void => {
+        axios.post(`${backendUrl}/api/lidar`, {
+            enable: enable,
+            use_own_map: use_own_map
+        })
+        .then(function (response) {
+            console.log(response);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
+    const setMapping = (start: boolean, pause: boolean, stop: boolean): void => {
+        axios.post(`${backendUrl}/api/mapping`, {
+            start: start,
+            pause: pause,
+            stop: stop
+        })
+        .then(function (response) {
+            console.log(response);
+            if (start) {
+                changeStatus("On Progress");
+            }
+            else if (pause) {
+                changeStatus("Paused");
+            }
+            else if (stop) {
+                changeStatus("Idle");
+                alert("Map saved successfully");
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
     const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>): void => {
         setIsChecked(event.target.checked);
         if (event.target.checked) {
-            axios.post(`${backendUrl}/api/lidar`, {
-                enable: true,
-                use_own_map: false
-            })
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+            setLidar(true, false);
         } else {
-            axios.post(`${backendUrl}/api/lidar`, {
-                enable: false,
-                use_own_map: false
-            })
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+            setLidar(false, false);
         }
     };
 
@@ -107,7 +126,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
             const gridClient = new (window as any).ROS2D.OccupancyGridClient({
                 ros: ros,
                 rootObject: viewer.scene,
-                // continuous: true,
+                continuous: true
             });
 
             // Scale the canvas to fit the map
@@ -120,16 +139,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
         return () => {
             // clean up when exiting the page
             ros.close();
-            axios.post(`${backendUrl}/api/lidar`, {
-                enable: false,
-                use_own_map: false
-            })
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+            setLidar(false, false);
         };
     }, []);
 
@@ -189,19 +199,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                 onClick={() => {
                                     if (isChecked) {
                                         console.log("Play request sent");
-                                        axios.post(`${backendUrl}/api/mapping`, {
-                                            start: true,
-                                            pause: false,
-                                            stop: false
-                                        })
-                                        .then(function (response) {
-                                            console.log(response);
-                                            changeStatus("On Progress");
-                                        })
-                                        .catch(function (error) {
-                                            console.log(error);
-                                            alert("Start error. Please try again.")
-                                        });
+                                        setMapping(true, false, false);
                                     } else {
                                         alert("Please turn on the LIDAR before mapping.");
                                     }
@@ -216,19 +214,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                 onClick={() => {
                                     if (isChecked) {          
                                         console.log("Pause request sent");       
-                                        axios.post(`${backendUrl}/api/mapping`, {
-                                            start: false,
-                                            pause: true,
-                                            stop: false
-                                        })
-                                        .then(function (response) {
-                                            console.log(response);
-                                            changeStatus("Paused");
-                                        })
-                                        .catch(function (error) {
-                                            console.log(error);
-                                            alert("Pause error. Please try again.")
-                                        });
+                                        setMapping(false, true, false);
                                     } else {
                                         alert("Please turn on the LIDAR before mapping.");
                                     }
@@ -242,20 +228,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                 onClick={() => {
                                     if (isChecked) {
                                         console.log("Stop request sent");
-                                        axios.post(`${backendUrl}/api/mapping`, {
-                                            start: false,
-                                            pause: false,
-                                            stop: true
-                                        })
-                                        .then(function (response) {
-                                            console.log(response);
-                                            changeStatus("Idle");
-                                            alert("Map saved successfully.")
-                                        })
-                                        .catch(function (error) {
-                                            console.log(error);
-                                            alert("Stop error. Please try again.")
-                                        });
+                                        setMapping(false, false, true);
                                     }
                                     else {
                                         alert("Please turn on the LIDAR before mapping.");
