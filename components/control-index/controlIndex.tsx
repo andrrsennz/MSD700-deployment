@@ -47,10 +47,10 @@ export default function Mapping() {
         enable: enable,
         use_own_map: use_own_map
     })
-    .then(function (response) {
+    .then(function (response:any) {
         console.log(response);
     })
-    .catch(function (error) {
+    .catch(function (error:any) {
         console.log(error);
     });
   }
@@ -65,7 +65,7 @@ export default function Mapping() {
         pause: pause,
         stop: stop
     })
-    .then(function (response) {
+    .then(function (response:any) {
         console.log(response);
         if (start) {
             changeStatus("On Progress");
@@ -78,7 +78,7 @@ export default function Mapping() {
             alert("Map saved successfully");
         }
     })
-    .catch(function (error) {
+    .catch(function (error:any) {
         console.log(error);
     });
   }
@@ -88,10 +88,10 @@ export default function Mapping() {
         enable: enable,
         map_name: map_name
     })
-    .then(function (response) {
+    .then(function (response:any) {
         console.log(response);
     })
-    .catch(function (error) {
+    .catch(function (error:any) {
         console.log(error);
     });
   }
