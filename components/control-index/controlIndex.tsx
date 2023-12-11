@@ -42,52 +42,70 @@ export default function Mapping() {
     setSavingConfirmDialog(true);
   };
 
+  const setLidar = (enable: boolean, use_own_map: boolean): void => {
+    axios.post(`${backendUrl}/api/lidar`, {
+        enable: enable,
+        use_own_map: use_own_map
+    })
+    .then(function (response) {
+        console.log(response);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+  }
+
+  const setRobot = (start: boolean, pause: boolean, stop: boolean): void => {
+    /*for now the logic is the same as pause because sending stop
+      because sending stop will save the map to the robot
+      also, the API should be a path planning API not exploration
+      mapping API.*/
+    axios.post(`${backendUrl}/api/mapping`, {
+        start: start,
+        pause: pause,
+        stop: stop
+    })
+    .then(function (response) {
+        console.log(response);
+        if (start) {
+            changeStatus("On Progress");
+        }
+        else if (pause) {
+            changeStatus("Paused");
+        }
+        else if (stop) {
+            changeStatus("Idle");
+            alert("Map saved successfully");
+        }
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+  }
+
+  const setOwnMap = (enable: boolean, map_name: string): void => {
+    axios.post(`${backendUrl}/api/set_own_map`, {
+        enable: enable,
+        map_name: map_name
+    })
+    .then(function (response) {
+        console.log(response);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+  }
+
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // Update the state with the new checkbox value
     setIsChecked(event.target.checked);
     // isChecked === false ? changeStatus("Idle") : "";
     if (event.target.checked) {
-        axios.post(`${backendUrl}/api/set_own_map`, {
-          enable: true,
-          map_name: localStorage.getItem("mapName")
-        }).then(function(response) {
-          console.log(response);
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-
-        axios.post(`${backendUrl}/api/lidar`, {
-            enable: true,
-            use_own_map: true
-        })
-        .then(function (response) {
-            console.log(response);
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+        setOwnMap(true, localStorage.getItem("mapName") || '');
+        setLidar(true, true);
     } else {
-        axios.post(`${backendUrl}/api/set_own_map`, {
-          enable: false,
-          map_name: ''
-        }).then(function(response) {
-          console.log(response);
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-
-        axios.post(`${backendUrl}/api/lidar`, {
-            enable: false,
-            use_own_map: false
-        })
-        .then(function (response) {
-            console.log(response);
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+        setOwnMap(false, '');
+        setLidar(false, false);
     }
   };
 
@@ -136,35 +154,15 @@ export default function Mapping() {
 
     // Setup the map client if ROS is connected
     ros.on('connection', () => {
-      console.log('Connected to websocket server.');
+      console.log('Connected to ROS websocket server.');
     });
 
     return () => {
       //clean up when exiting page
       ros.close();
-      axios.post(`${backendUrl}/api/set_own_map`, {
-        enable: false,
-        map_name: ''
-      }).then(function(response) {
-        console.log(response);
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-
-      axios.post(`${backendUrl}/api/lidar`, {
-          enable: false,
-          use_own_map: false
-      })
-      .then(function (response) {
-          console.log(response);
-      })
-      .catch(function (error) {
-          console.log(error);
-      });
+      setOwnMap(false, '');
+      setLidar(false, false);
     }
-    
-
   }, []);
 
   const zoomMap = () => { }
@@ -223,23 +221,11 @@ export default function Mapping() {
                   }`}
                 onClick={() => {
                   if (isChecked) {
+                    setRobot(true, false, false);
                     console.log("Play request sent");
-                    axios.post(`${backendUrl}/api/mapping`, {
-                      start: true,
-                      pause: false,
-                      stop: false
-                    })
-                    .then(function (response) {
-                      console.log(response);
-                      changeStatus("On Progress");
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                        alert("Start error. Please try again.")
-                    });
                   }
                   else {
-                    alert("Please enable LIDAR first.")
+                    alert("Please turn on LIDAR first.")
                   }
                 }}
               >
@@ -251,22 +237,10 @@ export default function Mapping() {
                   }`}
                 onClick={(() => {
                   if (isChecked) {
+                    setRobot(false, true, false);
                     console.log("Pause request sent");
-                    axios.post(`${backendUrl}/api/mapping`, {
-                      start: false,
-                      pause: true,
-                      stop: false
-                    })
-                    .then(function (response) {
-                      console.log(response);
-                      changeStatus("Paused");
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                        alert("Pause error. Please try again.")
-                    });
                     } else {
-                      alert("Please enable LIDAR first.")
+                      alert("Please turn on LIDAR first.")
                     }
                   })}
               >
@@ -277,26 +251,10 @@ export default function Mapping() {
                 className={styles.stopButton}
                 onClick={() => {
                   if (isChecked) {
-                    /*for now the logic is the same as pause because sending stop
-                      because sending stop will save the map to the robot
-                      also, the API should be a path planning API not exploration
-                      mapping API.*/
-                    axios.post(`${backendUrl}/api/mapping`, {
-                      start: false,
-                      pause: true,
-                      stop: false
-                    })
-                    .then(function (response) {
-                      console.log(response);
-                      changeStatus("Idle");
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                        alert("Stop error. Please try again.")
-                    });
+                    setRobot(false, true, false);
                     console.log("Stop request sent");
                   } else {
-                    alert("Please enable LIDAR first.")
+                    alert("Please turn on LIDAR first.")
                   }
                 }}
               >

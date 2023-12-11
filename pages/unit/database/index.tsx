@@ -157,7 +157,7 @@ export default function Database(): JSX.Element {
             console.log("ppp");
             setCheckedIndex(parseInt(index));
             localStorage.setItem("mapIndex", index);
-            localStorage.setItem("mapName", data[parseInt(index)].map_name)
+            localStorage.setItem("mapName", data[startIndex + parseInt(index)].map_name)
         }
     };
 
