@@ -23,6 +23,8 @@ export default function Home(): JSX.Element {
 
   const onProceedButtonClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
+    const ip_address = (document.getElementById("ipAddress") as HTMLInputElement).value
+    localStorage.setItem("ip_address", ip_address);
     setShowUtilSection(true);
   };
 
@@ -87,7 +89,7 @@ export default function Home(): JSX.Element {
                     type="text"
                     id="ipAddress"
                     name="ipAddress"
-                    defaultValue="192.168.18.17"
+                    defaultValue="10.147.17.198"
                     required
                   />
                 </div>

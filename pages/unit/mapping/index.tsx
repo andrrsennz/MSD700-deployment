@@ -97,7 +97,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
         // Connect to ROS.
         const ROSLIB = (window as any).ROSLIB;
         const ros = new ROSLIB.Ros({
-            url: 'ws://10.147.17.198:9090',
+            url: `ws://${localStorage.getItem("ip_address")}:9090`,
         });
 
         // Handle ROS connection errors
