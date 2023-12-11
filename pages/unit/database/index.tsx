@@ -62,6 +62,7 @@ export default function Database(): JSX.Element {
             }
         }
         fetchData();
+        setCheckedIndex(0);
     }, []);
 
     function sortByDate(data: DataItem[], sortDateOrder: 'asc' | 'desc'): DataItem[] {
@@ -149,14 +150,14 @@ export default function Database(): JSX.Element {
     };
 
     const handleCheckboxChange = (index: string) => {
-        if (mapIndex == parseInt(index)) {
+        if (mapIndex == startIndex + parseInt(index)) {
             console.log("nnnn");
             localStorage.setItem("mapIndex", "-1");
             setCheckedIndex(-1);
         } else {
             console.log("ppp");
-            setCheckedIndex(parseInt(index));
-            localStorage.setItem("mapIndex", index);
+            setCheckedIndex(startIndex + parseInt(index));
+            localStorage.setItem("mapIndex", String(startIndex + parseInt(index)));
             localStorage.setItem("mapName", data[startIndex + parseInt(index)].map_name)
         }
     };
@@ -290,7 +291,7 @@ export default function Database(): JSX.Element {
                                                     <input
                                                         type="checkbox"
                                                         id={`checklistItem${index}`}
-                                                        checked={mapIndex == index}
+                                                        checked={checkedIndex == startIndex + index}
                                                         onChange={() => handleCheckboxChange(index.toString())}
                                                     />
                                                     <label htmlFor={`checklistItem${index}`}></label>
