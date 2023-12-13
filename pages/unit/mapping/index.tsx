@@ -97,43 +97,46 @@ export default function Mapping(props: MappingProps): JSX.Element {
         // Connect to ROS.
         const ROSLIB = (window as any).ROSLIB;
         const ros = new ROSLIB.Ros({
-            url: `ws://${localStorage.getItem("ip_address")}:9090`,
+          url: `ws://${localStorage.getItem("ip_address")}:9090`,
         });
-
+    
         // Handle ROS connection errors
         ros.on('error', (error: Error) => {
-            console.error('Error connecting to ROS:', error);
-            // You can handle the error here, such as displaying a message to the user.
-            // For example:
-            // showErrorMessage('Failed to connect to ROS. Please check the connection.');
+          console.error('Error connecting to ROS:', error);
+          // You can handle the error here, such as displaying a message to the user.
+          // For example:
+          // showErrorMessage('Failed to connect to ROS. Please check the connection.');
         });
-
+    
         // Handle ROS connection closure
         ros.on('close', () => {
-            console.log('Connection to ROS is closed.');
-            // You can handle connection closure here if needed.
+          console.log('Connection to ROS is closed.');
+          // You can handle connection closure here if needed.
         });
-
+    
         // Create the main viewer.
         const viewer = new (window as any).ROS2D.Viewer({
-            divID: 'map',
-            width: mapRef.current?.clientWidth || 1050,
-            height: mapRef.current?.clientHeight || 650,
+          divID: 'map',
+          width: mapRef.current?.clientWidth || 1070,
+          height: mapRef.current?.clientHeight || 670,
         });
-
+    
+        var zoomView = new (window as any).ROS2D.ZoomView({
+          rootObject: viewer.scene
+        });
+    
+        // Setup the map client.
+        var gridClient = new (window as any).NAV2D.OccupancyGridClientNav({
+          ros: ros,
+          rootObject: viewer.scene,
+          viewer: viewer,
+          withOrientation: true,
+          continuous: true
+        });
+    
         // Setup the map client if ROS is connected
         ros.on('connection', () => {
-            const gridClient = new (window as any).ROS2D.OccupancyGridClient({
-                ros: ros,
-                rootObject: viewer.scene,
-                continuous: true
-            });
-
-            // Scale the canvas to fit the map
-            gridClient.on('change', () => {
-                viewer.scaleToDimensions(gridClient.currentGrid.width, gridClient.currentGrid.height);
-                viewer.shift(-25, -25);
-            });
+          console.log('Connected to ROS websocket server.');
         });
         
         return () => {
