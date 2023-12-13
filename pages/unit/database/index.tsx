@@ -38,6 +38,7 @@ export default function Database(): JSX.Element {
     const [deleteItemConfirm, setDeleteItemConfirm] = useState<boolean>(false);
     const [indexDelete, setIndexDelete] = useState<number>(0);
     const [searchQuery, setSearchQuery] = useState<string>('');
+    const [backendUrl, setBackendUrl] = useState<string>('http://localhost:5000');
 
     const itemsPerPage = 10;
     const totalItems = data.length;
@@ -48,15 +49,9 @@ export default function Database(): JSX.Element {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response_axios = await axios.get("http://localhost:5000/api/pgm_data");
+                const response_axios = await axios.get(`${backendUrl}/api/pgm_data`);
                 const data = response_axios.data.data;
-                // console.log(data);
                 setData(data);
-
-                // const response = await fetch('/data.json');
-                // const jsonData = await response.json();
-                // console.log(jsonData.data)
-                // setData(jsonData.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -170,8 +165,9 @@ export default function Database(): JSX.Element {
 
     //delete Item
     const handleDeleteItem = (index: number) => {
+        const dataIdx = startIndex + index;
         setDeleteItemConfirm(true);
-        setIndexDelete(index);
+        setIndexDelete(dataIdx);
     };
 
     const handleCancelDelete = () => {
@@ -181,10 +177,47 @@ export default function Database(): JSX.Element {
     };
 
     const deleteItem = (indexDelete: number) => {
-        const newData = data.filter((item, index) => index !== indexDelete);
+        const pgm_map_name = data[indexDelete].map_name;
+        const yaml_map_name = pgm_map_name.replace(".pgm", ".yaml");
 
-        // Update the state with the new array without the deleted item
-        setData(newData);
+        // delete pgm file
+        axios.delete(`${backendUrl}/api/pgm_data`, {
+            data: {
+                map_name: pgm_map_name
+            }
+        })
+        .then((response) => {
+            console.log(response);
+            // delete yaml file
+            axios.delete(`${backendUrl}/api/yaml_data`, {
+                data: {
+                    map_name: yaml_map_name
+                }
+            })
+            .then((response) => {
+                console.log(response)
+                // Update data
+                axios.get(`${backendUrl}/api/pgm_data`)
+                .then((response) => {
+                    console.log(response);
+                    setData(response.data.data);
+                    setDeleteItemConfirm(false);
+                    setCheckedIndex(-1);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    alert("Map failed to delete")
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+                alert("Map failed to delete")
+            });
+        })
+        .catch((error) => {
+            console.log(error);
+            alert("Map failed to delete")
+        });
     };
 
     //search Item
