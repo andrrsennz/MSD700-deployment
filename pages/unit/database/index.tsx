@@ -38,8 +38,7 @@ export default function Database(): JSX.Element {
     const [deleteItemConfirm, setDeleteItemConfirm] = useState<boolean>(false);
     const [indexDelete, setIndexDelete] = useState<number>(0);
     const [searchQuery, setSearchQuery] = useState<string>('');
-    const [backendUrl, setBackendUrl] = useState<string>('http://10.147.17.135:5000');
-    // const [backendUrl, setBackendUrl] = useState<string>('http://localhost:5000');
+    const [backendUrl, setBackendUrl] = useState<string>('http://localhost:5000');
     const [isEditing, setIsEditing] = useState<Record<number, boolean>>({});
 
     const itemsPerPage = 10;
@@ -54,8 +53,6 @@ export default function Database(): JSX.Element {
                 const response_axios = await axios.get(`${backendUrl}/api/pgm_data`);
                 const data = response_axios.data.data;
                 setData(data);
-                console.log(data);
-
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -258,11 +255,19 @@ export default function Database(): JSX.Element {
                 })
                     .then(response => {
                         console.log('PGM Data Update Response:', response);
-
-                        // Update the local state only after both updates are successful
-                        const updatedData = [...data];
-                        updatedData[index].map_name = newName;
-                        setData(updatedData);
+                        if (response.status === 200)  {
+                            axios.get(`${backendUrl}/api/pgm_data`)
+                            .then(res =>{
+                                const data = res.data.data
+                                setData(data);
+                            })
+                            .catch(err => {
+                                alert("Error refreshing data");
+                            })
+                        } 
+                        else {
+                            alert("Map failed to update")
+                        }
                     })
                     .catch(error => {
                         console.error('Error updating map name:', error);
