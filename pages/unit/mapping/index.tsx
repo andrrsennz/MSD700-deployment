@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useEffect, useRef } from "react";
+import { MouseEvent, useState, ChangeEvent, useEffect, useRef } from "react";
 import ConfirmElement from "../../../components/confirm-element/confirmElement";
 import Navigation from "../../../components/unit-navigation/navigation";
 import styles from "./mapping.module.css";
@@ -93,6 +93,13 @@ export default function Mapping(props: MappingProps): JSX.Element {
 
     const mapRef = useRef<HTMLDivElement>(null);
 
+    var ros: any
+    var viewer: any
+    var paN: any
+    var movecoor: any = [];
+    var isDrag = false;
+    var startcoor: any = [];
+
     useEffect(() => {
         // Connect to ROS.
         const ROSLIB = (window as any).ROSLIB;
@@ -103,37 +110,39 @@ export default function Mapping(props: MappingProps): JSX.Element {
         // Handle ROS connection errors
         ros.on('error', (error: Error) => {
           console.error('Error connecting to ROS:', error);
-          // You can handle the error here, such as displaying a message to the user.
-          // For example:
-          // showErrorMessage('Failed to connect to ROS. Please check the connection.');
         });
     
         // Handle ROS connection closure
         ros.on('close', () => {
           console.log('Connection to ROS is closed.');
-          // You can handle connection closure here if needed.
         });
     
         // Create the main viewer.
-        const viewer = new (window as any).ROS2D.Viewer({
+        viewer = new (window as any).ROS2D.Viewer({
           divID: 'map',
           width: mapRef.current?.clientWidth || 1070,
           height: mapRef.current?.clientHeight || 670,
+          background: "#7F7F7F",
+        });
+
+        paN = new (window as any).ROS2D.PanView({
+            rootObject: viewer.scene,
         });
     
+        
+        // Setup the map client.
+        var gridClient = new (window as any).NAV2D.OccupancyGridClientNav({
+            ros: ros,
+            rootObject: viewer.scene,
+            viewer: viewer,
+            withOrientation: true,
+            continuous: true
+        });
+        
         var zoomView = new (window as any).ROS2D.ZoomView({
           rootObject: viewer.scene
         });
-    
-        // Setup the map client.
-        var gridClient = new (window as any).NAV2D.OccupancyGridClientNav({
-          ros: ros,
-          rootObject: viewer.scene,
-          viewer: viewer,
-          withOrientation: true,
-          continuous: true
-        });
-    
+
         // Setup the map client if ROS is connected
         ros.on('connection', () => {
           console.log('Connected to ROS websocket server.');
@@ -145,6 +154,65 @@ export default function Mapping(props: MappingProps): JSX.Element {
             setLidar(false, false);
         };
     }, []);
+
+    var zoomCrossConst: number[] = []
+    var firstZoomVar = 1
+
+    const zoomIn = () => {
+        var zoom = new (window as any).ROS2D.ZoomView({
+          ros: ros,
+          rootObject: viewer.scene,
+        });
+        zoom.startZoom(250, 250);
+        const zoomInConst = 1.2
+        firstZoomVar = firstZoomVar * zoomInConst;
+        zoom.zoom(zoomInConst);
+        zoomCrossConst.push(zoomInConst)
+    }
+    
+    const zoomOut = () => {
+        var zoom = new (window as any).ROS2D.ZoomView({
+          ros: ros,
+          rootObject: viewer.scene,
+        });
+        zoom.startZoom(250, 250);
+        const zoomOutConst = 0.8
+        firstZoomVar = firstZoomVar * zoomOutConst
+        zoom.zoom(zoomOutConst);
+        zoomCrossConst.push(zoomOutConst)
+    }
+    
+    const restart = () => {
+        var zoom = new (window as any).ROS2D.ZoomView({
+          ros: ros,
+          rootObject: viewer.scene,
+        });
+        zoom.startZoom(250, 250);
+        var result = zoomCrossConst.reduce((accumulator, currentValue) => accumulator * currentValue, 1);
+        var newConst = 1 / result;
+        zoom.zoom(newConst)
+        zoomCrossConst = []
+    }
+    
+    const whenMouseDown = (event: MouseEvent) => {
+        paN.startPan(event.clientX, event.clientY);
+        isDrag = true;
+        startcoor[0] = event.clientX;
+        startcoor[1] = event.clientY;
+        // paN.pan(event.clientX,event.clientY)
+        // onMouseMove(event)
+    }
+    
+    const whenMouseUp = (event: MouseEvent) => {
+        isDrag = false;
+    }
+    
+    const whenMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+        if (isDrag) {
+          // Perform the action when the mouse is clicked and moving
+          paN.pan(e.clientX, e.clientY);
+        }
+    };
 
     return (
         <>
@@ -246,8 +314,19 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                 <p>Please turn on the LIDAR before mapping.</p>
                             </div>
                         </div>
-                        <div className={styles.centerDiv} id="map">
-                            {/* <img src="/icons/Frame.svg" alt="" /> */}
+                        <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp}>
+                        <div className={styles.buttonNavigation}>
+                            <div className={styles.zoomIn} onClick={zoomIn}>
+                            <img src="/icons/zoomin.svg" alt="" />
+                            </div>
+                            <div className={styles.zoomOut} onClick={zoomOut}>
+                            <img src="/icons/zoomout.svg" alt="" />
+                            </div>
+                            <div className={styles.restart} onClick={restart}>
+                            <img src="/icons/reset.svg" alt="" />
+                            </div>
+                        </div>
+                        {/* <img src="/icons/Frame.svg" alt="" /> */}
                         </div>
                     </div>
                     <Footer status={false} />
