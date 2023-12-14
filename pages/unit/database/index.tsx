@@ -38,7 +38,9 @@ export default function Database(): JSX.Element {
     const [deleteItemConfirm, setDeleteItemConfirm] = useState<boolean>(false);
     const [indexDelete, setIndexDelete] = useState<number>(0);
     const [searchQuery, setSearchQuery] = useState<string>('');
-    const [backendUrl, setBackendUrl] = useState<string>('http://localhost:5000');
+    const [backendUrl, setBackendUrl] = useState<string>('http://10.147.17.135:5000');
+    // const [backendUrl, setBackendUrl] = useState<string>('http://localhost:5000');
+    const [isEditing, setIsEditing] = useState<Record<number, boolean>>({});
 
     const itemsPerPage = 10;
     const totalItems = data.length;
@@ -52,6 +54,8 @@ export default function Database(): JSX.Element {
                 const response_axios = await axios.get(`${backendUrl}/api/pgm_data`);
                 const data = response_axios.data.data;
                 setData(data);
+                console.log(data);
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -186,38 +190,38 @@ export default function Database(): JSX.Element {
                 map_name: pgm_map_name
             }
         })
-        .then((response) => {
-            console.log(response);
-            // delete yaml file
-            axios.delete(`${backendUrl}/api/yaml_data`, {
-                data: {
-                    map_name: yaml_map_name
-                }
-            })
             .then((response) => {
-                console.log(response)
-                // Update data
-                axios.get(`${backendUrl}/api/pgm_data`)
-                .then((response) => {
-                    console.log(response);
-                    setData(response.data.data);
-                    setDeleteItemConfirm(false);
-                    setCheckedIndex(-1);
+                console.log(response);
+                // delete yaml file
+                axios.delete(`${backendUrl}/api/yaml_data`, {
+                    data: {
+                        map_name: yaml_map_name
+                    }
                 })
-                .catch((error) => {
-                    console.log(error);
-                    alert("Map failed to delete")
-                });
+                    .then((response) => {
+                        console.log(response)
+                        // Update data
+                        axios.get(`${backendUrl}/api/pgm_data`)
+                            .then((response) => {
+                                console.log(response);
+                                setData(response.data.data);
+                                setDeleteItemConfirm(false);
+                                setCheckedIndex(-1);
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                                alert("Map failed to delete")
+                            });
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        alert("Map failed to delete")
+                    });
             })
             .catch((error) => {
                 console.log(error);
                 alert("Map failed to delete")
             });
-        })
-        .catch((error) => {
-            console.log(error);
-            alert("Map failed to delete")
-        });
     };
 
     //search Item
@@ -232,6 +236,45 @@ export default function Database(): JSX.Element {
     });
 
     const currentData = filteredData.slice(startIndex, endIndex);
+
+    const handleDoubleClick = (index: number) => {
+        setIsEditing({ ...isEditing, [index]: true });
+    };
+
+    const updateMapName = (index: number) => {
+        const inputElement = document.getElementById(`mapNameInput${index}`);
+
+        console.log(inputElement);
+
+
+        if (inputElement instanceof HTMLInputElement) {
+            const newName = inputElement.value;
+            const oldName = data[index].map_name;
+
+            if (newName !== oldName) {
+                axios.put(`${backendUrl}/api/pgm_data`, {
+                    map_name: oldName,
+                    new_map_name: newName
+                })
+                    .then(response => {
+                        console.log('PGM Data Update Response:', response);
+
+                        // Update the local state only after both updates are successful
+                        const updatedData = [...data];
+                        updatedData[index].map_name = newName;
+                        setData(updatedData);
+                    })
+                    .catch(error => {
+                        console.error('Error updating map name:', error);
+                    });
+            }
+        } else {
+            console.error('Input element not found');
+        }
+
+        setIsEditing({ ...isEditing, [index]: false });
+    };
+
 
     return (
         <>
@@ -315,7 +358,20 @@ export default function Database(): JSX.Element {
                                     {currentData.map((item, index) => (
                                         <tr key={index}>
                                             <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-                                            <td>{item.map_name}</td>
+                                            <td onDoubleClick={() => handleDoubleClick(index)}>
+                                                {isEditing[index] ? (
+                                                    <input
+                                                        type="text"
+                                                        id={`mapNameInput${index}`} // Assign the ID here
+                                                        defaultValue={item.map_name}
+                                                        onBlur={() => updateMapName(index)}
+                                                        autoFocus
+                                                    />
+                                                ) : (
+                                                    item.map_name
+                                                )}
+                                            </td>
+
                                             <td>{item.modified_time}</td>
                                             <td>{item.file_type}</td>
                                             <td>{item.file_size}</td>
@@ -355,8 +411,8 @@ export default function Database(): JSX.Element {
                             </div>
                             <div
                                 className={`${styles.confirmMappingChoosed} ${(initialCheckedIndex !== null && parseInt(initialCheckedIndex) > -1) || mapIndex > -1
-                                        ? ""
-                                        : styles.disable
+                                    ? ""
+                                    : styles.disable
                                     }`}
                                 onClick={goToControlWithIndex}
                             >
