@@ -351,7 +351,10 @@
     background-color: #DCDCDC;
     overflow: hidden;
     box-shadow: 0px 4px 4px 0px #0567A6;
+
+
 }
+
 
 .centerDiv img {
     width: 100%;
@@ -365,7 +368,7 @@
     width: 37px;
     /* background-color: red; */
     position: absolute;
-
+    z-index: 10;
     gap: 10px;
 
     margin-left: 970px;
@@ -380,6 +383,11 @@
     border: 5px solid #60E3D5;
     border-radius: 5px;
     padding: 4px;
+}
+
+.centerDiv .buttonNavigation div:hover {
+    background-color: #8DAAC0;
+    cursor: pointer;
 }
 
 

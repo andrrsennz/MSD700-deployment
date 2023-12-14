@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
 import ConfirmElement from "../../components/confirm-element/confirmElement";
 import Navigation from "../../components/unit-navigation/navigation";
 import styles from "./controlIndex.module.css";
@@ -44,15 +44,15 @@ export default function Mapping() {
 
   const setLidar = (enable: boolean, use_own_map: boolean): void => {
     axios.post(`${backendUrl}/api/lidar`, {
-        enable: enable,
-        use_own_map: use_own_map
+      enable: enable,
+      use_own_map: use_own_map
     })
-    .then(function (response:any) {
+      .then(function (response: any) {
         console.log(response);
-    })
-    .catch(function (error:any) {
+      })
+      .catch(function (error: any) {
         console.log(error);
-    });
+      });
   }
 
   const setRobot = (start: boolean, pause: boolean, stop: boolean): void => {
@@ -61,39 +61,39 @@ export default function Mapping() {
       also, the API should be a path planning API not exploration
       mapping API.*/
     axios.post(`${backendUrl}/api/mapping`, {
-        start: start,
-        pause: pause,
-        stop: stop
+      start: start,
+      pause: pause,
+      stop: stop
     })
-    .then(function (response:any) {
+      .then(function (response: any) {
         console.log(response);
         if (start) {
-            changeStatus("On Progress");
+          changeStatus("On Progress");
         }
         else if (pause) {
-            changeStatus("Paused");
+          changeStatus("Paused");
         }
         else if (stop) {
-            changeStatus("Idle");
-            alert("Map saved successfully");
+          changeStatus("Idle");
+          alert("Map saved successfully");
         }
-    })
-    .catch(function (error:any) {
+      })
+      .catch(function (error: any) {
         console.log(error);
-    });
+      });
   }
 
   const setOwnMap = (enable: boolean, map_name: string): void => {
     axios.post(`${backendUrl}/api/set_own_map`, {
-        enable: enable,
-        map_name: map_name
+      enable: enable,
+      map_name: map_name
     })
-    .then(function (response:any) {
+      .then(function (response: any) {
         console.log(response);
-    })
-    .catch(function (error:any) {
+      })
+      .catch(function (error: any) {
         console.log(error);
-    });
+      });
   }
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,20 +101,27 @@ export default function Mapping() {
     setIsChecked(event.target.checked);
     // isChecked === false ? changeStatus("Idle") : "";
     if (event.target.checked) {
-        setOwnMap(true, localStorage.getItem("mapName") || '');
-        setLidar(true, true);
+      setOwnMap(true, localStorage.getItem("mapName") || '');
+      setLidar(true, true);
     } else {
-        setOwnMap(false, '');
-        setLidar(false, false);
+      setOwnMap(false, '');
+      setLidar(false, false);
     }
   };
 
   const mapRef = useRef<HTMLDivElement>(null);
 
+  var ros: any
+  var viewer: any
+  var paN: any
+  var movecoor: any = [];
+  var isDrag = false;
+  var startcoor: any = [];
+
   useEffect(() => {
     // Connect to ROS.
     const ROSLIB = (window as any).ROSLIB;
-    const ros = new ROSLIB.Ros({
+    ros = new ROSLIB.Ros({
       url: `ws://${localStorage.getItem("ip_address")}:9090`,
     });
 
@@ -133,24 +140,38 @@ export default function Mapping() {
     });
 
     // Create the main viewer.
-    const viewer = new (window as any).ROS2D.Viewer({
+    viewer = new (window as any).ROS2D.Viewer({
       divID: 'map',
-      width: mapRef.current?.clientWidth || 1070,
-      height: mapRef.current?.clientHeight || 670,
+      // width: mapRef.current?.clientWidth || 1070,
+      // height: mapRef.current?.clientHeight || 670,
+      width: 2500,
+      height: 2000,
+      background: "#7F7F7F",
     });
 
+    paN = new (window as any).ROS2D.PanView({
+      rootObject: viewer.scene,
+    });
+
+    // Setup the map client.
+    var gridClient = new (window as any).ROS2D.OccupancyGridClient({
+      ros: ros,
+      rootObject: viewer.scene,
+      viewer: viewer,
+      continuous: true,
+    });
+
+    gridClient.on('change', function () {
+      console.log("gridClient.currentGrid.pose.position.x : ", gridClient.currentGrid.pose.position.x);
+      console.log("gridClient.currentGrid.pose.position.y : ", gridClient.currentGrid.pose.position.y);
+      viewer.scaleToDimensions(gridClient.currentGrid.width, gridClient.currentGrid.height);
+      viewer.shift(-9, -43);
+    })
 
     var zoomView = new (window as any).ROS2D.ZoomView({
       rootObject: viewer.scene
     });
 
-    // Setup the map client.
-    var gridClient = new (window as any).NAV2D.OccupancyGridClientNav({
-      ros: ros,
-      rootObject: viewer.scene,
-      viewer: viewer,
-      withOrientation: true
-    });
 
     // Setup the map client if ROS is connected
     ros.on('connection', () => {
@@ -165,11 +186,73 @@ export default function Mapping() {
     }
   }, []);
 
-  const zoomMap = () => { }
+
+
+  var zoomCrossConst: number[] = []
+  var firstZoomVar = 1
+
+  const zoomIn = () => {
+    var zoom = new (window as any).ROS2D.ZoomView({
+      ros: ros,
+      rootObject: viewer.scene,
+    });
+    zoom.startZoom(250, 250);
+    const zoomInConst = 1.2
+    firstZoomVar = firstZoomVar * zoomInConst;
+    zoom.zoom(zoomInConst);
+    zoomCrossConst.push(zoomInConst)
+  }
+
+  const zoomOut = () => {
+    var zoom = new (window as any).ROS2D.ZoomView({
+      ros: ros,
+      rootObject: viewer.scene,
+    });
+    zoom.startZoom(250, 250);
+    const zoomOutConst = 0.8
+    firstZoomVar = firstZoomVar * zoomOutConst
+    zoom.zoom(zoomOutConst);
+    zoomCrossConst.push(zoomOutConst)
+  }
+
+  const restart = () => {
+    var zoom = new (window as any).ROS2D.ZoomView({
+      ros: ros,
+      rootObject: viewer.scene,
+    });
+    zoom.startZoom(250, 250);
+    var result = zoomCrossConst.reduce((accumulator, currentValue) => accumulator * currentValue, 1);
+    var newConst = 1 / result;
+    zoom.zoom(newConst)
+    zoomCrossConst = []
+  }
+
+  const whenMouseDown = (event: MouseEvent) => {
+    paN.startPan(event.clientX, event.clientY);
+    isDrag = true;
+    startcoor[0] = event.clientX;
+    startcoor[1] = event.clientY;
+    // paN.pan(event.clientX,event.clientY)
+    // onMouseMove(event)
+  }
+
+  const whenMouseUp = (event: MouseEvent) => {
+    isDrag = false;
+  }
+
+  const whenMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (isDrag) {
+      // Perform the action when the mouse is clicked and moving
+      paN.pan(e.clientX, e.clientY);
+    }
+  };
+
+
 
   return (
     <>
       {" "}
+
       <ConfirmElement
         message="Are you sure you want to close this app?"
         status={showConfirmClosePageDialog}
@@ -198,15 +281,15 @@ export default function Mapping() {
               <p>LIDAR</p>
             </div>
             <div className={styles.lidarButton}>
-                <label className={styles.toggleSwitch}>
-                    <input
-                        type="checkbox"
-                        className={styles.toggleInput}
-                        checked={isChecked}
-                        onChange={handleCheckboxChange}
-                    />
-                    <span className={styles.slider}></span>
-                </label>
+              <label className={styles.toggleSwitch}>
+                <input
+                  type="checkbox"
+                  className={styles.toggleInput}
+                  checked={isChecked}
+                  onChange={handleCheckboxChange}
+                />
+                <span className={styles.slider}></span>
+              </label>
             </div>
           </div>
           <CloseButton onClick={onConfirmButtonClick} />
@@ -239,10 +322,10 @@ export default function Mapping() {
                   if (isChecked) {
                     setRobot(false, true, false);
                     console.log("Pause request sent");
-                    } else {
-                      alert("Please turn on LIDAR first.")
-                    }
-                  })}
+                  } else {
+                    alert("Please turn on LIDAR first.")
+                  }
+                })}
               >
                 <p>Pause</p>
                 <img src="/icons/1.svg" alt="" />
@@ -269,23 +352,22 @@ export default function Mapping() {
                 </p>
               </div>
             </div>
-
-            <div className={styles.centerDiv} id="map">
+            <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp}>
               <div className={styles.buttonNavigation}>
-                <div className={styles.zoomIn} onClick={zoomMap}>
+                <div className={styles.zoomIn} onClick={zoomIn}>
                   <img src="/icons/zoomin.svg" alt="" />
                 </div>
-                <div className={styles.zoomOut}>
+                <div className={styles.zoomOut} onClick={zoomOut}>
                   <img src="/icons/zoomout.svg" alt="" />
                 </div>
-                <div className={styles.restart}>
+                <div className={styles.restart} onClick={restart}>
                   <img src="/icons/reset.svg" alt="" />
                 </div>
               </div>
               {/* <img src="/icons/Frame.svg" alt="" /> */}
             </div>
           </div>
-          <Footer status={false} />
+          {/* <Footer status={false} /> */}
         </div>
       </div>
     </>
