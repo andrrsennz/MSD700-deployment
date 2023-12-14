@@ -330,6 +330,36 @@
     height: 100%;
 }
 
+.centerDiv .buttonNavigation {
+    display: flex;
+    flex-direction: column;
+    height: 115px;
+    width: 37px;
+    /* background-color: red; */
+    position: absolute;
+    z-index: 10;
+    gap: 10px;
+
+    margin-left: 970px;
+    margin-top: 25px;
+
+}
+
+.centerDiv .buttonNavigation div {
+    height: 37px;
+    width: 37px;
+    background-color: #0C98B4;
+    border: 5px solid #60E3D5;
+    border-radius: 5px;
+    padding: 4px;
+}
+
+.centerDiv .buttonNavigation div:hover {
+    background-color: #8DAAC0;
+    cursor: pointer;
+}
+
+
 @media (max-width: 1439px) {
     .mapSection {
         position: relative;
