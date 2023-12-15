@@ -12,9 +12,9 @@ export default function Home(): JSX.Element {
   const router = useRouter();
 
   if (typeof window !== "undefined") {
-    // Code using localStorage
-    localStorage.getItem("mapIndex") === null
-      ? localStorage.setItem("mapIndex", "0") // Ensure setting string "0"
+    // Code using sessionStorage
+    sessionStorage.getItem("mapIndex") === null
+      ? sessionStorage.setItem("mapIndex", "-1") // Ensure setting string "0"
       : "";
   }
 
@@ -24,7 +24,7 @@ export default function Home(): JSX.Element {
   const onProceedButtonClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
     const ip_address = (document.getElementById("ipAddress") as HTMLInputElement).value
-    localStorage.setItem("ip_address", ip_address);
+    sessionStorage.setItem("ip_address", ip_address);
     setShowUtilSection(true);
   };
 

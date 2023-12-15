@@ -101,7 +101,7 @@ export default function Mapping() {
     setIsChecked(event.target.checked);
     // isChecked === false ? changeStatus("Idle") : "";
     if (event.target.checked) {
-      setOwnMap(true, localStorage.getItem("mapName") || '');
+      setOwnMap(true, sessionStorage.getItem("mapName") || '');
       setLidar(true, true);
     } else {
       setOwnMap(false, '');
@@ -122,7 +122,7 @@ export default function Mapping() {
     // Connect to ROS.
     const ROSLIB = (window as any).ROSLIB;
     ros = new ROSLIB.Ros({
-      url: `ws://${localStorage.getItem("ip_address")}:9090`,
+      url: `ws://${sessionStorage.getItem("ip_address")}:9090`,
     });
 
     // Handle ROS connection errors

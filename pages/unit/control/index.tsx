@@ -17,9 +17,9 @@ const Control: React.FC = () => {
   useEffect(() => {
     // storing input name
     setMapIndex(
-      localStorage.getItem('mapIndex') === null
+      sessionStorage.getItem('mapIndex') === null
         ? -1
-        : parseInt(localStorage.getItem('mapIndex') || '0', 10)
+        : parseInt(sessionStorage.getItem('mapIndex') || '0', 10)
     );
 
     console.log(mapIndex);

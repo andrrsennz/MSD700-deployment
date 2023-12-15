@@ -20,14 +20,14 @@ export default function Database(): JSX.Element {
     const router = useRouter();
 
     const initialCheckedIndex =
-        typeof window !== 'undefined' ? localStorage.getItem('mapIndex') : '-1';
+        typeof window !== 'undefined' ? sessionStorage.getItem('mapIndex') : '-1';
     const parsedInitialIndex = initialCheckedIndex !== null ? parseInt(initialCheckedIndex, 10) : null;
     const [checkedIndex, setCheckedIndex] = useState<number | null>(parsedInitialIndex);
 
     let mapIndex: number = -1;
 
-    if (typeof window !== 'undefined' && window.localStorage) {
-        mapIndex = parseInt(localStorage.getItem('mapIndex') || '', 10);
+    if (typeof window !== 'undefined' && window.sessionStorage) {
+        mapIndex = parseInt(sessionStorage.getItem('mapIndex') || '', 10);
     }
 
     const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
@@ -151,13 +151,13 @@ export default function Database(): JSX.Element {
     const handleCheckboxChange = (index: string) => {
         if (mapIndex == startIndex + parseInt(index)) {
             console.log("nnnn");
-            localStorage.setItem("mapIndex", "-1");
+            sessionStorage.setItem("mapIndex", "-1");
             setCheckedIndex(-1);
         } else {
             console.log("ppp");
             setCheckedIndex(startIndex + parseInt(index));
-            localStorage.setItem("mapIndex", String(startIndex + parseInt(index)));
-            localStorage.setItem("mapName", data[startIndex + parseInt(index)].map_name)
+            sessionStorage.setItem("mapIndex", String(startIndex + parseInt(index)));
+            sessionStorage.setItem("mapName", data[startIndex + parseInt(index)].map_name)
         }
     };
 
