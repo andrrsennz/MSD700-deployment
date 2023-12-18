@@ -7,7 +7,12 @@ git clone https://github.com/itbdelaboprogramming/ROS-dashboard-next-ts
 
 ## Get into the directory using
 ```bash
-cd map-ts
+cd ROS-dashboard-next-ts
+```
+## Create environment variables
+```bash
+cp .env.template .env.local
+# open .env.local and fill required variables
 ```
 
 ## Install all dependencies
