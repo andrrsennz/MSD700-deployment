@@ -16,7 +16,7 @@ export default function Mapping() {
   const [savingConfirmDialog, setSavingConfirmDialog] = useState<boolean>(false);
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [status, setStatus] = useState<string>("Idle");
-  const [backendUrl, setBackendUrl] = useState<string>("http://localhost:5000");
+  const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");
 
   const onConfirmButtonClick = () => {
     setShowConfirmClosePageDialog(true);
@@ -122,7 +122,7 @@ export default function Mapping() {
     // Connect to ROS.
     const ROSLIB = (window as any).ROSLIB;
     ros = new ROSLIB.Ros({
-      url: `ws://${sessionStorage.getItem("ip_address")}:9090`,
+      url: process.env.WS_ROSBRIDGE_URL,
     });
 
     // Handle ROS connection errors

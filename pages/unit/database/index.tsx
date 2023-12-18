@@ -38,7 +38,7 @@ export default function Database(): JSX.Element {
     const [deleteItemConfirm, setDeleteItemConfirm] = useState<boolean>(false);
     const [indexDelete, setIndexDelete] = useState<number>(0);
     const [searchQuery, setSearchQuery] = useState<string>('');
-    const [backendUrl, setBackendUrl] = useState<string>('http://localhost:5000');
+    const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || 'http://localhost:5000');
     const [isEditing, setIsEditing] = useState<Record<number, boolean>>({});
 
     const itemsPerPage = 10;

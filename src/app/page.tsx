@@ -23,8 +23,8 @@ export default function Home(): JSX.Element {
 
   const onProceedButtonClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
-    const ip_address = (document.getElementById("ipAddress") as HTMLInputElement).value
-    sessionStorage.setItem("ip_address", ip_address);
+    // const ip_address = (document.getElementById("ipAddress") as HTMLInputElement).value
+    // sessionStorage.setItem("ip_address", ip_address);
     setShowUtilSection(true);
   };
 
@@ -82,7 +82,7 @@ export default function Home(): JSX.Element {
                   />
                 </div>
 
-                <div className="inputUnit">
+                {/* <div className="inputUnit">
                   <label htmlFor="ipAddress">IP Address</label>
                   <p className="separateElement">:</p>
                   <input
@@ -92,7 +92,7 @@ export default function Home(): JSX.Element {
                     defaultValue="10.147.17.198"
                     required
                   />
-                </div>
+                </div> */}
                 <button
                   type="submit" // Specify the type as submit
                   onClick={onProceedButtonClick}
