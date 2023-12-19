@@ -8,6 +8,13 @@ import MapSaving from "../../components/map-saving/mapSaving";
 import ConfirmSaving from "../../components/confirm-saving-mapping/confirmSaving";
 import axios from "axios";
 
+var ros: any
+var viewer: any
+var paN: any
+var movecoor: any = [];
+var isDrag = false;
+var startcoor: any = [];
+
 export default function Mapping() {
   const [showConfirmClosePageDialog, setShowConfirmClosePageDialog] =
     useState<boolean>(false);
@@ -110,13 +117,6 @@ export default function Mapping() {
   };
 
   const mapRef = useRef<HTMLDivElement>(null);
-
-  var ros: any
-  var viewer: any
-  var paN: any
-  var movecoor: any = [];
-  var isDrag = false;
-  var startcoor: any = [];
 
   useEffect(() => {
     // Connect to ROS.

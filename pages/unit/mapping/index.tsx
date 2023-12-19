@@ -11,6 +11,13 @@ import axios from "axios";
 
 interface MappingProps { }
 
+var ros: any
+var viewer: any
+var paN: any
+var movecoor: any = [];
+var isDrag = false;
+var startcoor: any = [];
+
 export default function Mapping(props: MappingProps): JSX.Element {
     const [showConfirmClosePageDialog, setShowConfirmClosePageDialog] =
         useState<boolean>(false);
@@ -92,13 +99,6 @@ export default function Mapping(props: MappingProps): JSX.Element {
     };
 
     const mapRef = useRef<HTMLDivElement>(null);
-
-    var ros: any
-    var viewer: any
-    var paN: any
-    var movecoor: any = [];
-    var isDrag = false;
-    var startcoor: any = [];
 
     useEffect(() => {
         // Connect to ROS.
