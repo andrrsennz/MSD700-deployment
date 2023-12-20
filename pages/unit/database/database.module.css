@@ -147,6 +147,10 @@
 
 }
 
+.theTable .header .fileSize {
+    width: 100px;
+}
+
 .theTable td {
     height: 50px;
     color: #D0E1E7;
@@ -168,6 +172,8 @@
 .theTable .sortableHeader {
     align-items: center;
     padding-right: 20px;
+
+    width: 300px;
 }
 
 /* CSS untuk header konten (teks dan gambar) */
@@ -457,13 +463,13 @@
         margin-top: 0;
     }
 
-    .statusSection{
+    .statusSection {
         /* background-color: red; */
         margin-top: 5px;
         /* display: none; */
     }
 
-    .navigation{
+    .navigation {
         width: 780px;
     }
 

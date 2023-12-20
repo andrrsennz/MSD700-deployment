@@ -250,17 +250,17 @@ export default function Database(): JSX.Element {
                 })
                     .then(response => {
                         console.log('PGM Data Update Response:', response);
-                        if (response.status === 200)  {
+                        if (response.status === 200) {
                             axios.get(`${backendUrl}/api/pgm_data`)
-                            .then(res =>{
-                                const data = res.data.data
-                                setData(data);
-                                alert("Map name updated successfully");
-                            })
-                            .catch(err => {
-                                alert("Error refreshing data");
-                            })
-                        } 
+                                .then(res => {
+                                    const data = res.data.data
+                                    setData(data);
+                                    alert("Map name updated successfully");
+                                })
+                                .catch(err => {
+                                    alert("Error refreshing data");
+                                })
+                        }
                         else {
                             alert("Map failed to update")
                         }
@@ -349,7 +349,7 @@ export default function Database(): JSX.Element {
                                             </div>
                                         </th>
                                         <th>File Type</th>
-                                        <th>File Size</th>
+                                        <th className={styles.fileSize}>File Size</th>
                                         <th className={styles.selectedMap}>Selected Map to Load</th>
                                         <th>Delete</th>
                                     </tr>
@@ -375,7 +375,7 @@ export default function Database(): JSX.Element {
 
                                             <td>{item.modified_time}</td>
                                             <td>{item.file_type}</td>
-                                            <td>{item.file_size}</td>
+                                            <td className={styles.fileSize}>{item.file_size}</td>
                                             <td className={`${styles.dark} `}>
                                                 <div className={`${styles.inputContainer}`}>
                                                     <input
