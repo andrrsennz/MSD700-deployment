@@ -240,14 +240,9 @@ export default function Database(): JSX.Element {
 
     const updateMapName = (index: number) => {
         const inputElement = document.getElementById(`mapNameInput${index}`);
-
-        console.log(inputElement);
-
-
         if (inputElement instanceof HTMLInputElement) {
+            const oldName = data[startIndex + index].map_name;
             const newName = inputElement.value;
-            const oldName = data[index].map_name;
-
             if (newName !== oldName) {
                 axios.put(`${backendUrl}/api/pgm_data`, {
                     map_name: oldName,
@@ -260,6 +255,7 @@ export default function Database(): JSX.Element {
                             .then(res =>{
                                 const data = res.data.data
                                 setData(data);
+                                alert("Map name updated successfully");
                             })
                             .catch(err => {
                                 alert("Error refreshing data");
