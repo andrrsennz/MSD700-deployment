@@ -8,6 +8,7 @@ import MapSaving from "../../../components/map-saving/mapSaving";
 import ConfirmSaving from "../../../components/confirm-saving-mapping/confirmSaving";
 import Script from "next/script";
 import axios from "axios";
+import Head from "next/head";
 
 interface MappingProps { }
 
@@ -27,6 +28,9 @@ export default function Mapping(props: MappingProps): JSX.Element {
     const [isChecked, setIsChecked] = useState<boolean>(false);
     const [status, setStatus] = useState<string>("Idle");
     const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");
+    const [count, setcount] = useState<Number>(0);
+    // var count = 0;
+
 
     const onConfirmButtonClick = (): void => {
         setShowConfirmClosePageDialog(true);
@@ -57,12 +61,12 @@ export default function Mapping(props: MappingProps): JSX.Element {
             enable: enable,
             use_own_map: use_own_map
         })
-        .then(function (response) {
-            console.log(response);
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     const setMapping = (start: boolean, pause: boolean, stop: boolean): void => {
@@ -71,22 +75,22 @@ export default function Mapping(props: MappingProps): JSX.Element {
             pause: pause,
             stop: stop
         })
-        .then(function (response) {
-            console.log(response);
-            if (start) {
-                changeStatus("On Progress");
-            }
-            else if (pause) {
-                changeStatus("Paused");
-            }
-            else if (stop) {
-                changeStatus("Idle");
-                alert("Map saved successfully");
-            }
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+            .then(function (response) {
+                console.log(response);
+                if (start) {
+                    changeStatus("On Progress");
+                }
+                else if (pause) {
+                    changeStatus("Paused");
+                }
+                else if (stop) {
+                    changeStatus("Idle");
+                    alert("Map saved successfully");
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -101,35 +105,34 @@ export default function Mapping(props: MappingProps): JSX.Element {
     const mapRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        // Connect to ROS.
         const ROSLIB = (window as any).ROSLIB;
         const ros = new ROSLIB.Ros({
-          url: process.env.WS_ROSBRIDGE_URL,
+            url: process.env.WS_ROSBRIDGE_URL,
         });
-    
+
         // Handle ROS connection errors
         ros.on('error', (error: Error) => {
-          console.error('Error connecting to ROS:', error);
+            console.error('Error connecting to ROS:', error);
         });
-    
+
         // Handle ROS connection closure
         ros.on('close', () => {
-          console.log('Connection to ROS is closed.');
+            console.log('Connection to ROS is closed.');
         });
-    
+
         // Create the main viewer.
         viewer = new (window as any).ROS2D.Viewer({
-          divID: 'map',
-          width: mapRef.current?.clientWidth || 1070,
-          height: mapRef.current?.clientHeight || 670,
-          background: "#7F7F7F",
+            divID: 'map',
+            width: mapRef.current?.clientWidth || 1070,
+            height: mapRef.current?.clientHeight || 670,
+            background: "#7F7F7F",
         });
 
         paN = new (window as any).ROS2D.PanView({
             rootObject: viewer.scene,
         });
-    
-        
+
+
         // Setup the map client.
         var gridClient = new (window as any).NAV2D.OccupancyGridClientNav({
             ros: ros,
@@ -138,16 +141,16 @@ export default function Mapping(props: MappingProps): JSX.Element {
             withOrientation: true,
             continuous: true
         });
-        
+
         var zoomView = new (window as any).ROS2D.ZoomView({
-          rootObject: viewer.scene
+            rootObject: viewer.scene
         });
 
         // Setup the map client if ROS is connected
         ros.on('connection', () => {
-          console.log('Connected to ROS websocket server.');
+            console.log('Connected to ROS websocket server.');
         });
-        
+
         return () => {
             // clean up when exiting the page
             ros.close();
@@ -160,8 +163,8 @@ export default function Mapping(props: MappingProps): JSX.Element {
 
     const zoomIn = () => {
         var zoom = new (window as any).ROS2D.ZoomView({
-          ros: ros,
-          rootObject: viewer.scene,
+            ros: ros,
+            rootObject: viewer.scene,
         });
         zoom.startZoom(250, 250);
         const zoomInConst = 1.2
@@ -169,11 +172,11 @@ export default function Mapping(props: MappingProps): JSX.Element {
         zoom.zoom(zoomInConst);
         zoomCrossConst.push(zoomInConst)
     }
-    
+
     const zoomOut = () => {
         var zoom = new (window as any).ROS2D.ZoomView({
-          ros: ros,
-          rootObject: viewer.scene,
+            ros: ros,
+            rootObject: viewer.scene,
         });
         zoom.startZoom(250, 250);
         const zoomOutConst = 0.8
@@ -181,11 +184,11 @@ export default function Mapping(props: MappingProps): JSX.Element {
         zoom.zoom(zoomOutConst);
         zoomCrossConst.push(zoomOutConst)
     }
-    
+
     const restart = () => {
         var zoom = new (window as any).ROS2D.ZoomView({
-          ros: ros,
-          rootObject: viewer.scene,
+            ros: ros,
+            rootObject: viewer.scene,
         });
         zoom.startZoom(250, 250);
         var result = zoomCrossConst.reduce((accumulator, currentValue) => accumulator * currentValue, 1);
@@ -193,29 +196,31 @@ export default function Mapping(props: MappingProps): JSX.Element {
         zoom.zoom(newConst)
         zoomCrossConst = []
     }
-    
+
     const whenMouseDown = (event: MouseEvent) => {
         paN.startPan(event.clientX, event.clientY);
         isDrag = true;
         startcoor[0] = event.clientX;
         startcoor[1] = event.clientY;
-        // paN.pan(event.clientX,event.clientY)
-        // onMouseMove(event)
     }
-    
+
     const whenMouseUp = (event: MouseEvent) => {
         isDrag = false;
     }
-    
+
     const whenMouseMove = (e: MouseEvent<HTMLDivElement>) => {
         if (isDrag) {
-          // Perform the action when the mouse is clicked and moving
-          paN.pan(e.clientX, e.clientY);
+            // Perform the action when the mouse is clicked and moving
+            paN.pan(e.clientX, e.clientY);
         }
     };
 
     return (
         <>
+            <Head>
+                <title>Mapping</title>
+                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+            </Head>
             <ConfirmElement
                 message="Are you sure you want to close this app?"
                 status={showConfirmClosePageDialog}
@@ -269,8 +274,10 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                     }`}
                                 onClick={() => {
                                     if (isChecked) {
-                                        console.log("Play request sent");
-                                        setMapping(true, false, false);
+                                        if (status != "On Progress") {
+                                            console.log("Play request sent");
+                                            setMapping(true, false, false);
+                                        }
                                     } else {
                                         alert("Please turn on the LIDAR before mapping.");
                                     }
@@ -280,12 +287,17 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                 <img src="/icons/3.svg" alt="" />
                             </div>
                             <div
-                                className={`${styles.pauseButton} ${status == "Idle" ? styles.buttonActive : ""
-                                    }`}
+                                className={`${styles.pauseButton} ${status != "Idle" && count != 0 || status == "Paused" && count  != 0 ? styles.buttonActive : ""}`}
                                 onClick={() => {
-                                    if (isChecked) {          
-                                        console.log("Pause request sent");       
-                                        setMapping(false, true, false);
+                                    if (isChecked) {
+                                        if (status != "Idle") {
+                                            setcount(1)
+                                            console.log("Pause request sent");
+                                            setMapping(false, true, false);
+                                        }
+                                        else {
+                                            alert("Cannot pause when Lidar button turned on");
+                                        }
                                     } else {
                                         alert("Please turn on the LIDAR before mapping.");
                                     }
@@ -298,8 +310,12 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                 className={styles.stopButton}
                                 onClick={() => {
                                     if (isChecked) {
-                                        console.log("Stop request sent");
-                                        setMapping(false, false, true);
+                                        if (status != "Idle") {
+                                            console.log("Stop request sent");
+                                            setMapping(false, false, true);
+                                        } else {
+                                            alert("Cannot stop when Lidar button turned on");
+                                        }
                                     }
                                     else {
                                         alert("Please turn on the LIDAR before mapping.");
@@ -315,18 +331,18 @@ export default function Mapping(props: MappingProps): JSX.Element {
                             </div>
                         </div>
                         <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp}>
-                        <div className={styles.buttonNavigation}>
-                            <div className={styles.zoomIn} onClick={zoomIn}>
-                            <img src="/icons/zoomin.svg" alt="" />
+                            <div className={styles.buttonNavigation}>
+                                <div className={styles.zoomIn} onClick={zoomIn}>
+                                    <img src="/icons/zoomin.svg" alt="" />
+                                </div>
+                                <div className={styles.zoomOut} onClick={zoomOut}>
+                                    <img src="/icons/zoomout.svg" alt="" />
+                                </div>
+                                <div className={styles.restart} onClick={restart}>
+                                    <img src="/icons/reset.svg" alt="" />
+                                </div>
                             </div>
-                            <div className={styles.zoomOut} onClick={zoomOut}>
-                            <img src="/icons/zoomout.svg" alt="" />
-                            </div>
-                            <div className={styles.restart} onClick={restart}>
-                            <img src="/icons/reset.svg" alt="" />
-                            </div>
-                        </div>
-                        {/* <img src="/icons/Frame.svg" alt="" /> */}
+                            {/* <img src="/icons/Frame.svg" alt="" /> */}
                         </div>
                     </div>
                     <Footer status={false} />

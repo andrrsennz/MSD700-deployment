@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import ConfirmDelete from '../../../components/confirm-delete/confirmDelete';
 import axios from 'axios';
+import Head from 'next/head';
 
 interface DataItem {
     map_name: string;
@@ -21,8 +22,11 @@ export default function Database(): JSX.Element {
 
     const initialCheckedIndex =
         typeof window !== 'undefined' ? sessionStorage.getItem('mapIndex') : '-1';
+    console.log("initialCheckedIndex : ", initialCheckedIndex);
     const parsedInitialIndex = initialCheckedIndex !== null ? parseInt(initialCheckedIndex, 10) : null;
+    console.log("parsedInitialIndex : ", parsedInitialIndex);
     const [checkedIndex, setCheckedIndex] = useState<number | null>(parsedInitialIndex);
+    console.log("checkedIndex : ", checkedIndex);
 
     let mapIndex: number = -1;
 
@@ -58,7 +62,6 @@ export default function Database(): JSX.Element {
             }
         }
         fetchData();
-        setCheckedIndex(0);
     }, []);
 
     function sortByDate(data: DataItem[], sortDateOrder: 'asc' | 'desc'): DataItem[] {
@@ -147,11 +150,9 @@ export default function Database(): JSX.Element {
 
     const handleCheckboxChange = (index: string) => {
         if (mapIndex == startIndex + parseInt(index)) {
-            console.log("nnnn");
             sessionStorage.setItem("mapIndex", "-1");
             setCheckedIndex(-1);
         } else {
-            console.log("ppp");
             setCheckedIndex(startIndex + parseInt(index));
             sessionStorage.setItem("mapIndex", String(startIndex + parseInt(index)));
             sessionStorage.setItem("mapName", data[startIndex + parseInt(index)].map_name)
@@ -280,6 +281,10 @@ export default function Database(): JSX.Element {
     return (
         <>
             {' '}
+            <Head>
+                <title>Database</title>
+                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+            </Head>
             <ConfirmElement
                 message="Are you sure you want to close this app?"
                 status={showConfirmDialog}

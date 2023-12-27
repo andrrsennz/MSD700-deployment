@@ -10,6 +10,7 @@ import ControlNonIndex from '../../../components/control-non-index/controlNonInd
 import ControlIndex from '../../../components/control-index/controlIndex';
 import { useDispatch, useSelector } from 'react-redux';
 import Script from 'next/script';
+import Head from 'next/head';
 
 const Control: React.FC = () => {
   const [mapIndex, setMapIndex] = useState<number>(-1);
@@ -42,6 +43,10 @@ const Control: React.FC = () => {
   return (
     <>
       {' '}
+      <Head>
+        <title>Control Mode</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       <ConfirmElement
         message="Are you sure you want to close this app?"
         status={showConfirmDialog}
