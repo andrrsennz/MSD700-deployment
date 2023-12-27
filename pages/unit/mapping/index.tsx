@@ -29,6 +29,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
     const [status, setStatus] = useState<string>("Idle");
     const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");
     const [count, setcount] = useState<Number>(0);
+    const [stopButton, setStopButton] = useState<boolean>(false);
     // var count = 0;
 
 
@@ -86,11 +87,14 @@ export default function Mapping(props: MappingProps): JSX.Element {
                 else if (stop) {
                     changeStatus("Idle");
                     alert("Map saved successfully");
+                    setStopButton(false)
                 }
             })
             .catch(function (error) {
                 console.log(error);
             });
+
+
     }
 
     const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -287,7 +291,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                 <img src="/icons/3.svg" alt="" />
                             </div>
                             <div
-                                className={`${styles.pauseButton} ${status != "Idle" && count != 0 || status == "Paused" && count  != 0 ? styles.buttonActive : ""}`}
+                                className={`${styles.pauseButton} ${status == "Paused" && count != 0 ? styles.buttonActive : ""}`}
                                 onClick={() => {
                                     if (isChecked) {
                                         if (status != "Idle") {
@@ -307,19 +311,21 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                 <img src="/icons/1.svg" alt="" />
                             </div>
                             <div
-                                className={styles.stopButton}
+                                id="stopButton"
+                                className={`${styles.stopButton} ${stopButton ? styles.buttonActive : ''}`}
                                 onClick={() => {
                                     if (isChecked) {
-                                        if (status != "Idle") {
+                                        if (status !== "Idle") {
+                                            setStopButton(true); // Toggle the active state
                                             console.log("Stop request sent");
                                             setMapping(false, false, true);
                                         } else {
                                             alert("Cannot stop when Lidar button turned on");
                                         }
-                                    }
-                                    else {
+                                    } else {
                                         alert("Please turn on the LIDAR before mapping.");
                                     }
+                                    // setStopButton(false);
                                 }}
                             >
                                 <p>Stop</p>
