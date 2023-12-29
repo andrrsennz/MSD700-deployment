@@ -22,11 +22,8 @@ export default function Database(): JSX.Element {
 
     const initialCheckedIndex =
         typeof window !== 'undefined' ? sessionStorage.getItem('mapIndex') : '-1';
-    console.log("initialCheckedIndex : ", initialCheckedIndex);
     const parsedInitialIndex = initialCheckedIndex !== null ? parseInt(initialCheckedIndex, 10) : null;
-    console.log("parsedInitialIndex : ", parsedInitialIndex);
     const [checkedIndex, setCheckedIndex] = useState<number | null>(parsedInitialIndex);
-    console.log("checkedIndex : ", checkedIndex);
 
     let mapIndex: number = -1;
 
@@ -44,12 +41,6 @@ export default function Database(): JSX.Element {
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || 'http://localhost:5000');
     const [isEditing, setIsEditing] = useState<Record<number, boolean>>({});
-
-    const itemsPerPage = 10;
-    const totalItems = data.length;
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
 
     useEffect(() => {
         async function fetchData() {
@@ -229,9 +220,30 @@ export default function Database(): JSX.Element {
     };
 
     const filteredData = data.filter((item) => {
-        // Modify the conditions based on your data structure and search logic
         return item.map_name.toLowerCase().includes(searchQuery.toLowerCase());
     });
+
+
+
+    const itemsPerPage = 10;
+    const totalItems = filteredData.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    // Ensure currentPage doesn't exceed totalPages when search is used
+    useEffect(() => {
+        if (currentPage > totalPages) {
+            setCurrentPage(totalPages);
+        }
+    }, [totalPages, currentPage]);
+
+    // Reset to the first page when the search query changes
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery]);
+
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
 
     const currentData = filteredData.slice(startIndex, endIndex);
 
@@ -276,6 +288,10 @@ export default function Database(): JSX.Element {
 
         setIsEditing({ ...isEditing, [index]: false });
     };
+
+    function getBaseName(fileName: any) {
+        return fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
+    }
 
 
     return (
@@ -364,17 +380,18 @@ export default function Database(): JSX.Element {
                                     {currentData.map((item, index) => (
                                         <tr key={index}>
                                             <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
+
                                             <td onDoubleClick={() => handleDoubleClick(index)}>
                                                 {isEditing[index] ? (
                                                     <input
                                                         type="text"
                                                         id={`mapNameInput${index}`} // Assign the ID here
-                                                        defaultValue={item.map_name}
+                                                        defaultValue={getBaseName(item.map_name)} // Remove the extension before editing
                                                         onBlur={() => updateMapName(index)}
                                                         autoFocus
                                                     />
                                                 ) : (
-                                                    item.map_name
+                                                    getBaseName(item.map_name) // Display the name without the extension
                                                 )}
                                             </td>
 
