@@ -255,7 +255,7 @@ export default function Database(): JSX.Element {
         const inputElement = document.getElementById(`mapNameInput${index}`);
         if (inputElement instanceof HTMLInputElement) {
             const oldName = data[startIndex + index].map_name;
-            const newName = inputElement.value;
+            const newName = `${inputElement.value}.pgm`;
             if (newName !== oldName) {
                 axios.put(`${backendUrl}/api/pgm_data`, {
                     map_name: oldName,
