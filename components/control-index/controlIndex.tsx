@@ -153,6 +153,7 @@ export default function Mapping() {
       rootObject: viewer.scene,
       viewer: viewer,
       withOrientation: true,
+      withCommand: true,
       continuous: true
     });
 
@@ -216,12 +217,13 @@ export default function Mapping() {
   }
 
   const whenMouseDown = (event: MouseEvent) => {
-    paN.startPan(event.clientX, event.clientY);
-    isDrag = true;
-    startcoor[0] = event.clientX;
-    startcoor[1] = event.clientY;
-    // paN.pan(event.clientX,event.clientY)
-    // onMouseMove(event)
+    if (event.button === 1) {
+      // middle click
+      paN.startPan(event.clientX, event.clientY);
+      isDrag = true;
+      startcoor[0] = event.clientX;
+      startcoor[1] = event.clientY;
+    }
   }
 
   const whenMouseUp = (event: MouseEvent) => {
