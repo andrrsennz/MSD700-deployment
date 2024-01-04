@@ -110,8 +110,11 @@ export default function Mapping() {
               <div className={styles.settingsButton}>
                 <img src="/icons/information-circle-svgrepo-com (1).svg" alt="" />
                 <p>
-                  Double-click to add the pinpoint <br/> Double-click again to remove
-                  the pinpoint
+                  Click, hold, and orient to add the pinpoint 
+                  <br /> 
+                  Double-click to remove the pinpoint
+                  <br />
+                  Hold middle mouse button to pan the map
                 </p>
               </div>
             </div>

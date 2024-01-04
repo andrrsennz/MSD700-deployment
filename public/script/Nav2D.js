@@ -295,6 +295,8 @@ NAV2D.Navigator = function(options) {
               });
               // send the goal
               sendGoal(pose);
+            } else if (mouseState === 'dblclick') {
+              that.cancelGoal();
             }
           }
       };
@@ -309,6 +311,9 @@ NAV2D.Navigator = function(options) {
 
       this.rootObject.addEventListener('stagemouseup', function(event) {
         mouseEventHandler(event,'up');
+      });
+      this.rootObject.addEventListener('dblclick', function(event) {
+        mouseEventHandler(event,'dblclick');
       });
     }
   } 
