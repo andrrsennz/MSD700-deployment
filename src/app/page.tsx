@@ -7,6 +7,7 @@ import ConfirmElement from "@/components/confirm-element/confirmElement";
 import { useRouter } from "next/navigation"; // Changed from "next/navigation"
 import CloseButton from "@/components/close-button/closeButton";
 import Footer from "@/components/footer/footer";
+import styles from "./page.module.css";
 
 export default function Home(): JSX.Element {
   const router = useRouter();
@@ -20,6 +21,8 @@ export default function Home(): JSX.Element {
 
   const [showUtilSection, setShowUtilSection] = useState<boolean>(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+
 
   const onProceedButtonClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
@@ -36,10 +39,6 @@ export default function Home(): JSX.Element {
     setShowConfirmDialog(false);
   };
 
-  const goToUnitPage = (): void => {
-    router.push("/unit/control");
-  };
-
   return (
     <>
       <ConfirmElement
@@ -47,118 +46,105 @@ export default function Home(): JSX.Element {
         status={showConfirmDialog}
         onCancel={handleCancel}
       />
-      <div className="centered-content">
-        <CloseButton onClick={onConfirmButtonClick} />
-        <div className="greetings">
-          <p>Hello Username, welcome to the MSD700 application!</p>
-        </div>
+      <CloseButton onClick={onConfirmButtonClick} />
+      <div className={styles.container}>
+        <div className={styles.parents}>
 
-        <div className="data-section">
-          <div>
-            <div className="label-section">
-              <p>
-                <span>
-                  <Image
-                    src="/icons/information-circle-svgrepo-com.svg"
-                    alt="Picture of the author"
-                    width={500}
-                    height={500}
-                  />
-                </span>
-                Please input your MSD700 unit data.
-              </p>
-            </div>
-            <div className="input-section">
-              <form action="#" method="post">
-                <div className="inputUnit">
-                  <label htmlFor="unitID">Unit ID</label>
-                  <p className="separateElement">:</p>
-                  <input
-                    type="text"
-                    id="unitID"
-                    name="unitID"
-                    defaultValue="Unit A"
-                    required
-                  />
-                </div>
-
-                {/* <div className="inputUnit">
-                  <label htmlFor="ipAddress">IP Address</label>
-                  <p className="separateElement">:</p>
-                  <input
-                    type="text"
-                    id="ipAddress"
-                    name="ipAddress"
-                    defaultValue="10.147.17.198"
-                    required
-                  />
-                </div> */}
-                <button
-                  type="submit" // Specify the type as submit
-                  onClick={onProceedButtonClick}
-                >
-                  Proceed
-                </button>
-              </form>
-            </div>
-          </div>
-
-          <div
-            className={`util_section ${showUtilSection === true ? "show-class" : "hide-class"
-              }`}
-          >
-            <Image
-              src="/images/MSD700.png"
-              alt="Picture of the author"
-              width={350}
-              height={264}
-            />
-            <div className="data_util">
-              <form action="#" method="post">
-                <div className="inputUnit">
-                  <label htmlFor="battery">Battery</label>
-                  <p className="separateElement">:</p>
-                  <input
-                    type="text"
-                    id="battery"
-                    name="battery"
-                    defaultValue="50%"
-                    required
-                  />
-                </div>
-
-                <div className="inputUnit">
-                  <label htmlFor="uptime">Uptime</label>
-                  <p className="separateElement">:</p>
-                  <input
-                    type="text"
-                    id="uptime"
-                    name="uptime"
-                    defaultValue="05:33:00"
-                    required
-                  />
-                </div>
-              </form>
-            </div>
-            <button
-              onClick={goToUnitPage}
-              aria-label="Submit form Button"
-              className="submit_button"
-            >
-              <p>Login</p>
+          <div className={styles.register}>
+            <p>Don't have an account or the unit hasn't been registered yet?</p>
+            <div className={styles.buttonRegister}>
               <Image
-                src="/icons/arrow-right-3-svgrepo-com (1).svg"
-                alt=""
-                width={500}
-                height={500}
+                src="/icons/user-register.svg"
+                alt="Picture of the author"
+                width={20}
+                height={20}
               />
-            </button>
+              <p>SIGN UP</p>
+            </div>
+          </div>
+
+          <div className={styles.centeredContent}>
+
+            <div className={styles.greetings}>
+              <p>Hello Username, welcome to the MSD700 application!</p>
+            </div>
+
+            <div className={styles.dataSection}>
+              <div className={styles.labelSection}>
+                <p>
+                  <span>
+                    <Image
+                      src="/icons/information-circle-svgrepo-com.svg"
+                      alt="Picture of the author"
+                      width={500}
+                      height={500}
+                    />
+                  </span>
+                  Please input your login data.
+                </p>
+              </div>
+              <div className={styles.inputSection}>
+                <form action="#" method="post">
+                  <div className={styles.inputUnit}>
+                    <label htmlFor="username">Username</label>
+                    <p className={styles.separateElement}>:</p>
+                    <input
+                      type="text"
+                      id="username"
+                      name="username"
+                      defaultValue=""
+                      required
+                    />
+                  </div>
+                  <div className={styles.inputUnit}>
+                    <label htmlFor="unitID">Unit ID</label>
+                    <p className={styles.separateElement}>:</p>
+                    <input
+                      type="text"
+                      id="unitID"
+                      name="unitID"
+                      defaultValue=""
+                      required
+                    />
+                  </div>
+                  <div className={styles.inputUnit}>
+                    <label htmlFor="password">Password</label>
+                    <p className={styles.separateElement}>:</p>
+                    <div className={styles.passwordInputContainer}>
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        id="password"
+                        name="password"
+                        defaultValue=""
+                        required
+                      />
+                      <div className={styles.passwordStatusButton} >
+                        <Image
+                          src="/icons/Eye.svg"
+                          alt="Picture of the author"
+                          width={30}
+                          height={30}
+                          onClick={() => setShowPassword(!showPassword)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                  className={styles.submitButton}
+                    type="submit" // Specify the type as submit
+                    onClick={onProceedButtonClick}
+                  >
+                    Proceed
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.theFooter}>
+            <Footer status={true} />
           </div>
         </div>
-      </div>
-
-      <div className="theFooter">
-        <Footer status={true} />
       </div>
     </>
   );
