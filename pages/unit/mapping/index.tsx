@@ -190,11 +190,22 @@ export default function Mapping(props: MappingProps): JSX.Element {
         zoomCrossConst.push(zoomOutConst)
     }
 
+    const rotateCW = () => {
+        var rotate = new (window as any).ROS2D.Rotate({
+            rootObject: viewer.scene
+          });
+          rotate.startRotate(20);
+    }
+
     const restart = () => {
         var zoom = new (window as any).ROS2D.ZoomView({
             ros: ros,
             rootObject: viewer.scene,
         });
+        var rotate = new (window as any).ROS2D.Rotate({
+            rootObject: viewer.scene
+          });
+        rotate.resetRotate();
         zoom.startZoom(250, 250);
         var result = zoomCrossConst.reduce((accumulator, currentValue) => accumulator * currentValue, 1);
         var newConst = 1 / result;
@@ -344,6 +355,9 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                 </div>
                                 <div className={styles.zoomOut} onClick={zoomOut}>
                                     <img src="/icons/zoomout.svg" alt="" />
+                                </div>
+                                <div className={styles.restart} onClick={rotateCW}>
+                                    <img src="/icons/rotate.svg" alt="" />
                                 </div>
                                 <div className={styles.restart} onClick={restart}>
                                     <img src="/icons/reset.svg" alt="" />
