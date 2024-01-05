@@ -1,0 +1,63 @@
+.carousel-container {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  /* Adjust the width as necessary */
+  height: 100%;
+  /* Adjust the height to fit the container */
+}
+
+.carousel-track {
+  display: flex;
+  flex-direction: column;
+  /* Stack children vertically */
+  position: absolute;
+  bottom: 0;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  /* Adjust to match the container's width */
+  height: 200%;
+  /* Double the height for continuous effect */
+  animation: slide 20s linear infinite;
+
+  &:hover {
+    animation-play-state: paused;
+  }
+}
+
+.carousel-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  /* &:hover {
+    transform: scale(0.9);
+    box-shadow: 5px 5px 8px rgba(222, 222, 222, 0.362),
+      10px 10px 8px rgba(152, 133, 133, 0.392),
+      15px 15px 8px rgba(139, 154, 139, 0.303);
+  } */
+  border-radius: 20%;
+  /* background: rgb(41, 40, 40); */
+}
+
+.carousel-card>img {
+  height: 80%;
+  width: 80%;
+  border-radius: 10%;
+}
+
+
+@keyframes slide {
+  0% {
+    bottom: -100%;
+    /* Start below the view */
+  }
+
+  100% {
+    bottom: 0;
+    /* End at the top of the view */
+  }
+}

@@ -9,17 +9,26 @@ import CloseButton from "@/components/close-button/closeButton";
 import Footer from "@/components/footer/footer";
 import styles from "./signup.module.css";
 
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Row from 'react-bootstrap/Row';
+import AutoplayCarousel from "../../components/carousel/AutoplayCarousel";
+
+import  { cardDetails } from "../../components/carousel/CarouselImages";
+import Head from "next/head";
+
 export default function Home(): JSX.Element {
     const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
 
     const [usernameColumn, setUsernameColumn] = useState<boolean>(false);
     const [isUsernameValid, setIsUsernameValid] = useState(true);
 
-    const [unitIdColumn, setUnitIdColumn] = useState<boolean>(false);
-    const [isUnitIdValid, setIsUnitIdValid] = useState(true);
+    const [fullNameColumn, setFullNameColumn] = useState<boolean>(false);
+    const [isFullNameValid, setIsFullNameValid] = useState(true);
 
-    const [ownerColumn, setOwnerColumn] = useState<boolean>(false);
-    const [isOwnerValid, setIsOwnerValid] = useState(true);
+
 
     const [emailColumn, setEmailColumn] = useState<boolean>(false);
     const [isEmailValid, setIsEmailValid] = useState(true);
@@ -47,8 +56,7 @@ export default function Home(): JSX.Element {
 
     const [formValues, setFormValues] = useState({
         username: '',
-        unitid: '',
-        owner: '',
+        fullname: '',
         email: '',
         password: '',
         confirmPassword: '',
@@ -64,14 +72,9 @@ export default function Home(): JSX.Element {
             setIsUsernameValid(true); // Assume the input is valid as the user types
         }
 
-        if (name === 'unitid') {
+        if (name === 'fullname') {
             setAttemptedSubmit(false);
-            setIsUnitIdValid(true); // Assume the input is valid as the user types
-        }
-
-        if (name === 'owner') {
-            setAttemptedSubmit(false);
-            setIsOwnerValid(true); // Assume the input is valid as the user types
+            setIsFullNameValid(true); // Assume the input is valid as the user types
         }
 
         if (name === 'email') {
@@ -81,13 +84,17 @@ export default function Home(): JSX.Element {
 
         }
 
-        if (name === 'password' ) {
+        if (name === 'password') {
             setAttemptedSubmit(false);
             setIsPasswordValid(true); // Assume the input is valid as the user types
+            setPasswordsMatch(formValues.password === (name === 'password' ? value : formValues.confirmPassword));
+
         }
 
         if (name === 'confirmPassword') {
-            setPasswordsMatch(formValues.password === (name === 'password' ? value : formValues.confirmPassword));
+            console.log(formValues.confirmPassword === (name === 'password' ? value : formValues.confirmPassword));
+
+            setPasswordsMatch(formValues.confirmPassword === (name === 'password' ? value : formValues.confirmPassword));
             setAttemptedSubmit(false);
             setIsConfirmPasswordValid(true); // Assume the input is valid as the user types
         }
@@ -102,60 +109,37 @@ export default function Home(): JSX.Element {
 
         // Check if the username is filled
         const isUsernameFilled = formValues.username.trim() !== '';
-        setIsUsernameValid(isUsernameFilled); // Update the state based on the username input
+        setIsUsernameValid(isUsernameFilled);
 
-        if (!isUsernameFilled) {
-            // If the username is not filled, don't proceed with form submission
+        const isFullNameFilled = formValues.fullname.trim() !== '';
+        setIsFullNameValid(isFullNameFilled);
+
+        const isEmailFilled = formValues.email.trim() !== '';
+        setIsEmailValid(isEmailFilled);
+
+        const isPasswordFilled = formValues.password.trim() !== '';
+        setIsPasswordValid(isPasswordFilled);
+
+        const isConfirmPasswordFilled = formValues.confirmPassword.trim() !== '';
+        setIsConfirmPasswordValid(isConfirmPasswordFilled);
+
+        // If any input is invalid, return early and don't proceed with form submission
+        if (!isUsernameFilled || !isFullNameFilled || !isEmailFilled || !isPasswordFilled || !isConfirmPasswordFilled) {
             return;
         }
 
-        const isUnitIdValid = formValues.unitid.trim() !== '';
-        setIsUnitIdValid(isUnitIdValid); // Update the state based on the username input
-
-        if (!isUnitIdValid) {
-            // If the username is not filled, don't proceed with form submission
-            return;
-        }
-
-        const isOwnerValid = formValues.owner.trim() !== '';
-        setIsOwnerValid(isOwnerValid); // Update the state based on the username input
-
-        if (!isOwnerValid) {
-            // If the username is not filled, don't proceed with form submission
-            return;
-        }
-
-        const isEmailValid = formValues.email.trim() !== '';
-        setIsEmailValid(isEmailValid); // Update the state based on the username input
-
-        if (!isEmailValid) {
-            // If the username is not filled, don't proceed with form submission
-            return;
-        }
-
-        const isPasswordValid = formValues.password.trim() !== '';
-        setIsPasswordValid(isPasswordValid); // Update the state based on the username input
-
-        if (!isPasswordValid) {
-            // If the username is not filled, don't proceed with form submission
-            return;
-        }
-
-        const isConfirmPasswordValid = formValues.confirmPassword.trim() !== '';
-        setIsConfirmPasswordValid(isConfirmPasswordValid); // Update the state based on the username input
-
-        if (!isConfirmPasswordValid) {
-            // If the username is not filled, don't proceed with form submission
-            return;
-        }
-
-        // Proceed with form submission if valid
+        // If all validations pass, proceed with form submission
         console.log(formValues);
     };
 
 
+
     return (
         <>
+             <Head>
+                <title>Sign Up</title>
+                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+            </Head>
             <ConfirmElement
                 message="Are you sure you want to close this app?"
                 status={showConfirmDialog}
@@ -166,32 +150,19 @@ export default function Home(): JSX.Element {
                 <div className={styles.parents}>
                     <div className={styles.leftSide}>
                         <div className={styles.imageAnimation}>
-                            <Image
-                                src="/images/animation-signup/Backhoe.png"
-                                alt="Picture of the author"
-                                width={200}
-                                height={200}
-                            />
-                            <Image
-                                src="/images/animation-signup/Bucket.png"
-                                alt="Picture of the author"
-                                width={200}
-                                height={200}
-                            />
-                            <Image
-                                src="/images/animation-signup/Dump.png"
-                                alt="Picture of the author"
-                                width={200}
-                                height={200}
-                            />  <Image
-                                src="/images/animation-signup/Blade.png"
-                                alt="Picture of the author"
-                                width={200}
-                                height={200}
-                            />
-
+                            <AutoplayCarousel></AutoplayCarousel>
                         </div>
-                        <div className="information"></div>
+                        <div className={styles.information}>
+                            <h1>MSD700</h1>
+                            <div className={styles.feature}>
+                                <h3>Features</h3>
+                                <ul>
+                                    <li>Blade / bucket type</li>
+                                    <li>Backhoe / dump type</li>
+                                    <li>Customized to suit on-site conditions</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                     <div className={styles.rightSide}>
                         <div className={styles.tagline}>
@@ -213,7 +184,7 @@ export default function Home(): JSX.Element {
                                             onChange={handleChange}
                                         />
                                         <div className={styles.iconStatusColumnButton}>
-                                            {attemptedSubmit && !isUsernameValid ? (
+                                            {!isUsernameValid ? (
                                                 <Image
                                                     src="/icons/info-alert.svg"
                                                     alt="Alert icon"
@@ -233,26 +204,26 @@ export default function Home(): JSX.Element {
                                 </div>
                                 <div >
                                     <div className={styles.label}>
-                                        <label htmlFor="unitid">Unit ID</label>
+                                        <label htmlFor="fullname">Full Name</label>
                                     </div>
-                                    <div className={`${styles.iconStatusColumn} ${!isUnitIdValid ? styles.invalid : ''}`}>
+                                    <div className={`${styles.iconStatusColumn} ${!isFullNameValid ? styles.invalid : ''}`}>
                                         <input
                                             type="text"
-                                            id="unitid"
-                                            name="unitid"
-                                            placeholder={isUnitIdValid ? "Unit ID" : "Fill in this data"}
+                                            id="fullname"
+                                            name="fullname"
+                                            placeholder={isFullNameValid ? "Fullname" : "Fill in this data"}
                                             required
                                             onChange={handleChange}
                                         />
                                         <div className={styles.iconStatusColumnButton}>
-                                            {attemptedSubmit && !isUnitIdValid ? (
+                                            {!isFullNameValid ? (
                                                 <Image
                                                     src="/icons/info-alert.svg"
                                                     alt="Alert icon"
                                                     width={30}
                                                     height={30}
                                                 />
-                                            ) : formValues.unitid.trim() !== '' ? (
+                                            ) : formValues.fullname.trim() !== '' ? (
                                                 <Image
                                                     src="/icons/Check-circle.svg"
                                                     alt="Check icon"
@@ -263,38 +234,7 @@ export default function Home(): JSX.Element {
                                         </div>
                                     </div>
                                 </div>
-                                <div >
-                                    <div className={styles.label}>
-                                        <label htmlFor="owner">Owner Name</label>
-                                    </div>
-                                    <div className={`${styles.iconStatusColumn} ${!isOwnerValid ? styles.invalid : ''}`}>
-                                        <input
-                                            type="text"
-                                            id="owner"
-                                            name="owner"
-                                            placeholder={isOwnerValid ? "Owner" : "Fill in this data"}
-                                            required
-                                            onChange={handleChange}
-                                        />
-                                        <div className={styles.iconStatusColumnButton}>
-                                            {attemptedSubmit && !isOwnerValid ? (
-                                                <Image
-                                                    src="/icons/info-alert.svg"
-                                                    alt="Alert icon"
-                                                    width={30}
-                                                    height={30}
-                                                />
-                                            ) : formValues.owner.trim() !== '' ? (
-                                                <Image
-                                                    src="/icons/Check-circle.svg"
-                                                    alt="Check icon"
-                                                    width={30}
-                                                    height={30}
-                                                />
-                                            ) : null}
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <div >
                                     <div className={styles.label}>
                                         <label htmlFor="email">Email</label>
@@ -309,7 +249,7 @@ export default function Home(): JSX.Element {
                                             onChange={handleChange}
                                         />
                                         <div className={styles.iconStatusColumnButton}>
-                                            {attemptedSubmit && !isEmailValid ? (
+                                            {!isEmailValid ? (
                                                 <Image
                                                     src="/icons/info-alert.svg"
                                                     alt="Alert icon"
@@ -347,7 +287,7 @@ export default function Home(): JSX.Element {
                                                 onChange={handleChange}
                                             />
                                             <div className={styles.iconStatusColumnButton}>
-                                                {attemptedSubmit && !isPasswordValid ? (
+                                                {!isPasswordValid ? (
                                                     <Image
                                                         src="/icons/info-alert.svg"
                                                         alt="Alert icon"
@@ -370,7 +310,7 @@ export default function Home(): JSX.Element {
                                         <div className={styles.label}>
                                             <label htmlFor="confirmPassword">Confirm Password</label>
                                         </div>
-                                        <div className={`${styles.iconStatusColumn} ${!passwordsMatch ? styles.invalid : ''}`}>
+                                        <div className={`${styles.iconStatusColumn} ${!passwordsMatch || formValues.confirmPassword.length == 0 ? styles.invalid : ''}`}>
                                             <input
                                                 type="text"
                                                 id="confirmPassword"
@@ -382,19 +322,24 @@ export default function Home(): JSX.Element {
                                                 className={!passwordsMatch ? styles.invalidInput : ''}
                                             />
                                             <div className={styles.iconStatusColumnButton}>
-                                                {formValues.confirmPassword && !passwordsMatch ? (
+                                                {!passwordsMatch || formValues.confirmPassword.length == 0 ? (
                                                     <Image
                                                         src="/icons/info-alert.svg"
                                                         alt="Alert icon"
                                                         width={30}
                                                         height={30}
                                                     />
-                                                ) : null}
+                                                ) : <Image
+                                                    src="/icons/Check-circle.svg"
+                                                    alt="Check icon"
+                                                    width={30}
+                                                    height={30}
+                                                />}
                                             </div>
                                         </div>
-                                        {!passwordsMatch && formValues.confirmPassword ? (
+                                        {!passwordsMatch ? (
                                             <div className={styles.tooltip}>
-                                                <p>Passwords do not match</p>
+                                                <p>Wrong Password</p>
                                             </div>
                                         ) : null}
                                     </div>
@@ -406,7 +351,7 @@ export default function Home(): JSX.Element {
                             </form>
                         </div>
                         <div className={styles.loginSection}>
-                            <p>I have an account and my unit is registered</p>
+                            <p>I have an account</p>
                             <div className={styles.buttonLogin}>
                                 <Image
                                     src="/icons/user-register.svg"

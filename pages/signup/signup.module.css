@@ -4,7 +4,9 @@
     background-size: cover;
     background-repeat: no-repeat;
     width: 100%;
+
     height: 100%;
+    /* max-height: 1024px; */
     top: 0;
     left: 0;
     position: absolute;
@@ -21,6 +23,7 @@
 
     max-width: 1440px;
     height: 100%;
+    max-height: 1024px;
 
     /* background-color: red; */
 
@@ -28,6 +31,7 @@
 }
 
 .leftSide {
+    /* padding-top: 30px; */
     width: 500px;
     border-right: 10px solid #60E3D5;
     background-color: #0C98B4;
@@ -35,11 +39,48 @@
     /* Add this line to position child elements */
     overflow: hidden;
     /* Add this line to hide overflow */
+
 }
 
-.leftSide .imageAnimation {}
+.leftSide .imageAnimation {
+    height: 750px;
+    padding-top: 30px;
+    /* background-color: red; */
+}
 
-.leftSide .information {}
+.leftSide .information {
+    align-items: center;
+    padding-left: 48px;
+    padding-right: 48px;
+    margin-top: 50px;
+}
+
+.leftSide .information h1 {
+    font-family: Inter;
+    /* font-size: 26px; */
+    font-weight: 700;
+    line-height: 31px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #ECF4F6;
+
+    text-align: center;
+}
+
+.leftSide .information h3 {
+    outline: none;
+    margin: 0;
+}
+
+.leftSide .information .feature {
+    font-family: Inter;
+    font-size: 19px;
+    font-weight: 600;
+    /* line-height: 31px; */
+    letter-spacing: 0em;
+    text-align: left;
+    color: #ECF4F6;
+}
 
 
 .rightSide {
@@ -48,6 +89,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-top: 52px;
 }
 
 .rightSide .tagline {
@@ -70,9 +112,12 @@
 
 /* ------- FORM SECTION --------------- */
 .formSection {
-    width: 800px;
-    display: f;
-    /* background-color: firebrick; */
+    max-width: 800px;
+    /* Maximum width */
+    width: 100%;
+    /* Make it take the full width of its parent by default */
+    margin: 0 auto;
+    /* Center it */
 }
 
 .formSection input {
@@ -127,9 +172,8 @@
 
 .passwordSection {
     display: flex;
-    /* width: 99%; */
-    /* background-color: red; */
     justify-content: space-between;
+    width: 100%;
 }
 
 .passwordSection .divPasswordSection {
@@ -190,7 +234,7 @@
 
     display: flex;
 
-    width: 450px;
+    width: 275px;
     height: 43px;
     justify-content: space-between;
 
@@ -233,4 +277,40 @@
     line-height: 17px;
     letter-spacing: 0em;
     text-align: left;
+}
+
+.form-control.is-valid,
+.was-validated .form-control:valid {
+    background-image: url("/icons/Stop.svg");
+}
+
+@media (max-width: 768px) {
+    .formSection {
+        width: 90%;
+        /* Slightly smaller width on smaller screens */
+        padding: 0 15px;
+        /* Add some padding */
+    }
+
+    .passwordSection .divPasswordSection,
+    .iconStatusColumn input {
+        width: 100%;
+        /* Full width on smaller screens */
+    }
+}
+
+@media (max-width: 1250px) {
+    .passwordSection {
+        flex-direction: column;
+        /* Stack children vertically */
+        align-items: center;
+        /* Center children */
+    }
+
+    .divPasswordSection {
+        width: 100%;
+
+        margin-bottom: 20px;
+        /* Add some space between the fields */
+    }
 }
