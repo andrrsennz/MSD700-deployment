@@ -128,24 +128,18 @@ export default function Mapping() {
     // Handle ROS connection errors
     ros.on('error', (error: Error) => {
       console.error('Error connecting to ROS:', error);
-      // You can handle the error here, such as displaying a message to the user.
-      // For example:
-      // showErrorMessage('Failed to connect to ROS. Please check the connection.');
     });
 
     // Handle ROS connection closure
     ros.on('close', () => {
       console.log('Connection to ROS is closed.');
-      // You can handle connection closure here if needed.
     });
 
     // Create the main viewer.
     viewer = new (window as any).ROS2D.Viewer({
       divID: 'map',
-      // width: mapRef.current?.clientWidth || 1070,
-      // height: mapRef.current?.clientHeight || 670,
-      width: 2500,
-      height: 2000,
+      width: mapRef.current?.clientWidth || 1070,
+      height: mapRef.current?.clientHeight || 1070,
       background: "#7F7F7F",
     });
 
@@ -154,19 +148,14 @@ export default function Mapping() {
     });
 
     // Setup the map client.
-    var gridClient = new (window as any).ROS2D.OccupancyGridClient({
+    var gridClient = new (window as any).NAV2D.OccupancyGridClientNav({
       ros: ros,
       rootObject: viewer.scene,
       viewer: viewer,
-      continuous: true,
+      withOrientation: true,
+      withCommand: true,
+      continuous: true
     });
-
-    gridClient.on('change', function () {
-      console.log("gridClient.currentGrid.pose.position.x : ", gridClient.currentGrid.pose.position.x);
-      console.log("gridClient.currentGrid.pose.position.y : ", gridClient.currentGrid.pose.position.y);
-      viewer.scaleToDimensions(gridClient.currentGrid.width, gridClient.currentGrid.height);
-      viewer.shift(-9, -43);
-    })
 
     var zoomView = new (window as any).ROS2D.ZoomView({
       rootObject: viewer.scene
@@ -228,12 +217,13 @@ export default function Mapping() {
   }
 
   const whenMouseDown = (event: MouseEvent) => {
-    paN.startPan(event.clientX, event.clientY);
-    isDrag = true;
-    startcoor[0] = event.clientX;
-    startcoor[1] = event.clientY;
-    // paN.pan(event.clientX,event.clientY)
-    // onMouseMove(event)
+    if (event.button === 1) {
+      // middle click
+      paN.startPan(event.clientX, event.clientY);
+      isDrag = true;
+      startcoor[0] = event.clientX;
+      startcoor[1] = event.clientY;
+    }
   }
 
   const whenMouseUp = (event: MouseEvent) => {
@@ -347,8 +337,11 @@ export default function Mapping() {
               <div className={styles.settingsButton}>
                 <img src="/icons/information-circle-svgrepo-com (1).svg" alt="" />
                 <p>
-                  Double-click to add the pinpoint <br /> Double-click again to remove
-                  the pinpoint
+                  Click, hold, and orient to add the pinpoint 
+                  <br /> 
+                  Double-click to remove the pinpoint
+                  <br />
+                  Hold middle mouse button to pan the map
                 </p>
               </div>
             </div>

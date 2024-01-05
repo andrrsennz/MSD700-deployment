@@ -142,7 +142,8 @@ export default function Mapping(props: MappingProps): JSX.Element {
             ros: ros,
             rootObject: viewer.scene,
             viewer: viewer,
-            withOrientation: true,
+            withOrientation: false,
+            withCommand: false,
             continuous: true
         });
 
