@@ -12,7 +12,7 @@ const CarouselItem: React.FC<CarouselItemProps> = ({ imgUrl, imgTitle }) => {
     return (
         <div className="carousel-card">
             <Image
-                src={imgUrl}
+                src={`${imgUrl}`}
                 alt="Picture of the author"
                 width={200}
                 height={200}

@@ -16,10 +16,12 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
 import AutoplayCarousel from "../../components/carousel/AutoplayCarousel";
 
-import  { cardDetails } from "../../components/carousel/CarouselImages";
+import { cardDetails } from "../../components/carousel/CarouselImages";
 import Head from "next/head";
 
-export default function Home(): JSX.Element {
+export default function Signup(): JSX.Element {
+    const router = useRouter();
+
     const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
 
     const [usernameColumn, setUsernameColumn] = useState<boolean>(false);
@@ -132,11 +134,15 @@ export default function Home(): JSX.Element {
         console.log(formValues);
     };
 
+    const goToSigninPage = (): void => {
+        router.push("/");
+    }
+
 
 
     return (
         <>
-             <Head>
+            <Head>
                 <title>Sign Up</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>
@@ -145,9 +151,10 @@ export default function Home(): JSX.Element {
                 status={showConfirmDialog}
                 onCancel={handleCancel}
             />
-            <CloseButton onClick={onConfirmButtonClick} />
+
             <div className={styles.container}>
                 <div className={styles.parents}>
+                    <CloseButton onClick={onConfirmButtonClick} />
                     <div className={styles.leftSide}>
                         <div className={styles.imageAnimation}>
                             <AutoplayCarousel></AutoplayCarousel>
@@ -352,7 +359,7 @@ export default function Home(): JSX.Element {
                         </div>
                         <div className={styles.loginSection}>
                             <p>I have an account</p>
-                            <div className={styles.buttonLogin}>
+                            <div className={styles.buttonLogin} onClick={goToSigninPage}>
                                 <Image
                                     src="/icons/user-register.svg"
                                     alt="Picture of the author"

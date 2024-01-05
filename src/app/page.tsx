@@ -39,6 +39,10 @@ export default function Home(): JSX.Element {
     setShowConfirmDialog(false);
   };
 
+  const goToSignUpPage = ():void=>{
+    router.push("/signup");
+  }
+
   return (
     <>
       <ConfirmElement
@@ -46,13 +50,13 @@ export default function Home(): JSX.Element {
         status={showConfirmDialog}
         onCancel={handleCancel}
       />
-      <CloseButton onClick={onConfirmButtonClick} />
+
       <div className={styles.container}>
         <div className={styles.parents}>
-
+          <CloseButton onClick={onConfirmButtonClick} />
           <div className={styles.register}>
             <p>Don't have an account or the unit hasn't been registered yet?</p>
-            <div className={styles.buttonRegister}>
+            <div className={styles.buttonRegister} onClick={goToSignUpPage}>
               <Image
                 src="/icons/user-register.svg"
                 alt="Picture of the author"
@@ -130,7 +134,7 @@ export default function Home(): JSX.Element {
                     </div>
                   </div>
                   <button
-                  className={styles.submitButton}
+                    className={styles.submitButton}
                     type="submit" // Specify the type as submit
                     onClick={onProceedButtonClick}
                   >
