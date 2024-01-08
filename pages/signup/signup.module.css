@@ -170,6 +170,40 @@
     color: #C66E87;
 }
 
+.formSection [type="password"] {
+    width: 99%;
+    height: 45px;
+    border-radius: 3px;
+    border: 2px solid #0567A6;
+
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19px;
+    letter-spacing: 0em;
+    text-align: left;
+
+    padding-left: 10px;
+
+}
+
+.formSection [type="password"]:valid {
+    border: 2px solid #60E3D5;
+    background-color: #ECF4F6;
+}
+
+.invalid [type="password"] {
+    border: 2px solid #C66E87;
+    background-color: #F6F0F0;
+    color: #C66E87;
+}
+
+.invalid [type="password"]:valid {
+    border: 2px solid #C66E87;
+    background-color: #F6F0F0;
+    color: #C66E87;
+}
+
 .passwordSection {
     display: flex;
     justify-content: space-between;

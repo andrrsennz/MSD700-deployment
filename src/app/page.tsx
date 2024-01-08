@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation"; // Changed from "next/navigation"
 import CloseButton from "@/components/close-button/closeButton";
 import Footer from "@/components/footer/footer";
 import styles from "./page.module.css";
+import axios from "axios";
 
 export default function Home(): JSX.Element {
   const router = useRouter();
@@ -28,6 +29,26 @@ export default function Home(): JSX.Element {
     event.preventDefault();
     // const ip_address = (document.getElementById("ipAddress") as HTMLInputElement).value
     // sessionStorage.setItem("ip_address", ip_address);
+    const username = document.getElementById("username") as HTMLInputElement;
+    const password = document.getElementById("password") as HTMLInputElement;
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:5000";
+    axios.post(`${backendUrl}/user/login`, {
+      username: username.value,
+      password: password.value
+    })
+    .then(function (response: any) {
+      if (response.status === 200) {
+        sessionStorage.setItem("token", response.data.token);
+        router.push("/unit/control");
+      }
+      else {
+        alert("Invalid username or password");
+      }
+    })
+    .catch(function (error: any) {
+      console.log(error);
+      alert("Invalid username or password");
+    })
     setShowUtilSection(true);
   };
 
@@ -96,17 +117,6 @@ export default function Home(): JSX.Element {
                       type="text"
                       id="username"
                       name="username"
-                      defaultValue=""
-                      required
-                    />
-                  </div>
-                  <div className={styles.inputUnit}>
-                    <label htmlFor="unitID">Unit ID</label>
-                    <p className={styles.separateElement}>:</p>
-                    <input
-                      type="text"
-                      id="unitID"
-                      name="unitID"
                       defaultValue=""
                       required
                     />

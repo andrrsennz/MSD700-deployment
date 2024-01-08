@@ -15,6 +15,7 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
 import AutoplayCarousel from "../../components/carousel/AutoplayCarousel";
+import axios from "axios";
 
 import { cardDetails } from "../../components/carousel/CarouselImages";
 import Head from "next/head";
@@ -49,6 +50,8 @@ export default function Signup(): JSX.Element {
 
     const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 
+    const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");
+
     const onConfirmButtonClick = (): void => {
         setShowConfirmDialog(true);
     };
@@ -71,7 +74,17 @@ export default function Signup(): JSX.Element {
         // If we are changing the username, reset the attemptedSubmit and set isUsernameValid to true
         if (name === 'username') {
             setAttemptedSubmit(false);
-            setIsUsernameValid(true); // Assume the input is valid as the user types
+            axios.post(`${backendUrl}/user/check-username`, {
+                username: value
+            })
+            .then(function(response: any) {
+                if (response.status === 200) {
+                    setIsUsernameValid(true);
+                }
+            })
+            .catch(function(error: any) {
+                setIsUsernameValid(false);
+            });
         }
 
         if (name === 'fullname') {
@@ -81,24 +94,45 @@ export default function Signup(): JSX.Element {
 
         if (name === 'email') {
             setAttemptedSubmit(false);
-            setIsEmailValid(true); // Assume the input is valid as the user types
-            setIsEmailFormatValid(emailRegex.test(value));
-
+            axios.post(`${backendUrl}/user/check-email`, {
+                email: value
+            })
+            .then(function(response: any) {
+                if (response.status === 200) {
+                    setIsEmailValid(true);
+                }
+            })
+            .catch(function(error: any) {
+                setIsEmailValid(false);
+            });
         }
 
         if (name === 'password') {
             setAttemptedSubmit(false);
-            setIsPasswordValid(true); // Assume the input is valid as the user types
-            setPasswordsMatch(formValues.password === (name === 'password' ? value : formValues.confirmPassword));
-
+            if (value === formValues.confirmPassword && value !== '' && formValues.confirmPassword !== '') {
+                setPasswordsMatch(true);
+                setIsPasswordValid(true);
+                setIsConfirmPasswordValid(true);
+            }
+            else {
+                setPasswordsMatch(false);
+                setIsConfirmPasswordValid(false);
+                setIsPasswordValid(false);
+            }
         }
 
         if (name === 'confirmPassword') {
-            console.log(formValues.confirmPassword === (name === 'password' ? value : formValues.confirmPassword));
-
-            setPasswordsMatch(formValues.confirmPassword === (name === 'password' ? value : formValues.confirmPassword));
             setAttemptedSubmit(false);
-            setIsConfirmPasswordValid(true); // Assume the input is valid as the user types
+            if (value === formValues.password && value !== '' && formValues.password !== '') {
+                setPasswordsMatch(true);
+                setIsPasswordValid(true);
+                setIsConfirmPasswordValid(true);
+            }
+            else{
+                setPasswordsMatch(false);
+                setIsConfirmPasswordValid(false);
+                setIsPasswordValid(false);
+            }
         }
 
 
@@ -109,29 +143,30 @@ export default function Signup(): JSX.Element {
         // Mark that a submit attempt has been made
         setAttemptedSubmit(true);
 
-        // Check if the username is filled
-        const isUsernameFilled = formValues.username.trim() !== '';
-        setIsUsernameValid(isUsernameFilled);
-
         const isFullNameFilled = formValues.fullname.trim() !== '';
         setIsFullNameValid(isFullNameFilled);
 
-        const isEmailFilled = formValues.email.trim() !== '';
-        setIsEmailValid(isEmailFilled);
-
-        const isPasswordFilled = formValues.password.trim() !== '';
-        setIsPasswordValid(isPasswordFilled);
-
-        const isConfirmPasswordFilled = formValues.confirmPassword.trim() !== '';
-        setIsConfirmPasswordValid(isConfirmPasswordFilled);
-
         // If any input is invalid, return early and don't proceed with form submission
-        if (!isUsernameFilled || !isFullNameFilled || !isEmailFilled || !isPasswordFilled || !isConfirmPasswordFilled) {
+        if (!isUsernameValid || !isFullNameFilled || !isEmailValid || !isPasswordValid || !isConfirmPasswordValid) {
             return;
         }
 
         // If all validations pass, proceed with form submission
-        console.log(formValues);
+        axios.post(`${backendUrl}/user/register`, {
+            username: formValues.username,
+            full_name: formValues.fullname,
+            email: formValues.email,
+            password: formValues.password,
+        })
+        .then(function(response: any) {
+            if (response.status === 201) {
+                alert("User created successfully");
+                router.push("/");
+            }
+        })
+        .catch(function(error: any) {
+            alert("Error creating user");
+        })
     };
 
     const goToSigninPage = (): void => {
@@ -286,7 +321,7 @@ export default function Signup(): JSX.Element {
                                         </div>
                                         <div className={`${styles.iconStatusColumn} ${!isPasswordValid ? styles.invalid : ''}`}>
                                             <input
-                                                type="text"
+                                                type="password"
                                                 id="password"
                                                 name="password"
                                                 placeholder={isPasswordValid ? "Password" : "Fill in this data"}
@@ -319,7 +354,7 @@ export default function Signup(): JSX.Element {
                                         </div>
                                         <div className={`${styles.iconStatusColumn} ${!passwordsMatch || formValues.confirmPassword.length == 0 ? styles.invalid : ''}`}>
                                             <input
-                                                type="text"
+                                                type="password"
                                                 id="confirmPassword"
                                                 name="confirmPassword"
                                                 placeholder="Confirm Password"
