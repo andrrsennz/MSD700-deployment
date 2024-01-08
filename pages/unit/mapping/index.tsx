@@ -357,10 +357,10 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                     <img src="/icons/zoomout.svg" alt="" />
                                 </div>
                                 <div className={styles.restart} onClick={rotateCW}>
-                                    <img src="/icons/rotate.svg" alt="" />
+                                    <img src="/icons/Reload.svg" alt="" />
                                 </div>
                                 <div className={styles.restart} onClick={restart}>
-                                    <img src="/icons/reset.svg" alt="" />
+                                    <img src="/icons/new reload.svg" alt="" />
                                 </div>
                             </div>
                             {/* <img src="/icons/Frame.svg" alt="" /> */}

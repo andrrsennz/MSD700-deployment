@@ -354,7 +354,7 @@ export default function Mapping() {
                   <img src="/icons/zoomout.svg" alt="" />
                 </div>
                 <div className={styles.restart} onClick={restart}>
-                  <img src="/icons/reset.svg" alt="" />
+                  <img src="/icons/Reload.svg" alt="" />
                 </div>
               </div>
               {/* <img src="/icons/Frame.svg" alt="" /> */}

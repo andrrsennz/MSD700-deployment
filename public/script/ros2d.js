@@ -476,32 +476,82 @@ ROS2D.Grid.prototype.__proto__ = createjs.Shape.prototype;
  *   * fillColor (optional) - the createjs color for the fill
  *   * pulse (optional) - if the marker should "pulse" over time
  */
+// ROS2D.NavigationArrow = function (options) {
+//   var that = this;
+//   options = options || {};
+//   var size = 10;
+//   var strokeSize = 3;
+//   var strokeColor = options.strokeColor || createjs.Graphics.getRGB(0, 0, 0);
+//   var fillColor = options.fillColor || createjs.Graphics.getRGB(255, 0, 0);
+//   var pulse = options.pulse;
+
+//   // draw the arrow
+//   var graphics = new createjs.Graphics();
+//   // line width
+//   graphics.setStrokeStyle(strokeSize);
+//   graphics.moveTo(-size / 2.0, -size / 2.0);
+//   graphics.beginStroke(strokeColor);
+//   graphics.beginFill(fillColor);
+//   graphics.lineTo(size, 0);
+//   graphics.lineTo(-size / 2.0, size / 2.0);
+//   graphics.closePath();
+//   graphics.endFill();
+//   graphics.endStroke();
+
+//   // create the shape
+//   createjs.Shape.call(this, graphics);
+
+//   // check if we are pulsing
+//   if (pulse) {
+//     // have the model "pulse"
+//     var growCount = 0;
+//     var growing = true;
+//     createjs.Ticker.addEventListener('tick', function () {
+//       if (growing) {
+//         that.scaleX *= 1.035;
+//         that.scaleY *= 1.035;
+//         growing = (++growCount < 10);
+//       } else {
+//         that.scaleX /= 1.035;
+//         that.scaleY /= 1.035;
+//         growing = (--growCount < 0);
+//       }
+//     });
+//   }
+// };
+// ROS2D.NavigationArrow.prototype.__proto__ = createjs.Shape.prototype;
+
 ROS2D.NavigationArrow = function (options) {
   var that = this;
   options = options || {};
-  var size = 10;
-  var strokeSize = 3;
-  var strokeColor = options.strokeColor || createjs.Graphics.getRGB(0, 0, 0);
-  var fillColor = options.fillColor || createjs.Graphics.getRGB(255, 0, 0);
   var pulse = options.pulse;
+  var imageUrl = options.imageUrl || "/icons/tank-navy-100.png"; // Provide a default or ensure it's passed in options
 
-  // draw the arrow
-  var graphics = new createjs.Graphics();
-  // line width
-  graphics.setStrokeStyle(strokeSize);
-  graphics.moveTo(-size / 2.0, -size / 2.0);
-  graphics.beginStroke(strokeColor);
-  graphics.beginFill(fillColor);
-  graphics.lineTo(size, 0);
-  graphics.lineTo(-size / 2.0, size / 2.0);
-  graphics.closePath();
-  graphics.endFill();
-  graphics.endStroke();
+  // Load the image
+  var arrowImage = new Image();
+  arrowImage.src = imageUrl;
+  arrowImage.onload = function() {
+    // Create a bitmap once the image is loaded
+    var bitmap = new createjs.Bitmap(arrowImage);
+    
+    // Adjust the registration point and the scale according to the size
+    bitmap.regX = arrowImage.width / 2;
+    bitmap.regY = arrowImage.height / 2;
+    bitmap.scaleX = bitmap.scaleY = options.size / arrowImage.width; // This assumes you want to scale the image to a specific size
+    
+    // Add bitmap to the stage
+    that.addChild(bitmap);
 
-  // create the shape
-  createjs.Shape.call(this, graphics);
+    // Update the stage if it exists
+    if (that.getStage()) {
+      that.getStage().update();
+    }
+  };
 
-  // check if we are pulsing
+  // Inherit from createjs.Container
+  createjs.Container.call(this);
+
+  // Check if we are pulsing
   if (pulse) {
     // have the model "pulse"
     var growCount = 0;
@@ -519,7 +569,11 @@ ROS2D.NavigationArrow = function (options) {
     });
   }
 };
-ROS2D.NavigationArrow.prototype.__proto__ = createjs.Shape.prototype;
+
+// Correct way to set up prototype chain in modern JavaScript
+ROS2D.NavigationArrow.prototype = Object.create(createjs.Container.prototype);
+ROS2D.NavigationArrow.prototype.constructor = ROS2D.NavigationArrow;
+
 
 /**
  * @fileOverview
