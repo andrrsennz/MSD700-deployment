@@ -45,7 +45,11 @@ export default function Database(): JSX.Element {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response_axios = await axios.get(`${backendUrl}/api/pgm_data`);
+                const response_axios = await axios.get(`${backendUrl}/api/pgm_data`, {
+                    headers: {
+                        'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
+                    }
+                });
                 const data = response_axios.data.data;
                 setData(data);
             } catch (error) {
@@ -190,7 +194,11 @@ export default function Database(): JSX.Element {
                     .then((response) => {
                         console.log(response)
                         // Update data
-                        axios.get(`${backendUrl}/api/pgm_data`)
+                        axios.get(`${backendUrl}/api/pgm_data`, {
+                                headers: {
+                                    'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
+                                }
+                            })
                             .then((response) => {
                                 console.log(response);
                                 setData(response.data.data);
@@ -264,7 +272,11 @@ export default function Database(): JSX.Element {
                     .then(response => {
                         console.log('PGM Data Update Response:', response);
                         if (response.status === 200) {
-                            axios.get(`${backendUrl}/api/pgm_data`)
+                            axios.get(`${backendUrl}/api/pgm_data`, {
+                                    headers: {
+                                        'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
+                                    }
+                                })
                                 .then(res => {
                                     const data = res.data.data
                                     setData(data);

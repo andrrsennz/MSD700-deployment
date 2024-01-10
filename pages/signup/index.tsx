@@ -34,7 +34,6 @@ export default function Signup(): JSX.Element {
 
     const [emailColumn, setEmailColumn] = useState<boolean>(false);
     const [isEmailValid, setIsEmailValid] = useState(true);
-    const [isEmailFormatValid, setIsEmailFormatValid] = useState(true);
     const [isEmailRegistered, setIsEmailRegistered] = useState<boolean>(false);
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple email regex for demonstration
@@ -45,8 +44,6 @@ export default function Signup(): JSX.Element {
 
     const [confirmPasswordColumn, setConfirmPasswordColumn] = useState<boolean>(false);
     const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(true);
-
-    const [passwordsMatch, setPasswordsMatch] = useState(true);
 
     const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 
@@ -80,7 +77,12 @@ export default function Signup(): JSX.Element {
             })
                 .then(function (response: any) {
                     if (response.status === 200) {
+                        setIsUsernameRegistered(false);   
                         setIsUsernameValid(true);
+                    }
+                    else {
+                        setIsUsernameRegistered(true)
+                        setIsUsernameValid(false);
                     }
                 })
                 .catch(function (error: any) {
@@ -96,31 +98,34 @@ export default function Signup(): JSX.Element {
 
         if (name === 'email') {
             setAttemptedSubmit(false);
-            setIsEmailRegistered(false)
-
-
             axios.post(`${backendUrl}/user/check-email`, {
                 email: value
             })
                 .then(function (response) {
-                    setIsEmailValid(true);
-                    setIsEmailRegistered(true)
+                    if (response.status === 200) {
+                        setIsEmailValid(true);
+                        setIsEmailRegistered(false)
+                    }
                 })
                 .catch(function (error) {
-                    setIsEmailValid(false);
+                    if (error.response.status === 409) {
+                        setIsEmailValid(false);
+                        setIsEmailRegistered(true)
+                    }
+                    else {
+                        setIsEmailValid(false);
+                        setIsEmailRegistered(false)
+                    }
                 });
-
         }
 
         if (name === 'password') {
             setAttemptedSubmit(false);
             if (value === formValues.confirmPassword && value !== '' && formValues.confirmPassword !== '') {
-                setPasswordsMatch(true);
                 setIsPasswordValid(true);
                 setIsConfirmPasswordValid(true);
             }
             else {
-                setPasswordsMatch(false);
                 setIsConfirmPasswordValid(false);
                 setIsPasswordValid(false);
             }
@@ -129,12 +134,10 @@ export default function Signup(): JSX.Element {
         if (name === 'confirmPassword') {
             setAttemptedSubmit(false);
             if (value === formValues.password && value !== '' && formValues.password !== '') {
-                setPasswordsMatch(true);
                 setIsPasswordValid(true);
                 setIsConfirmPasswordValid(true);
             }
             else {
-                setPasswordsMatch(false);
                 setIsConfirmPasswordValid(false);
                 setIsPasswordValid(false);
             }
@@ -149,16 +152,33 @@ export default function Signup(): JSX.Element {
         setAttemptedSubmit(true);
 
         const isUsernameFilled = formValues.username.trim() !== '';
-        setIsUsernameValid(isUsernameFilled);
+        if (!isUsernameFilled) {
+            setIsUsernameValid(false);
+        }
 
         const isFullNameFilled = formValues.fullname.trim() !== '';
-        setIsFullNameValid(isFullNameFilled);
+        if (!isFullNameFilled) {
+            setIsFullNameValid(false);
+        }
 
         const isEmailFilled = formValues.email.trim() !== '';
-        setIsEmailValid(isEmailFilled);
+        if (!isEmailFilled) {
+            setIsEmailValid(false);
+        }
+
+        const isPasswordFilled = formValues.password.trim() !== '';
+        if (!isPasswordFilled) {
+            setIsPasswordValid(false);
+        }
+
+        const isConfirmPasswordFilled = formValues.confirmPassword.trim() !== '';
+        if (!isConfirmPasswordFilled) {
+            setIsConfirmPasswordValid(false);
+        }
 
         // If any input is invalid, return early and don't proceed with form submission
-        if (!isUsernameFilled || !isFullNameFilled || !isEmailFilled || !isPasswordValid || !isConfirmPasswordValid) {
+        if (!isUsernameFilled || !isUsernameValid || isUsernameRegistered || !isFullNameFilled || 
+            !isEmailFilled    || !isEmailValid    || isEmailRegistered     || !isPasswordValid  || !isConfirmPasswordValid) {
             return;
         }
 
@@ -239,7 +259,7 @@ export default function Signup(): JSX.Element {
                                         <div className={styles.iconStatusColumnButton}>
                                             {!isUsernameValid || isUsernameRegistered ? (
                                                 <Image
-                                                    src="/icons/info-alert.svg"
+                                                    src="/icons/Info-alert.svg"
                                                     alt="Alert icon"
                                                     width={30}
                                                     height={30}
@@ -277,7 +297,7 @@ export default function Signup(): JSX.Element {
                                         <div className={styles.iconStatusColumnButton}>
                                             {!isFullNameValid ? (
                                                 <Image
-                                                    src="/icons/info-alert.svg"
+                                                    src="/icons/Info-alert.svg"
                                                     alt="Alert icon"
                                                     width={30}
                                                     height={30}
@@ -310,7 +330,7 @@ export default function Signup(): JSX.Element {
                                         <div className={styles.iconStatusColumnButton}>
                                             {!isEmailValid || isEmailRegistered ? (
                                                 <Image
-                                                    src="/icons/info-alert.svg"
+                                                    src="/icons/Info-alert.svg"
                                                     alt="Alert icon"
                                                     width={30}
                                                     height={30}
@@ -353,7 +373,7 @@ export default function Signup(): JSX.Element {
                                             <div className={styles.iconStatusColumnButton}>
                                                 {!isPasswordValid ? (
                                                     <Image
-                                                        src="/icons/info-alert.svg"
+                                                        src="/icons/Info-alert.svg"
                                                         alt="Alert icon"
                                                         width={30}
                                                         height={30}
@@ -374,34 +394,34 @@ export default function Signup(): JSX.Element {
                                         <div className={styles.label}>
                                             <label htmlFor="confirmPassword">Confirm Password</label>
                                         </div>
-                                        <div className={`${styles.iconStatusColumn} ${!passwordsMatch && attemptedSubmit ? styles.invalid : ''}`}>
+                                        <div className={`${styles.iconStatusColumn} ${!isConfirmPasswordValid ? styles.invalid : ''}`}>
                                             <input
                                                 type="password"
                                                 id="confirmPassword"
                                                 name="confirmPassword"
-                                                placeholder="Confirm Password"
+                                                placeholder={isConfirmPasswordValid ? "Confirm Password" : "Fill in this data"}
                                                 required
                                                 onChange={handleChange}
-                                                // If you want to show a red border when passwords do not match
-                                                className={!passwordsMatch ? styles.invalidInput : ''}
                                             />
                                             <div className={styles.iconStatusColumnButton}>
-                                                {attemptedSubmit ? !passwordsMatch || formValues.confirmPassword.length == 0 ? (
+                                                {!isConfirmPasswordValid ? (
                                                     <Image
-                                                        src="/icons/info-alert.svg"
+                                                        src="/icons/Info-alert.svg"
                                                         alt="Alert icon"
                                                         width={30}
                                                         height={30}
                                                     />
-                                                ) : <Image
-                                                    src="/icons/Check-circle.svg"
-                                                    alt="Check icon"
-                                                    width={30}
-                                                    height={30}
-                                                /> : null}
+                                                ) : formValues.password.trim() !== '' ? (
+                                                    <Image
+                                                        src="/icons/Check-circle.svg"
+                                                        alt="Check icon"
+                                                        width={30}
+                                                        height={30}
+                                                    />
+                                                ) : null}
                                             </div>
                                         </div>
-                                        {!passwordsMatch ? (
+                                        {!isConfirmPasswordValid ? (
                                             <div className={styles.tooltip}>
                                                 <p>Wrong Password</p>
                                             </div>
