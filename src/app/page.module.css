@@ -62,6 +62,7 @@
 .buttonRegister:hover {
   box-shadow: 0px 4px 4px 0px #60E3D5;
   transition: 0.5s;
+  cursor: pointer;
 }
 
 .buttonRegister p {

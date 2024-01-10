@@ -534,11 +534,18 @@ ROS2D.NavigationArrow = function (options) {
     // Create a bitmap once the image is loaded
     var bitmap = new createjs.Bitmap(arrowImage);
     
-    // Adjust the registration point and the scale according to the size
+    // Adjust the registration point to the center of the image
     bitmap.regX = arrowImage.width / 2;
     bitmap.regY = arrowImage.height / 2;
-    bitmap.scaleX = bitmap.scaleY = options.size / arrowImage.width; // This assumes you want to scale the image to a specific size
-    
+
+    // Scale the image
+    var scale = options.size / arrowImage.width;
+    bitmap.scaleX = scale;
+    bitmap.scaleY = scale;
+
+    // Rotate the image 90 degrees clockwise
+    bitmap.rotation = 90; // 90 degrees for clockwise rotation
+
     // Add bitmap to the stage
     that.addChild(bitmap);
 
