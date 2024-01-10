@@ -38,6 +38,8 @@ export default function Home(): JSX.Element {
     })
     .then(function (response: any) {
       if (response.status === 200) {
+        sessionStorage.setItem("username", response.data.username);
+        sessionStorage.setItem("full_name", response.data.full_name);
         sessionStorage.setItem("token", response.data.token);
         router.push("/unit/control");
       }

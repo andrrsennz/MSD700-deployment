@@ -1,4 +1,5 @@
 import React from 'react'; // Import React for type annotations
+import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import styles from './navigation.module.css';
 import Link from 'next/link';
@@ -11,6 +12,12 @@ interface NavLink {
 const Navigation: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname() || '/unit/control';
+  const [username, setUsername] = useState<string>('');
+  const [full_name, setFull_name] = useState<string>('');
+  useEffect(() => {
+    setUsername(sessionStorage.getItem('username') || '');
+    setFull_name(sessionStorage.getItem('full_name') || '');
+  })
 
   function isActive(href: string) {
     return pathname === href;
@@ -42,7 +49,7 @@ const Navigation: React.FC = () => {
             }`}
         >
           <img src="/icons/user-10-svgrepo-com.svg" alt="" />
-          <p>Welcome, Unit A!</p>
+          <p>{`Welcome, ${full_name} (${username})`}</p>
         </div>
         <div className={styles.menu}>
           <div
@@ -84,7 +91,7 @@ const Navigation: React.FC = () => {
             }`}
         >
           <img src="/icons/user-10-svgrepo-com.svg" alt="" />
-          <p>Welcome, Unit A!</p>
+          <p>{`Welcome, ${full_name} (${username})`}</p>
         </div>
         <div className={`${styles.menu}`}>
           <select
