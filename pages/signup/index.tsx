@@ -109,7 +109,7 @@ export default function Signup(): JSX.Element {
                 })
                 .catch(function (error) {
                     if (error.response.status === 409) {
-                        setIsEmailValid(false);
+                        setIsEmailValid(true);
                         setIsEmailRegistered(true)
                     }
                     else {
@@ -350,7 +350,12 @@ export default function Signup(): JSX.Element {
                                             <p>Wrong Email | Please fill in with the correct email e.g. email-name@gmail.com</p>
                                         </div>
                                     )} */}
-                                    {isEmailRegistered ?
+                                    {
+                                        !isEmailValid && formValues.email.trim() !== '' ?
+                                        <div className={styles.tooltip}>
+                                            <p>This email is not valid</p>
+                                        </div> :
+                                        isEmailRegistered ?
                                         <div className={styles.tooltip}>
                                             <p>This email is already in use</p>
                                         </div> : null
