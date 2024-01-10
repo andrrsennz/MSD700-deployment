@@ -179,6 +179,9 @@ export default function Database(): JSX.Element {
 
         // delete pgm file
         axios.delete(`${backendUrl}/api/pgm_data`, {
+            headers:{
+                'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
+            },
             data: {
                 map_name: pgm_map_name
             }
@@ -187,6 +190,9 @@ export default function Database(): JSX.Element {
                 console.log(response);
                 // delete yaml file
                 axios.delete(`${backendUrl}/api/yaml_data`, {
+                    headers:{
+                        'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
+                    },
                     data: {
                         map_name: yaml_map_name
                     }
@@ -268,6 +274,10 @@ export default function Database(): JSX.Element {
                 axios.put(`${backendUrl}/api/pgm_data`, {
                     map_name: oldName,
                     new_map_name: newName
+                }, {
+                    headers: {
+                        'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
+                    }
                 })
                     .then(response => {
                         console.log('PGM Data Update Response:', response);

@@ -114,7 +114,7 @@ export default function Mapping() {
                   <br /> 
                   Double-click to remove the pinpoint
                   <br />
-                  Hold middle mouse button to pan the map
+                  Hold middle mouse button to move the map
                 </p>
               </div>
             </div>

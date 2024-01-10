@@ -61,6 +61,10 @@ export default function Mapping(props: MappingProps): JSX.Element {
         axios.post(`${backendUrl}/api/lidar`, {
             enable: enable,
             use_own_map: use_own_map
+        }, {
+            headers: {
+                'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
+            }
         })
             .then(function (response) {
                 console.log(response);
@@ -75,6 +79,10 @@ export default function Mapping(props: MappingProps): JSX.Element {
             start: start,
             pause: pause,
             stop: stop
+        }, {
+            headers: {
+                'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
+            }
         })
             .then(function (response) {
                 console.log(response);
