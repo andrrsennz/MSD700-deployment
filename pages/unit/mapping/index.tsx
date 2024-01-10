@@ -9,6 +9,7 @@ import ConfirmSaving from "../../../components/confirm-saving-mapping/confirmSav
 import Script from "next/script";
 import axios from "axios";
 import Head from "next/head";
+import { useRouter } from "next/router";
 
 interface MappingProps { }
 
@@ -30,8 +31,8 @@ export default function Mapping(props: MappingProps): JSX.Element {
     const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");
     const [count, setcount] = useState<Number>(0);
     const [stopButton, setStopButton] = useState<boolean>(false);
-    // var count = 0;
-
+    const [render, setRender] = useState<boolean>(true);
+    const router = useRouter();
 
     const onConfirmButtonClick = (): void => {
         setShowConfirmClosePageDialog(true);
@@ -117,6 +118,27 @@ export default function Mapping(props: MappingProps): JSX.Element {
     const mapRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        var enableRos = false;
+        async function checkToken() {
+            await axios.get(`${backendUrl}`, {
+              headers: {
+                  'Authorization' : `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
+              }
+            })
+            .then((response) => {
+              if (response.status === 200) {
+                setRender(true);
+                enableRos = true;
+              }
+              else {
+                router.push('/');
+              }
+            })
+            .catch((error) => {
+              router.push('/');
+            });
+        }
+        checkToken();
         const ROSLIB = (window as any).ROSLIB;
         const ros = new ROSLIB.Ros({
             url: process.env.WS_ROSBRIDGE_URL,
@@ -240,150 +262,155 @@ export default function Mapping(props: MappingProps): JSX.Element {
     };
 
     return (
-        <>
-            <Head>
-                <title>Mapping</title>
-                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-            </Head>
-            <ConfirmElement
-                message="Are you sure you want to close this app?"
-                status={showConfirmClosePageDialog}
-                onCancel={handleCancel}
-            />
-            <ConfirmSaving
-                message="Are you sure you want to stop and save the map?"
-                status={showConfirmMappingDialog}
-                onCancel={handleDatabaseCancel}
-                onConfirm={onConfirmSaveMappingButtonClick}
-            />
-            <MapSaving status={savingConfirmDialog} />
-            <div className={styles.container}>
-                <div className={styles.parents}>
-                    <div className={styles.statusSection}>
-                        <div
-                            className={`${styles.status} ${status === "Idle" ? styles.idle : ""
-                                }`}
-                        >
-                            <img src="/icons/information-circle-svgrepo-com.svg" alt="" />
-                            <p>
-                                Status : <span>{status}</span>
-                            </p>
-                        </div>
+        <> {render ? 
+            (
+                <>
+                    <Head>
+                        <title>Mapping</title>
+                        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+                    </Head>
+                    <ConfirmElement
+                        message="Are you sure you want to close this app?"
+                        status={showConfirmClosePageDialog}
+                        onCancel={handleCancel}
+                    />
+                    <ConfirmSaving
+                        message="Are you sure you want to stop and save the map?"
+                        status={showConfirmMappingDialog}
+                        onCancel={handleDatabaseCancel}
+                        onConfirm={onConfirmSaveMappingButtonClick}
+                    />
+                    <MapSaving status={savingConfirmDialog} />
+                    <div className={styles.container}>
+                        <div className={styles.parents}>
+                            <div className={styles.statusSection}>
+                                <div
+                                    className={`${styles.status} ${status === "Idle" ? styles.idle : ""
+                                        }`}
+                                >
+                                    <img src="/icons/information-circle-svgrepo-com.svg" alt="" />
+                                    <p>
+                                        Status : <span>{status}</span>
+                                    </p>
+                                </div>
 
-                        <div className={styles.lidar}>
-                            <p>LIDAR</p>
-                        </div>
+                                <div className={styles.lidar}>
+                                    <p>LIDAR</p>
+                                </div>
 
-                        <div className={styles.lidarButton}>
-                            <label className={styles.toggleSwitch}>
-                                <input
-                                    type="checkbox"
-                                    className={styles.toggleInput}
-                                    checked={isChecked}
-                                    onChange={handleCheckboxChange}
-                                />
-                                <span className={styles.slider}></span>
-                            </label>
+                                <div className={styles.lidarButton}>
+                                    <label className={styles.toggleSwitch}>
+                                        <input
+                                            type="checkbox"
+                                            className={styles.toggleInput}
+                                            checked={isChecked}
+                                            onChange={handleCheckboxChange}
+                                        />
+                                        <span className={styles.slider}></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <CloseButton onClick={onConfirmButtonClick} />
+                            <div className={styles.navigation}>
+                                <Navigation />
+                            </div>
+                            <div className={styles.mapSection}>
+                                <div className={styles.topDiv}>
+                                    <p>Create a New Map</p>
+                                    <div
+                                        className={`${styles.playButton} ${status == "On Progress" ? styles.buttonActive : ""
+                                            }`}
+                                        onClick={() => {
+                                            if (isChecked) {
+                                                if (status != "On Progress") {
+                                                    console.log("Play request sent");
+                                                    setMapping(true, false, false);
+                                                }
+                                            } else {
+                                                alert("Please turn on the LIDAR before mapping.");
+                                            }
+                                        }}
+                                    >
+                                        <p>Play</p>
+                                        <img src="/icons/3.svg" alt="" />
+                                    </div>
+                                    <div
+                                        className={`${styles.pauseButton} ${status == "Paused" && count != 0 ? styles.buttonActive : ""}`}
+                                        onClick={() => {
+                                            if (isChecked) {
+                                                if (status != "Idle") {
+                                                    setcount(1)
+                                                    console.log("Pause request sent");
+                                                    setMapping(false, true, false);
+                                                }
+                                                else {
+                                                    alert("Cannot pause when Lidar button turned on");
+                                                }
+                                            } else {
+                                                alert("Please turn on the LIDAR before mapping.");
+                                            }
+                                        }}
+                                    >
+                                        <p>Pause</p>
+                                        <img src="/icons/1.svg" alt="" />
+                                    </div>
+                                    <div
+                                        id="stopButton"
+                                        className={`${styles.stopButton} ${stopButton ? styles.buttonActive : ''}`}
+                                        onClick={() => {
+                                            if (isChecked) {
+                                                if (status !== "Idle") {
+                                                    setStopButton(true); // Toggle the active state
+                                                    console.log("Stop request sent");
+                                                    setMapping(false, false, true);
+                                                } else {
+                                                    alert("Cannot stop when Lidar button turned on");
+                                                }
+                                            } else {
+                                                alert("Please turn on the LIDAR before mapping.");
+                                            }
+                                            // setStopButton(false);
+                                        }}
+                                    >
+                                        <p>Stop</p>
+                                        <img src="/icons/2.svg" alt="" />
+                                    </div>
+                                    <div className={styles.settingsButton}>
+                                        <img src="/icons/Setting.svg" alt="" />
+                                        <p>Please turn on the LIDAR before mapping.</p>
+                                    </div>
+                                </div>
+                                <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp}>
+                                    <div className={styles.buttonNavigation}>
+                                        <div className={styles.zoomIn} onClick={zoomIn}>
+                                            <img src="/icons/zoomin.svg" alt="" />
+                                        </div>
+                                        <div className={styles.zoomOut} onClick={zoomOut}>
+                                            <img src="/icons/zoomout.svg" alt="" />
+                                        </div>
+                                        <div className={styles.restart} onClick={rotateCW}>
+                                            <img src="/icons/Reload.svg" alt="" />
+                                        </div>
+                                        <div className={styles.restart} onClick={restart}>
+                                            <img src="/icons/new reload.svg" alt="" />
+                                        </div>
+                                    </div>
+                                    {/* <img src="/icons/Frame.svg" alt="" /> */}
+                                </div>
+                            </div>
+                            <Footer status={false} />
                         </div>
                     </div>
-                    <CloseButton onClick={onConfirmButtonClick} />
-                    <div className={styles.navigation}>
-                        <Navigation />
-                    </div>
-                    <div className={styles.mapSection}>
-                        <div className={styles.topDiv}>
-                            <p>Create a New Map</p>
-                            <div
-                                className={`${styles.playButton} ${status == "On Progress" ? styles.buttonActive : ""
-                                    }`}
-                                onClick={() => {
-                                    if (isChecked) {
-                                        if (status != "On Progress") {
-                                            console.log("Play request sent");
-                                            setMapping(true, false, false);
-                                        }
-                                    } else {
-                                        alert("Please turn on the LIDAR before mapping.");
-                                    }
-                                }}
-                            >
-                                <p>Play</p>
-                                <img src="/icons/3.svg" alt="" />
-                            </div>
-                            <div
-                                className={`${styles.pauseButton} ${status == "Paused" && count != 0 ? styles.buttonActive : ""}`}
-                                onClick={() => {
-                                    if (isChecked) {
-                                        if (status != "Idle") {
-                                            setcount(1)
-                                            console.log("Pause request sent");
-                                            setMapping(false, true, false);
-                                        }
-                                        else {
-                                            alert("Cannot pause when Lidar button turned on");
-                                        }
-                                    } else {
-                                        alert("Please turn on the LIDAR before mapping.");
-                                    }
-                                }}
-                            >
-                                <p>Pause</p>
-                                <img src="/icons/1.svg" alt="" />
-                            </div>
-                            <div
-                                id="stopButton"
-                                className={`${styles.stopButton} ${stopButton ? styles.buttonActive : ''}`}
-                                onClick={() => {
-                                    if (isChecked) {
-                                        if (status !== "Idle") {
-                                            setStopButton(true); // Toggle the active state
-                                            console.log("Stop request sent");
-                                            setMapping(false, false, true);
-                                        } else {
-                                            alert("Cannot stop when Lidar button turned on");
-                                        }
-                                    } else {
-                                        alert("Please turn on the LIDAR before mapping.");
-                                    }
-                                    // setStopButton(false);
-                                }}
-                            >
-                                <p>Stop</p>
-                                <img src="/icons/2.svg" alt="" />
-                            </div>
-                            <div className={styles.settingsButton}>
-                                <img src="/icons/Setting.svg" alt="" />
-                                <p>Please turn on the LIDAR before mapping.</p>
-                            </div>
-                        </div>
-                        <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp}>
-                            <div className={styles.buttonNavigation}>
-                                <div className={styles.zoomIn} onClick={zoomIn}>
-                                    <img src="/icons/zoomin.svg" alt="" />
-                                </div>
-                                <div className={styles.zoomOut} onClick={zoomOut}>
-                                    <img src="/icons/zoomout.svg" alt="" />
-                                </div>
-                                <div className={styles.restart} onClick={rotateCW}>
-                                    <img src="/icons/Reload.svg" alt="" />
-                                </div>
-                                <div className={styles.restart} onClick={restart}>
-                                    <img src="/icons/new reload.svg" alt="" />
-                                </div>
-                            </div>
-                            {/* <img src="/icons/Frame.svg" alt="" /> */}
-                        </div>
-                    </div>
-                    <Footer status={false} />
-                </div>
-            </div>
 
 
-            <Script src="/script/Nav2D.js" strategy="beforeInteractive" />
-            <Script src="/script/roslib.js" strategy="beforeInteractive" />
-            <Script src="/script/eventemitter2.min.js" strategy="beforeInteractive" />
-            <Script src="/script/easeljs.js" strategy="beforeInteractive" />
-            <Script src="/script/ros2d.js" strategy="beforeInteractive" />
+                    <Script src="/script/Nav2D.js" strategy="beforeInteractive" />
+                    <Script src="/script/roslib.js" strategy="beforeInteractive" />
+                    <Script src="/script/eventemitter2.min.js" strategy="beforeInteractive" />
+                    <Script src="/script/easeljs.js" strategy="beforeInteractive" />
+                    <Script src="/script/ros2d.js" strategy="beforeInteractive" />
+                </>
+            ) : (<>
+                </>)}
         </>
     );
 }

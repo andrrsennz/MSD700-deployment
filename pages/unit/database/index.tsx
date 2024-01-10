@@ -41,6 +41,7 @@ export default function Database(): JSX.Element {
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || 'http://localhost:5000');
     const [isEditing, setIsEditing] = useState<Record<number, boolean>>({});
+    const [render, setRender] = useState<boolean>(true);
 
     useEffect(() => {
         async function fetchData() {
@@ -52,7 +53,9 @@ export default function Database(): JSX.Element {
                 });
                 const data = response_axios.data.data;
                 setData(data);
+                setRender(true);
             } catch (error) {
+                router.push('/');
                 console.error('Error fetching data:', error);
             }
         }
@@ -317,234 +320,238 @@ export default function Database(): JSX.Element {
 
 
     return (
-        <>
-            {' '}
-            <Head>
-                <title>Database</title>
-                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-            </Head>
-            <ConfirmElement
-                message="Are you sure you want to close this app?"
-                status={showConfirmDialog}
-                onCancel={handleCancel}
-            />
-            <ConfirmDelete
-                message="Are you sure you want to delete the map?"
-                status={deleteItemConfirm}
-                onCancel={handleCancelDelete}
-                onConfirm={() => deleteItem(indexDelete)}
-            />
-            <div className={styles.container}>
-                <div className={styles.parents}>
-                    <CloseButton onClick={onConfirmButtonClick} />
-                    <div className={styles.navigation}>
-                        <Navigation />
-                    </div>
-                    <div className={styles.mapSection}>
-                        <div className={styles.topSection}>
-                            <div className="">
-                                <p>Map Collection</p>
+        <>  {render ? 
+            (
+                <>
+                    {' '}
+                    <Head>
+                        <title>Database</title>
+                        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+                    </Head>
+                    <ConfirmElement
+                        message="Are you sure you want to close this app?"
+                        status={showConfirmDialog}
+                        onCancel={handleCancel}
+                    />
+                    <ConfirmDelete
+                        message="Are you sure you want to delete the map?"
+                        status={deleteItemConfirm}
+                        onCancel={handleCancelDelete}
+                        onConfirm={() => deleteItem(indexDelete)}
+                    />
+                    <div className={styles.container}>
+                        <div className={styles.parents}>
+                            <CloseButton onClick={onConfirmButtonClick} />
+                            <div className={styles.navigation}>
+                                <Navigation />
                             </div>
+                            <div className={styles.mapSection}>
+                                <div className={styles.topSection}>
+                                    <div className="">
+                                        <p>Map Collection</p>
+                                    </div>
 
-                            <div className={styles.searchBar}>
-                                <input
-                                    type="text"
-                                    placeholder="Search..."
-                                    value={searchQuery} // Set the input value to searchQuery
-                                    onChange={handleSearchInputChange} // Call the handler on input change
-                                />
-                                <Image
-                                    src="/icons/search-cion.svg"
-                                    alt=""
-                                    height={20}
-                                    width={20}
-                                />
-                            </div>
-                        </div>
-
-                        <div className={styles.mainSection}>
-                            <table className={styles.theTable}>
-                                <thead>
-                                    <tr className={styles.header}>
-                                        <th>No.</th>
-                                        <th className={styles.sortableHeader}>
-                                            <div className={styles.headerContent}>
-                                                <span>Map Name</span>
-                                                <Image
-                                                    alt=""
-                                                    src={`/icons/${sortOrder}ending.svg`} // Use different icons for ascending and descending
-                                                    width={40}
-                                                    height={40}
-                                                    onClick={handleSortClick}
-                                                />
-                                            </div>
-                                        </th>
-                                        <th className={styles.sortableHeader}>
-                                            <div className={styles.headerContent}>
-                                                <span>Date Modified</span>
-                                                <Image
-                                                    alt=""
-                                                    src={`/icons/${sortDateOrder}ending.svg`}
-                                                    width={40}
-                                                    height={40}
-                                                    onClick={handleDateSortClick}
-                                                />
-                                            </div>
-                                        </th>
-                                        <th>File Type</th>
-                                        <th className={styles.fileSize}>File Size</th>
-                                        <th className={styles.selectedMap}>Selected Map to Load</th>
-                                        <th>Delete</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    {currentData.map((item, index) => (
-                                        <tr key={index}>
-                                            <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-
-                                            <td onDoubleClick={() => handleDoubleClick(index)}>
-                                                {isEditing[index] ? (
-                                                    <input
-                                                        type="text"
-                                                        id={`mapNameInput${index}`} // Assign the ID here
-                                                        defaultValue={getBaseName(item.map_name)} // Remove the extension before editing
-                                                        onBlur={() => updateMapName(index)}
-                                                        autoFocus
-                                                    />
-                                                ) : (
-                                                    getBaseName(item.map_name) // Display the name without the extension
-                                                )}
-                                            </td>
-
-                                            <td>{item.modified_time}</td>
-                                            <td>{item.file_type}</td>
-                                            <td className={styles.fileSize}>{item.file_size}</td>
-                                            <td className={`${styles.dark} `}>
-                                                <div className={`${styles.inputContainer}`}>
-                                                    <input
-                                                        type="checkbox"
-                                                        id={`checklistItem${index}`}
-                                                        checked={checkedIndex == startIndex + index}
-                                                        onChange={() => handleCheckboxChange(index.toString())}
-                                                    />
-                                                    <label htmlFor={`checklistItem${index}`}></label>
-                                                </div>
-                                            </td>
-                                            <td className={`${styles.dark} ${styles.delete}`}>
-                                                <Image
-                                                    src="/icons/Delete.svg"
-                                                    alt="Delete icons"
-                                                    height={30}
-                                                    width={30}
-                                                    onClick={() => handleDeleteItem(index)}
-                                                />
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div className={styles.bottomSection}>
-                            <div className={styles.warning}>
-                                <img
-                                    src="/icons/information-circle-svgrepo-com (1).svg"
-                                    alt=""
-                                />
-                                <p>Rename the map by double-click the name</p>
-                            </div>
-                            <div
-                                className={`${styles.confirmMappingChoosed} ${(initialCheckedIndex !== null && parseInt(initialCheckedIndex) > -1) || mapIndex > -1
-                                    ? ""
-                                    : styles.disable
-                                    }`}
-                                onClick={goToControlWithIndex}
-                            >
-                                <p>Go to the Map</p>
-                                <Image src="/icons/3.svg" width={20} height={20} alt="play" />
-                            </div>
-
-                            <div className={styles.pagination}>
-                                <button
-                                    className={`${styles.bottonPagination} ${currentPage === 1 ? styles.buttonDisable : ""
-                                        }`}
-                                    onClick={() => handlePaginationButtonClick("first")}
-                                    disabled={currentPage === 1}
-                                >
-                                    <Image
-                                        src="/icons/2 left.svg"
-                                        alt="button left"
-                                        width={10}
-                                        height={10}
-                                    />
-                                </button>
-                                <button
-                                    className={`${styles.bottonPagination} ${currentPage === 1 ? styles.buttonDisable : ""
-                                        }`}
-                                    onClick={() => handlePaginationButtonClick("prev")}
-                                    disabled={currentPage === 1}
-                                >
-                                    <Image
-                                        src="/icons/1 left.svg"
-                                        alt="button left"
-                                        width={10}
-                                        height={10}
-                                    />
-                                </button>
-
-                                <div className={styles.currentPage}>
-                                    <input
-                                        className={styles.pageInput}
-                                        type="text"
-                                        value={currentPage}
-                                        onChange={(e) => {
-                                            const newValue = e.target.value;
-                                            if (
-                                                /^[0-9]*$/.test(newValue) &&
-                                                parseInt(newValue) >= 1 &&
-                                                parseInt(newValue) <= totalPages
-                                            ) {
-                                                setCurrentPage(parseInt(newValue));
-                                            }
-                                        }}
-                                    />
+                                    <div className={styles.searchBar}>
+                                        <input
+                                            type="text"
+                                            placeholder="Search..."
+                                            value={searchQuery} // Set the input value to searchQuery
+                                            onChange={handleSearchInputChange} // Call the handler on input change
+                                        />
+                                        <Image
+                                            src="/icons/search-cion.svg"
+                                            alt=""
+                                            height={20}
+                                            width={20}
+                                        />
+                                    </div>
                                 </div>
 
-                                <p>of</p>
-                                <p>{totalPages}</p>
-                                <button
-                                    className={`${styles.bottonPagination} ${currentPage === totalPages ? styles.buttonDisable : ""
-                                        }`}
-                                    onClick={() => handlePaginationButtonClick("next")}
-                                    disabled={currentPage === totalPages}
-                                >
-                                    <Image
-                                        src="/icons/1 right.svg"
-                                        alt="button 1 right"
-                                        width={10}
-                                        height={10}
-                                    />
-                                </button>
-                                <button
-                                    className={`${styles.bottonPagination} ${currentPage === totalPages ? styles.buttonDisable : ""
-                                        }`}
-                                    onClick={() => handlePaginationButtonClick("last")}
-                                    disabled={currentPage === totalPages}
-                                >
-                                    <Image
-                                        src="/icons/2 right.svg"
-                                        alt="button 2 right"
-                                        width={10}
-                                        height={10}
-                                    />
-                                </button>
+                                <div className={styles.mainSection}>
+                                    <table className={styles.theTable}>
+                                        <thead>
+                                            <tr className={styles.header}>
+                                                <th>No.</th>
+                                                <th className={styles.sortableHeader}>
+                                                    <div className={styles.headerContent}>
+                                                        <span>Map Name</span>
+                                                        <Image
+                                                            alt=""
+                                                            src={`/icons/${sortOrder}ending.svg`} // Use different icons for ascending and descending
+                                                            width={40}
+                                                            height={40}
+                                                            onClick={handleSortClick}
+                                                        />
+                                                    </div>
+                                                </th>
+                                                <th className={styles.sortableHeader}>
+                                                    <div className={styles.headerContent}>
+                                                        <span>Date Modified</span>
+                                                        <Image
+                                                            alt=""
+                                                            src={`/icons/${sortDateOrder}ending.svg`}
+                                                            width={40}
+                                                            height={40}
+                                                            onClick={handleDateSortClick}
+                                                        />
+                                                    </div>
+                                                </th>
+                                                <th>File Type</th>
+                                                <th className={styles.fileSize}>File Size</th>
+                                                <th className={styles.selectedMap}>Selected Map to Load</th>
+                                                <th>Delete</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            {currentData.map((item, index) => (
+                                                <tr key={index}>
+                                                    <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
+
+                                                    <td onDoubleClick={() => handleDoubleClick(index)}>
+                                                        {isEditing[index] ? (
+                                                            <input
+                                                                type="text"
+                                                                id={`mapNameInput${index}`} // Assign the ID here
+                                                                defaultValue={getBaseName(item.map_name)} // Remove the extension before editing
+                                                                onBlur={() => updateMapName(index)}
+                                                                autoFocus
+                                                            />
+                                                        ) : (
+                                                            getBaseName(item.map_name) // Display the name without the extension
+                                                        )}
+                                                    </td>
+
+                                                    <td>{item.modified_time}</td>
+                                                    <td>{item.file_type}</td>
+                                                    <td className={styles.fileSize}>{item.file_size}</td>
+                                                    <td className={`${styles.dark} `}>
+                                                        <div className={`${styles.inputContainer}`}>
+                                                            <input
+                                                                type="checkbox"
+                                                                id={`checklistItem${index}`}
+                                                                checked={checkedIndex == startIndex + index}
+                                                                onChange={() => handleCheckboxChange(index.toString())}
+                                                            />
+                                                            <label htmlFor={`checklistItem${index}`}></label>
+                                                        </div>
+                                                    </td>
+                                                    <td className={`${styles.dark} ${styles.delete}`}>
+                                                        <Image
+                                                            src="/icons/Delete.svg"
+                                                            alt="Delete icons"
+                                                            height={30}
+                                                            width={30}
+                                                            onClick={() => handleDeleteItem(index)}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div className={styles.bottomSection}>
+                                    <div className={styles.warning}>
+                                        <img
+                                            src="/icons/information-circle-svgrepo-com (1).svg"
+                                            alt=""
+                                        />
+                                        <p>Rename the map by double-click the name</p>
+                                    </div>
+                                    <div
+                                        className={`${styles.confirmMappingChoosed} ${(initialCheckedIndex !== null && parseInt(initialCheckedIndex) > -1) || mapIndex > -1
+                                            ? ""
+                                            : styles.disable
+                                            }`}
+                                        onClick={goToControlWithIndex}
+                                    >
+                                        <p>Go to the Map</p>
+                                        <Image src="/icons/3.svg" width={20} height={20} alt="play" />
+                                    </div>
+
+                                    <div className={styles.pagination}>
+                                        <button
+                                            className={`${styles.bottonPagination} ${currentPage === 1 ? styles.buttonDisable : ""
+                                                }`}
+                                            onClick={() => handlePaginationButtonClick("first")}
+                                            disabled={currentPage === 1}
+                                        >
+                                            <Image
+                                                src="/icons/2 left.svg"
+                                                alt="button left"
+                                                width={10}
+                                                height={10}
+                                            />
+                                        </button>
+                                        <button
+                                            className={`${styles.bottonPagination} ${currentPage === 1 ? styles.buttonDisable : ""
+                                                }`}
+                                            onClick={() => handlePaginationButtonClick("prev")}
+                                            disabled={currentPage === 1}
+                                        >
+                                            <Image
+                                                src="/icons/1 left.svg"
+                                                alt="button left"
+                                                width={10}
+                                                height={10}
+                                            />
+                                        </button>
+
+                                        <div className={styles.currentPage}>
+                                            <input
+                                                className={styles.pageInput}
+                                                type="text"
+                                                value={currentPage}
+                                                onChange={(e) => {
+                                                    const newValue = e.target.value;
+                                                    if (
+                                                        /^[0-9]*$/.test(newValue) &&
+                                                        parseInt(newValue) >= 1 &&
+                                                        parseInt(newValue) <= totalPages
+                                                    ) {
+                                                        setCurrentPage(parseInt(newValue));
+                                                    }
+                                                }}
+                                            />
+                                        </div>
+
+                                        <p>of</p>
+                                        <p>{totalPages}</p>
+                                        <button
+                                            className={`${styles.bottonPagination} ${currentPage === totalPages ? styles.buttonDisable : ""
+                                                }`}
+                                            onClick={() => handlePaginationButtonClick("next")}
+                                            disabled={currentPage === totalPages}
+                                        >
+                                            <Image
+                                                src="/icons/1 right.svg"
+                                                alt="button 1 right"
+                                                width={10}
+                                                height={10}
+                                            />
+                                        </button>
+                                        <button
+                                            className={`${styles.bottonPagination} ${currentPage === totalPages ? styles.buttonDisable : ""
+                                                }`}
+                                            onClick={() => handlePaginationButtonClick("last")}
+                                            disabled={currentPage === totalPages}
+                                        >
+                                            <Image
+                                                src="/icons/2 right.svg"
+                                                alt="button 2 right"
+                                                width={10}
+                                                height={10}
+                                            />
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
+                            <Footer status={true} />
                         </div>
                     </div>
-                    <Footer status={true} />
-                </div>
-            </div>
+                </>
+            ): <></>}
         </>
     );
 }
