@@ -1,8 +1,13 @@
 import React from 'react';
 import Footer from '../../src/components/footer/footer';
 import style from './closingPage.module.css';
+import { useEffect } from 'react';
 
 const ClosingPage: React.FC = () => {
+  useEffect(() => {
+    sessionStorage.clear();
+  }, []);
+  
   return (
     <div className={style.container}>
       <div className={style.centerDiv}>
