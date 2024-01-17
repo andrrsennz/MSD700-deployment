@@ -10,6 +10,7 @@ import Script from "next/script";
 import axios from "axios";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import mqtt from "mqtt";
 
 interface MappingProps { }
 
@@ -29,9 +30,13 @@ export default function Mapping(props: MappingProps): JSX.Element {
     const [isChecked, setIsChecked] = useState<boolean>(false);
     const [status, setStatus] = useState<string>("Idle");
     const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");
+    const [brokerUrl, setBrokerUrl] = useState<string>(process.env.WS_MQTT_BROKER_URL || "ws://localhost:9001");
+    const [topic, setTopic] = useState<string>('/camera');
     const [count, setcount] = useState<Number>(0);
     const [stopButton, setStopButton] = useState<boolean>(false);
     const [render, setRender] = useState<boolean>(true);
+    const [imageBlob, setImageBlob] = useState<Blob | null>(null);
+    const [showImage, setShowImage] = useState<boolean>(false);
     const router = useRouter();
 
     const onConfirmButtonClick = (): void => {
@@ -73,6 +78,8 @@ export default function Mapping(props: MappingProps): JSX.Element {
             .catch(function (error) {
                 console.log(error);
             });
+        
+        enable? setShowImage(true) : setShowImage(false);
     }
 
     const setMapping = (start: boolean, pause: boolean, stop: boolean): void => {
@@ -186,9 +193,28 @@ export default function Mapping(props: MappingProps): JSX.Element {
             console.log('Connected to ROS websocket server.');
         });
 
+        // MQTT Client Setup
+        const mqtt_client = mqtt.connect(brokerUrl);
+        mqtt_client.on('connect', () => {
+            mqtt_client.subscribe(topic);
+            console.log('Connected to MQTT broker');
+        });
+        
+        mqtt_client.on('message', (receivedTopic, message) => {
+            if (receivedTopic === topic) {
+                const receivedImageBlob = new Blob([message]);
+                setImageBlob(receivedImageBlob);
+            }
+        });
+    
+        mqtt_client.on('close', () => {
+            console.log('Connection to MQTT is closed');
+        })
+      
         return () => {
             // clean up when exiting the page
             ros.close();
+            mqtt_client.end();
             setLidar(false, false);
         };
     }, []);
@@ -313,6 +339,10 @@ export default function Mapping(props: MappingProps): JSX.Element {
                             <CloseButton onClick={onConfirmButtonClick} />
                             <div className={styles.navigation}>
                                 <Navigation />
+                                <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                                {showImage && imageBlob && <img src={URL.createObjectURL(imageBlob)} alt="Streamed Image"/>}
+                            </div>
+                            <div>
                             </div>
                             <div className={styles.mapSection}>
                                 <div className={styles.topDiv}>
