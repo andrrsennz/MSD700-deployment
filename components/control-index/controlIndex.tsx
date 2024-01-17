@@ -7,6 +7,7 @@ import Footer from "../../components/footer/footer";
 import MapSaving from "../../components/map-saving/mapSaving";
 import ConfirmSaving from "../../components/confirm-saving-mapping/confirmSaving";
 import axios from "axios";
+import mqtt from "mqtt";
 
 var ros: any
 var viewer: any
@@ -24,6 +25,10 @@ export default function Mapping() {
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [status, setStatus] = useState<string>("Idle");
   const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");
+  const [brokerUrl, setBrokerUrl] = useState<string>(process.env.WS_MQTT_BROKER_URL || "ws://localhost:9001");
+  const [topic, setTopic] = useState<string>('/camera');
+  const [imageBlob, setImageBlob] = useState<Blob | null>(null);
+  const [showImage, setShowImage] = useState<boolean>(false);
 
   const onConfirmButtonClick = () => {
     setShowConfirmClosePageDialog(true);
@@ -64,6 +69,7 @@ export default function Mapping() {
       .catch(function (error: any) {
         console.log(error);
       });
+    enable? setShowImage(true) : setShowImage(false);
   }
 
   const setRobot = (start: boolean, pause: boolean, stop: boolean): void => {
@@ -178,6 +184,24 @@ export default function Mapping() {
     ros.on('connection', () => {
       console.log('Connected to ROS websocket server.');
     });
+
+    // MQTT Client Setup
+    const mqtt_client = mqtt.connect(brokerUrl);
+    mqtt_client.on('connect', () => {
+        mqtt_client.subscribe(topic);
+        console.log('Connected to MQTT broker');
+    });
+    
+    mqtt_client.on('message', (receivedTopic, message) => {
+        if (receivedTopic === topic) {
+            const receivedImageBlob = new Blob([message]);
+            setImageBlob(receivedImageBlob);
+        }
+    });
+
+    mqtt_client.on('close', () => {
+        console.log('Connection to MQTT is closed');
+    })
 
     return () => {
       //clean up when exiting page
@@ -297,6 +321,8 @@ export default function Mapping() {
           <CloseButton onClick={onConfirmButtonClick} />
           <div className={styles.navigation}>
             <Navigation />
+            <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            {showImage && imageBlob && <img src={URL.createObjectURL(imageBlob)} alt="Streamed Image"/>}
           </div>
           <div className={styles.mapSection}>
             <div className={styles.topDiv}>
