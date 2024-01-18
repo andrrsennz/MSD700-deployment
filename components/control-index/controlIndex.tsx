@@ -15,6 +15,7 @@ var paN: any
 var movecoor: any = [];
 var isDrag = false;
 var startcoor: any = [];
+var showImage:boolean = false;
 
 export default function Mapping() {
   const [showConfirmClosePageDialog, setShowConfirmClosePageDialog] =
@@ -28,8 +29,7 @@ export default function Mapping() {
   const [brokerUrl, setBrokerUrl] = useState<string>(process.env.WS_MQTT_BROKER_URL || "ws://localhost:9001");
   const [topic, setTopic] = useState<string>('/camera');
   const [imageBlob, setImageBlob] = useState<Blob | null>(null);
-  const [showImage, setShowImage] = useState<boolean>(false);
-
+  
   const onConfirmButtonClick = () => {
     setShowConfirmClosePageDialog(true);
   };
@@ -69,7 +69,7 @@ export default function Mapping() {
       .catch(function (error: any) {
         console.log(error);
       });
-    enable? setShowImage(true) : setShowImage(false);
+    showImage = enable
   }
 
   const setRobot = (start: boolean, pause: boolean, stop: boolean): void => {
@@ -195,7 +195,7 @@ export default function Mapping() {
     mqtt_client.on('message', (receivedTopic, message) => {
         if (receivedTopic === topic) {
             const receivedImageBlob = new Blob([message]);
-            setImageBlob(receivedImageBlob);
+            setImageBlob(showImage ? receivedImageBlob : null);
         }
     });
 
@@ -322,7 +322,8 @@ export default function Mapping() {
           <div className={styles.navigation}>
             <Navigation />
             <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-            {showImage && imageBlob && <img src={URL.createObjectURL(imageBlob)} alt="Streamed Image"/>}
+            {imageBlob ? (<img src={URL.createObjectURL(imageBlob)} alt="Streamed Image"/>) 
+                       : (<div style={{ width: '320px', height: '240px', backgroundColor: 'black' }} />)}
           </div>
           <div className={styles.mapSection}>
             <div className={styles.topDiv}>

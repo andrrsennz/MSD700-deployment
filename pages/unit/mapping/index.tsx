@@ -20,6 +20,7 @@ var paN: any
 var movecoor: any = [];
 var isDrag = false;
 var startcoor: any = [];
+var showImage:boolean = false;
 
 export default function Mapping(props: MappingProps): JSX.Element {
     const [showConfirmClosePageDialog, setShowConfirmClosePageDialog] =
@@ -36,7 +37,6 @@ export default function Mapping(props: MappingProps): JSX.Element {
     const [stopButton, setStopButton] = useState<boolean>(false);
     const [render, setRender] = useState<boolean>(true);
     const [imageBlob, setImageBlob] = useState<Blob | null>(null);
-    const [showImage, setShowImage] = useState<boolean>(false);
     const router = useRouter();
 
     const onConfirmButtonClick = (): void => {
@@ -78,8 +78,8 @@ export default function Mapping(props: MappingProps): JSX.Element {
             .catch(function (error) {
                 console.log(error);
             });
-        
-        enable? setShowImage(true) : setShowImage(false);
+
+        showImage = enable;
     }
 
     const setMapping = (start: boolean, pause: boolean, stop: boolean): void => {
@@ -203,7 +203,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
         mqtt_client.on('message', (receivedTopic, message) => {
             if (receivedTopic === topic) {
                 const receivedImageBlob = new Blob([message]);
-                setImageBlob(receivedImageBlob);
+                setImageBlob(showImage ? receivedImageBlob : null);
             }
         });
     
@@ -340,7 +340,8 @@ export default function Mapping(props: MappingProps): JSX.Element {
                             <div className={styles.navigation}>
                                 <Navigation />
                                 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-                                {showImage && imageBlob && <img src={URL.createObjectURL(imageBlob)} alt="Streamed Image"/>}
+                                {imageBlob ? (<img src={URL.createObjectURL(imageBlob)} alt="Streamed Image"/>) 
+                                           : (<div style={{ width: '320px', height: '240px', backgroundColor: 'black' }} />)}
                             </div>
                             <div>
                             </div>
