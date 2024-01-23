@@ -13,6 +13,9 @@ import axios from "axios";
 export default function Home(): JSX.Element {
   const router = useRouter();
 
+  const [showRegisterUnitColumn, setShowRegisterUnitColumn] = useState<boolean>(false);
+
+
   const data = [
     { id: 1, unit: 'MSD700-1', status: 'on', battery: '90%', uptime: '5 hours' },
     { id: 2, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
@@ -156,6 +159,15 @@ export default function Home(): JSX.Element {
   }, [data]);
 
 
+  // Handler to show registerUnitColumn
+  const handleShowRegisterUnitColumn = () => {
+    setShowRegisterUnitColumn(true);
+  };
+
+  // Handler to hide registerUnitColumn
+  const handleHideRegisterUnitColumn = () => {
+    setShowRegisterUnitColumn(false);
+  };
 
 
 
@@ -176,7 +188,7 @@ export default function Home(): JSX.Element {
             <div className={styles.buttonRegister} onClick={goToSignUpPage}>
               <Image
                 src="/icons/user-register.svg"
-                alt="Picture of the author"
+                alt="Sign up icon"
                 width={20}
                 height={20}
               />
@@ -188,10 +200,11 @@ export default function Home(): JSX.Element {
         <div className={styles.centerSection}>
 
           <div className={styles.greetings}>
-            <p>Hello Username, welcome to the MSD700 application!</p>
+            <p>Hello, welcome to the MSD700 application!</p>
           </div>
 
           <div className={styles.dataSection}>
+
             <div className={styles.loginSection}>
               <div className={styles.labelSection}>
                 <p>
@@ -251,20 +264,7 @@ export default function Home(): JSX.Element {
                 </form>
               </div>
             </div>
-            <div className={styles.registerUnit}>
-              <div className={styles.registerUnitText}>
-                <p>Is the unit not registered yet?</p>
-              </div>
-              <div className={styles.buttonRegisterUnit} onClick={goToSignUpPage}>
-                <Image
-                  src="/icons/user-register.svg"
-                  alt="Picture of the author"
-                  width={20}
-                  height={20}
-                />
-                <p>UNIT REGISTER</p>
-              </div>
-            </div>
+
             <div className={styles.tableUnit}>
               <div className={styles.labelSection}>
                 <p>
@@ -319,6 +319,76 @@ export default function Home(): JSX.Element {
                 />
               </button>
             </div>
+
+          </div>
+
+          <div className={styles.registerUnit}>
+            <div className={styles.registerUnitForm}>
+              <div className={styles.registerUnitText}>
+                <p>Is the unit not registered yet?</p>
+              </div>
+              <div className={styles.buttonRegisterUnit} onClick={handleShowRegisterUnitColumn}>
+                <Image
+                  src="/icons/user-register.svg"
+                  alt="Picture of the author"
+                  width={20}
+                  height={20}
+                />
+                <p>UNIT REGISTER</p>
+              </div>
+            </div>
+            {showRegisterUnitColumn && (
+              <div className={styles.registerUnitColumn}>
+                <div className={styles.inputUnit}>
+                  <label htmlFor="username">Unit ID</label>
+                  <p className={styles.separateElement}>:</p>
+                  <input
+                    type="text"
+                    id="unitid"
+                    name="unitid"
+                    defaultValue=""
+                    required
+                  />
+                </div>
+                <div className={styles.buttonSection}>
+                  <button className={styles.registerButton} type="submit" >
+                    Register
+                  </button>
+                  <button className={styles.cancelButton} type="submit" onClick={handleHideRegisterUnitColumn}>
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+            {/* <div className={styles.registerUnitColumn}>
+              <div className={styles.inputUnit}>
+                <label htmlFor="username">Unit ID</label>
+                <p className={styles.separateElement}>:</p>
+                <input
+                  type="text"
+                  id="unitid"
+                  name="unitid"
+                  defaultValue=""
+                  required
+                />
+              </div>
+              <div className={styles.buttonSection}>
+                <button
+                  className={styles.registerButton}
+                  type="submit" // Specify the type as submit
+                  onClick={onProceedButtonClick}
+                >
+                  Register
+                </button>
+                <button
+                  className={styles.submitButton}
+                  type="submit" // Specify the type as submit
+                  onClick={onProceedButtonClick}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div> */}
           </div>
         </div>
 
