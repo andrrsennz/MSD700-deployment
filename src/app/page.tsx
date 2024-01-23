@@ -14,26 +14,13 @@ export default function Home(): JSX.Element {
   const router = useRouter();
 
   const [showRegisterUnitColumn, setShowRegisterUnitColumn] = useState<boolean>(false);
+  const [selectedRowId, setSelectedRowId] = useState(null);
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [registerSuccess, setRegisterSuccess] = useState(false);
+  const [registerFailure, setRegisterFailure] = useState(false);
 
+  const [data, setData] = useState<any[]>([]);
 
-  const data = [
-    { id: 1, unit: 'MSD700-1', status: 'on', battery: '90%', uptime: '5 hours' },
-    { id: 2, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
-    { id: 3, unit: 'MSD700-1', status: 'on', battery: '90%', uptime: '5 hours' },
-    { id: 4, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
-    { id: 5, unit: 'MSD700-1', status: 'on', battery: '90%', uptime: '5 hours' },
-    { id: 6, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
-    { id: 7, unit: 'MSD700-1', status: 'on', battery: '90%', uptime: '5 hours' },
-    { id: 8, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
-    { id: 9, unit: 'MSD700-1', status: 'on', battery: '90%', uptime: '5 hours' },
-    { id: 10, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
-    { id: 11, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
-    { id: 12, unit: 'MSD700-1', status: 'on', battery: '90%', uptime: '5 hours' },
-    { id: 13, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
-
-
-    // Add more data rows here
-  ];
 
   if (typeof window !== "undefined") {
     // Code using sessionStorage
@@ -63,7 +50,9 @@ export default function Home(): JSX.Element {
           sessionStorage.setItem("username", response.data.username);
           sessionStorage.setItem("full_name", response.data.full_name);
           sessionStorage.setItem("token", response.data.token);
-          router.push("/unit/control");
+
+          fetchUnitData(response.data.token);
+          setShowUtilSection(true);
         }
         else {
           alert("Invalid username or password");
@@ -73,8 +62,33 @@ export default function Home(): JSX.Element {
         console.log(error);
         alert("Invalid username or password");
       })
-    setShowUtilSection(true);
   };
+
+  const fetchUnitData = (token: any) => {
+    axios.get("http://slam.itbdelabo.my.id:5000/unit/all", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then((response) => {
+        if (response.data && response.data.success) {
+          const formattedData = response.data.data.map((item: any) => ({
+            id: item.id,
+            unit: item.unit_name,
+            status: '', // You can define default values or modify as needed
+            battery: '',
+            uptime: ''
+          }));
+
+          setData(formattedData); // Update your state
+          setShowUtilSection(true);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching unit data: ", error);
+      });
+  };
+
 
   const onConfirmButtonClick = (): void => {
     setShowConfirmDialog(true);
@@ -167,6 +181,111 @@ export default function Home(): JSX.Element {
   // Handler to hide registerUnitColumn
   const handleHideRegisterUnitColumn = () => {
     setShowRegisterUnitColumn(false);
+  };
+
+  const handleRowClick = (id: any) => {
+    if (selectedRowId === id) {
+      // If the row is already selected, unselect it
+      setSelectedRowId(null);
+      sessionStorage.removeItem('unit');
+    } else {
+      // Else, select the row and save to sessionStorage
+      setSelectedRowId(id);
+      sessionStorage.setItem('unit', id.toString());
+    }
+  };
+
+  useEffect(() => {
+    const handlePageClick = () => {
+      if (showAlert) {
+        setShowAlert(false);
+      }
+    };
+
+    if (showAlert) {
+      document.addEventListener('click', handlePageClick);
+    }
+
+    return () => {
+      document.removeEventListener('click', handlePageClick);
+    };
+  }, [showAlert]);
+
+  const handleStartButtonClick = () => {
+    if (selectedRowId === null) {
+      // Show alert if no row is selected
+      setShowAlert(true);
+    } else {
+      // Find the selected unit data using the selectedRowId
+      const selectedUnit = data.find(item => item.id === selectedRowId);
+      if (selectedUnit) {
+        // Save the id and the unit_name to sessionStorage
+        sessionStorage.setItem('unit_id', selectedUnit.id.toString());
+        sessionStorage.setItem('unit_name', selectedUnit.unit);
+
+        // Proceed with starting the application if a row is selected
+        router.push("/unit/control");
+      } else {
+        // Handle the case where the selected unit is not found in the data array
+        console.error("Selected unit not found in the data array");
+        // You may want to set an error state here to inform the user
+      }
+    }
+  };
+
+  // The JSX for the alert
+  const AlertComponent = () => {
+    if (!showAlert) {
+      return null;
+    }
+
+    return (
+      <div className={styles.alertOverlay} onClick={() => setShowAlert(false)}>
+        <div className={styles.alertBox}>
+          <Image
+            src="/icons/warning.svg"
+            alt="Warning icon"
+            width={20}
+            height={20}
+          />
+          <p>You haven't selected the unit yet.</p>
+        </div>
+      </div>
+    );
+  };
+
+  const handleRegisterButtonClick = async () => {
+    const unitInput = document.getElementById('unitid') as HTMLInputElement | null;
+    const token = sessionStorage.getItem('token'); // Retrieve the token from sessionStorage
+
+    if (unitInput && token) {
+      try {
+        const response = await axios.post('http://slam.itbdelabo.my.id:5000/unit/register', {
+          unit_name: unitInput.value
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        if (response.data.success) {
+          setRegisterSuccess(true);
+          setTimeout(() => setRegisterSuccess(false), 2000); // Hide the success message after 2 seconds
+          fetchUnitData(token); // Fetch unit data again to update the list
+        } else {
+          // If the response has a success property but it's not true, assume failure
+          throw new Error('Registration not successful');
+        }
+      } catch (error) {
+        console.error("Registration failed: ", error);
+        setRegisterFailure(true);
+        setTimeout(() => setRegisterFailure(false), 2000); // Hide the failure message after 2 seconds
+      }
+    } else {
+      // Handle the case where the unit input or token is null
+      console.error("Unit input or token is missing");
+      // You could set an error state here to inform the user
+    }
   };
 
 
@@ -265,60 +384,69 @@ export default function Home(): JSX.Element {
               </div>
             </div>
 
-            <div className={styles.tableUnit}>
-              <div className={styles.labelSection}>
-                <p>
-                  <span>
-                    <Image
-                      src="/icons/information-circle-svgrepo-com.svg"
-                      alt="Picture of the author"
-                      width={500}
-                      height={500}
-                    />
-                  </span>
-                  Please choose your MSD700 unit.
-                </p>
-              </div>
-              <div className={styles.tableSection}>
-                <table className={styles.table}>
-                  <thead className={styles.headerTable}>
-                    <tr >
-                      <th>No.</th>
-                      <th>MSD700 Unit</th>
-                      <th>Status</th>
-                      <th>Battery</th>
-                      <th>Uptime</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.map((item) => (
-                      <tr key={item.id} className={item.status === 'off' ? styles.offRow : styles.onRow}>
-                        <td data-column="0">{item.id}</td>
-                        <td data-column="1">{item.unit}</td>
-                        <td data-column="2">{item.status}</td>
-                        <td data-column="3">{item.battery}</td>
-                        <td data-column="4">{item.uptime}</td>
+            {
+              showUtilSection ? (<div className={styles.tableUnit}>
+                <div className={styles.labelSection}>
+                  <p>
+                    <span>
+                      <Image
+                        src="/icons/information-circle-svgrepo-com.svg"
+                        alt="Picture of the author"
+                        width={500}
+                        height={500}
+                      />
+                    </span>
+                    Please choose your MSD700 unit.
+                  </p>
+                </div>
+                <div className={styles.tableSection}>
+                  <table className={styles.table}>
+                    <thead className={styles.headerTable}>
+                      <tr >
+                        <th>No.</th>
+                        <th>MSD700 Unit</th>
+                        <th>Status</th>
+                        <th>Battery</th>
+                        <th>Uptime</th>
                       </tr>
-                    ))}
+                    </thead>
+                    <tbody>
+                      {data.map((item) => (
+                        <tr
+                          key={item.id}
+                          onClick={() => handleRowClick(item.id)}
+                          className={`${item.status === 'off' ? styles.offRow : styles.onRow} ${selectedRowId === item.id ? styles.selectedRow : ''}`}
+                        >
+                          <td data-column="0">{item.id}</td>
+                          <td data-column="1">{item.unit}</td>
+                          <td data-column="2">{item.status}</td>
+                          <td data-column="3">{item.battery}</td>
+                          <td data-column="4">{item.uptime}</td>
+                        </tr>
+                      ))}
 
-                  </tbody>
-                </table>
+                    </tbody>
+                  </table>
 
-              </div>
-              <button
-                // onClick={goToUnitPage}
-                aria-label="Submit form Button"
-                className={styles.loginFormButton}
-              >
-                <p>Start</p>
-                <Image
-                  src="/icons/arrow-right-3-svgrepo-com (1).svg"
-                  alt=""
-                  width={500}
-                  height={500}
-                />
-              </button>
-            </div>
+                </div>
+                <button
+                  // onClick={goToUnitPage}
+                  aria-label="Submit form Button"
+                  className={styles.loginFormButton}
+                  onClick={handleStartButtonClick}
+                >
+                  <p>Start</p>
+                  <Image
+                    src="/icons/arrow-right-3-svgrepo-com (1).svg"
+                    alt=""
+                    width={500}
+                    height={500}
+                  />
+                </button>
+
+                <AlertComponent />
+              </div>) : ""
+            }
 
           </div>
 
@@ -329,7 +457,7 @@ export default function Home(): JSX.Element {
               </div>
               <div className={styles.buttonRegisterUnit} onClick={handleShowRegisterUnitColumn}>
                 <Image
-                  src="/icons/user-register.svg"
+                  src="/icons/Car.svg"
                   alt="Picture of the author"
                   width={20}
                   height={20}
@@ -351,7 +479,7 @@ export default function Home(): JSX.Element {
                   />
                 </div>
                 <div className={styles.buttonSection}>
-                  <button className={styles.registerButton} type="submit" >
+                  <button className={styles.registerButton} type="button" onClick={handleRegisterButtonClick}>
                     Register
                   </button>
                   <button className={styles.cancelButton} type="submit" onClick={handleHideRegisterUnitColumn}>
@@ -360,42 +488,39 @@ export default function Home(): JSX.Element {
                 </div>
               </div>
             )}
-            {/* <div className={styles.registerUnitColumn}>
-              <div className={styles.inputUnit}>
-                <label htmlFor="username">Unit ID</label>
-                <p className={styles.separateElement}>:</p>
-                <input
-                  type="text"
-                  id="unitid"
-                  name="unitid"
-                  defaultValue=""
-                  required
-                />
-              </div>
-              <div className={styles.buttonSection}>
-                <button
-                  className={styles.registerButton}
-                  type="submit" // Specify the type as submit
-                  onClick={onProceedButtonClick}
-                >
-                  Register
-                </button>
-                <button
-                  className={styles.submitButton}
-                  type="submit" // Specify the type as submit
-                  onClick={onProceedButtonClick}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div> */}
+            {
+              registerSuccess && (
+                <div className={styles.registerUnitSuccessInformation}>
+                  <Image
+                    src="/icons/save.svg"
+                    alt="Success icon"
+                    width={20}
+                    height={20}
+                  />
+                  <p>The unit has been registered.</p>
+                </div>
+              )
+            }
+            {
+              registerFailure && (
+                <div className={styles.registerUnitFailedInformation}>
+                  <Image
+                    src="/icons/error.svg" // Change this to an error icon
+                    alt="Error icon"
+                    width={20}
+                    height={20}
+                  />
+                  <p>This unit has previously been registered.</p>
+                </div>
+              )
+            }
           </div>
         </div>
+      </div>
 
-        <div className={styles.bottomSection}>
-          <div className={styles.theFooter}>
-            <Footer status={true} />
-          </div>
+      <div className={styles.bottomSection}>
+        <div className={styles.theFooter}>
+          <Footer status={true} />
         </div>
       </div>
     </>
