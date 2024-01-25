@@ -19,10 +19,12 @@ const Navigation: React.FC<NavigationProps> = ({ imageSrc }) => {
   const pathname = usePathname() || '/unit/control';
   const [username, setUsername] = useState<string>('');
   const [full_name, setFull_name] = useState<string>('');
+  const [unit_name, setUnit_name] = useState<string>('');
 
   useEffect(() => {
     setUsername(sessionStorage.getItem('username') || '');
     setFull_name(sessionStorage.getItem('full_name') || '');
+    setUnit_name(sessionStorage.getItem('unit_name') || '');
   })
 
   function isActive(href: string) {
@@ -55,7 +57,7 @@ const Navigation: React.FC<NavigationProps> = ({ imageSrc }) => {
             }`}
         >
           <img src="/icons/user-10-svgrepo-com.svg" alt="" />
-          <p>{`Welcome, ${full_name} (${username})`}</p>
+          <p>{`Welcome, ${full_name} (${username}) - ${unit_name}`}</p>
         </div>
         <div className={styles.menu}>
           <div
@@ -92,7 +94,7 @@ const Navigation: React.FC<NavigationProps> = ({ imageSrc }) => {
 
         <div className={styles.mapStream}>
           <div className={styles.mapName}>
-            <p>20230804_Room A</p>
+            <p>Live Camera Stream</p>
           </div>
           <div className={styles.mapDisplay}>
             {/* <Image
@@ -101,7 +103,7 @@ const Navigation: React.FC<NavigationProps> = ({ imageSrc }) => {
               width={200}
               height={160}
             /> */}
-            {imageSrc ? <img src={imageSrc} alt="Streamed Image" /> : (<div style={{ width: '240px', height: '170px', backgroundColor: 'black' }} />)}
+            {imageSrc ? <img src={imageSrc} alt="Streamed Image" width="240" height="170" /> : (<div style={{ width: '240px', height: '170px', backgroundColor: 'black' }} />)}
           </div>
         </div>
       </div>

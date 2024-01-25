@@ -320,7 +320,7 @@ export default function Mapping() {
           </div>
           <CloseButton onClick={onConfirmButtonClick} />
           <div className={styles.navigation}>
-            <Navigation />
+            <Navigation imageSrc={imageBlob ? URL.createObjectURL(imageBlob) : undefined} />
           </div>
           <div className={styles.mapSection}>
             <div className={styles.topDiv}>

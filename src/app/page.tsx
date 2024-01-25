@@ -14,27 +14,12 @@ export default function Home(): JSX.Element {
   const router = useRouter();
 
   const [showRegisterUnitColumn, setShowRegisterUnitColumn] = useState<boolean>(false);
-  const [selectedRowId, setSelectedRowId] = useState(null);
+  const [selectedRowIdx, setSelectedRowIdx] = useState(null);
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [registerSuccess, setRegisterSuccess] = useState(false);
   const [registerFailure, setRegisterFailure] = useState(false);
 
-  const [data, setData] = useState<any[]>([
-
-    { id: 1, unit: 'MSD700-1', status: 'on', battery: '90%', uptime: '5 hours' },
-    { id: 2, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
-    { id: 3, unit: 'MSD700-1', status: 'on', battery: '90%', uptime: '5 hours' },
-    { id: 4, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
-    { id: 5, unit: 'MSD700-1', status: 'on', battery: '90%', uptime: '5 hours' },
-    { id: 6, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
-    { id: 7, unit: 'MSD700-1', status: 'on', battery: '90%', uptime: '5 hours' },
-    { id: 8, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
-    { id: 9, unit: 'MSD700-1', status: 'on', battery: '90%', uptime: '5 hours' },
-    { id: 10, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
-    { id: 11, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
-    { id: 12, unit: 'MSD700-1', status: 'on', battery: '90%', uptime: '5 hours' },
-    { id: 13, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
-  ]);
+  const [data, setData] = useState<any[]>([]);
 
 
   if (typeof window !== "undefined") {
@@ -44,18 +29,16 @@ export default function Home(): JSX.Element {
       : "";
   }
 
-  const [showUtilSection, setShowUtilSection] = useState<boolean>(true);
+  const [showUtilSection, setShowUtilSection] = useState<boolean>(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");
 
 
   const onProceedButtonClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
-    // const ip_address = (document.getElementById("ipAddress") as HTMLInputElement).value
-    // sessionStorage.setItem("ip_address", ip_address);
     const username = document.getElementById("username") as HTMLInputElement;
     const password = document.getElementById("password") as HTMLInputElement;
-    const backendUrl = process.env.BACKEND_URL || "http://localhost:5000";
     axios.post(`${backendUrl}/user/login`, {
       username: username.value,
       password: password.value
@@ -80,7 +63,7 @@ export default function Home(): JSX.Element {
   };
 
   const fetchUnitData = (token: any) => {
-    axios.get("http://slam.itbdelabo.my.id:5000/unit/all", {
+    axios.get(`${backendUrl}/unit/all`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -198,15 +181,13 @@ export default function Home(): JSX.Element {
     setShowRegisterUnitColumn(false);
   };
 
-  const handleRowClick = (id: any) => {
-    if (selectedRowId === id) {
+  const handleRowClick = (idx: any) => {
+    if (selectedRowIdx === idx) {
       // If the row is already selected, unselect it
-      setSelectedRowId(null);
-      sessionStorage.removeItem('unit');
+      setSelectedRowIdx(null);
     } else {
       // Else, select the row and save to sessionStorage
-      setSelectedRowId(id);
-      sessionStorage.setItem('unit', id.toString());
+      setSelectedRowIdx(idx);
     }
   };
 
@@ -227,15 +208,14 @@ export default function Home(): JSX.Element {
   }, [showAlert]);
 
   const handleStartButtonClick = () => {
-    if (selectedRowId === null) {
+    if (selectedRowIdx === null) {
       // Show alert if no row is selected
       setShowAlert(true);
     } else {
-      // Find the selected unit data using the selectedRowId
-      const selectedUnit = data.find(item => item.id === selectedRowId);
+      // Find the selected unit data using the selectedRowIdx
+      const selectedUnit = data[selectedRowIdx]
       if (selectedUnit) {
         // Save the id and the unit_name to sessionStorage
-        sessionStorage.setItem('unit_id', selectedUnit.id.toString());
         sessionStorage.setItem('unit_name', selectedUnit.unit);
 
         // Proceed with starting the application if a row is selected
@@ -275,7 +255,7 @@ export default function Home(): JSX.Element {
 
     if (unitInput && token) {
       try {
-        const response = await axios.post('http://slam.itbdelabo.my.id:5000/unit/register', {
+        const response = await axios.post(`${backendUrl}/unit/register`, {
           unit_name: unitInput.value
         }, {
           headers: {
@@ -428,13 +408,13 @@ export default function Home(): JSX.Element {
                           </tr>
                         </thead>
                         <tbody>
-                          {data.map((item) => (
+                          {data.map((item, idx) => (
                             <tr
-                              key={item.id}
-                              onClick={() => handleRowClick(item.id)}
-                              className={`${item.status === 'off' ? styles.offRow : styles.onRow} ${selectedRowId === item.id ? styles.selectedRow : ''}`}
+                              key={idx}
+                              onClick={() => handleRowClick(idx)}
+                              className={`${item.status === 'off' ? styles.offRow : styles.onRow} ${selectedRowIdx === idx ? styles.selectedRow : ''}`}
                             >
-                              <td data-column="0">{item.id}</td>
+                              <td data-column="0">{idx+1}</td>
                               <td data-column="1">{item.unit}</td>
                               <td data-column="2">{item.status}</td>
                               <td data-column="3">{item.battery}</td>
