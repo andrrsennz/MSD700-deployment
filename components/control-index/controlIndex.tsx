@@ -27,6 +27,7 @@ export default function Mapping() {
   const [status, setStatus] = useState<string>("Idle");
   const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");
   const [brokerUrl, setBrokerUrl] = useState<string>(process.env.WS_MQTT_BROKER_URL || "ws://localhost:9001");
+  const [rosUrl, setRosUrl] = useState<string>(process.env.WS_ROSBRIDGE_URL || "ws://localhost:9090");
   const [topic, setTopic] = useState<string>('/camera');
   const [imageBlob, setImageBlob] = useState<Blob | null>(null);
 
@@ -140,7 +141,7 @@ export default function Mapping() {
     // Connect to ROS.
     const ROSLIB = (window as any).ROSLIB;
     ros = new ROSLIB.Ros({
-      url: process.env.WS_ROSBRIDGE_URL,
+      url: rosUrl,
     });
 
     // Handle ROS connection errors
