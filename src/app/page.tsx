@@ -19,7 +19,22 @@ export default function Home(): JSX.Element {
   const [registerSuccess, setRegisterSuccess] = useState(false);
   const [registerFailure, setRegisterFailure] = useState(false);
 
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<any[]>([
+
+    { id: 1, unit: 'MSD700-1', status: 'on', battery: '90%', uptime: '5 hours' },
+    { id: 2, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
+    { id: 3, unit: 'MSD700-1', status: 'on', battery: '90%', uptime: '5 hours' },
+    { id: 4, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
+    { id: 5, unit: 'MSD700-1', status: 'on', battery: '90%', uptime: '5 hours' },
+    { id: 6, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
+    { id: 7, unit: 'MSD700-1', status: 'on', battery: '90%', uptime: '5 hours' },
+    { id: 8, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
+    { id: 9, unit: 'MSD700-1', status: 'on', battery: '90%', uptime: '5 hours' },
+    { id: 10, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
+    { id: 11, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
+    { id: 12, unit: 'MSD700-1', status: 'on', battery: '90%', uptime: '5 hours' },
+    { id: 13, unit: 'MSD700-2', status: 'off', battery: '65%', uptime: '3 hours' },
+  ]);
 
 
   if (typeof window !== "undefined") {
@@ -29,7 +44,7 @@ export default function Home(): JSX.Element {
       : "";
   }
 
-  const [showUtilSection, setShowUtilSection] = useState<boolean>(false);
+  const [showUtilSection, setShowUtilSection] = useState<boolean>(true);
   const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -385,144 +400,151 @@ export default function Home(): JSX.Element {
             </div>
 
             {
-              showUtilSection ? (<div className={styles.tableUnit}>
-                <div className={styles.labelSection}>
-                  <p>
-                    <span>
+              showUtilSection ? (
+                <>
+                  <div className={styles.tableUnit}>
+                    <div className={styles.labelSection}>
+                      <p>
+                        <span>
+                          <Image
+                            src="/icons/information-circle-svgrepo-com.svg"
+                            alt="Picture of the author"
+                            width={500}
+                            height={500}
+                          />
+                        </span>
+                        Please choose your MSD700 unit.
+                      </p>
+                    </div>
+                    <div className={styles.tableSection}>
+                      <table className={styles.table}>
+                        <thead className={styles.headerTable}>
+                          <tr >
+                            <th>No.</th>
+                            <th>MSD700 Unit</th>
+                            <th>Status</th>
+                            <th>Battery</th>
+                            <th>Uptime</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {data.map((item) => (
+                            <tr
+                              key={item.id}
+                              onClick={() => handleRowClick(item.id)}
+                              className={`${item.status === 'off' ? styles.offRow : styles.onRow} ${selectedRowId === item.id ? styles.selectedRow : ''}`}
+                            >
+                              <td data-column="0">{item.id}</td>
+                              <td data-column="1">{item.unit}</td>
+                              <td data-column="2">{item.status}</td>
+                              <td data-column="3">{item.battery}</td>
+                              <td data-column="4">{item.uptime}</td>
+                            </tr>
+                          ))}
+
+                        </tbody>
+                      </table>
+
+                    </div>
+                    <button
+                      // onClick={goToUnitPage}
+                      aria-label="Submit form Button"
+                      className={styles.loginFormButton}
+                      onClick={handleStartButtonClick}
+                    >
+                      <p>Start</p>
                       <Image
-                        src="/icons/information-circle-svgrepo-com.svg"
-                        alt="Picture of the author"
+                        src="/icons/arrow-right-3-svgrepo-com (1).svg"
+                        alt=""
                         width={500}
                         height={500}
                       />
-                    </span>
-                    Please choose your MSD700 unit.
-                  </p>
-                </div>
-                <div className={styles.tableSection}>
-                  <table className={styles.table}>
-                    <thead className={styles.headerTable}>
-                      <tr >
-                        <th>No.</th>
-                        <th>MSD700 Unit</th>
-                        <th>Status</th>
-                        <th>Battery</th>
-                        <th>Uptime</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {data.map((item) => (
-                        <tr
-                          key={item.id}
-                          onClick={() => handleRowClick(item.id)}
-                          className={`${item.status === 'off' ? styles.offRow : styles.onRow} ${selectedRowId === item.id ? styles.selectedRow : ''}`}
-                        >
-                          <td data-column="0">{item.id}</td>
-                          <td data-column="1">{item.unit}</td>
-                          <td data-column="2">{item.status}</td>
-                          <td data-column="3">{item.battery}</td>
-                          <td data-column="4">{item.uptime}</td>
-                        </tr>
-                      ))}
+                    </button>
 
-                    </tbody>
-                  </table>
-
-                </div>
-                <button
-                  // onClick={goToUnitPage}
-                  aria-label="Submit form Button"
-                  className={styles.loginFormButton}
-                  onClick={handleStartButtonClick}
-                >
-                  <p>Start</p>
-                  <Image
-                    src="/icons/arrow-right-3-svgrepo-com (1).svg"
-                    alt=""
-                    width={500}
-                    height={500}
-                  />
-                </button>
-
-                <AlertComponent />
-              </div>) : ""
+                    <AlertComponent />
+                  </div>
+                  <div className={styles.registerUnit}>
+                    <div className={styles.registerUnitForm}>
+                      <div className={styles.registerUnitText}>
+                        <p>Is the unit not registered yet?</p>
+                      </div>
+                      <div className={styles.buttonRegisterUnit} onClick={handleShowRegisterUnitColumn}>
+                        <Image
+                          src="/icons/Car.svg"
+                          alt="Picture of the author"
+                          width={20}
+                          height={20}
+                        />
+                        <p>UNIT REGISTER</p>
+                      </div>
+                    </div>
+                    {showRegisterUnitColumn && (
+                      <div className={styles.registerUnitColumn}>
+                        <div className={styles.inputUnit}>
+                          <label htmlFor="username">Unit ID</label>
+                          <p className={styles.separateElement}>:</p>
+                          <input
+                            type="text"
+                            id="unitid"
+                            name="unitid"
+                            defaultValue=""
+                            required
+                          />
+                        </div>
+                        <div className={styles.buttonSection}>
+                          <button className={styles.registerButton} type="button" onClick={handleRegisterButtonClick}>
+                            Register
+                          </button>
+                          <button className={styles.cancelButton} type="submit" onClick={handleHideRegisterUnitColumn}>
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    {
+                      registerSuccess && (
+                        <div className={styles.registerUnitSuccessInformation}>
+                          <Image
+                            src="/icons/save.svg"
+                            alt="Success icon"
+                            width={20}
+                            height={20}
+                          />
+                          <p>The unit has been registered.</p>
+                        </div>
+                      )
+                    }
+                    {
+                      registerFailure && (
+                        <div className={styles.registerUnitFailedInformation}>
+                          <Image
+                            src="/icons/error.svg" // Change this to an error icon
+                            alt="Error icon"
+                            width={20}
+                            height={20}
+                          />
+                          <p>This unit has previously been registered.</p>
+                        </div>
+                      )
+                    }
+                  </div>
+                </>
+              ) : ""
             }
 
           </div>
 
-          <div className={styles.registerUnit}>
-            <div className={styles.registerUnitForm}>
-              <div className={styles.registerUnitText}>
-                <p>Is the unit not registered yet?</p>
-              </div>
-              <div className={styles.buttonRegisterUnit} onClick={handleShowRegisterUnitColumn}>
-                <Image
-                  src="/icons/Car.svg"
-                  alt="Picture of the author"
-                  width={20}
-                  height={20}
-                />
-                <p>UNIT REGISTER</p>
-              </div>
-            </div>
-            {showRegisterUnitColumn && (
-              <div className={styles.registerUnitColumn}>
-                <div className={styles.inputUnit}>
-                  <label htmlFor="username">Unit ID</label>
-                  <p className={styles.separateElement}>:</p>
-                  <input
-                    type="text"
-                    id="unitid"
-                    name="unitid"
-                    defaultValue=""
-                    required
-                  />
-                </div>
-                <div className={styles.buttonSection}>
-                  <button className={styles.registerButton} type="button" onClick={handleRegisterButtonClick}>
-                    Register
-                  </button>
-                  <button className={styles.cancelButton} type="submit" onClick={handleHideRegisterUnitColumn}>
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            )}
-            {
-              registerSuccess && (
-                <div className={styles.registerUnitSuccessInformation}>
-                  <Image
-                    src="/icons/save.svg"
-                    alt="Success icon"
-                    width={20}
-                    height={20}
-                  />
-                  <p>The unit has been registered.</p>
-                </div>
-              )
-            }
-            {
-              registerFailure && (
-                <div className={styles.registerUnitFailedInformation}>
-                  <Image
-                    src="/icons/error.svg" // Change this to an error icon
-                    alt="Error icon"
-                    width={20}
-                    height={20}
-                  />
-                  <p>This unit has previously been registered.</p>
-                </div>
-              )
-            }
+
+        </div>
+
+        <div className={styles.bottomSection}>
+          <div className={styles.theFooter}>
+            <Footer status={true} />
           </div>
         </div>
       </div>
 
-      <div className={styles.bottomSection}>
-        <div className={styles.theFooter}>
-          <Footer status={true} />
-        </div>
-      </div>
+
     </>
   );
 }

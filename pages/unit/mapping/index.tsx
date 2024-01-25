@@ -20,7 +20,7 @@ var paN: any
 var movecoor: any = [];
 var isDrag = false;
 var startcoor: any = [];
-var showImage:boolean = false;
+var showImage: boolean = false;
 
 export default function Mapping(props: MappingProps): JSX.Element {
     const [showConfirmClosePageDialog, setShowConfirmClosePageDialog] =
@@ -69,7 +69,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
             use_own_map: use_own_map
         }, {
             headers: {
-                'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
             }
         })
             .then(function (response) {
@@ -89,7 +89,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
             stop: stop
         }, {
             headers: {
-                'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
             }
         })
             .then(function (response) {
@@ -128,22 +128,22 @@ export default function Mapping(props: MappingProps): JSX.Element {
         var enableRos = false;
         async function checkToken() {
             await axios.get(`${backendUrl}`, {
-              headers: {
-                  'Authorization' : `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
-              }
+                headers: {
+                    'Authorization': `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
+                }
             })
-            .then((response) => {
-              if (response.status === 200) {
-                setRender(true);
-                enableRos = true;
-              }
-              else {
-                router.push('/');
-              }
-            })
-            .catch((error) => {
-              router.push('/');
-            });
+                .then((response) => {
+                    if (response.status === 200) {
+                        setRender(true);
+                        enableRos = true;
+                    }
+                    else {
+                        router.push('/');
+                    }
+                })
+                .catch((error) => {
+                    router.push('/');
+                });
         }
         checkToken();
         const ROSLIB = (window as any).ROSLIB;
@@ -199,18 +199,18 @@ export default function Mapping(props: MappingProps): JSX.Element {
             mqtt_client.subscribe(topic);
             console.log('Connected to MQTT broker');
         });
-        
+
         mqtt_client.on('message', (receivedTopic, message) => {
             if (receivedTopic === topic) {
                 const receivedImageBlob = new Blob([message]);
                 setImageBlob(showImage ? receivedImageBlob : null);
             }
         });
-    
+
         mqtt_client.on('close', () => {
             console.log('Connection to MQTT is closed');
         })
-      
+
         return () => {
             // clean up when exiting the page
             ros.close();
@@ -249,8 +249,8 @@ export default function Mapping(props: MappingProps): JSX.Element {
     const rotateCW = () => {
         var rotate = new (window as any).ROS2D.Rotate({
             rootObject: viewer.scene
-          });
-          rotate.startRotate(20);
+        });
+        rotate.startRotate(20);
     }
 
     const restart = () => {
@@ -260,7 +260,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
         });
         var rotate = new (window as any).ROS2D.Rotate({
             rootObject: viewer.scene
-          });
+        });
         rotate.resetRotate();
         zoom.startZoom(250, 250);
         var result = zoomCrossConst.reduce((accumulator, currentValue) => accumulator * currentValue, 1);
@@ -288,7 +288,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
     };
 
     return (
-        <> {render ? 
+        <> {render ?
             (
                 <>
                     <Head>
@@ -338,10 +338,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
                             </div>
                             <CloseButton onClick={onConfirmButtonClick} />
                             <div className={styles.navigation}>
-                                <Navigation />
-                                <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-                                {imageBlob ? (<img src={URL.createObjectURL(imageBlob)} alt="Streamed Image"/>) 
-                                           : (<div style={{ width: '320px', height: '240px', backgroundColor: 'black' }} />)}
+                                <Navigation imageSrc={imageBlob ? URL.createObjectURL(imageBlob) : undefined} />
                             </div>
                             <div>
                             </div>
@@ -441,7 +438,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
                     <Script src="/script/ros2d.js" strategy="beforeInteractive" />
                 </>
             ) : (<>
-                </>)}
+            </>)}
         </>
     );
 }

@@ -114,7 +114,7 @@
 .centerSection {
     width: 60%;
     padding-top: 15px;
-    
+
     display: flex;
     gap: 20px;
 
@@ -135,7 +135,7 @@
     background-color: #0C98B4;
     /* border: 3px solid #60E3D5; */
     border: none;
-    
+
 
     height: 57px;
     padding: 10px;
@@ -190,6 +190,35 @@
     text-align: left;
     color: #FFFFFF;
 }
+
+/* MAP STREAM SECTION  */
+
+.mapStream {
+    width: 260px;
+    background: hsla(194, 32%, 86%, 1);
+    height: 236.5px;
+    box-shadow: -10px 10px 4px 0px hsla(0, 0%, 0%, 0.25);
+    border-radius: 4px;
+    padding: 15px, 25px, 15px, 25px;
+    gap: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.mapName {
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: hsla(203, 94%, 34%, 1);
+    ;
+}
+
+/* ------------------------------ */
 
 
 @media (min-width: 1440px) {

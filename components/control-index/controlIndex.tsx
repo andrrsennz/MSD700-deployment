@@ -15,7 +15,7 @@ var paN: any
 var movecoor: any = [];
 var isDrag = false;
 var startcoor: any = [];
-var showImage:boolean = false;
+var showImage: boolean = false;
 
 export default function Mapping() {
   const [showConfirmClosePageDialog, setShowConfirmClosePageDialog] =
@@ -29,7 +29,7 @@ export default function Mapping() {
   const [brokerUrl, setBrokerUrl] = useState<string>(process.env.WS_MQTT_BROKER_URL || "ws://localhost:9001");
   const [topic, setTopic] = useState<string>('/camera');
   const [imageBlob, setImageBlob] = useState<Blob | null>(null);
-  
+
   const onConfirmButtonClick = () => {
     setShowConfirmClosePageDialog(true);
   };
@@ -58,9 +58,9 @@ export default function Mapping() {
     axios.post(`${backendUrl}/api/lidar`, {
       enable: enable,
       use_own_map: use_own_map
-    },{
+    }, {
       headers: {
-          'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
+        'Authorization': `Bearer ${sessionStorage.getItem('token')}`
       }
     })
       .then(function (response: any) {
@@ -83,7 +83,7 @@ export default function Mapping() {
       stop: stop
     }, {
       headers: {
-          'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
+        'Authorization': `Bearer ${sessionStorage.getItem('token')}`
       }
     })
       .then(function (response: any) {
@@ -110,7 +110,7 @@ export default function Mapping() {
       map_name: map_name
     }, {
       headers: {
-          'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
+        'Authorization': `Bearer ${sessionStorage.getItem('token')}`
       }
     })
       .then(function (response: any) {
@@ -188,19 +188,19 @@ export default function Mapping() {
     // MQTT Client Setup
     const mqtt_client = mqtt.connect(brokerUrl);
     mqtt_client.on('connect', () => {
-        mqtt_client.subscribe(topic);
-        console.log('Connected to MQTT broker');
+      mqtt_client.subscribe(topic);
+      console.log('Connected to MQTT broker');
     });
-    
+
     mqtt_client.on('message', (receivedTopic, message) => {
-        if (receivedTopic === topic) {
-            const receivedImageBlob = new Blob([message]);
-            setImageBlob(showImage ? receivedImageBlob : null);
-        }
+      if (receivedTopic === topic) {
+        const receivedImageBlob = new Blob([message]);
+        setImageBlob(showImage ? receivedImageBlob : null);
+      }
     });
 
     mqtt_client.on('close', () => {
-        console.log('Connection to MQTT is closed');
+      console.log('Connection to MQTT is closed');
     })
 
     return () => {
@@ -321,9 +321,6 @@ export default function Mapping() {
           <CloseButton onClick={onConfirmButtonClick} />
           <div className={styles.navigation}>
             <Navigation />
-            <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-            {imageBlob ? (<img src={URL.createObjectURL(imageBlob)} alt="Streamed Image"/>) 
-                       : (<div style={{ width: '320px', height: '240px', backgroundColor: 'black' }} />)}
           </div>
           <div className={styles.mapSection}>
             <div className={styles.topDiv}>
@@ -376,8 +373,8 @@ export default function Mapping() {
               <div className={styles.settingsButton}>
                 <img src="/icons/information-circle-svgrepo-com (1).svg" alt="" />
                 <p>
-                  Click, hold, and orient to add the pinpoint 
-                  <br /> 
+                  Click, hold, and orient to add the pinpoint
+                  <br />
                   Double-click to remove the pinpoint
                   <br />
                   Hold middle mouse button to move the map

@@ -3,17 +3,23 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import styles from './navigation.module.css';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface NavLink {
   href: string;
   text: string;
 }
 
-const Navigation: React.FC = () => {
+interface NavigationProps {
+  imageSrc?: string; // optional image source
+}
+
+const Navigation: React.FC<NavigationProps> = ({ imageSrc }) => {
   const router = useRouter();
   const pathname = usePathname() || '/unit/control';
   const [username, setUsername] = useState<string>('');
   const [full_name, setFull_name] = useState<string>('');
+
   useEffect(() => {
     setUsername(sessionStorage.getItem('username') || '');
     setFull_name(sessionStorage.getItem('full_name') || '');
@@ -81,6 +87,21 @@ const Navigation: React.FC = () => {
               <img src="/icons/map-svgrepo-com.svg" alt="" />
               <p>Database</p>
             </Link>
+          </div>
+        </div>
+
+        <div className={styles.mapStream}>
+          <div className={styles.mapName}>
+            <p>20230804_Room A</p>
+          </div>
+          <div className={styles.mapDisplay}>
+            {/* <Image
+              src="/images/camera.png"
+              alt="Warning icon"
+              width={200}
+              height={160}
+            /> */}
+            {imageSrc ? <img src={imageSrc} alt="Streamed Image" /> : (<div style={{ width: '240px', height: '170px', backgroundColor: 'black' }} />)}
           </div>
         </div>
       </div>
