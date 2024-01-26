@@ -18,6 +18,7 @@ export default function Home(): JSX.Element {
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [registerSuccess, setRegisterSuccess] = useState(false);
   const [registerFailure, setRegisterFailure] = useState(false);
+  const [registerInvalid, setRegisterInvalid] = useState(false);
 
   const [data, setData] = useState<any[]>([]);
 
@@ -271,10 +272,16 @@ export default function Home(): JSX.Element {
           // If the response has a success property but it's not true, assume failure
           throw new Error('Registration not successful');
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Registration failed: ", error);
-        setRegisterFailure(true);
-        setTimeout(() => setRegisterFailure(false), 2000); // Hide the failure message after 2 seconds
+        if (error.response.status === 400) {
+          setRegisterInvalid(true);
+          setTimeout(() => setRegisterInvalid(false), 2000); // Hide the invalid message after 2 seconds
+        }
+        else if (error.response.status === 409){
+          setRegisterFailure(true);
+          setTimeout(() => setRegisterFailure(false), 2000); // Hide the failure message after 2 seconds
+        }
       }
     } else {
       // Handle the case where the unit input or token is null
@@ -504,6 +511,19 @@ export default function Home(): JSX.Element {
                             height={20}
                           />
                           <p>This unit has previously been registered.</p>
+                        </div>
+                      )
+                    }
+                    {
+                      registerInvalid && (
+                        <div className={styles.registerUnitFailedInformation}>
+                          <Image
+                            src="/icons/error.svg" // Change this to an error icon
+                            alt="Error icon"
+                            width={20}
+                            height={20}
+                          />
+                          <p>Invalid unit name</p>
                         </div>
                       )
                     }

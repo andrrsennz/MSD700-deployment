@@ -97,12 +97,6 @@ const Navigation: React.FC<NavigationProps> = ({ imageSrc }) => {
             <p>Live Camera Stream</p>
           </div>
           <div className={styles.mapDisplay}>
-            {/* <Image
-              src="/images/camera.png"
-              alt="Warning icon"
-              width={200}
-              height={160}
-            /> */}
             {imageSrc ? <img src={imageSrc} alt="Streamed Image" width="240" height="170" /> : (<div style={{ width: '240px', height: '170px', backgroundColor: 'black' }} />)}
           </div>
         </div>

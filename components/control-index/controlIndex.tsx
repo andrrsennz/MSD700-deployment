@@ -28,7 +28,7 @@ export default function Mapping() {
   const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");
   const [brokerUrl, setBrokerUrl] = useState<string>(process.env.WS_MQTT_BROKER_URL || "ws://localhost:9001");
   const [rosUrl, setRosUrl] = useState<string>(process.env.WS_ROSBRIDGE_URL || "ws://localhost:9090");
-  const [topic, setTopic] = useState<string>('/camera');
+  const [topic, setTopic] = useState<string>(`${sessionStorage.getItem("username")}/${sessionStorage.getItem("unit_name")}/camera`);
   const [imageBlob, setImageBlob] = useState<Blob | null>(null);
 
   const onConfirmButtonClick = () => {
@@ -58,7 +58,8 @@ export default function Mapping() {
   const setLidar = (enable: boolean, use_own_map: boolean): void => {
     axios.post(`${backendUrl}/api/lidar`, {
       enable: enable,
-      use_own_map: use_own_map
+      use_own_map: use_own_map,
+      unit_name: sessionStorage.getItem('unit_name')
     }, {
       headers: {
         'Authorization': `Bearer ${sessionStorage.getItem('token')}`
@@ -81,7 +82,8 @@ export default function Mapping() {
     axios.post(`${backendUrl}/api/mapping`, {
       start: start,
       pause: pause,
-      stop: stop
+      stop: stop,
+      unit_name: sessionStorage.getItem('unit_name')
     }, {
       headers: {
         'Authorization': `Bearer ${sessionStorage.getItem('token')}`
