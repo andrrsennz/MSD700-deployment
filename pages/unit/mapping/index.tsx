@@ -20,7 +20,13 @@ var paN: any
 var movecoor: any = [];
 var isDrag = false;
 var startcoor: any = [];
-var showImage: boolean = false;
+var showImage:boolean = false;
+var gridClient:any;
+var multiPointMode = false;
+var getInit = false;
+var setHomeBaseMode = false;
+var homePoint:any = null;
+var navmode = false;
 
 export default function Mapping(props: MappingProps): JSX.Element {
     const [showConfirmClosePageDialog, setShowConfirmClosePageDialog] =
@@ -178,14 +184,23 @@ export default function Mapping(props: MappingProps): JSX.Element {
 
 
         // Setup the map client.
-        var gridClient = new (window as any).NAV2D.OccupancyGridClientNav({
+        gridClient = new (window as any).NAV2D.OccupancyGridClientNav({
             ros: ros,
             rootObject: viewer.scene,
             viewer: viewer,
-            withOrientation: false,
-            withCommand: false,
+            withOrientation: true,
+            withCommand: true,
             continuous: true
         });
+
+        // getHomeBasePoint();
+        // if (navmode == false) {
+        //     setTimeout(()=>{
+        //         getHomeBasePoint();
+        //         console.log("get home point")
+        //       },1000);
+        // }
+
 
         var zoomView = new (window as any).ROS2D.ZoomView({
             rootObject: viewer.scene
@@ -199,15 +214,15 @@ export default function Mapping(props: MappingProps): JSX.Element {
         // MQTT Client Setup
         const mqtt_client = mqtt.connect(brokerUrl);
         mqtt_client.on('connect', () => {
-            mqtt_client.subscribe(topic);
+            // mqtt_client.subscribe(topic);
             console.log('Connected to MQTT broker');
         });
 
         mqtt_client.on('message', (receivedTopic, message) => {
-            if (receivedTopic === topic) {
-                const receivedImageBlob = new Blob([message]);
-                setImageBlob(showImage ? receivedImageBlob : null);
-            }
+            // if (receivedTopic === topic) {
+            //     const receivedImageBlob = new Blob([message]);
+            //     setImageBlob(showImage ? receivedImageBlob : null);
+            // }
         });
 
         mqtt_client.on('close', () => {
@@ -273,10 +288,13 @@ export default function Mapping(props: MappingProps): JSX.Element {
     }
 
     const whenMouseDown = (event: MouseEvent) => {
-        paN.startPan(event.clientX, event.clientY);
-        isDrag = true;
-        startcoor[0] = event.clientX;
-        startcoor[1] = event.clientY;
+        if (event.button === 1) {
+            paN.startPan(event.clientX, event.clientY);
+            isDrag = true;
+            startcoor[0] = event.clientX;
+            startcoor[1] = event.clientY;
+        }
+
     }
 
     const whenMouseUp = (event: MouseEvent) => {
@@ -289,6 +307,18 @@ export default function Mapping(props: MappingProps): JSX.Element {
             paN.pan(e.clientX, e.clientY);
         }
     };
+
+    //get home base point from SLAM initial point
+    const getHomeBasePoint = () => {
+        if (gridClient.navigator != null) {
+            homePoint = gridClient.navigator.getHomeBasePoint();
+            console.log(homePoint);
+        } else {
+            console.log("navigator null")
+        }
+
+    }
+
 
     return (
         <> {render ?
@@ -406,6 +436,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                         <p>Stop</p>
                                         <img src="/icons/2.svg" alt="" />
                                     </div>
+
                                     <div className={styles.settingsButton}>
                                         <img src="/icons/Setting.svg" alt="" />
                                         <p>Please turn on the LIDAR before mapping.</p>

@@ -476,52 +476,51 @@ ROS2D.Grid.prototype.__proto__ = createjs.Shape.prototype;
  *   * fillColor (optional) - the createjs color for the fill
  *   * pulse (optional) - if the marker should "pulse" over time
  */
-// ROS2D.NavigationArrow = function (options) {
-//   var that = this;
-//   options = options || {};
-//   var size = 10;
-//   var strokeSize = 3;
-//   var strokeColor = options.strokeColor || createjs.Graphics.getRGB(0, 0, 0);
-//   var fillColor = options.fillColor || createjs.Graphics.getRGB(255, 0, 0);
-//   var pulse = options.pulse;
-
-//   // draw the arrow
-//   var graphics = new createjs.Graphics();
-//   // line width
-//   graphics.setStrokeStyle(strokeSize);
-//   graphics.moveTo(-size / 2.0, -size / 2.0);
-//   graphics.beginStroke(strokeColor);
-//   graphics.beginFill(fillColor);
-//   graphics.lineTo(size, 0);
-//   graphics.lineTo(-size / 2.0, size / 2.0);
-//   graphics.closePath();
-//   graphics.endFill();
-//   graphics.endStroke();
-
-//   // create the shape
-//   createjs.Shape.call(this, graphics);
-
-//   // check if we are pulsing
-//   if (pulse) {
-//     // have the model "pulse"
-//     var growCount = 0;
-//     var growing = true;
-//     createjs.Ticker.addEventListener('tick', function () {
-//       if (growing) {
-//         that.scaleX *= 1.035;
-//         that.scaleY *= 1.035;
-//         growing = (++growCount < 10);
-//       } else {
-//         that.scaleX /= 1.035;
-//         that.scaleY /= 1.035;
-//         growing = (--growCount < 0);
-//       }
-//     });
-//   }
-// };
-// ROS2D.NavigationArrow.prototype.__proto__ = createjs.Shape.prototype;
-
 ROS2D.NavigationArrow = function (options) {
+  var that = this;
+  options = options || {};
+  var size = options.size || 10;
+  var strokeSize = options.strokeSize || 3;
+  var strokeColor = options.strokeColor || createjs.Graphics.getRGB(0, 0, 0);
+  var fillColor = options.fillColor || createjs.Graphics.getRGB(255, 0, 0);
+  var pulse = options.pulse;
+
+  // draw the arrow
+  var graphics = new createjs.Graphics();
+  // line width
+  graphics.setStrokeStyle(strokeSize);
+  graphics.moveTo(-size / 2.0, -size / 2.0);
+  graphics.beginStroke(strokeColor);
+  graphics.beginFill(fillColor);
+  graphics.lineTo(size, 0);
+  graphics.lineTo(-size / 2.0, size / 2.0);
+  graphics.closePath();
+  graphics.endFill();
+  graphics.endStroke();
+
+  // create the shape
+  createjs.Shape.call(this, graphics);
+
+  // check if we are pulsing
+  if (pulse) {
+    // have the model "pulse"
+    var growCount = 0;
+    var growing = true;
+    createjs.Ticker.addEventListener('tick', function() {
+      if (growing) {
+        that.scaleX *= 1.035;
+        that.scaleY *= 1.035;
+        growing = (++growCount < 10);
+      } else {
+        that.scaleX /= 1.035;
+        that.scaleY /= 1.035;
+        growing = (--growCount < 0);
+      }
+    });
+  }};
+ROS2D.NavigationArrow.prototype.__proto__ = createjs.Shape.prototype;
+
+ROS2D.NavigationImage = function (options) {
   var that = this;
   options = options || {};
   var pulse = options.pulse;
@@ -578,8 +577,8 @@ ROS2D.NavigationArrow = function (options) {
 };
 
 // Correct way to set up prototype chain in modern JavaScript
-ROS2D.NavigationArrow.prototype = Object.create(createjs.Container.prototype);
-ROS2D.NavigationArrow.prototype.constructor = ROS2D.NavigationArrow;
+ROS2D.NavigationImage.prototype = Object.create(createjs.Container.prototype);
+ROS2D.NavigationImage.prototype.constructor = ROS2D.NavigationImage;
 
 
 /**
@@ -596,59 +595,122 @@ ROS2D.NavigationArrow.prototype.constructor = ROS2D.NavigationArrow;
  *   * image - the image to use as a marker
  *   * pulse (optional) - if the marker should "pulse" over time
  */
-ROS2D.NavigationImage = function (options) {
-  var that = this;
-  options = options || {};
-  var size = options.size || 10;
-  var image_url = options.image;
-  var pulse = options.pulse;
-  var alpha = options.alpha || 1;
 
-  var originals = {};
+// ROS2D.NavigationImage = function (options) {
+//   var that = this;
+//   options = options || {};
+//   var pulse = options.pulse;
+//   var imageUrl = options.image || "/icons/tank-navy-100.png"; // Provide a default or ensure it's passed in options
 
-  var paintImage = function () {
-    createjs.Bitmap.call(that, image);
-    var scale = calculateScale(size);
-    that.alpha = alpha;
-    that.scaleX = scale;
-    that.scaleY = scale;
-    that.regY = that.image.height / 2;
-    that.regX = that.image.width / 2;
-    originals['rotation'] = that.rotation;
-    Object.defineProperty(that, 'rotation', {
-      get: function () { return originals['rotation'] + 90; },
-      set: function (value) { originals['rotation'] = value; }
-    });
-    if (pulse) {
-      // have the model "pulse"
-      var growCount = 0;
-      var growing = true;
-      var SCALE_SIZE = 1.020;
-      createjs.Ticker.addEventListener('tick', function () {
-        if (growing) {
-          that.scaleX *= SCALE_SIZE;
-          that.scaleY *= SCALE_SIZE;
-          growing = (++growCount < 10);
-        } else {
-          that.scaleX /= SCALE_SIZE;
-          that.scaleY /= SCALE_SIZE;
-          growing = (--growCount < 0);
-        }
-      });
-    }
-  };
+//   // Load the image
+//   var arrowImage = new Image();
+//   arrowImage.src = imageUrl;
+//   arrowImage.onload = function() {
+//     // Create a bitmap once the image is loaded
+//     var bitmap = new createjs.Bitmap(arrowImage);
+    
+//     // Adjust the registration point to the center of the image
+//     bitmap.regX = arrowImage.width / 2;
+//     bitmap.regY = arrowImage.height / 2;
 
-  var calculateScale = function (_size) {
-    return _size / image.width;
-  };
+//     // Scale the image
+//     var scale = options.size / arrowImage.width;
+//     bitmap.scaleX = scale;
+//     bitmap.scaleY = scale;
 
-  var image = new Image();
-  image.onload = paintImage;
-  image.src = image_url;
+//     // Rotate the image 90 degrees clockwise
+//     bitmap.rotation = 90; // 90 degrees for clockwise rotation
 
-};
+//     // Add bitmap to the stage
+//     that.addChild(bitmap);
 
-ROS2D.NavigationImage.prototype.__proto__ = createjs.Bitmap.prototype;
+//     // Update the stage if it exists
+//     if (that.getStage()) {
+//       that.getStage().update();
+//     }
+//   };
+
+//   // Inherit from createjs.Container
+//   createjs.Container.call(this);
+
+//   // Check if we are pulsing
+//   if (pulse) {
+//     // have the model "pulse"
+//     var growCount = 0;
+//     var growing = true;
+//     createjs.Ticker.addEventListener('tick', function () {
+//       if (growing) {
+//         that.scaleX *= 1.035;
+//         that.scaleY *= 1.035;
+//         growing = (++growCount < 10);
+//       } else {
+//         that.scaleX /= 1.035;
+//         that.scaleY /= 1.035;
+//         growing = (--growCount < 0);
+//       }
+//     });
+//   }
+// };
+
+// // Correct way to set up prototype chain in modern JavaScript
+// ROS2D.NavigationImage.prototype = Object.create(createjs.Container.prototype);
+// ROS2D.NavigationImage.prototype.constructor = ROS2D.NavigationImage;
+
+// ROS2D.NavigationImage = function (options) {
+//   var that = this;
+//   options = options || {};
+//   var size = options.size || 3;
+//   var image_url = options.image;
+//   var pulse = options.pulse;
+//   var alpha = options.alpha || 1;
+
+//   var originals = {};
+
+
+//   var paintImage = function () {
+//     createjs.Bitmap.call(that, image);
+//     // var scale = calculateScale(size);
+//     var scale = size/that.image.width;
+//     that.alpha = alpha;
+//     that.scaleX = scale;
+//     that.scaleY = scale;
+//     that.regY = that.image.height / 2;
+//     that.regX = that.image.width / 2;
+//     originals['rotation'] = that.rotation;
+//     Object.defineProperty(that, 'rotation', {
+//       get: function () { return originals['rotation'] + 90; },
+//       set: function (value) { originals['rotation'] = value; }
+//     });
+//     if (pulse) {
+//       // have the model "pulse"
+//       var growCount = 0;
+//       var growing = true;
+//       var SCALE_SIZE = 1.020;
+//       createjs.Ticker.addEventListener('tick', function () {
+//         if (growing) {
+//           that.scaleX *= SCALE_SIZE;
+//           that.scaleY *= SCALE_SIZE;
+//           growing = (++growCount < 10);
+//         } else {
+//           that.scaleX /= SCALE_SIZE;
+//           that.scaleY /= SCALE_SIZE;
+//           growing = (--growCount < 0);
+//         }
+//       });
+//     }
+//   };
+
+//   var calculateScale = function (_size) {
+//     return _size / image.width;
+//   };
+
+//   var image = new Image();
+//   image.onload = paintImage;
+//   image.src = image_url;
+
+// };
+
+// ROS2D.NavigationImage.prototype.__proto__ = createjs.Bitmap.prototype;
 
 /**
  * @fileOverview

@@ -15,7 +15,12 @@ var paN: any
 var movecoor: any = [];
 var isDrag = false;
 var startcoor: any = [];
-var showImage: boolean = false;
+var showImage:boolean = false;
+var gridClient:any;
+var multiPointMode = false;
+var getInit = false;
+var setHomeBaseMode = false;
+var homePoint:any = null;
 
 export default function Mapping() {
   const [showConfirmClosePageDialog, setShowConfirmClosePageDialog] =
@@ -93,6 +98,7 @@ export default function Mapping() {
         console.log(response);
         if (start) {
           changeStatus("On Progress");
+          startNavigation();
         }
         else if (pause) {
           changeStatus("Paused");
@@ -169,7 +175,7 @@ export default function Mapping() {
     });
 
     // Setup the map client.
-    var gridClient = new (window as any).NAV2D.OccupancyGridClientNav({
+    gridClient = new (window as any).NAV2D.OccupancyGridClientNav({
       ros: ros,
       rootObject: viewer.scene,
       viewer: viewer,
@@ -177,6 +183,7 @@ export default function Mapping() {
       withCommand: true,
       continuous: true
     });
+    
 
     var zoomView = new (window as any).ROS2D.ZoomView({
       rootObject: viewer.scene
@@ -243,6 +250,13 @@ export default function Mapping() {
     zoomCrossConst.push(zoomOutConst)
   }
 
+  const rotateCW = () => {
+    var rotate = new (window as any).ROS2D.Rotate({
+        rootObject: viewer.scene
+      });
+      rotate.startRotate(20);
+}
+
   const restart = () => {
     var zoom = new (window as any).ROS2D.ZoomView({
       ros: ros,
@@ -275,6 +289,111 @@ export default function Mapping() {
       paN.pan(e.clientX, e.clientY);
     }
   };
+
+  //multi pin point feature
+  //change to between single and multi pin point mode
+  const multiPoint = () => {
+    if (multiPointMode == false) {
+      multiPointMode = true;
+      gridClient.navigator.multiPointMode(true);
+      var button = document.getElementById("multiModeButton")
+      if(button != null){
+        button.innerText = "Multi Pin Point Mode"
+        console.log("button changes")
+      }
+    }
+
+    else if (multiPointMode == true) {
+      multiPointMode = false
+      gridClient.navigator.multiPointMode(false);
+      var button = document.getElementById("multiModeButton")
+      if(button != null){
+        button.innerText = "Single Pin Point Mode"
+        console.log("button changes")
+      }
+    }
+  }
+  //start navigation after multi pin point arranged
+  const startNavigation = () => {
+    gridClient.navigator.startNaav();
+  }
+
+  //remove all marker
+  const removeallMarker = () => {
+    gridClient.navigator.removeAllMark();
+  }
+
+  //2D pose estimation
+  const initPose = () => {
+    if (getInit == false) {
+      getInit = true;
+      gridClient.navigator.initPose(true);
+      var button = document.getElementById("initButton")
+      if(button != null){
+        button.innerText = "Done Initial Pose"
+        console.log("button changes")
+      }
+      console.log("initial pose")
+    }
+
+    else if (getInit == true) {
+      getInit = false
+      gridClient.navigator.initPose(false);
+      var button = document.getElementById("initButton")
+      if(button != null){
+        button.innerText = "Initial Pose"
+        console.log("button changes")
+      }
+      console.log("initial pose done")
+    }
+  }
+
+  //home base feature
+  //change user input mode to modify home base point by input
+  const setHomeBase = () => {
+    if (setHomeBaseMode == false) {
+      setHomeBaseMode = true;
+      gridClient.navigator.setHomeBasePoint(true);
+      var button = document.getElementById("setHomebtn")
+      if(button != null){
+        button.innerText = "Done Set Home Base"
+        console.log("button changes")
+      }
+    }
+    else if (setHomeBaseMode == true) {
+      setHomeBaseMode = false;
+      gridClient.navigator.setHomeBasePoint(false);
+      getHomeBasePoint();
+      var button = document.getElementById("setHomebtn")
+      if(button != null){
+        button.innerText = "Set Home Base"
+        console.log("button changes")
+      }
+    }
+
+  }
+  //get home base point from SLAM initial point
+  const getHomeBasePoint = () => {
+    if (gridClient.navigator != null) {
+      homePoint = gridClient.navigator.getHomeBasePoint();
+      console.log(homePoint);
+    }
+
+  }
+  //update home base and initial pose estimate when control page launched
+  const updateHomeBase = () => {
+    if (homePoint != null) {
+      if (gridClient.navigator != null) {
+        gridClient.navigator.updateHome(homePoint);
+      }
+    }
+  }
+  //command robot to return to home point
+  const returnToHome = () => {
+    if (homePoint != null) {
+      gridClient.navigator.returnToHome(homePoint);
+    }
+  }
 
 
 
@@ -315,7 +434,7 @@ export default function Mapping() {
                   type="checkbox"
                   className={styles.toggleInput}
                   checked={isChecked}
-                  onChange={handleCheckboxChange}
+                  // onChange={handleCheckboxChange}
                 />
                 <span className={styles.slider}></span>
               </label>
@@ -363,16 +482,23 @@ export default function Mapping() {
                 className={styles.stopButton}
                 onClick={() => {
                   if (isChecked) {
-                    setRobot(false, true, false);
+                    // setRobot(false, true, false);
                     console.log("Stop request sent");
                   } else {
                     alert("Please turn on LIDAR first.")
                   }
+                  returnToHome();
                 }}
               >
                 <p>Return Home</p>
                 <img src="/icons/Home.svg" alt="" />
               </div>
+
+              <button id="initButton" onClick={initPose}>Initial Pose</button>
+              <button id="multiModeButton" onClick={multiPoint}>Single Pin Point Mode</button>
+              <button id="setHomebtn" onClick={setHomeBase}>Set Home Base</button>
+              <button onClick={removeallMarker}>Remove All Marker</button>
+
               <div className={styles.settingsButton}>
                 <img src="/icons/information-circle-svgrepo-com (1).svg" alt="" />
                 <p>
@@ -392,8 +518,11 @@ export default function Mapping() {
                 <div className={styles.zoomOut} onClick={zoomOut}>
                   <img src="/icons/zoomout.svg" alt="" />
                 </div>
-                <div className={styles.restart} onClick={restart}>
+                <div className={styles.restart} onClick={rotateCW}>
                   <img src="/icons/Reload.svg" alt="" />
+                </div>
+                <div className={styles.restart} onClick={restart}>
+                  <img src="/icons/new reload.svg" alt="" />
                 </div>
               </div>
               {/* <img src="/icons/Frame.svg" alt="" /> */}
