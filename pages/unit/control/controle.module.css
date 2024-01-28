@@ -47,9 +47,15 @@
 }
 
 @media (max-width: 1200px) {
-    .theFooter{
+    .theFooter {
         padding-bottom: 100px;
         height: 100%;
         background-color: red;
+    }
+}
+
+@media (min-width:2560px) {
+    .parents {
+        max-width: 100%;
     }
 }

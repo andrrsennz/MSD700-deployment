@@ -18,6 +18,8 @@ export default function Home(): JSX.Element {
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [registerSuccess, setRegisterSuccess] = useState(false);
   const [registerFailure, setRegisterFailure] = useState(false);
+  const [unitId, setUnitId] = useState(''); // Add this line to create a state variable for the unit ID input
+
 
   const [data, setData] = useState<any[]>([]);
 
@@ -29,7 +31,7 @@ export default function Home(): JSX.Element {
       : "";
   }
 
-  const [showUtilSection, setShowUtilSection] = useState<boolean>(false);
+  const [showUtilSection, setShowUtilSection] = useState<boolean>(true);
   const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");
@@ -283,7 +285,9 @@ export default function Home(): JSX.Element {
     }
   };
 
-
+  const handleUnitIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUnitId(event.target.value);
+  };
 
   return (
     <>
@@ -301,7 +305,7 @@ export default function Home(): JSX.Element {
             <p>Don't have an account yet?</p>
             <div className={styles.buttonRegister} onClick={goToSignUpPage}>
               <Image
-                src="/icons/user-register.svg"
+                src="/icons/buttonregister.svg"
                 alt="Sign up icon"
                 width={20}
                 height={20}
@@ -414,7 +418,7 @@ export default function Home(): JSX.Element {
                               onClick={() => handleRowClick(idx)}
                               className={`${item.status === 'off' ? styles.offRow : styles.onRow} ${selectedRowIdx === idx ? styles.selectedRow : ''}`}
                             >
-                              <td data-column="0">{idx+1}</td>
+                              <td data-column="0">{idx + 1}</td>
                               <td data-column="1">{item.unit}</td>
                               <td data-column="2">{item.status}</td>
                               <td data-column="3">{item.battery}</td>
@@ -467,12 +471,19 @@ export default function Home(): JSX.Element {
                             type="text"
                             id="unitid"
                             name="unitid"
-                            defaultValue=""
+                            value={unitId} // Bind the input value to the state variable
+                            onChange={handleUnitIdChange} // Update the state variable on input change
                             required
                           />
+
                         </div>
                         <div className={styles.buttonSection}>
-                          <button className={styles.registerButton} type="button" onClick={handleRegisterButtonClick}>
+                          <button
+                            className={styles.registerButton}
+                            type="button"
+                            onClick={handleRegisterButtonClick}
+                            disabled={!unitId} // Disable the button if `unitId` is empty
+                          >
                             Register
                           </button>
                           <button className={styles.cancelButton} type="submit" onClick={handleHideRegisterUnitColumn}>
@@ -483,7 +494,7 @@ export default function Home(): JSX.Element {
                     )}
                     {
                       registerSuccess && (
-                        <div className={styles.registerUnitSuccessInformation}>
+                        <div className={`${styles.registerUnitSuccessInformation} ${styles.registerResponseBox}`}>
                           <Image
                             src="/icons/save.svg"
                             alt="Success icon"
@@ -496,9 +507,9 @@ export default function Home(): JSX.Element {
                     }
                     {
                       registerFailure && (
-                        <div className={styles.registerUnitFailedInformation}>
+                        <div className={`${styles.registerUnitFailedInformation} ${styles.registerResponseBox}`}>
                           <Image
-                            src="/icons/error.svg" // Change this to an error icon
+                            src="/icons/warning.svg" // Change this to an error icon
                             alt="Error icon"
                             width={20}
                             height={20}

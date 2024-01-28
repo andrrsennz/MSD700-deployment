@@ -30,6 +30,7 @@ export default function Mapping() {
   const [rosUrl, setRosUrl] = useState<string>(process.env.WS_ROSBRIDGE_URL || "ws://localhost:9090");
   const [topic, setTopic] = useState<string>('/camera');
   const [imageBlob, setImageBlob] = useState<Blob | null>(null);
+  const [mapName, setMapName] = useState<string>('');
 
   const onConfirmButtonClick = () => {
     setShowConfirmClosePageDialog(true);
@@ -204,6 +205,9 @@ export default function Mapping() {
       console.log('Connection to MQTT is closed');
     })
 
+    const mapNameFromSession = sessionStorage.getItem('mapName');
+    setMapName(mapNameFromSession ?? ''); // If mapNameFromSession is null, use an empty string
+
     return () => {
       //clean up when exiting page
       ros.close();
@@ -261,6 +265,13 @@ export default function Mapping() {
       startcoor[0] = event.clientX;
       startcoor[1] = event.clientY;
     }
+  }
+
+  const rotateCW = () => {
+    var rotate = new (window as any).ROS2D.Rotate({
+      rootObject: viewer.scene
+    });
+    rotate.startRotate(20);
   }
 
   const whenMouseUp = (event: MouseEvent) => {
@@ -390,14 +401,23 @@ export default function Mapping() {
                 <div className={styles.zoomOut} onClick={zoomOut}>
                   <img src="/icons/zoomout.svg" alt="" />
                 </div>
+                <div className={styles.restart} onClick={rotateCW}>
+                  <img src="/icons/Maximize.svg" alt="" />
+                </div>
                 <div className={styles.restart} onClick={restart}>
-                  <img src="/icons/Reload.svg" alt="" />
+                  <img src="/icons/new reload.svg" alt="" />
                 </div>
               </div>
-              {/* <img src="/icons/Frame.svg" alt="" /> */}
+              <div className={styles.footerMap}>
+                <div className={styles.emergencyButton}>
+                  <img src="/icons/emergency.svg" alt="" />
+                  <p>Emergency Button</p>
+                </div>
+                <div className={styles.mapName}>{mapName}</div>
+              </div>
             </div>
           </div>
-          {/* <Footer status={false} /> */}
+          <Footer status={false} />
         </div>
       </div>
     </>

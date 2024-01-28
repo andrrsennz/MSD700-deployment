@@ -443,10 +443,10 @@ export default function Signup(): JSX.Element {
                             <p>I have an account</p>
                             <div className={styles.buttonLogin} onClick={goToSigninPage}>
                                 <Image
-                                    src="/icons/user-register.svg"
+                                    src="/icons/Login.svg"
                                     alt="Picture of the author"
-                                    width={20}
-                                    height={20}
+                                    width={30}
+                                    height={30}
                                 />
                                 <p>LOG IN</p>
                             </div>

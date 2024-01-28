@@ -46,8 +46,8 @@
     padding: 10px;
 
     background-color: #D0E1E7;
-    border: 2px solid #0C98B4;
-    border-radius: 30px;
+    border: 5.38px solid #0C98B4;
+    border-radius: 45px;
     display: flex;
 
     flex-direction: column;
@@ -63,7 +63,7 @@
     display: flex;
     /* flex-direction: column; */
     justify-content: start;
-    padding-left: 10px;
+    padding-left: 20px;
 }
 
 .sideSection .menu div a {
@@ -72,8 +72,8 @@
     margin-right: auto;
     height: 53px;
     background-color: #0567A6;
-    border: 2px solid #60E3D5;
-    border-radius: 20px;
+    border: 4px solid #60E3D5;
+    border-radius: 25px;
 
     display: flex;
     align-items: center;
@@ -107,7 +107,7 @@
 .sideSection .menu div a:hover {
     cursor: pointer;
     background-color: #60E3D5 !important;
-    border: 2px solid #0567A6;
+    border: 4px solid #0567A6;
 }
 
 /* Center Section */
@@ -198,7 +198,7 @@
     background: hsla(194, 32%, 86%, 1);
     height: 236.5px;
     box-shadow: -10px 10px 4px 0px hsla(0, 0%, 0%, 0.25);
-    border-radius: 4px;
+    border-radius: 6px;
     padding: 15px, 25px, 15px, 25px;
     gap: 5px;
     display: flex;
@@ -220,6 +220,111 @@
 
 /* ------------------------------ */
 
+@media (min-width:2560px) {
+    .sideSection{
+        padding-left: 50px;
+        padding-top: 30px;
+    }
+    .sideSection .greetings {
+        width: max-content;
+        height: 85px;
+        padding-right: 35px;
+        padding-left: 35px;
+    }
+
+    .sideSection .greetings img {
+        width: 35px;
+        height: 35px;
+        margin-right: 10px;
+        /* Add some spacing between img and text */
+    }
+
+    .sideSection .greetings p {
+        font-size: 28px;
+        font-weight: 500;
+    }
+
+    .sideSection .menu {
+        width: 360px;
+        height: 374px;
+    }
+
+    .sideSection .menu div a {
+        width: 290px;
+        height: 78px;
+        font-size: 24px;
+        line-height: 29px;
+    }
+
+    .sideSection .menu img {
+        width: 32px;
+        height: 32px;
+    }
+
+    /* MAP STREAM SECTION  */
+
+    .mapStream {
+        width: 390px;
+        height: 323px;
+    }
+
+    .mapName {
+        font-size: 19px;
+        line-height: 22.99px;
+    }
+
+}
+
+@media (width:1440px) and (height:1024px) {
+    .sideSection .greetings {
+        width: max-content;
+        height: 57px;
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+
+    .sideSection .greetings img {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        /* Add some spacing between img and text */
+    }
+
+    .sideSection .greetings p {
+        font-size: 22px;
+        font-weight: 500;
+    }
+
+    .sideSection .menu {
+        width: 250px;
+        height: 259px;
+    }
+
+    .sideSection .menu div a {
+        width: 200px;
+        height: 53px;
+        font-size: 19px;
+        line-height: 29px;
+    }
+
+    .sideSection .menu img {
+        width: 32px;
+        height: 32px;
+    }
+
+    /* MAP STREAM SECTION  */
+
+    .mapStream {
+        width: 270px;
+        height: 236.5px;
+    }
+
+    .mapName {
+        font-size: 16px;
+        line-height: 22.99px;
+    }
+
+}
 
 @media (min-width: 1440px) {
     .centerSection {
@@ -234,3 +339,4 @@
     }
 
 }
+

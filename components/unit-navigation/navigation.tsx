@@ -66,7 +66,7 @@ const Navigation: React.FC<NavigationProps> = ({ imageSrc }) => {
             onClick={goToControlPage}
           >
             <Link href="/unit/control" className={styles.buttonLink}>
-              <img src="/icons/map-svgrepo-com.svg" alt="" />
+              <img src="/icons/Marker.svg" alt="" />
               <p>Control Mode</p>
             </Link>
           </div>
@@ -76,7 +76,7 @@ const Navigation: React.FC<NavigationProps> = ({ imageSrc }) => {
             onClick={goToMappingPage}
           >
             <Link href="/unit/mapping" className={styles.buttonLink}>
-              <img src="/icons/map-svgrepo-com.svg" alt="" />
+              <img src="/icons/mapping.svg" alt="" />
               <p>Mapping</p>
             </Link>
           </div>
@@ -86,7 +86,7 @@ const Navigation: React.FC<NavigationProps> = ({ imageSrc }) => {
             onClick={goToDatabasePage}
           >
             <Link href="/unit/database" className={styles.buttonLink}>
-              <img src="/icons/map-svgrepo-com.svg" alt="" />
+              <img src="/icons/Database.svg" alt="" />
               <p>Database</p>
             </Link>
           </div>
