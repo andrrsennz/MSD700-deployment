@@ -11,7 +11,7 @@ const Footer: React.FC<FooterProps> = (props) => {
       {props.status === true ? (
         <div className={styles.container}>
           <div className={styles.handlingInstructions}>
-            <img src="./icons/book-svgrepo-com.svg" alt="" />
+            <img src="/icons/book-svgrepo-com.svg" alt="" />
             <p>
               Handling
               <br />
@@ -19,7 +19,7 @@ const Footer: React.FC<FooterProps> = (props) => {
             </p>
           </div>
           <div className={styles.safetyPrecautions}>
-            <img src="./icons/shield-alt-svgrepo-com (2).svg" alt="" />
+            <img src="/icons/shield-alt-svgrepo-com (2).svg" alt="" />
             <p>
               Safety <br />
               Precaution

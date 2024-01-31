@@ -1,11 +1,11 @@
 import { MouseEvent, useState, ChangeEvent, useEffect, useRef } from "react";
-import ConfirmElement from "../../../components/confirm-element/confirmElement";
-import Navigation from "../../../components/unit-navigation/navigation";
+import ConfirmElement from "@/components/confirm-element/confirmElement";
+import Navigation from "@/components/unit-navigation/navigation";
 import styles from "./mapping.module.css";
-import CloseButton from "../../../components/close-button/closeButton";
-import Footer from "../../../components/footer/footer";
-import MapSaving from "../../../components/map-saving/mapSaving";
-import ConfirmSaving from "../../../components/confirm-saving-mapping/confirmSaving";
+import CloseButton from "@/components/close-button/closeButton";
+import Footer from "@/components/footer/footer";
+import MapSaving from "@/components/map-saving/mapSaving";
+import ConfirmSaving from "@/components/confirm-saving-mapping/confirmSaving";
 import Script from "next/script";
 import axios from "axios";
 import Head from "next/head";
@@ -21,6 +21,12 @@ var movecoor: any = [];
 var isDrag = false;
 var startcoor: any = [];
 var showImage: boolean = false;
+var gridClient: any;
+var multiPointMode = false;
+var getInit = false;
+var setHomeBaseMode = false;
+var homePoint: any = null;
+var navmode = false;
 
 export default function Mapping(props: MappingProps): JSX.Element {
     const [showConfirmClosePageDialog, setShowConfirmClosePageDialog] =
@@ -33,12 +39,15 @@ export default function Mapping(props: MappingProps): JSX.Element {
     const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");
     const [brokerUrl, setBrokerUrl] = useState<string>(process.env.WS_MQTT_BROKER_URL || "ws://localhost:9001");
     const [rosUrl, setRosUrl] = useState<string>(process.env.WS_ROSBRIDGE_URL || "ws://localhost:9090");
-    const [topic, setTopic] = useState<string>('/camera');
+    const [topic, setTopic] = useState<string>(`${sessionStorage.getItem("username")}/${sessionStorage.getItem("unit_name")}/camera`);
     const [count, setcount] = useState<Number>(0);
     const [stopButton, setStopButton] = useState<boolean>(false);
     const [render, setRender] = useState<boolean>(true);
     const [imageBlob, setImageBlob] = useState<Blob | null>(null);
+    const [mapName, setMapName] = useState<string>('');
+
     const router = useRouter();
+    
 
     const onConfirmButtonClick = (): void => {
         setShowConfirmClosePageDialog(true);
@@ -67,7 +76,8 @@ export default function Mapping(props: MappingProps): JSX.Element {
     const setLidar = (enable: boolean, use_own_map: boolean): void => {
         axios.post(`${backendUrl}/api/lidar`, {
             enable: enable,
-            use_own_map: use_own_map
+            use_own_map: use_own_map,
+            unit_name: sessionStorage.getItem('unit_name')
         }, {
             headers: {
                 'Authorization': `Bearer ${sessionStorage.getItem('token')}`
@@ -87,7 +97,8 @@ export default function Mapping(props: MappingProps): JSX.Element {
         axios.post(`${backendUrl}/api/mapping`, {
             start: start,
             pause: pause,
-            stop: stop
+            stop: stop,
+            unit_name: sessionStorage.getItem('unit_name')
         }, {
             headers: {
                 'Authorization': `Bearer ${sessionStorage.getItem('token')}`
@@ -176,7 +187,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
 
 
         // Setup the map client.
-        var gridClient = new (window as any).NAV2D.OccupancyGridClientNav({
+        gridClient = new (window as any).NAV2D.OccupancyGridClientNav({
             ros: ros,
             rootObject: viewer.scene,
             viewer: viewer,
@@ -184,6 +195,15 @@ export default function Mapping(props: MappingProps): JSX.Element {
             withCommand: false,
             continuous: true
         });
+
+        // getHomeBasePoint();
+        // if (navmode == false) {
+        //     setTimeout(()=>{
+        //         getHomeBasePoint();
+        //         console.log("get home point")
+        //       },1000);
+        // }
+
 
         var zoomView = new (window as any).ROS2D.ZoomView({
             rootObject: viewer.scene
@@ -197,20 +217,24 @@ export default function Mapping(props: MappingProps): JSX.Element {
         // MQTT Client Setup
         const mqtt_client = mqtt.connect(brokerUrl);
         mqtt_client.on('connect', () => {
-            mqtt_client.subscribe(topic);
+            // mqtt_client.subscribe(topic);
             console.log('Connected to MQTT broker');
         });
 
         mqtt_client.on('message', (receivedTopic, message) => {
-            if (receivedTopic === topic) {
-                const receivedImageBlob = new Blob([message]);
-                setImageBlob(showImage ? receivedImageBlob : null);
-            }
+            // if (receivedTopic === topic) {
+            //     const receivedImageBlob = new Blob([message]);
+            //     setImageBlob(showImage ? receivedImageBlob : null);
+            // }
         });
 
         mqtt_client.on('close', () => {
             console.log('Connection to MQTT is closed');
         })
+
+        const mapNameFromSession = sessionStorage.getItem('mapName');
+        setMapName(mapNameFromSession ?? ''); // If mapNameFromSession is null, use an empty string
+    
 
         return () => {
             // clean up when exiting the page
@@ -271,10 +295,13 @@ export default function Mapping(props: MappingProps): JSX.Element {
     }
 
     const whenMouseDown = (event: MouseEvent) => {
-        paN.startPan(event.clientX, event.clientY);
-        isDrag = true;
-        startcoor[0] = event.clientX;
-        startcoor[1] = event.clientY;
+        if (event.button === 1) {
+            paN.startPan(event.clientX, event.clientY);
+            isDrag = true;
+            startcoor[0] = event.clientX;
+            startcoor[1] = event.clientY;
+        }
+
     }
 
     const whenMouseUp = (event: MouseEvent) => {
@@ -287,6 +314,18 @@ export default function Mapping(props: MappingProps): JSX.Element {
             paN.pan(e.clientX, e.clientY);
         }
     };
+
+    //get home base point from SLAM initial point
+    const getHomeBasePoint = () => {
+        if (gridClient.navigator != null) {
+            homePoint = gridClient.navigator.getHomeBasePoint();
+            console.log(homePoint);
+        } else {
+            console.log("navigator null")
+        }
+
+    }
+
 
     return (
         <> {render ?
@@ -404,6 +443,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                         <p>Stop</p>
                                         <img src="/icons/2.svg" alt="" />
                                     </div>
+
                                     <div className={styles.settingsButton}>
                                         <img src="/icons/Setting.svg" alt="" />
                                         <p>Please turn on the LIDAR before mapping.</p>
@@ -423,6 +463,13 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                         <div className={styles.restart} onClick={restart}>
                                             <img src="/icons/new reload.svg" alt="" />
                                         </div>
+                                    </div>
+                                    <div className={styles.footerMap}>
+                                        <div className={styles.emergencyButton}>
+                                            <img src="/icons/emergency.svg" alt="" />
+                                            <p>Emergency Button</p>
+                                        </div>
+                                        <div className={styles.mapName}>{mapName}</div>
                                     </div>
                                     {/* <img src="/icons/Frame.svg" alt="" /> */}
                                 </div>

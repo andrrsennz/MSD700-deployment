@@ -19,7 +19,7 @@
     margin-left: auto;
     margin-right: auto;
 
-    max-width: 1440px;
+    /* max-width: 1440px; */
     height: 100%;
 
     position: relative;
@@ -48,7 +48,7 @@
     display: flex;
     align-items: center;
     background-color: #0C98B4;
-    border: 3px solid #60E3D5;
+    border: 4px solid #60E3D5;
     border-radius: 20px;
 
     font-family: 'Inter', sans-serif;
@@ -179,15 +179,15 @@
 /* MAP SECTION */
 
 .mapSection {
-    width: 1102px;
+    width: 1050px;
     /* min-width: 1000px; */
     max-height: 800px;
     min-height: 800px;
     /* min-height: 900px; */
     height: 80%;
     background-color: #D0E1E7;
-    border: 2px solid #0C98B4;
-    border-radius: 30px;
+    border: 4.15px solid #0C98B4;
+    border-radius: 45px;
 
     /* Horizontally center the content */
 
@@ -349,12 +349,100 @@
     margin-left: auto;
     margin-right: auto;
     background-color: #DCDCDC;
+    overflow: hidden;
+    box-shadow: 0px 4px 4px 0px #0567A6;
 }
+
 
 .centerDiv img {
     width: 100%;
     height: 100%;
 }
+
+.centerDiv .buttonNavigation {
+    display: flex;
+    flex-direction: column;
+    height: 115px;
+    width: 37px;
+    /* background-color: red; */
+    position: absolute;
+    z-index: 10;
+    gap: 10px;
+
+    margin-left: 930px;
+    margin-top: 25px;
+}
+
+.centerDiv .buttonNavigation div {
+    height: 37px;
+    width: 37px;
+    background-color: #0C98B4;
+    border: 5px solid #60E3D5;
+    border-radius: 5px;
+    padding: 4px;
+}
+
+.centerDiv .buttonNavigation div:hover {
+    background-color: #8DAAC0;
+    cursor: pointer;
+}
+
+.footerMap {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top: 85%;
+    padding-left: 30px;
+    width: 90%;
+    /* background-color: red; */
+}
+
+.emergencyButton {
+    background-color: #FF7582;
+    display: flex;
+    width: 150px;
+    height: 37.1px;
+    border-radius: 20px;
+    border: 2.1px solid #FF7582;
+    color: #FFFFFF;
+    font-family: Inter;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 23px;
+    letter-spacing: 0em;
+    text-align: left;
+    padding-left: 15px;
+    padding-right: 15px;
+
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+
+}
+
+.emergencyButton img {
+    width: 16px;
+    height: 16px;
+}
+
+.emergencyButton:hover {
+    background-color: #C66E87;
+}
+
+.mapName {
+    font-family: Inter;
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 23px;
+    letter-spacing: 0em;
+    text-align: left;
+    display: flex;
+    align-items: center;
+
+    color: #0567A6;
+}
+
+
 
 @media (max-width: 1439px) {
     .mapSection {
@@ -375,7 +463,6 @@
         z-index: 10;
     }
 
-
     .container {
         display: flex;
         flex-direction: column;
@@ -389,4 +476,196 @@
         margin-left: auto;
         margin-right: auto;
     }
+}
+
+@media (min-width: 2560px) and (min-height:1200px) {
+    .parents {
+        max-width: 100%;
+    }
+
+    .statusSection {
+        width: 50%;
+        height: 105px;
+        align-items: center;
+    }
+
+    .statusSection .status {
+        width: 375px;
+        height: 75px;
+        border-radius: 28px;
+
+        font-size: 28px;
+    }
+
+    .statusSection .status img {
+        margin-left: 35px;
+        width: 35px;
+        height: 35px;
+    }
+
+    .statusSection .lidar {
+        width: 141px;
+        height: 74px;
+        font-size: 28px;
+        border-radius: 30px;
+    }
+
+    .slider {
+        margin-top: 20%;
+        width: 112.55px;
+        height: 56.28px;
+        border-radius: 56.28px;
+    }
+
+    .slider::before {
+        width: 20px;
+        height: 20px;
+        border: 15px solid #0567A6;
+    }
+
+    .toggleInput:checked+.slider::before {
+        border: 15px solid #60E3D5;
+        /* Color of the indicator when checked */
+    }
+
+    .topDiv {
+        font-size: 38px;
+        font-weight: 600;
+    }
+
+    .mapSection {
+        margin-top: 155px;
+        width: 1960px !important;
+        height: 1160px;
+        max-height: 100%;
+        border: 5px solid #0C98B4;
+    }
+
+
+    .topDiv .playButton,
+    .topDiv .pauseButton {
+        height: 52px;
+        border: 2.4px solid #60E3D5;
+        border-radius: 10px;
+    }
+
+    .topDiv .playButton {
+        width: 87px;
+    }
+
+    .topDiv .pauseButton {
+        width: 104px
+    }
+
+    .topDiv .stopButton {
+        width: 167px;
+        height: 52px;
+        background-color: #0C98B4;
+        border: 2.4px solid #60E3D5;
+        border-radius: 10px;
+    }
+
+    .topDiv .playButton p,
+    .topDiv .pauseButton p,
+    .topDiv .stopButton p {
+        font-size: 19px;
+        line-height: 22.99px;
+    }
+
+    .topDiv .playButton img,
+    .topDiv .pauseButton img,
+    .topDiv .stopButton img {
+        width: 20px;
+        /* Adjust image width as needed */
+        height: 20px;
+        /* Add some spacing between image and text */
+    }
+
+    .topDiv .settingsButton {
+        margin-top: 22.5px;
+        height: 121px;
+        width: 560px;
+        border: 4px solid #60E3D5;
+        border-radius: 5px;
+        font-size: 22px;
+        font-weight: 500;
+        padding: 0;
+        padding-left: 25px;
+    }
+
+    .topDiv .settingsButton img {
+        height: 30px;
+        width: 30px;
+    }
+
+    /* Center Div */
+    .centerDiv {
+        width: 95%;
+        height: 950px;
+        border-radius: 45px;
+        border: 4.15px solid #0C98B4;
+        box-shadow: 0px 5.529412269592285px 5.529412269592285px 0px #0567A6;
+    }
+
+    .centerDiv .buttonNavigation {
+        height: 115px;
+        width: 37px;
+
+        margin-left: 1730px;
+        margin-top: 30px;
+    }
+
+    .centerDiv .buttonNavigation div {
+        height: 60px !important;
+        width: 60px;
+        background-color: #0C98B4;
+        border: 3.5px solid #60E3D5;
+        border-radius: 8px;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .centerDiv .buttonNavigation div img {
+        width: 28px;
+        height: 28px;
+        padding: 20px;
+    }
+
+    .centerDiv .buttonNavigation div:hover {
+        background-color: #8DAAC0;
+        cursor: pointer;
+
+    }
+
+    .footerMap {
+        top: 88%;
+        padding-left: 30px;
+        width: 90%;
+    }
+
+    .emergencyButton {
+        width: 225px;
+        height: 55px;
+        border-radius: 20px;
+        font-size: 19px;
+        font-weight: 500;
+        line-height: 23px;
+        letter-spacing: 0em;
+        text-align: left;
+        padding-left: 15px;
+        padding-right: 15px;
+
+        align-items: center;
+        gap: 10px;
+        justify-content: center;
+
+    }
+
+    .emergencyButton img {
+        width: 25px;
+        height: 25px;
+    }
+
 }

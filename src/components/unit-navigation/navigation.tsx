@@ -1,16 +1,31 @@
 import React from 'react'; // Import React for type annotations
+import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import styles from './navigation.module.css';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface NavLink {
   href: string;
   text: string;
 }
 
-const Navigation: React.FC = () => {
+interface NavigationProps {
+  imageSrc?: string; // optional image source
+}
+
+const Navigation: React.FC<NavigationProps> = ({ imageSrc }) => {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() || '/unit/control';
+  const [username, setUsername] = useState<string>('');
+  const [full_name, setFull_name] = useState<string>('');
+  const [unit_name, setUnit_name] = useState<string>('');
+
+  useEffect(() => {
+    setUsername(sessionStorage.getItem('username') || '');
+    setFull_name(sessionStorage.getItem('full_name') || '');
+    setUnit_name(sessionStorage.getItem('unit_name') || '');
+  })
 
   function isActive(href: string) {
     return pathname === href;
@@ -38,64 +53,62 @@ const Navigation: React.FC = () => {
     <>
       <div className={`${styles.sideSection}`}>
         <div
-          className={`${styles.greetings} ${
-            isActive('/unit/control') && styles.active
-          }`}
+          className={`${styles.greetings} ${isActive('/unit/control') && styles.active
+            }`}
         >
           <img src="/icons/user-10-svgrepo-com.svg" alt="" />
-          <p>Welcome, Unit A!</p>
+          <p>{`Welcome, ${full_name} (${username}) - ${unit_name}`}</p>
         </div>
         <div className={styles.menu}>
           <div
-            className={`${styles.controlMode} ${
-              isActive('/unit/control') && styles.active
-            }`}
+            className={`${styles.controlMode} ${isActive('/unit/control') && styles.active
+              }`}
             onClick={goToControlPage}
           >
-            <Link href="/unit/control" passHref>
-              <a className={styles.buttonLink}>
-                <img src="/icons/map-svgrepo-com.svg" alt="" />
-                <p>Control Mode</p>
-              </a>
+            <Link href="/unit/control" className={styles.buttonLink}>
+              <img src="/icons/Marker.svg" alt="" />
+              <p>Control Mode</p>
             </Link>
           </div>
           <div
-            className={`${styles.mapping} ${
-              isActive('/unit/mapping') && styles.active
-            }`}
+            className={`${styles.mapping} ${isActive('/unit/mapping') && styles.active
+              }`}
             onClick={goToMappingPage}
           >
-            <Link href="/unit/mapping" passHref>
-              <a className={styles.buttonLink}>
-                <img src="/icons/map-svgrepo-com.svg" alt="" />
-                <p>Mapping</p>
-              </a>
+            <Link href="/unit/mapping" className={styles.buttonLink}>
+              <img src="/icons/mapping.svg" alt="" />
+              <p>Mapping</p>
             </Link>
           </div>
           <div
-            className={`${styles.database} ${
-              isActive('/unit/database') && styles.active
-            }`}
+            className={`${styles.database} ${isActive('/unit/database') && styles.active
+              }`}
             onClick={goToDatabasePage}
           >
-            <Link href="/unit/database" passHref>
-              <a className={styles.buttonLink}>
-                <img src="/icons/map-svgrepo-com.svg" alt="" />
-                <p>Database</p>
-              </a>
+            <Link href="/unit/database" className={styles.buttonLink}>
+              <img src="/icons/Database.svg" alt="" />
+              <p>Database</p>
             </Link>
+          </div>
+        </div>
+
+        <div className={styles.mapStream}>
+          <div className={styles.mapName}>
+            <p>Live Camera Stream</p>
+          </div>
+          <div className={styles.mapDisplay}>
+            {imageSrc ? <img src={imageSrc} alt="Streamed Image" className={styles.map}  /> : (<div className={styles.map} />)}
           </div>
         </div>
       </div>
 
       <div className={`${styles.centerSection}`}>
         <div
-          className={`${styles.greetings} ${
-            isActive('/unit/control') && styles.active
-          }`}
+          className={`${styles.greetings} ${isActive('/unit/control') && styles.active
+            }`}
         >
           <img src="/icons/user-10-svgrepo-com.svg" alt="" />
-          <p>Welcome, Unit A!</p>
+          <p>{`Welcome, ${full_name} (${username})`}</p>
         </div>
         <div className={`${styles.menu}`}>
           <select

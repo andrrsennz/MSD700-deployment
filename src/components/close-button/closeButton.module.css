@@ -1,14 +1,12 @@
-/* CSS for the close button */
 .closeButton {
     position: absolute;
-    right: 25px;
-    top: 10px;
+    right: 10px;
+    top: 30px;
     background-color: #0C98B4;
-    border: 2px solid #60E3D5;
+    border: 3.5px solid #60E3D5;
     color: #FFFFFF;
     padding-top: 5px;
-    /* padding: 5px 10px; */
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
     
     font-family: 'Inter', sans-serif;
@@ -17,11 +15,18 @@
     line-height: 19px;
     letter-spacing: 0em;
     z-index: 3;
-    /* Ensure it's on top of other content */
 }
 
 .closeButton:hover {
     box-shadow: -4px 4px 4px 0px #00000040;
     transition: 1s;
-    /* Change color on hover */
+}
+
+@media (min-width:2560px){
+    .closeButton{
+        margin-right: 30px;
+        height: 60px;
+        width: 60px;
+        border-radius: 8.11px;
+    }
 }

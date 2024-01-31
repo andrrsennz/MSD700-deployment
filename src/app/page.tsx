@@ -20,8 +20,12 @@ export default function Home(): JSX.Element {
   const [registerFailure, setRegisterFailure] = useState(false);
   const [unitId, setUnitId] = useState(''); // Add this line to create a state variable for the unit ID input
 
+  const [registerInvalid, setRegisterInvalid] = useState(false);
 
   const [data, setData] = useState<any[]>([]);
+
+  const [showIncorrectPassword, setShowIncorrectPassword] = useState<boolean>(false);
+
 
 
   if (typeof window !== "undefined") {
@@ -31,7 +35,7 @@ export default function Home(): JSX.Element {
       : "";
   }
 
-  const [showUtilSection, setShowUtilSection] = useState<boolean>(true);
+  const [showUtilSection, setShowUtilSection] = useState<boolean>(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");
@@ -60,8 +64,12 @@ export default function Home(): JSX.Element {
       })
       .catch(function (error: any) {
         console.log(error);
-        alert("Invalid username or password");
+        setShowIncorrectPassword(true);
+        setTimeout(() => {
+          setShowIncorrectPassword(false);
+        }, 2000);
       })
+
   };
 
   const fetchUnitData = (token: any) => {
@@ -273,10 +281,16 @@ export default function Home(): JSX.Element {
           // If the response has a success property but it's not true, assume failure
           throw new Error('Registration not successful');
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Registration failed: ", error);
-        setRegisterFailure(true);
-        setTimeout(() => setRegisterFailure(false), 2000); // Hide the failure message after 2 seconds
+        if (error.response.status === 400) {
+          setRegisterInvalid(true);
+          setTimeout(() => setRegisterInvalid(false), 2000); // Hide the invalid message after 2 seconds
+        }
+        else if (error.response.status === 409) {
+          setRegisterFailure(true);
+          setTimeout(() => setRegisterFailure(false), 2000); // Hide the failure message after 2 seconds
+        }
       }
     } else {
       // Handle the case where the unit input or token is null
@@ -381,7 +395,18 @@ export default function Home(): JSX.Element {
                   </button>
                 </form>
               </div>
+
+              {
+                showIncorrectPassword && (
+                  <div className={styles.incorrectPassword}>
+                    <img src="/icons/warning.svg" alt="" />
+                    <p>The username or password you entered is incorrect.</p>
+                  </div>
+                )
+              }
+
             </div>
+
 
             {
               showUtilSection ? (
@@ -518,6 +543,19 @@ export default function Home(): JSX.Element {
                         </div>
                       )
                     }
+                    {
+                      registerInvalid && (
+                        <div className={styles.registerUnitFailedInformation}>
+                          <Image
+                            src="/icons/error.svg" // Change this to an error icon
+                            alt="Error icon"
+                            width={20}
+                            height={20}
+                          />
+                          <p>Invalid unit name</p>
+                        </div>
+                      )
+                    }
                   </div>
                 </>
               ) : ""
@@ -529,9 +567,7 @@ export default function Home(): JSX.Element {
         </div>
 
         <div className={styles.bottomSection}>
-          <div className={styles.theFooter}>
-            <Footer status={true} />
-          </div>
+          <Footer status={true} />
         </div>
       </div>
 

@@ -14,16 +14,18 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
-import AutoplayCarousel from "../../components/carousel/AutoplayCarousel";
+import AutoplayCarousel from "@/components/carousel/AutoplayCarousel";
 import axios from "axios";
 
-import { cardDetails } from "../../components/carousel/CarouselImages";
+import { cardDetails } from "@/components/carousel/CarouselImages";
 import Head from "next/head";
+import ConfirmRegister from "@/components/confirm-register-user/confirmRegister";
 
 export default function Signup(): JSX.Element {
     const router = useRouter();
 
     const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
+    const [showRegisterDialog, setShowRegisterDialog] = useState<boolean>(false);
 
     const [usernameColumn, setUsernameColumn] = useState<boolean>(false);
     const [isUsernameValid, setIsUsernameValid] = useState(true);
@@ -77,7 +79,7 @@ export default function Signup(): JSX.Element {
             })
                 .then(function (response: any) {
                     if (response.status === 200) {
-                        setIsUsernameRegistered(false);   
+                        setIsUsernameRegistered(false);
                         setIsUsernameValid(true);
                     }
                     else {
@@ -177,8 +179,8 @@ export default function Signup(): JSX.Element {
         }
 
         // If any input is invalid, return early and don't proceed with form submission
-        if (!isUsernameFilled || !isUsernameValid || isUsernameRegistered || !isFullNameFilled || 
-            !isEmailFilled    || !isEmailValid    || isEmailRegistered     || !isPasswordValid  || !isConfirmPasswordValid) {
+        if (!isUsernameFilled || !isUsernameValid || isUsernameRegistered || !isFullNameFilled ||
+            !isEmailFilled || !isEmailValid || isEmailRegistered || !isPasswordValid || !isConfirmPasswordValid) {
             return;
         }
 
@@ -191,13 +193,17 @@ export default function Signup(): JSX.Element {
         })
             .then(function (response: any) {
                 if (response.status === 201) {
-                    alert("User created successfully");
-                    router.push("/");
+                    setShowRegisterDialog(true); // Set the register dialog to show
+
+                    // Use setTimeout to navigate to the home page after 1.5 seconds
+                    setTimeout(() => {
+                        router.push("/");
+                    }, 1500); // 1500 milliseconds = 1.5 seconds
                 }
             })
             .catch(function (error: any) {
                 alert("Error creating user");
-            })
+            });
     };
 
     const goToSigninPage = (): void => {
@@ -217,6 +223,7 @@ export default function Signup(): JSX.Element {
                 status={showConfirmDialog}
                 onCancel={handleCancel}
             />
+            <ConfirmRegister status={showRegisterDialog} />
 
             <div className={styles.container}>
                 <div className={styles.parents}>
@@ -352,13 +359,13 @@ export default function Signup(): JSX.Element {
                                     )} */}
                                     {
                                         !isEmailValid && formValues.email.trim() !== '' ?
-                                        <div className={styles.tooltip}>
-                                            <p>This email is not valid</p>
-                                        </div> :
-                                        isEmailRegistered ?
-                                        <div className={styles.tooltip}>
-                                            <p>This email is already in use</p>
-                                        </div> : null
+                                            <div className={styles.tooltip}>
+                                                <p>This email is not valid</p>
+                                            </div> :
+                                            isEmailRegistered ?
+                                                <div className={styles.tooltip}>
+                                                    <p>This email is already in use</p>
+                                                </div> : null
                                     }
                                 </div>
                                 <div className={styles.passwordSection}>

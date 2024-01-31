@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import ConfirmElement from '../../../components/confirm-element/confirmElement';
-import Navigation from '../../../components/unit-navigation/navigation';
+import ConfirmElement from '@/components/confirm-element/confirmElement';
+import Navigation from '@/components/unit-navigation/navigation';
 import styles from './database.module.css';
-import CloseButton from '../../../components/close-button/closeButton';
-import Footer from '../../../components/footer/footer';
+import CloseButton from '@/components/close-button/closeButton';
+import Footer from '@/components/footer/footer';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import ConfirmDelete from '../../../components/confirm-delete/confirmDelete';
+import ConfirmDelete from '@/components/confirm-delete/confirmDelete';
 import axios from 'axios';
 import Head from 'next/head';
 
@@ -48,7 +48,7 @@ export default function Database(): JSX.Element {
             try {
                 const response_axios = await axios.get(`${backendUrl}/api/pgm_data`, {
                     headers: {
-                        'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
+                        'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                     }
                 });
                 const data = response_axios.data.data;
@@ -182,8 +182,8 @@ export default function Database(): JSX.Element {
 
         // delete pgm file
         axios.delete(`${backendUrl}/api/pgm_data`, {
-            headers:{
-                'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
+            headers: {
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
             },
             data: {
                 map_name: pgm_map_name
@@ -193,8 +193,8 @@ export default function Database(): JSX.Element {
                 console.log(response);
                 // delete yaml file
                 axios.delete(`${backendUrl}/api/yaml_data`, {
-                    headers:{
-                        'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
+                    headers: {
+                        'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                     },
                     data: {
                         map_name: yaml_map_name
@@ -204,10 +204,10 @@ export default function Database(): JSX.Element {
                         console.log(response)
                         // Update data
                         axios.get(`${backendUrl}/api/pgm_data`, {
-                                headers: {
-                                    'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
-                                }
-                            })
+                            headers: {
+                                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                            }
+                        })
                             .then((response) => {
                                 console.log(response);
                                 setData(response.data.data);
@@ -279,17 +279,17 @@ export default function Database(): JSX.Element {
                     new_map_name: newName
                 }, {
                     headers: {
-                        'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
+                        'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                     }
                 })
                     .then(response => {
                         console.log('PGM Data Update Response:', response);
                         if (response.status === 200) {
                             axios.get(`${backendUrl}/api/pgm_data`, {
-                                    headers: {
-                                        'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
-                                    }
-                                })
+                                headers: {
+                                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                                }
+                            })
                                 .then(res => {
                                     const data = res.data.data
                                     setData(data);
@@ -320,7 +320,7 @@ export default function Database(): JSX.Element {
 
 
     return (
-        <>  {render ? 
+        <>  {render ?
             (
                 <>
                     {' '}
@@ -358,12 +358,7 @@ export default function Database(): JSX.Element {
                                             value={searchQuery} // Set the input value to searchQuery
                                             onChange={handleSearchInputChange} // Call the handler on input change
                                         />
-                                        <Image
-                                            src="/icons/search-cion.svg"
-                                            alt=""
-                                            height={20}
-                                            width={20}
-                                        />
+                                        <img src="/icons/search-cion.svg" alt="" className={styles.largeScreenImage} />
                                     </div>
                                 </div>
 
@@ -377,7 +372,7 @@ export default function Database(): JSX.Element {
                                                         <span>Map Name</span>
                                                         <Image
                                                             alt=""
-                                                            src={`/icons/${sortOrder}ending.svg`} // Use different icons for ascending and descending
+                                                            src={`/icons/${sortOrder}ending.svg`}
                                                             width={40}
                                                             height={40}
                                                             onClick={handleSortClick}
@@ -551,7 +546,7 @@ export default function Database(): JSX.Element {
                         </div>
                     </div>
                 </>
-            ): <></>}
+            ) : <></>}
         </>
     );
 }
