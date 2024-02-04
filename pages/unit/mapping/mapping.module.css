@@ -187,7 +187,7 @@
     height: 80%;
     background-color: #D0E1E7;
     border: 2px solid #0C98B4;
-    border-radius: 30px;
+    border-radius: 45px;
 
     /* Horizontally center the content */
 
@@ -225,14 +225,12 @@
     color: #0567A6;
     gap: 20px;
 
-    width: 90%;
+    width: 95%;
     margin-left: auto;
     margin-right: auto;
-
     height: 40px;
     margin-top: 46px;
     margin-bottom: 64.1px;
-
 }
 
 .topDiv .playButton,
@@ -375,7 +373,7 @@
     background-color: #FF7582;
     display: flex;
     width: 150px;
-    height: 37.1px;
+    height: 37px;
     border-radius: 20px;
     border: 2.1px solid #FF7582;
     color: #FFFFFF;
@@ -405,7 +403,7 @@
 
 .mapName {
     font-family: Inter;
-    font-size: 19px;
+    font-size: 25px;
     font-weight: 500;
     line-height: 23px;
     letter-spacing: 0em;
@@ -510,11 +508,12 @@
 
     .mapSection {
         margin-top: 155px;
-        width: 1960px !important;
-        height: 1160px;
-        max-height: 100%;
+        width: 2300px;
+        height: 1300px;
         border: 5px solid #0C98B4;
+        max-height: 100%;
     }
+
 
 
     .topDiv .playButton,
@@ -570,7 +569,7 @@
     /* Center Div */
     .centerDiv {
         width: 95%;
-        height: 950px;
+        height: 1100px;
         border-radius: 45px;
         border: 4.15px solid #0C98B4;
         box-shadow: 0px 5.529412269592285px 5.529412269592285px 0px #0567A6;
@@ -580,8 +579,8 @@
         height: 115px;
         width: 37px;
 
-        margin-left: 1730px;
-        margin-top: 30px;
+        margin-left: 2050px;
+        margin-top: 50px;
     }
 
     .centerDiv .buttonNavigation div {
@@ -609,16 +608,16 @@
     }
 
     .footerMap {
-        top: 88%;
+        top: 90%;
         padding-left: 30px;
         width: 90%;
     }
 
     .emergencyButton {
         width: 225px;
-        height: 55px;
+        height: 60px;
         border-radius: 20px;
-        font-size: 19px;
+        font-size: 20px;
         font-weight: 500;
         line-height: 23px;
         letter-spacing: 0em;
@@ -633,8 +632,8 @@
     }
 
     .emergencyButton img {
-        width: 25px;
-        height: 25px;
+        width: 30px;
+        height: 30px;
     }
 
 }

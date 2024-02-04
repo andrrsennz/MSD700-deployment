@@ -11,7 +11,7 @@ const Footer: React.FC<FooterProps> = (props) => {
       {props.status === true ? (
         <div className={styles.container}>
           <div className={styles.handlingInstructions}>
-            <img src="/icons/book-svgrepo-com.svg" alt="" />
+            <img src="/icons/new-book.svg" alt="" />
             <p>
               Handling
               <br />
@@ -19,7 +19,7 @@ const Footer: React.FC<FooterProps> = (props) => {
             </p>
           </div>
           <div className={styles.safetyPrecautions}>
-            <img src="/icons/shield-alt-svgrepo-com (2).svg" alt="" />
+            <img src="/icons/new-shield.svg" alt="" />
             <p>
               Safety <br />
               Precaution
@@ -32,7 +32,7 @@ const Footer: React.FC<FooterProps> = (props) => {
 
       <div className={styles.copyright}>
         <p>
-          <span>&#169;</span> 2023ITBdeLabo
+          <span>&#169;</span> 2023 ITBdeLabo
         </p>
       </div>
     </footer>

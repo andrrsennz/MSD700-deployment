@@ -32,7 +32,7 @@
   border: 4px solid #FF7582;
 
   color: #C66E87;
-  font-family: Inter;
+  font-family: 'Inter', sans-serif;
   font-size: 22px;
   font-weight: 500;
   line-height: 27px;
@@ -71,7 +71,7 @@
 
 .register p {
   color: #0C98B4;
-  font-family: Inter;
+  font-family: 'Inter', sans-serif;
   font-size: 19px;
   font-weight: 500;
   line-height: 23px;
@@ -128,7 +128,7 @@
 .registerUnit {
   /* margin-top: auto; */
   height: 43px;
-  font-family: Inter;
+  font-family: 'Inter', sans-serif;
   font-size: 19px;
   font-weight: 500;
   line-height: 23px;
@@ -264,7 +264,7 @@
   letter-spacing: 0em;
   text-align: center;
   color: #0567A6;
-  text-shadow: 0px 4px 4px #60E3D5;
+  text-shadow: 0px 7px 7px #60E3D5;
   margin-bottom: 1%;
   margin-top: 50px;
 }
@@ -274,6 +274,7 @@
   width: 100%;
   margin-left: auto;
   margin-right: auto;
+  
 }
 
 /* Table Section */
@@ -292,7 +293,7 @@
   position: sticky;
   top: 0;
 
-  font-family: Inter;
+  font-family: 'Inter';
   font-size: 19px;
   font-weight: 500;
   line-height: 23px;
@@ -356,7 +357,7 @@
   width: 418px;
   border-radius: 7px;
   border-collapse: separate;
-  font-family: Inter;
+  font-family: 'Inter', sans-serif;
   font-size: 16px;
   font-weight: 500;
   line-height: 19px;
@@ -437,19 +438,24 @@
   padding: 20px;
   color: rgba(255, 117, 130, 1);
   background-color: hsla(0, 25%, 95%, 1);
-  border: 4px solid rgba(255, 117, 130, 1);
+  border: 5px solid rgba(255, 117, 130, 1);
   border-radius: 5px;
   z-index: 1001;
   /* Ensure the box is above the overlay */
 
-  font-family: Inter;
-  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 22px;
   font-weight: 500;
   line-height: 17px;
   letter-spacing: 0em;
   text-align: left;
 
   cursor: pointer;
+}
+
+.alertBox img{
+  width: 30px;
+  height: 30px;
 }
 
 /* --------------------------------------------------------------------- */
@@ -474,7 +480,6 @@
   border-radius: 10px;
   margin-left: auto;
   margin-bottom: 20px;
-  /* margin-right: 20px; */
 }
 
 .loginFormButton:hover {
@@ -505,9 +510,11 @@
   margin-left: auto;
   margin-right: auto;
   display: flex;
+  /* width: 100%; */
   flex-direction: column;
   /* Updated to column to align children vertically */
   align-items: center;
+  /* justify-content: center; */
   /* Center children horizontally */
   /* Center children vertically */
 }
@@ -516,7 +523,7 @@
   color: #FFFFFF;
   margin-bottom: 35px;
   top: 300px;
-  border-radius: 5px;
+  border-radius: 10px;
   gap: 10px;
   display: flex;
   justify-content: center;
@@ -915,13 +922,17 @@
 }
 
 @media (min-width: 2560px) {
+  .centerSection {
+    margin-top: 5%;
+  }
+
   .centerSection .greetings {
-    font-size: 54px;
+    font-size: 60px !important;
     margin-top: 25px;
   }
 
   .register p {
-    font-size: 22px;
+    font-size: 24px;
     /* Remove padding */
   }
 
@@ -941,15 +952,30 @@
 
   .loginSection .labelSection {
     width: 459px;
+    margin-left: 50px;
+    padding: 0 !important;
     font-size: 28px;
+    height: 65px;
+    padding: 15px;
+    /* padding: 0 !important; */
+  }
+
+
+  .loginSection .labelSection img {
+    width: 40px;
+    height: 40px;
   }
 
   .inputSection {
     width: 598px;
   }
 
+  .inputUnit {
+    padding-left: 10px;
+  }
+  
   .inputSection label {
-    font-size: 28px;
+    font-size: 30px;
   }
 
   .inputSection input[type="text"] {
@@ -962,12 +988,23 @@
     font-size: 28px;
   }
 
+  .inputSection form {
+    width: 598px;
+    padding: 30px;
+    border-radius: 8px;
+    border: 4px solid #60E3D5;
+    gap: 25px
+  }
+
+
+
   .tableUnit {
+    height: 990px;
     max-height: 2000px;
+    width: fit-content;
   }
 
   .tableSection {
-    height: 800px;
     max-height: 2000px;
   }
 
@@ -987,16 +1024,25 @@
     border-spacing: 4px 8px;
   }
 
-  .table th,
-  .table td {
+  .tableSection th,
+  .tableSection td {
     height: 56px !important;
-    width: 55px !important;
+    text-align: center;
+    border: 3px solid #0C98B4;
+    border-radius: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: auto; /* Set width to auto */
+    padding-left: 10px;
+    padding-right: 10px;
   }
-
+  
   .loginFormButton {
     width: 118px;
     height: 58px;
     font-size: 28px;
+    /* margin-right: -70px; */
   }
 
 
@@ -1022,7 +1068,7 @@
   .registerUnit {
     height: 59px;
     font-size: 24px;
-    top: 120%;
+    top: 130%;
     left: 40%;
   }
 

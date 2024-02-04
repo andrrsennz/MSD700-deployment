@@ -24,6 +24,21 @@ export default function Home(): JSX.Element {
 
   const [data, setData] = useState<any[]>([]);
 
+  var dummyData = [
+    { id: 1, unit: "Unit A", user_id: 1, status: "true", battery: "", uptime: '' },
+    { id: 2, unit: "Unit B", user_id: 1, status: "true", battery: "", uptime: '' },
+    { id: 7, unit: "Unit C", user_id: 1, status: "true", battery: "", uptime: '' },
+    { id: 13, unit: "Unit D", user_id: 1, status: "true", battery: "", uptime: '' },
+    { id: 14, unit: "tess", user_id: 1, status: "true", battery: "", uptime: '' },
+    { id: 15, unit: "asas", user_id: 1, status: "true", battery: "", uptime: '' },
+    { id: 16, unit: "asasasas", user_id: 1, status: "true", battery: "", uptime: '' },
+    { id: 17, unit: "asasasasasas", user_id: 1, status: "true", battery: "", uptime: '' },
+    { id: 18, unit: "asasasasasasasas", user_id: 1, status: "true", battery: "", uptime: '' },
+    { id: 19, unit: "asasasasasasasaasass", user_id: 1, status: "true", battery: "", uptime: '' },
+    { id: 20, unit: "asasasasasasaasassaasass", user_id: 1, status: "true", battery: "", uptime: '' }
+  ];
+
+
   const [showIncorrectPassword, setShowIncorrectPassword] = useState<boolean>(false);
 
 
@@ -437,7 +452,7 @@ export default function Home(): JSX.Element {
                           </tr>
                         </thead>
                         <tbody>
-                          {data.map((item, idx) => (
+                          {dummyData.map((item, idx) => (
                             <tr
                               key={idx}
                               onClick={() => handleRowClick(idx)}

@@ -20,8 +20,8 @@
 
     color: #D0E1E7;
     background-color: #4E6CB1;
-    border: 2px solid #60E3D5;
-    border-radius: 5px;
+    border: 5.5px solid #60E3D5;
+    border-radius: 9px;
     font-size: 19px;
 
     font-family: 'Inter', sans-serif;
@@ -81,6 +81,7 @@
 .safetyPrecautions img {
     width: 40%;
     height: 40%;
+    margin-bottom: 10px;
 }
 
 @media (min-width:2560px) {
@@ -99,13 +100,13 @@
     }
 
     .copyright {
-        width: 248px;
-        height: 48px;
-        border-radius: 5px;
-        border: 5.33px solid #60E3D5;
+        width: 332.9px;
+        height: 63px;
+        border-radius: 9px;
+        border: 6px solid #60E3D5;
 
         font-family: Inter;
-        font-size: 25px;
+        font-size: 34px;
         font-weight: 500;
         line-height: 41px;
         letter-spacing: 0em;

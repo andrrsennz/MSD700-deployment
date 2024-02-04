@@ -1,0 +1,26 @@
+.bottomLeftElement {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    background-color: #0C98B4;
+    /* Set your desired background color */
+    color: #fff;
+    /* Set your desired text color */
+    border: 4.5px solid #60E3D5;
+    width: 90px;
+    height: 90px;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+.bottomLeftElement:hover {
+    cursor: pointer;
+}
+
+.bottomLeftElement img {
+    width: 45px;
+    height: 45px;
+}
