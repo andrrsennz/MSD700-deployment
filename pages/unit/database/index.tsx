@@ -9,6 +9,8 @@ import { useRouter } from 'next/navigation';
 import ConfirmDelete from '@/components/confirm-delete/confirmDelete';
 import axios from 'axios';
 import Head from 'next/head';
+import ButtonInformation from '@/components/unit-information-button/unitInformationButton';
+import ControlInstruction from '@/components/control-instruction/controlInstruction';
 
 interface DataItem {
     map_name: string;
@@ -42,6 +44,7 @@ export default function Database(): JSX.Element {
     const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || 'http://localhost:5000');
     const [isEditing, setIsEditing] = useState<Record<number, boolean>>({});
     const [render, setRender] = useState<boolean>(true);
+    const [showControlInstruction, setShowControlInstruction] = useState<boolean>(false);
 
     useEffect(() => {
         async function fetchData() {
@@ -318,6 +321,13 @@ export default function Database(): JSX.Element {
         return fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
     }
 
+    const handleInfoIconClick = () => {
+        setShowControlInstruction(!showControlInstruction); // Toggle the state
+    };
+
+    const handleControlInstructionClick = () => {
+        setShowControlInstruction(false);
+    };
 
     return (
         <>  {render ?
@@ -339,6 +349,7 @@ export default function Database(): JSX.Element {
                         onCancel={handleCancelDelete}
                         onConfirm={() => deleteItem(indexDelete)}
                     />
+                    {showControlInstruction && <ControlInstruction onClick={handleControlInstructionClick} width={629} height={635.29} imgUrl='/images/instruction_database.png' />}
                     <div className={styles.container}>
                         <div className={styles.parents}>
                             <CloseButton onClick={onConfirmButtonClick} />
@@ -542,7 +553,8 @@ export default function Database(): JSX.Element {
                                     </div>
                                 </div>
                             </div>
-                            <Footer status={true} />
+                            <ButtonInformation onClick={handleInfoIconClick} />
+                            <Footer status={false} />
                         </div>
                     </div>
                 </>

@@ -11,6 +11,8 @@ import axios from "axios";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import mqtt from "mqtt";
+import ButtonInformation from "@/components/unit-information-button/unitInformationButton";
+import ControlInstruction from "@/components/control-instruction/controlInstruction";
 
 interface MappingProps { }
 
@@ -45,9 +47,10 @@ export default function Mapping(props: MappingProps): JSX.Element {
     const [render, setRender] = useState<boolean>(true);
     const [imageBlob, setImageBlob] = useState<Blob | null>(null);
     const [mapName, setMapName] = useState<string>('');
+    const [showControlInstruction, setShowControlInstruction] = useState<boolean>(false);
 
     const router = useRouter();
-    
+
 
     const onConfirmButtonClick = (): void => {
         setShowConfirmClosePageDialog(true);
@@ -234,7 +237,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
 
         const mapNameFromSession = sessionStorage.getItem('mapName');
         setMapName(mapNameFromSession ?? ''); // If mapNameFromSession is null, use an empty string
-    
+
 
         return () => {
             // clean up when exiting the page
@@ -326,6 +329,13 @@ export default function Mapping(props: MappingProps): JSX.Element {
 
     }
 
+    const handleInfoIconClick = () => {
+        setShowControlInstruction(!showControlInstruction); // Toggle the state
+    };
+
+    const handleControlInstructionClick = () => {
+        setShowControlInstruction(false);
+    };
 
     return (
         <> {render ?
@@ -347,7 +357,9 @@ export default function Mapping(props: MappingProps): JSX.Element {
                         onConfirm={onConfirmSaveMappingButtonClick}
                     />
                     <MapSaving status={savingConfirmDialog} />
+                    
                     <div className={styles.container}>
+                    {showControlInstruction && <ControlInstruction onClick={handleControlInstructionClick} height={1000} width={780} imgUrl='/images/instruction_mapping.png' />}
                         <div className={styles.parents}>
                             <div className={styles.statusSection}>
                                 <div
@@ -478,7 +490,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
                         </div>
                     </div>
 
-
+                    <ButtonInformation onClick={handleInfoIconClick} />
                     <Script src="/script/Nav2D.js" strategy="beforeInteractive" />
                     <Script src="/script/roslib.js" strategy="beforeInteractive" />
                     <Script src="/script/eventemitter2.min.js" strategy="beforeInteractive" />
