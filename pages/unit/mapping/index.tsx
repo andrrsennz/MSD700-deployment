@@ -179,9 +179,9 @@ export default function Mapping(props: MappingProps): JSX.Element {
         // Create the main viewer.
         viewer = new (window as any).ROS2D.Viewer({
             divID: 'map',
-            width: mapRef.current?.clientWidth || 1070,
-            height: mapRef.current?.clientHeight || 670,
-            background: "#7F7F7F",
+            width: mapRef.current?.clientWidth || 1870,
+            height: mapRef.current?.clientHeight || 958,
+            background: "#DCDCDC",
         });
 
         paN = new (window as any).ROS2D.PanView({
@@ -456,10 +456,10 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                         <img src="/icons/2.svg" alt="" />
                                     </div>
 
-                                    <div className={styles.settingsButton}>
+                                    {/* <div className={styles.settingsButton}>
                                         <img src="/icons/Setting.svg" alt="" />
                                         <p>Please turn on the LIDAR before mapping.</p>
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp}>
                                     <div className={styles.buttonNavigation}>

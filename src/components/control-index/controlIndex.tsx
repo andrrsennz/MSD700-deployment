@@ -158,9 +158,9 @@ export default function Mapping() {
     // Create the main viewer.
     viewer = new (window as any).ROS2D.Viewer({
       divID: 'map',
-      width: mapRef.current?.clientWidth || 1070,
-      height: mapRef.current?.clientHeight || 1070,
-      background: "#7F7F7F",
+      width: mapRef.current?.clientWidth || 1870,
+      height: mapRef.current?.clientHeight || 958,
+      background: "#DCDCDC",
     });
 
     paN = new (window as any).ROS2D.PanView({
@@ -382,7 +382,7 @@ export default function Mapping() {
                 <p>Return Home</p>
                 <img src="/icons/Home.svg" alt="" />
               </div>
-              <div className={styles.settingsButton}>
+              {/* <div className={styles.settingsButton}>
                 <img src="/icons/information-circle-svgrepo-com (1).svg" alt="" />
                 <p>
                   Click, hold, and orient to add the pinpoint
@@ -391,7 +391,7 @@ export default function Mapping() {
                   <br />
                   Hold middle mouse button to move the map
                 </p>
-              </div>
+              </div> */}
             </div>
             <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp}>
               <div className={styles.buttonNavigation}>

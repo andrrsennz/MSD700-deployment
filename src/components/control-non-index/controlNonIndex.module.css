@@ -7,7 +7,7 @@
     height: 80%;
     background-color: #D0E1E7;
     border: 2px solid #0C98B4;
-    border-radius: 40px;
+    border-radius: 45px;
 
     /* Horizontally center the content */
 
@@ -17,7 +17,6 @@
     position: absolute;
     margin-top: 147.5px;
     margin-bottom: 20px;
-    margin-right: 50px;
     right: 25px;
 
     z-index: 2;
@@ -108,10 +107,12 @@
 @media (min-width:2560px) {
     .mapSection {
         margin-top: 155px;
-        width: 2250px;
-        height: 1300px;
+        width: 2000px !important;
+        height: 1160px;
+        max-height: 100%;
         border: 5px solid #0C98B4;
     }
+
 
     .centerDiv {
         font-family: Inter;

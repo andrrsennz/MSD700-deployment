@@ -377,6 +377,7 @@ export default function Home(): JSX.Element {
                       name="username"
                       defaultValue=""
                       required
+                      disabled={showUtilSection} // Disable the input if showUtilSection is true
                     />
                   </div>
                   <div className={styles.inputUnit}>
@@ -389,22 +390,25 @@ export default function Home(): JSX.Element {
                         name="password"
                         defaultValue=""
                         required
+                        disabled={showUtilSection} // Disable the input if showUtilSection is true
                       />
-                      <div className={styles.passwordStatusButton} >
+                      <div className={styles.passwordStatusButton}>
                         <Image
                           src="/icons/Eye.svg"
                           alt="Picture of the author"
                           width={30}
                           height={30}
                           onClick={() => setShowPassword(!showPassword)}
+                          style={{ cursor: showUtilSection ? 'not-allowed' : 'pointer' }} // Set cursor style based on showUtilSection
                         />
                       </div>
                     </div>
                   </div>
                   <button
                     className={styles.submitButton}
-                    type="submit" // Specify the type as submit
+                    type="submit"
                     onClick={onProceedButtonClick}
+                    disabled={showUtilSection} // Disable the button if showUtilSection is true
                   >
                     Proceed
                   </button>

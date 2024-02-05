@@ -809,8 +809,6 @@
   }
 }
 
-
-
 @media (width: 1440px) and (height: 1024px) {
   .centerSection .greetings {
     font-size: 32px;
@@ -922,9 +920,9 @@
 }
 
 @media (min-width: 2560px) {
-  .centerSection {
-    margin-top: 5%;
-  }
+  /* .centerSection {
+    margin-top: 1%;
+  } */
 
   .centerSection .greetings {
     font-size: 60px !important;
@@ -996,11 +994,9 @@
     gap: 25px
   }
 
-
-
   .tableUnit {
-    height: 990px;
-    max-height: 2000px;
+    height: auto;
+    max-height: 1040px;
     width: fit-content;
   }
 
@@ -1069,7 +1065,7 @@
     height: 59px;
     font-size: 24px;
     top: 130%;
-    left: 40%;
+    left: 35%;
   }
 
   .registerUnitText {

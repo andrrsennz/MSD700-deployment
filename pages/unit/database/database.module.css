@@ -45,7 +45,7 @@
     height: 80%;
     background-color: #D0E1E7;
     border: 3px solid #0C98B4;
-    border-radius: 30px;
+    border-radius: 45px;
 
     /* Horizontally center the content */
 
@@ -69,8 +69,8 @@
 .mapSection .topSection {
     position: absolute;
     top: 0;
-    left: 20px;
-    right: 20px;
+    left: 75px;
+    right: 75px;
     height: 15%;
 
     display: flex;
@@ -122,9 +122,8 @@
 .mapSection .mainSection {
     position: absolute;
     top: 15%;
-    left: 20px;
-    right: 20px;
-
+    left: 75px;
+    right: 75px;
 }
 
 /* .theTable */
@@ -194,9 +193,9 @@
 .inputContainer label::before {
     content: '';
     display: inline-block;
-    width: 18px;
-    height: 18px;
-    border: 2px solid #60E3D5;
+    width: 32px;
+    height: 32px;
+    border: 4px solid #60E3D5;
     border-radius: 50%;
 
     background-color: #D9FEFA;
@@ -250,8 +249,8 @@
 .bottomSection {
     position: absolute;
     bottom: 3%;
-    left: 20px;
-    right: 20px;
+    left: 75px;
+    right: 75px;
     display: flex;
     justify-content: space-between;
 
@@ -473,7 +472,7 @@
 
     .mapSection {
         margin-top: 155px;
-        width: 1960px !important;
+        width: 2000px !important;
         height: 1160px;
         max-height: 100%;
         border: 5px solid #0C98B4;
@@ -549,6 +548,26 @@
 
     .theTable .headerContent img {
         margin-left: auto;
+    }
+
+    .idColumn{
+        width: 108px;
+    }
+
+    .fileType{
+        width: 212px;
+    }
+
+    .fileSize {
+        width: 238px;
+    }
+
+    .selectedMap{
+        width: 265px;
+    }
+
+    .delete{
+        width: 208px;
     }
 
     .theTable tbody{

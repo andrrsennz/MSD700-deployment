@@ -377,7 +377,7 @@ export default function Database(): JSX.Element {
                                     <table className={styles.theTable}>
                                         <thead>
                                             <tr className={styles.header}>
-                                                <th>No.</th>
+                                                <th className={styles.idColumn}>No.</th>
                                                 <th className={styles.sortableHeader}>
                                                     <div className={styles.headerContent}>
                                                         <span>Map Name</span>
@@ -402,10 +402,10 @@ export default function Database(): JSX.Element {
                                                         />
                                                     </div>
                                                 </th>
-                                                <th>File Type</th>
-                                                <th className={styles.fileSize}>File Size</th>
-                                                <th className={styles.selectedMap}>Selected Map to Load</th>
-                                                <th>Delete</th>
+                                                <th className={styles.fileType}>File Type</th>
+                                                <th className={styles.fileSize}>Size</th>
+                                                <th className={styles.selectedMap}>Selected<br /> Map to Load</th>
+                                                <th className={styles.delete}>Delete</th>
                                             </tr>
                                         </thead>
 

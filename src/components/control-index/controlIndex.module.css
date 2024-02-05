@@ -431,7 +431,7 @@
 
 .mapName {
     font-family: Inter;
-    font-size: 19px;
+    font-size: 25px;
     font-weight: 500;
     line-height: 23px;
     letter-spacing: 0em;
@@ -508,6 +508,7 @@
         height: 74px;
         font-size: 28px;
         border-radius: 30px;
+        margin-left: 30%;
     }
 
     .slider {
@@ -535,13 +536,11 @@
 
     .mapSection {
         margin-top: 155px;
-        width: 2250px;
-        height: 1300px;
-        border: 5px solid #0C98B4;
+        width: 2000px !important;
+        height: 1160px;
         max-height: 100%;
+        border: 5px solid #0C98B4;
     }
-
-
 
     .topDiv .playButton,
     .topDiv .pauseButton {
@@ -550,22 +549,15 @@
         border-radius: 10px;
     }
 
-    .topDiv .playButton {
-        width: 87px;
-    }
-
-    .topDiv .pauseButton {
-        width: 104px
-    }
-
+    .topDiv .playButton,
+    .topDiv .pauseButton,
     .topDiv .stopButton {
-        width: 167px;
-        height: 52px;
-        background-color: #0C98B4;
+        width: auto;
+        height: auto;
         border: 2.4px solid #60E3D5;
         border-radius: 10px;
     }
-
+    
     .topDiv .playButton p,
     .topDiv .pauseButton p,
     .topDiv .stopButton p {
@@ -612,8 +604,8 @@
         height: 115px;
         width: 37px;
 
-        margin-left: 1730px;
-        margin-top: 30px;
+        margin-left: 1750px;
+        margin-top: 50px;
     }
 
     .centerDiv .buttonNavigation div {
@@ -641,16 +633,16 @@
     }
 
     .footerMap {
-        top: 88%;
+        top: 85%;
         padding-left: 30px;
         width: 90%;
     }
 
     .emergencyButton {
         width: 225px;
-        height: 55px;
+        height: 60px;
         border-radius: 20px;
-        font-size: 19px;
+        font-size: 20px;
         font-weight: 500;
         line-height: 23px;
         letter-spacing: 0em;
@@ -665,8 +657,8 @@
     }
 
     .emergencyButton img {
-        width: 25px;
-        height: 25px;
+        width: 30px;
+        height: 30px;
     }
 
 }
