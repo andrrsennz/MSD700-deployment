@@ -349,7 +349,7 @@ export default function Database(): JSX.Element {
                         onCancel={handleCancelDelete}
                         onConfirm={() => deleteItem(indexDelete)}
                     />
-                    {showControlInstruction && <ControlInstruction onClick={handleControlInstructionClick} width={629} height={635.29} imgUrl='/images/instruction_database.png' />}
+                    {showControlInstruction && <ControlInstruction onClick={handleControlInstructionClick} width={80} height={80} imgUrl='/images/instruction_database.png' />}
                     <div className={styles.container}>
                         <div className={styles.parents}>
                             <CloseButton onClick={onConfirmButtonClick} />
@@ -458,13 +458,13 @@ export default function Database(): JSX.Element {
                                 </div>
 
                                 <div className={styles.bottomSection}>
-                                    <div className={styles.warning}>
+                                    {/* <div className={styles.warning}>
                                         <img
                                             src="/icons/information-circle-svgrepo-com (1).svg"
                                             alt=""
                                         />
                                         <p>Rename the map by double-click the name</p>
-                                    </div>
+                                    </div> */}
                                     <div
                                         className={`${styles.confirmMappingChoosed} ${(initialCheckedIndex !== null && parseInt(initialCheckedIndex) > -1) || mapIndex > -1
                                             ? ""

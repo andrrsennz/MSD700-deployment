@@ -56,7 +56,7 @@ const Navigation: React.FC<NavigationProps> = ({ imageSrc }) => {
           className={`${styles.greetings} ${isActive('/unit/control') && styles.active
             }`}
         >
-          <img src="/icons/user-10-svgrepo-com.svg" alt="" />
+          <img src="/icons/Icon-person-white.svg" alt="" />
           <p>{`Welcome, ${full_name} (${username}) - ${unit_name}`}</p>
         </div>
         <div className={styles.menu}>

@@ -10,8 +10,8 @@ interface ControlInstructionProps {
 
 const ControlInstruction: React.FC<ControlInstructionProps> = ({ onClick, imgUrl, width, height }) => {
   const style = {
-    width: width ? `${width}px` : undefined,
-    height: height ? `${height}px` : undefined,
+    width: width ? `${width}%` : `80%`,
+    height: height ? `${height}%` : `80%`,
   };
 
   return (

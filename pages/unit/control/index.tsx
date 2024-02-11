@@ -29,24 +29,24 @@ const Control: React.FC = () => {
         : parseInt(sessionStorage.getItem('mapIndex') || '0', 10)
     );
 
-    async function checkToken() {
-      await axios.get(`${backendUrl}`, {
-        headers: {
-          'Authorization': `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
-        }
-      })
-        .then((response) => {
-          if (response.status === 200) {
-            setRender(true);
-          } else {
-            router.push('/');
-          }
-        })
-        .catch((error) => {
-          router.push('/');
-        });
-    }
-    checkToken();
+    // async function checkToken() {
+    //   await axios.get(`${backendUrl}`, {
+    //     headers: {
+    //       'Authorization': `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
+    //     }
+    //   })
+    //     .then((response) => {
+    //       if (response.status === 200) {
+    //         setRender(true);
+    //       } else {
+    //         router.push('/');
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       router.push('/');
+    //     });
+    // }
+    // checkToken();
   }, []);
 
   const searchParams = useSearchParams();

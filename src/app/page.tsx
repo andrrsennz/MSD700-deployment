@@ -25,17 +25,17 @@ export default function Home(): JSX.Element {
   const [data, setData] = useState<any[]>([]);
 
   var dummyData = [
-    { id: 1, unit: "Unit A", user_id: 1, status: "true", battery: "", uptime: '' },
-    { id: 2, unit: "Unit B", user_id: 1, status: "true", battery: "", uptime: '' },
-    { id: 7, unit: "Unit C", user_id: 1, status: "true", battery: "", uptime: '' },
-    { id: 13, unit: "Unit D", user_id: 1, status: "true", battery: "", uptime: '' },
-    { id: 14, unit: "tess", user_id: 1, status: "true", battery: "", uptime: '' },
-    { id: 15, unit: "asas", user_id: 1, status: "true", battery: "", uptime: '' },
-    { id: 16, unit: "asasasas", user_id: 1, status: "true", battery: "", uptime: '' },
-    { id: 17, unit: "asasasasasas", user_id: 1, status: "true", battery: "", uptime: '' },
-    { id: 18, unit: "asasasasasasasas", user_id: 1, status: "true", battery: "", uptime: '' },
-    { id: 19, unit: "asasasasasasasaasass", user_id: 1, status: "true", battery: "", uptime: '' },
-    { id: 20, unit: "asasasasasasaasassaasass", user_id: 1, status: "true", battery: "", uptime: '' }
+    { id: 1, unit: "Unit A", user_id: 1, status: "on", battery: "", uptime: '' },
+    { id: 2, unit: "Unit B", user_id: 1, status: "on", battery: "", uptime: '' },
+    { id: 7, unit: "Unit C", user_id: 1, status: "on", battery: "", uptime: '' },
+    { id: 13, unit: "Unit D", user_id: 1, status: "off", battery: "", uptime: '' },
+    { id: 14, unit: "tess", user_id: 1, status: "off", battery: "", uptime: '' },
+    { id: 15, unit: "asas", user_id: 1, status: "off", battery: "", uptime: '' },
+    { id: 16, unit: "asasasas", user_id: 1, status: "off", battery: "", uptime: '' },
+    { id: 17, unit: "asasasasasas", user_id: 1, status: "off", battery: "", uptime: '' },
+    { id: 18, unit: "asasasasasasasas", user_id: 1, status: "off", battery: "", uptime: '' },
+    { id: 19, unit: "asasasasasasasaasass", user_id: 1, status: "off", battery: "", uptime: '' },
+    { id: 20, unit: "asasasasasasaasassaasass", user_id: 1, status: "off", battery: "", uptime: '' }
   ];
 
 
@@ -460,7 +460,7 @@ export default function Home(): JSX.Element {
                             <tr
                               key={idx}
                               onClick={() => handleRowClick(idx)}
-                              className={`${item.status === 'off' ? styles.offRow : styles.onRow} ${selectedRowIdx === idx ? styles.selectedRow : ''}`}
+                              className={`${item.status == 'off' ? styles.offRow : styles.onRow} ${selectedRowIdx === idx ? styles.selectedRow : ''}`}
                             >
                               <td data-column="0">{idx + 1}</td>
                               <td data-column="1">{item.unit}</td>

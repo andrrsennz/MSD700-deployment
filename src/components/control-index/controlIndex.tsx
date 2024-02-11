@@ -31,6 +31,11 @@ export default function Mapping() {
   const [topic, setTopic] = useState<string>('/camera');
   const [imageBlob, setImageBlob] = useState<Blob | null>(null);
   const [mapName, setMapName] = useState<string>('');
+  const [showOptions, setShowOptions] = useState(false);
+  const [isRotated, setIsRotated] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<string>("");
+
+
 
   const onConfirmButtonClick = () => {
     setShowConfirmClosePageDialog(true);
@@ -285,6 +290,17 @@ export default function Mapping() {
     }
   };
 
+  const toggleOptions = () => {
+    setShowOptions(!showOptions);
+    setIsRotated(!isRotated);
+  };
+
+  const selectedModeListButton = (id: string) => () => {
+    if (isRotated) {
+      id == selectedOption ? setSelectedOption("") : ""
+      selectedOption == "" ? setSelectedOption(id) : ""
+    }
+  };
 
 
   return (
@@ -382,30 +398,59 @@ export default function Mapping() {
                 <p>Return Home</p>
                 <img src="/icons/Home.svg" alt="" />
               </div>
-              {/* <div className={styles.settingsButton}>
-                <img src="/icons/information-circle-svgrepo-com (1).svg" alt="" />
-                <p>
-                  Click, hold, and orient to add the pinpoint
-                  <br />
-                  Double-click to remove the pinpoint
-                  <br />
-                  Hold middle mouse button to move the map
-                </p>
-              </div> */}
             </div>
             <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp}>
-              <div className={styles.buttonNavigation}>
-                <div className={styles.zoomIn} onClick={zoomIn}>
-                  <img src="/icons/zoomin.svg" alt="" />
+              <div className={styles.navigationSection}>
+
+                <div className={styles.modeListSection}>
+                  <div
+                    className={`${styles.modeListParents} ${styles.modeListOption}`}
+                    onClick={toggleOptions}
+                  >
+                    <p>Mode List</p>
+                    <img
+                      src="/icons/down-arrow.svg"
+                      alt=""
+                      className={`${styles.modeList} ${isRotated ? styles.rotated : ''}`}
+                    />
+                  </div>
+
+                  <div id="mode-list-1" className={`${showOptions || selectedOption == "mode-list-1" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-1" ? styles.activeDisableModeListButton : ""}`} onClick={selectedModeListButton("mode-list-1")}>
+                    <img src="/icons/Marker.svg" alt="" />
+                    {selectedOption == "mode-list-1" ? <p>Finish Pinpoint</p> : <p>Single Pinpoint</p>}
+                  </div>
+                  <div id="mode-list-2" className={`${showOptions || selectedOption == "mode-list-2" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-2" ? styles.activeDisableModeListButton : ""}`} onClick={selectedModeListButton("mode-list-2")}>
+                    <img src="/icons/Marker.svg" alt="" />
+                    {selectedOption == "mode-list-2" ? <p>Finish Pinpoint</p> : <p>Multiple Pinpoint</p>}
+                  </div>
+                  <div id="mode-list-3" className={`${showOptions || selectedOption == "mode-list-3" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-3" ? styles.activeDisableModeListButton : ""}`} onClick={selectedModeListButton("mode-list-3")}>
+                    <img src="/icons/Home.svg" alt="" />
+                    {selectedOption == "mode-list-3" ? <p>Finish Home Base</p> : <p>Set Home Base</p>}
+                  </div>
+                  <div id="mode-list-4" className={`${showOptions || selectedOption == "mode-list-4" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-4" ? styles.activeDisableModeListButton : ""}`} onClick={selectedModeListButton("mode-list-4")}>
+                    <img src="/icons/Position.svg" alt="" />
+                    {selectedOption == "mode-list-4" ? <p>Finish Initial Pose</p> : <p>Initial Pose</p>}
+                  </div>
+                  <div id="mode-list-5" className={`${showOptions || selectedOption == "mode-list-1" || selectedOption == "mode-list-2" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.deleteOption} ${selectedOption !== "mode-list-1" && selectedOption !== "mode-list-2" ? styles.disableModeListButton : ""}`}>
+                    <img src="/icons/delete_mode_list.svg" alt="" />
+                    <p>Delete All Pinpoints</p>
+                  </div>
+
                 </div>
-                <div className={styles.zoomOut} onClick={zoomOut}>
-                  <img src="/icons/zoomout.svg" alt="" />
-                </div>
-                <div className={styles.restart} onClick={rotateCW}>
-                  <img src="/icons/Maximize.svg" alt="" />
-                </div>
-                <div className={styles.restart} onClick={restart}>
-                  <img src="/icons/new reload.svg" alt="" />
+
+                <div className={styles.buttonNavigation}>
+                  <div className={styles.zoomIn} onClick={zoomIn}>
+                    <img src="/icons/zoomin.svg" alt="" />
+                  </div>
+                  <div className={styles.zoomOut} onClick={zoomOut}>
+                    <img src="/icons/zoomout.svg" alt="" />
+                  </div>
+                  <div className={styles.restart} onClick={rotateCW}>
+                    <img src="/icons/Maximize.svg" alt="" />
+                  </div>
+                  <div className={styles.restart} onClick={restart}>
+                    <img src="/icons/new reload.svg" alt="" />
+                  </div>
                 </div>
               </div>
               <div className={styles.footerMap}>

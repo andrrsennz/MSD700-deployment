@@ -30,6 +30,19 @@ var setHomeBaseMode = false;
 var homePoint: any = null;
 var navmode = false;
 
+interface Option {
+    icon: string;
+    text: string;
+}
+
+const options: Option[] = [
+    { icon: '/icons/2.svg', text: 'Single Pinpoint' },
+    { icon: '/icons/2.svg', text: 'Multiple Pinpoints' },
+    { icon: '/icons/2.svg', text: 'Set Home Base' },
+    { icon: '/icons/2.svg', text: 'Initial Pose' },
+    { icon: '/icons/2.svg', text: 'Delete All Pinpoints' },
+];
+
 export default function Mapping(props: MappingProps): JSX.Element {
     const [showConfirmClosePageDialog, setShowConfirmClosePageDialog] =
         useState<boolean>(false);
@@ -48,6 +61,26 @@ export default function Mapping(props: MappingProps): JSX.Element {
     const [imageBlob, setImageBlob] = useState<Blob | null>(null);
     const [mapName, setMapName] = useState<string>('');
     const [showControlInstruction, setShowControlInstruction] = useState<boolean>(false);
+    const [showMenu, setShowMenu] = useState<boolean>(false);
+    const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+
+    const handleOptionClick = (text: string): void => {
+        if (text === 'Delete All Pinpoints') {
+            // Check if options 1 to 4 have been selected
+            if (selectedOptions.length === 4) {
+                setSelectedOptions(options.map((option) => option.text));
+            }
+        } else {
+            // Check if the option is not already selected
+            if (!selectedOptions.includes(text)) {
+                setSelectedOptions((prevSelected) => [...prevSelected, text]);
+            }
+        }
+    };
+
+    const handleToggleMenu = (): void => {
+        setShowMenu((prevShowMenu) => !prevShowMenu);
+    };
 
     const router = useRouter();
 
@@ -357,9 +390,9 @@ export default function Mapping(props: MappingProps): JSX.Element {
                         onConfirm={onConfirmSaveMappingButtonClick}
                     />
                     <MapSaving status={savingConfirmDialog} />
-                    
+
                     <div className={styles.container}>
-                    {showControlInstruction && <ControlInstruction onClick={handleControlInstructionClick} height={1000} width={780} imgUrl='/images/instruction_mapping.png' />}
+                        {showControlInstruction && <ControlInstruction onClick={handleControlInstructionClick} height={80} width={90} imgUrl='/images/instruction_mapping.png' />}
                         <div className={styles.parents}>
                             <div className={styles.statusSection}>
                                 <div
@@ -476,6 +509,14 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                             <img src="/icons/new reload.svg" alt="" />
                                         </div>
                                     </div>
+                                    <div className={styles.footerMap}>
+                                        <div className={styles.emergencyButton}>
+                                            <img src="/icons/emergency.svg" alt="" />
+                                            <p>Emergency Button</p>
+                                        </div>
+                                        <div className={styles.mapName}>{mapName}</div>
+                                    </div>
+
                                     <div className={styles.footerMap}>
                                         <div className={styles.emergencyButton}>
                                             <img src="/icons/emergency.svg" alt="" />

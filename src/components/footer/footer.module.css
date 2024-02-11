@@ -83,14 +83,6 @@
     margin-bottom: 10px;
 }
 
-@media (min-width:2560px) {
-    .theFooter {
-        max-width: 100%;
-        padding-right: 30px;
-        padding-bottom: 29.45px;
-    }
-}
-
 @media (min-width:2560px) and (min-height:1440px) {
     .theFooter {
         max-width: 100%;
@@ -183,7 +175,7 @@
         letter-spacing: 0em;
         text-align: center;
 
-        margin-right: 0;
+        margin-right: 24px;
     }
 }
 

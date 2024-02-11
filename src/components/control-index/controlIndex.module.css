@@ -26,7 +26,7 @@
 }
 
 .statusSection {
-    width: 0px;
+    width: 40%;
     min-width: 480px;
     padding-top: 10px;
     position: absolute;
@@ -81,6 +81,7 @@
 }
 
 .statusSection .lidar {
+    margin-left: auto;
     min-width: 94px;
     height: 57px;
     text-align: center;
@@ -359,6 +360,11 @@
     height: 100%;
 }
 
+.centerDiv .navigationSection {
+    display: flex;
+    position: absolute;
+}
+
 .centerDiv .buttonNavigation {
     display: flex;
     flex-direction: column;
@@ -391,7 +397,7 @@
     display: flex;
     justify-content: space-between;
     position: absolute;
-    top: 85%;
+    top: 88%;
     padding-left: 30px;
     width: 90%;
     /* background-color: red; */
@@ -442,6 +448,96 @@
     color: #0567A6;
 }
 
+/* MODE LIST */
+.modeListSection {
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: 10%;
+    margin-top: 25px;
+    gap: 12px;
+    margin-left: 700px;
+}
+
+.modeListSection img {
+    width: 22px;
+    height: 22px;
+}
+
+.modeListParents {
+    width: 189px;
+    height: 40px;
+    border: 3px solid #60E3D5;
+    border-radius: 24px;
+    background-color: #0C98B4;
+
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 23px;
+    letter-spacing: 0em;
+    text-align: left;
+
+    color: #FFFFFF;
+
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
+    gap: 2px;
+}
+
+.modeListParents:hover {
+    cursor: pointer;
+}
+
+.modeListOption{
+    gap: 40%;
+}
+
+.modeListSection .option {
+    background-color: #0567A6;
+}
+
+.modeListSection .option:hover {
+    cursor: pointer;
+}
+
+.modeListSection .deleteOption {
+    background-color: #C66E87;
+    border: 3px solid #FF7582;
+}
+
+.modeListSection .deleteOption:hover {
+    cursor: pointer;
+}
+
+.rotated {
+    transform: rotate(180deg);
+    transition: transform 0.3s ease;
+    /* Rotate the element by 90 degrees */
+}
+
+.modeList {
+    transition: transform 0.3s ease;
+    /* Add a transition for the transform property */
+}
+
+.rotated {
+    transform: rotate(180deg);
+    /* Rotate the element when the 'rotated' class is applied */
+}
+
+.disableModeListButton {
+    background-color: #8DAAC0 !important;
+}
+
+.displayNone {
+    display: none;
+}
+
+.activeDisableModeListButton {
+    background-color: #60E3D5 !important;
+}
 
 
 @media (max-width: 1439px) {
@@ -557,7 +653,7 @@
         border: 2.4px solid #60E3D5;
         border-radius: 10px;
     }
-    
+
     .topDiv .playButton p,
     .topDiv .pauseButton p,
     .topDiv .stopButton p {
@@ -659,6 +755,19 @@
     .emergencyButton img {
         width: 30px;
         height: 30px;
+    }
+
+    /* MODE LIST */
+    .modeListSection {
+        margin-top: 50px;
+        margin-left: 1450px;
+    }
+
+    .modeListParents {
+        width: 217px !important;
+        height: 52px !important;
+        border: 3px solid #60E3D5;
+        font-size: 19px;
     }
 
 }
