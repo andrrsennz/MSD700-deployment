@@ -15,7 +15,13 @@ var paN: any
 var movecoor: any = [];
 var isDrag = false;
 var startcoor: any = [];
-var showImage: boolean = false;
+var showImage:boolean = false;
+var gridClient:any;
+var multiPointMode = false;
+var singlePointMode = false;
+var getInit = false;
+var setHomeBaseMode = false;
+var homePoint:any = null;
 
 export default function Mapping() {
   const [showConfirmClosePageDialog, setShowConfirmClosePageDialog] =
@@ -165,7 +171,7 @@ export default function Mapping() {
       divID: 'map',
       width: mapRef.current?.clientWidth || 1870,
       height: mapRef.current?.clientHeight || 958,
-      background: "#DCDCDC",
+      background: "#7F7F7F",
     });
 
     paN = new (window as any).ROS2D.PanView({
@@ -173,7 +179,7 @@ export default function Mapping() {
     });
 
     // Setup the map client.
-    var gridClient = new (window as any).NAV2D.OccupancyGridClientNav({
+    gridClient = new (window as any).NAV2D.OccupancyGridClientNav({
       ros: ros,
       rootObject: viewer.scene,
       viewer: viewer,
@@ -255,6 +261,10 @@ export default function Mapping() {
       ros: ros,
       rootObject: viewer.scene,
     });
+    var rotate = new (window as any).ROS2D.Rotate({
+      rootObject: viewer.scene
+    });
+    rotate.resetRotate();
     zoom.startZoom(250, 250);
     var result = zoomCrossConst.reduce((accumulator, currentValue) => accumulator * currentValue, 1);
     var newConst = 1 / result;
@@ -289,6 +299,139 @@ export default function Mapping() {
       paN.pan(e.clientX, e.clientY);
     }
   };
+
+    //multi pin point feature
+  //change to between single and multi pin point mode
+  const multiPoint = () => {
+    if (multiPointMode == false) {
+      multiPointMode = true;
+      gridClient.navigator.multiPointMode(true);
+      var button = document.getElementById("multiModeButton")
+      if(button != null){
+        button.innerText = "Finish Pin Point Mode"
+        console.log("button changes")
+      }
+    }
+
+    else if (multiPointMode == true) {
+      multiPointMode = false
+      gridClient.navigator.multiPointMode(false);
+      var button = document.getElementById("multiModeButton")
+      if(button != null){
+        button.innerText = "Multi Pin Point Mode"
+        console.log("button changes")
+      }
+    }
+  }
+
+  const singlePoint = () => {
+    if (singlePointMode == false) {
+      singlePointMode = true;
+      gridClient.navigator.singlePointMode(true);
+      var button = document.getElementById("singleModeButton")
+      if(button != null){
+        button.innerText = "Finish Pin Point Mode"
+        console.log("button changes")
+      }
+    }
+
+    else if (singlePointMode == true) {
+      singlePointMode = false
+      gridClient.navigator.singlePointMode(false);
+      var button = document.getElementById("singleModeButton")
+      if(button != null){
+        button.innerText = "Single Pin Point Mode"
+        console.log("button changes")
+      }
+    }
+  }
+  //start navigation after multi pin point arranged
+  const startNavigation = () => {
+    gridClient.navigator.startNaav();
+  }
+
+  //pause navigation
+  const pauseNavigation = () => {
+    gridClient.navigator.pauseNav();
+  }
+
+  //remove all marker
+  const removeallMarker = () => {
+    gridClient.navigator.removeAllMark();
+  }
+
+  //2D pose estimation
+  const initPose = () => {
+    if (getInit == false) {
+      getInit = true;
+      gridClient.navigator.initPose(true);
+      var button = document.getElementById("initButton")
+      if(button != null){
+        button.innerText = "Done Initial Pose"
+        console.log("button changes")
+      }
+      console.log("initial pose")
+    }
+
+    else if (getInit == true) {
+      getInit = false
+      gridClient.navigator.initPose(false);
+      var button = document.getElementById("initButton")
+      if(button != null){
+        button.innerText = "Initial Pose"
+        console.log("button changes")
+      }
+      console.log("initial pose done")
+    }
+  }
+
+  //home base feature
+  //change user input mode to modify home base point by input
+  const setHomeBase = () => {
+    if (setHomeBaseMode == false) {
+      setHomeBaseMode = true;
+      gridClient.navigator.setHomeBasePoint(true);
+      var button = document.getElementById("setHomebtn")
+      if(button != null){
+        button.innerText = "Done Set Home Base"
+        console.log("button changes")
+      }
+    }
+    else if (setHomeBaseMode == true) {
+      setHomeBaseMode = false;
+      gridClient.navigator.setHomeBasePoint(false);
+      getHomeBasePoint();
+      var button = document.getElementById("setHomebtn")
+      if(button != null){
+        button.innerText = "Set Home Base"
+        console.log("button changes")
+      }
+    }
+
+  }
+  //get home base point from SLAM initial point
+  const getHomeBasePoint = () => {
+    if (gridClient.navigator != null) {
+      homePoint = gridClient.navigator.getHomeBasePoint();
+      console.log(homePoint);
+    }
+
+  }
+  //update home base and initial pose estimate when control page launched
+  const updateHomeBase = () => {
+    if (homePoint != null) {
+      if (gridClient.navigator != null) {
+        gridClient.navigator.updateHome(homePoint);
+      }
+    }
+  }
+  //command robot to return to home point
+  const returnToHome = () => {
+    if (homePoint != null) {
+      gridClient.navigator.returnToHome(homePoint);
+    }
+  }
+
 
   const toggleOptions = () => {
     setShowOptions(!showOptions);
@@ -364,13 +507,14 @@ export default function Mapping() {
                   else {
                     alert("Please turn on LIDAR first.")
                   }
+                  startNavigation();
                 }}
               >
                 <p>Play</p>
                 <img src="/icons/3.svg" alt="" />
               </div>
               <div
-                className={`${styles.pauseButton} ${status === "Idle" ? styles.buttonActive : ""
+                className={`${styles.pauseButton} ${status === "Paused" ? styles.buttonActive : ""
                   }`}
                 onClick={(() => {
                   if (isChecked) {
@@ -379,6 +523,7 @@ export default function Mapping() {
                   } else {
                     alert("Please turn on LIDAR first.")
                   }
+                  pauseNavigation();
                 })}
               >
                 <p>Pause</p>
@@ -393,6 +538,7 @@ export default function Mapping() {
                   } else {
                     alert("Please turn on LIDAR first.")
                   }
+                  returnToHome();
                 }}
               >
                 <p>Return Home</p>
@@ -422,23 +568,23 @@ export default function Mapping() {
                     />
                   </div>
 
-                  <div id="mode-list-1" className={`${showOptions || selectedOption == "mode-list-1" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-1" ? styles.activeDisableModeListButton : ""}`} onClick={selectedModeListButton("mode-list-1")}>
+                  <div id="mode-list-1" className={`${showOptions || selectedOption == "mode-list-1" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-1" ? styles.activeDisableModeListButton : ""}`} onClick={() => {selectedModeListButton("mode-list-1"); singlePoint();}}>
                     <img src="/icons/Marker.svg" alt="" />
                     {selectedOption == "mode-list-1" ? <p>Finish Pinpoint</p> : <p>Single Pinpoint</p>}
                   </div>
-                  <div id="mode-list-2" className={`${showOptions || selectedOption == "mode-list-2" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-2" ? styles.activeDisableModeListButton : ""}`} onClick={selectedModeListButton("mode-list-2")}>
+                  <div id="mode-list-2" className={`${showOptions || selectedOption == "mode-list-2" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-2" ? styles.activeDisableModeListButton : ""}`} onClick={() =>{selectedModeListButton("mode-list-2"); multiPoint();}}>
                     <img src="/icons/Marker.svg" alt="" />
                     {selectedOption == "mode-list-2" ? <p>Finish Pinpoint</p> : <p>Multiple Pinpoint</p>}
                   </div>
-                  <div id="mode-list-3" className={`${showOptions || selectedOption == "mode-list-3" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-3" ? styles.activeDisableModeListButton : ""}`} onClick={selectedModeListButton("mode-list-3")}>
+                  <div id="mode-list-3" className={`${showOptions || selectedOption == "mode-list-3" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-3" ? styles.activeDisableModeListButton : ""}`} onClick={() => {selectedModeListButton("mode-list-3"); setHomeBase();}}>
                     <img src="/icons/Home.svg" alt="" />
                     {selectedOption == "mode-list-3" ? <p>Finish Home Base</p> : <p>Set Home Base</p>}
                   </div>
-                  <div id="mode-list-4" className={`${showOptions || selectedOption == "mode-list-4" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-4" ? styles.activeDisableModeListButton : ""}`} onClick={selectedModeListButton("mode-list-4")}>
+                  <div id="mode-list-4" className={`${showOptions || selectedOption == "mode-list-4" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-4" ? styles.activeDisableModeListButton : ""}`} onClick={() => {selectedModeListButton("mode-list-4"); initPose();}}>
                     <img src="/icons/Position.svg" alt="" />
                     {selectedOption == "mode-list-4" ? <p>Finish Initial Pose</p> : <p>Initial Pose</p>}
                   </div>
-                  <div id="mode-list-5" className={`${showOptions || selectedOption == "mode-list-1" || selectedOption == "mode-list-2" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.deleteOption} ${selectedOption !== "mode-list-1" && selectedOption !== "mode-list-2" ? styles.disableModeListButton : ""}`}>
+                  <div id="mode-list-5" className={`${showOptions || selectedOption == "mode-list-1" || selectedOption == "mode-list-2" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.deleteOption} ${selectedOption !== "mode-list-1" && selectedOption !== "mode-list-2" ? styles.disableModeListButton : ""}`} onClick={removeallMarker}>
                     <img src="/icons/delete_mode_list.svg" alt="" />
                     <p>Delete All Pinpoints</p>
                   </div>
@@ -452,10 +598,10 @@ export default function Mapping() {
                   <div className={styles.zoomOut} onClick={zoomOut}>
                     <img src="/icons/zoomout.svg" alt="" />
                   </div>
-                  <div className={styles.restart} onClick={rotateCW}>
+                  <div className={styles.restart} onClick={restart}>
                     <img src="/icons/Maximize.svg" alt="" />
                   </div>
-                  <div className={styles.restart} onClick={restart}>
+                  <div className={styles.restart} onClick={rotateCW}>
                     <img src="/icons/new reload.svg" alt="" />
                   </div>
                 </div>

@@ -135,6 +135,8 @@ NAV2D.Navigator = function (options) {
   var withCommand = options.withCommand || false;
   var use_image = options.image;
   var init_pose = options.init_pose || false;
+  var getInput = false;
+  var singlePoint = false;
   var multiPoint = false;
   var navigationStart = false;
   var setHomeBase = false;
@@ -143,11 +145,18 @@ NAV2D.Navigator = function (options) {
   this.goalMarker = null;
 
   var currentGoal;
+  var forward = true;
+  var seq = 0;
+  var pause = false;
+  var rtrnHome = false;
 
   this.multigoalMark = [];
   this.multiPose = [];
+  this.singlePose = null;
   this.poseList = [];
-  this.homeBasePoint = null
+  this.homeBasePoint = null;
+  this.overlayMarker = null;
+  this.overlayPoint = null;
 
   // setup the actionlib client
   var actionClient = new ROSLIB.ActionClient({
@@ -163,46 +172,46 @@ NAV2D.Navigator = function (options) {
    */
   function sendGoal(pose) {
     // create a goal
-    var goal = new ROSLIB.Goal({
-      actionClient: actionClient,
-      goalMessage: {
-        target_pose: {
-          header: {
-            frame_id: "map",
-          },
-          pose: pose,
-        },
-      },
-    });
-    goal.send();
+    // var goal = new ROSLIB.Goal({
+    //   actionClient: actionClient,
+    //   goalMessage: {
+    //     target_pose: {
+    //       header: {
+    //         frame_id: "map",
+    //       },
+    //       pose: pose,
+    //     },
+    //   },
+    // });
+    // goal.send();
 
-    that.currentGoal = goal;
+    // that.currentGoal = goal;
+
+    that.singlePose = pose;
+    
 
     // create a marker for the goal
     if (that.goalMarker === null) {
       that.goalMarker = new ROS2D.NavigationImage({
-        size: 30,
+        size: 20,
         strokeSize: 1,
         fillColor: createjs.Graphics.getRGB(0, 0, 255, 0.66),
         pulse: false,
         imageUrl: "/icons/pin-point.png",
       });
-      // if (use_image && ROS2D.hasOwnProperty("ImageNavigator")) {
-      //   that.goalMarker = new ROS2D.ImageNavigator({
-      //     size: 2.5,
-      //     image: use_image,
-      //     alpha: 0.7,
-      //     pulse: false,
-      //   });
-      // } else {
-      //   that.goalMarker = new ROS2D.NavigationArrow({
-      //     size: 15,
-      //     strokeSize: 1,
-      //     fillColor: createjs.Graphics.getRGB(255, 64, 128, 0.66),
-      //     pulse: false,
-      //   });
-      // }
-      that.rootObject.addChild(that.goalMarker);
+
+      that.rootObject.addChildAt(that.goalMarker,1);
+
+      var altgoalmark = that.goalMarker;
+      that.goalMarker.addEventListener("dblclick", function (event) {
+        if (singlePoint == true && navigationStart == false) {
+          var markCont = altgoalmark;
+          that.rootObject.removeChild(markCont);
+          console.log("child removed");
+          that.singlePose = null;
+          that.goalMarker = null;
+        }
+      });
     }
     that.goalMarker.x = pose.position.x;
     that.goalMarker.y = -pose.position.y;
@@ -212,10 +221,17 @@ NAV2D.Navigator = function (options) {
     that.goalMarker.scaleX = 1.0 / stage.scaleX;
     that.goalMarker.scaleY = 1.0 / stage.scaleY;
 
-    goal.on("result", function () {
-      that.rootObject.removeChild(that.goalMarker);
-      that.goalMarker = null;
-    });
+    // goal.on("result", function () {
+    //   that.rootObject.removeChild(that.goalMarker);
+    //   that.goalMarker = null;
+    // });
+  }
+
+  function removePinPoint(event){
+    var index = that.rootObject.getChildIndex(event.target);
+    // that.rootObject.removeChild(event.target);
+    that.multigoalMark.splice(index-1,1);
+    that.multiPose.splice(index-1,1);
   }
 
     /**
@@ -237,14 +253,60 @@ NAV2D.Navigator = function (options) {
 
       that.multiPose[x] = pose;
       // that.poseList[x] = {id: x, px: pose.position.x, py: pose.position.y, pw: stage.rosQuaternionToGlobalTheta(pose.orientation)}
-      that.multigoalMark[x] = new ROS2D.NavigationImage({
-        size: 30,
+      var markerCont = new createjs.Container();
+
+      var imageMarker = new ROS2D.NavigationImage({
+        size: 20,
         strokeSize: 1,
         fillColor: createjs.Graphics.getRGB(0, 0, 255, 0.66),
         pulse: false,
         imageUrl: "/icons/pin-point.png",
       });
-      that.rootObject.addChild(that.multigoalMark[x]);
+      markerCont.addChildAt(imageMarker,0);
+
+      var textMarker = new createjs.Text(x+1,"15px Arial","#000");
+      textMarker.textBaseline = "middle";
+      textMarker.textAlign = "center";
+      textMarker.rotation = 90;
+      // textMarker.x = imageMarker.image.width/2;
+      // textMarker.y = imageMarker.image.height/2;
+      markerCont.addChildAt(textMarker,1);
+
+      that.multigoalMark[x] = markerCont;
+
+      that.rootObject.addChildAt(that.multigoalMark[x],x+1);
+
+
+      markerCont.addEventListener("dblclick", function (event) {
+        if (multiPoint == true && navigationStart == false) {
+          var markCont = markerCont;
+          index = that.rootObject.getChildIndex(markCont);
+          console.log(index);
+          console.log(event.target);
+          that.rootObject.removeChildAt(index);
+          console.log("child removed");
+          var arrin = index-1;
+          that.multigoalMark.splice(arrin,1);
+          that.multiPose.splice(arrin,1);
+          var lengtharr = that.multigoalMark.length;
+          console.log("new arr length: "+lengtharr);
+          console.log(that.multigoalMark);
+          for(var i = arrin; i<lengtharr; i++) {
+            var text = that.multigoalMark[i].getChildAt(1);
+            text.text = i+1;
+          }
+          console.log("number of seq: "+seq);
+        }
+      });
+
+
+      // that.multigoalMark[x].addEventListener("dblclick", function (event) {
+      //   if (multiPoint == true && navigationStart == false) {
+      //     that.rootObject.removeChild(that.multigoalMark[x]);
+      //     that.multigoalMark.splice(x,1);
+      //     that.multiPose.splice(x,1);
+      //   }
+      // });
   
 
       that.multigoalMark[x].x = pose.position.x;
@@ -260,6 +322,49 @@ NAV2D.Navigator = function (options) {
       // });
     }
 
+    function overlayPose(pose) {
+
+      that.overlayPoint = pose;
+      // that.poseList[x] = {id: x, px: pose.position.x, py: pose.position.y, pw: stage.rosQuaternionToGlobalTheta(pose.orientation)}
+      that.overlayMarker = new ROS2D.NavigationImage({
+        size: 25,
+        strokeSize: 1,
+        fillColor: createjs.Graphics.getRGB(0, 0, 255, 0.66),
+        pulse: false,
+        imageUrl: "/icons/pin-point.png",
+      });
+      that.rootObject.addChild(that.overlayMarker);
+
+      // that.multigoalMark[x].addEventListener("dblclick", function (event) {
+      //   if (multiPoint == true && navigationStart == false) {
+      //     that.rootObject.removeChild(that.multigoalMark[x]);
+      //     removePinPoint(event)
+      //   }
+      // });
+
+
+      // that.multigoalMark[x].addEventListener("dblclick", function (event) {
+      //   if (multiPoint == true && navigationStart == false) {
+      //     that.rootObject.removeChild(that.multigoalMark[x]);
+      //     that.multigoalMark.splice(x,1);
+      //     that.multiPose.splice(x,1);
+      //   }
+      // });
+  
+
+      that.overlayMarker.x = pose.position.x;
+      that.overlayMarker.y = -pose.position.y;
+      that.overlayMarker.rotation = stage.rosQuaternionToGlobalTheta(
+        pose.orientation
+      );
+      that.overlayMarker.scaleX = 1.0 / stage.scaleX;
+      that.overlayMarker.scaleY = 1.0 / stage.scaleY;
+  
+      // goal.on("result", function () {
+      //   that.rootObject.removeChild(that.goalMarker);
+      // });
+    }
+
       /**
    * Send a goal to the navigation stack with the given pose.
    *
@@ -267,6 +372,7 @@ NAV2D.Navigator = function (options) {
    */
     function asyncFunc(ind){
         return new Promise((resolve)=>{
+          var curpose = that.multiPose[ind];
           var goal = new ROSLIB.Goal({
             actionClient: actionClient,
             goalMessage: {
@@ -274,15 +380,18 @@ NAV2D.Navigator = function (options) {
                 header: {
                   frame_id: "map",
                 },
-                pose: that.multiPose[ind],
+                pose: curpose,
               },
             },
           });
           goal.send();
           that.currentGoal = goal;
+          updateOverlayPosition(curpose.position,curpose.orientation);
+          // that.multigoalMark[ind].setPulse(true);
 
           goal.on("result", function () {
             // that.rootObject.removeChild(that.multigoalMark[i]);
+            // that.multigoalMark[ind].setPulse(false);
             resolve()
           });
   
@@ -299,21 +408,6 @@ NAV2D.Navigator = function (options) {
         var length = that.multiPose.length;
         navigationStart = true;
         for(var i=0;i<length;i++){
-          // var goal = new ROSLIB.Goal({
-          //   actionClient: actionClient,
-          //   goalMessage: {
-          //     target_pose: {
-          //       header: {
-          //         frame_id: "map",
-          //       },
-          //       pose: that.multiPose[i],
-          //     },
-          //   },
-          // });
-          // goal.send();
-      
-          // that.currentGoal = goal;
-          // var loop = true;
           await asyncFunc(i);
           that.rootObject.removeChild(that.multigoalMark[i]);
 
@@ -325,6 +419,112 @@ NAV2D.Navigator = function (options) {
         withCommand = true;
 
   }
+
+  function startSingleNav(){
+    navigationStart = true;
+    that.overlayMarker.visible = true;
+    var goal = new ROSLIB.Goal({
+      actionClient: actionClient,
+      goalMessage: {
+        target_pose: {
+          header: {
+            frame_id: "map",
+          },
+          pose: that.singlePose,
+        },
+      },
+    });
+    goal.send();
+    updateOverlayPosition(that.singlePose.position,that.singlePose.orientation);
+    that.currentGoal = goal;
+
+    goal.on("result", function () {
+      if (pause == false) {
+        that.rootObject.removeChild(that.goalMarker);
+        that.goalMarker = null;
+        navigationStart = false;
+      }
+      that.overlayMarker.visible = false;
+
+      // that.rootObject.removeChild(that.multigoalMark[i]);
+    });
+  }
+
+  function startRtrnHome(hpose){
+    navigationStart = true;
+    rtrnhomeMarker.visible = true;
+    var goal = new ROSLIB.Goal({
+      actionClient: actionClient,
+      goalMessage: {
+        target_pose: {
+          header: {
+            frame_id: "map",
+          },
+          pose: hpose,
+        },
+      },
+    });
+    goal.send();
+    that.currentGoal = goal;
+
+    goal.on("result", function () {
+      if (pause == false) {
+        navigationStart = false;
+      }
+      rtrnhomeMarker.visible = false;
+
+      // that.rootObject.removeChild(that.multigoalMark[i]);
+    });
+  }
+
+      /**
+   * Send a goal to the navigation stack with the given pose.
+   *
+   * @param pose - the goal pose
+   */
+      async function startNavLoop(){
+        navigationStart = true;
+        that.overlayMarker.visible = true;
+        console.log("sequence number at start: "+seq);
+        contloop: while (true) {
+          if (forward == true) {
+            var length = that.multiPose.length;
+            for(var i=0;seq<length;seq++){
+              // that.multigoalMark[seq].setPulse(true);
+              await asyncFunc(seq);
+              if (pause == true) {
+                that.overlayMarker.visible = false;
+                break contloop;
+              }
+              // that.multigoalMark[seq].setPulse(false);
+              // that.rootObject.removeChild(that.multigoalMark[i]);
+      
+            }
+            forward = false;
+            seq--;
+          }
+    
+          for(var i=0;seq>=0;seq--){
+            await asyncFunc(seq);
+            if (pause == true) {
+              break contloop;
+            }
+            // that.rootObject.removeChild(that.multigoalMark[i]);
+    
+          }
+          seq++;
+          forward = true;
+          // that.multigoalMark = [];
+          // that.multiPose = [];
+          // that.poseList = [];
+          // navigationStart = false;
+    
+        }
+    
+        navigationStart = false;
+        that.overlayMarker.visible = false;
+    
+      }
 
 
 
@@ -380,6 +580,14 @@ NAV2D.Navigator = function (options) {
   //     pulse: true,
   //   });
   // }
+  that.overlayMarker = new ROS2D.NavigationImage({
+    size: 25,
+    strokeSize: 1,
+    fillColor: createjs.Graphics.getRGB(0, 0, 255, 0.66),
+    pulse: false,
+    imageUrl: "/icons/cur-pin-point.png",
+  });
+  that.overlayMarker.visible = false;
 
   var homeBaseMarker = new ROS2D.NavigationImage({
     size: 30,
@@ -388,8 +596,21 @@ NAV2D.Navigator = function (options) {
     pulse: false,
     imageUrl: "/icons/Home.png",
   });
+
+  var rtrnhomeMarker = new ROS2D.NavigationImage({
+    size: 30,
+    strokeSize: 1,
+    fillColor: createjs.Graphics.getRGB(0, 0, 255, 0.66),
+    pulse: false,
+    imageUrl: "/icons/Rtrn-Home.png",
+  });
+  rtrnhomeMarker.visible = false;
+
+  // console.log(homeBaseMarker);
   homeBaseMarker.visible = false;
   this.rootObject.addChild(homeBaseMarker);
+  this.rootObject.addChild(rtrnhomeMarker);
+  this.rootObject.addChild(that.overlayMarker);
 
   // wait for a pose to come in first
   robotMarker.visible = false;
@@ -409,6 +630,10 @@ NAV2D.Navigator = function (options) {
       robotMarker.scaleY = 1.0 / stage.scaleY;
       homeBaseMarker.scaleX = 1.0 / stage.scaleX;
       homeBaseMarker.scaleY = 1.0 / stage.scaleY;
+      that.overlayMarker.scaleX = 1.0 / stage.scaleX;
+      that.overlayMarker.scaleY = 1.0 / stage.scaleY;
+      rtrnhomeMarker.scaleX = 1.0 / stage.scaleX;
+      rtrnhomeMarker.scaleY = 1.0 / stage.scaleY;
       homeBaseMarker.visible = true;
       initScaleSet = true;
     }
@@ -422,19 +647,41 @@ NAV2D.Navigator = function (options) {
     // update the robots position on the map
     homeBaseMarker.x = pose.x;
     homeBaseMarker.y = -pose.y;
+    rtrnhomeMarker.x = pose.x;
+    rtrnhomeMarker.y = -pose.y;
     console.log(initScaleSet);
     if (!initScaleSet) {
       robotMarker.scaleX = 1.0 / stage.scaleX;
       robotMarker.scaleY = 1.0 / stage.scaleY;
       homeBaseMarker.scaleX = 1.0 / stage.scaleX;
       homeBaseMarker.scaleY = 1.0 / stage.scaleY;
+      rtrnhomeMarker.scaleX = 1.0 / stage.scaleX;
+      rtrnhomeMarker.scaleY = 1.0 / stage.scaleY;
       // homeBaseMarker.visible = true;
       initScaleSet = true;
     }
     // change the angle
     homeBaseMarker.rotation = stage.rosQuaternionToGlobalTheta(orientation);
+    rtrnhomeMarker.rotation = stage.rosQuaternionToGlobalTheta(orientation);
     // Set visible
     homeBaseMarker.visible = true;
+  };
+
+
+  var updateOverlayPosition = function (pose, orientation) {
+    // update the robots position on the map
+    that.overlayMarker.x = pose.x;
+    that.overlayMarker.y = -pose.y;
+    console.log(initScaleSet);
+    if (!initScaleSet) {
+      that.overlayMarker.scaleX = 1.0 / stage.scaleX;
+      that.overlayMarker.scaleY = 1.0 / stage.scaleY;
+      // homeBaseMarker.visible = true;
+      initScaleSet = true;
+    }
+    // change the angle
+    that.overlayMarker.rotation = stage.rosQuaternionToGlobalTheta(orientation);
+
   };
 
   if (tfClient !== null) {
@@ -488,7 +735,7 @@ NAV2D.Navigator = function (options) {
     var yDelta = 0;
 
     var mouseEventHandler = function (event, mouseState) {
-      if (withCommand === true) {
+      if (withCommand === true && navigationStart === false && getInput === true) {
       if (event.nativeEvent.button === 0) {
       if (mouseState === "down") {
         // get position when mouse button is pressed down
@@ -510,6 +757,11 @@ NAV2D.Navigator = function (options) {
           // - get current mouse position
           // - calculate direction between stored <position> and current position
           // - place orientation marker
+          if (that.goalMarker != null) {
+            that.rootObject.removeChild(that.goalMarker);
+            that.goalMarker = null;
+            that.singlePose = null;
+          }
 
           var currentPos = stage.globalToRos(event.stageX, event.stageY);
           var currentPosVec3 = new ROSLIB.Vector3(currentPos);
@@ -517,7 +769,7 @@ NAV2D.Navigator = function (options) {
           console.log("mouse down and move");
 
           orientationMarker = new ROS2D.NavigationImage({
-            size: 40,
+            size: 25,
             strokeSize: 1,
             fillColor: createjs.Graphics.getRGB(0, 0, 255, 0.66),
             pulse: false,
@@ -663,27 +915,27 @@ NAV2D.Navigator = function (options) {
         positionVec3 = null;
         console.log("mouse double clicked")
        }
-       else if (multiPoint == true && navigationStart == false) {
-        var length = that.multigoalMark.length;
-        that.rootObject.removeChild(that.multigoalMark[length-1]);
-        that.multigoalMark.pop();
-        that.multiPose.pop();
-        mouseDown = false;
-        position = null;
-        positionVec3 = null;
-        console.log("mouse double clicked")
-       }
-       else if (multiPoint == true && navigationStart == true) {
-        console.log("goal canceled");
-        that.cancelGoal();
-        var length = that.multigoalMark.length;
-        for (var i=0; i<length; i++) {
-          that.rootObject.removeChild(that.multigoalMark[i]);
-        }
-        that.multigoalMark = [];
-        that.multiPose = [];
-        navigationStart = false;
-       }
+      //  else if (multiPoint == true && navigationStart == false) {
+      //   var length = that.multigoalMark.length;
+      //   that.rootObject.removeChild(that.multigoalMark[length-1]);
+      //   that.multigoalMark.pop();
+      //   that.multiPose.pop();
+      //   mouseDown = false;
+      //   position = null;
+      //   positionVec3 = null;
+      //   console.log("mouse double clicked")
+      //  }
+      //  else if (multiPoint == true && navigationStart == true) {
+      //   console.log("goal canceled");
+      //   that.cancelGoal();
+      //   var length = that.multigoalMark.length;
+      //   for (var i=0; i<length; i++) {
+      //     that.rootObject.removeChild(that.multigoalMark[i]);
+      //   }
+      //   that.multigoalMark = [];
+      //   that.multiPose = [];
+      //   navigationStart = false;
+      //  }
       }
 
     }
@@ -715,19 +967,48 @@ NAV2D.Navigator = function (options) {
   }
 
   NAV2D.Navigator.prototype.startNaav = function() {
+    if (multiPoint == true) {
+      pause = false;
+      startNavLoop();
+    }
+    else if (singlePoint == true) {
+      pause = false;
+      startSingleNav();
+    }
     console.log("navigation started");
-    startNav();
-    withCommand = false;
+    // startNav();
+    // withCommand = false;
+  }
+
+  NAV2D.Navigator.prototype.startNaavLoop = function() {
+    console.log("navigation loop started");
+    pause = false;
+    startNavLoop();
+  }
+
+  NAV2D.Navigator.prototype.pauseNav = function() {
+    console.log("navigation paused");
+    that.cancelGoal();
+    pause = true;
+    navigationStart = false;
   }
 
   NAV2D.Navigator.prototype.initPose = function(state) {
     console.log("Initpose");
     init_pose = state;
+    getInput = state;
   }
 
   NAV2D.Navigator.prototype.multiPointMode = function(state) {
     console.log("multipoint mode");
     multiPoint = state;
+    getInput = state;
+  }
+
+  NAV2D.Navigator.prototype.singlePointMode = function(state) {
+    console.log("singlepoint mode");
+    singlePoint = state;
+    getInput = state;
   }
 
   NAV2D.Navigator.prototype.pinPointList = function() {
@@ -747,13 +1028,23 @@ NAV2D.Navigator = function (options) {
   }
 
     NAV2D.Navigator.prototype.removeAllMark = function() {
-    console.log("all mark removed");
-    var length = that.multigoalMark.length;
-    for (var i=0; i<length; i++) {
-      this.rootObject.removeChild(that.multigoalMark[i]);
-    }
-    that.multigoalMark = [];
-    that.multiPose = [];
+      if (multiPoint == true) {
+        console.log("all mark removed");
+        var length = that.multigoalMark.length;
+        for (var i=0; i<length; i++) {
+          this.rootObject.removeChild(that.multigoalMark[i]);
+        }
+        that.multigoalMark = [];
+        that.multiPose = [];
+        seq = 0;
+      }
+      else if (singlePoint == true) {
+        this.rootObject.removeChild(that.goalMarker);
+        that.goalMarker = null;
+        that.singlePose = null;
+        console.log("all mark removed");
+      }
+
   }
 
   NAV2D.Navigator.prototype.getHomeBasePoint = function() {
@@ -764,6 +1055,7 @@ NAV2D.Navigator = function (options) {
   NAV2D.Navigator.prototype.setHomeBasePoint = function(state) {
     console.log("set home base point");
     setHomeBase = state;
+    getInput = state;
   } 
 
   NAV2D.Navigator.prototype.setNavigation = function(state) {
@@ -814,7 +1106,8 @@ NAV2D.Navigator = function (options) {
       position: hpose.position,
       orientation: hpose.orientation,
     });
-    sendGoal(pose);
+    // rtrnHome = true;
+    startRtrnHome(pose);
     
   }  
 
