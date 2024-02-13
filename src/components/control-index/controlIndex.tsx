@@ -400,7 +400,14 @@ export default function Mapping() {
               </div>
             </div>
             <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp}>
+
               <div className={styles.navigationSection}>
+
+                <div className={styles.mapPreview}>
+                  <div className={styles.map}>
+                    <img src="/images/map.png" alt="" />
+                  </div>
+                </div>
 
                 <div className={styles.modeListSection}>
                   <div
@@ -452,7 +459,10 @@ export default function Mapping() {
                     <img src="/icons/new reload.svg" alt="" />
                   </div>
                 </div>
+
+
               </div>
+
               <div className={styles.footerMap}>
                 <div className={styles.emergencyButton}>
                   <img src="/icons/emergency.svg" alt="" />

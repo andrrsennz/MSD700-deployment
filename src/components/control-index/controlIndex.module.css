@@ -365,6 +365,25 @@
     position: absolute;
 }
 
+.mapPreview {
+    width: 200px;
+    height: 150px;
+    background-color: #ECF4F6;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    border-radius: 4px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mapPreview .map {
+    width: 185px;
+    height: 123px;
+}
+
 .centerDiv .buttonNavigation {
     display: flex;
     flex-direction: column;
@@ -490,7 +509,7 @@
     cursor: pointer;
 }
 
-.modeListOption{
+.modeListOption {
     gap: 40%;
 }
 
@@ -768,6 +787,19 @@
         height: 52px !important;
         border: 3px solid #60E3D5;
         font-size: 19px;
+    }
+
+    .mapPreview {
+        width: 375px;
+        height: 281.25px;
+        border-radius: 10px;
+        top: 30px;
+        left: 30px;
+    }
+
+    .mapPreview .map {
+        width: 355px;
+        height: 238px;
     }
 
 }
