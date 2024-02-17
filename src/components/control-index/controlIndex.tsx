@@ -432,7 +432,6 @@ export default function Mapping() {
     }
   }
 
-
   const toggleOptions = () => {
     setShowOptions(!showOptions);
     setIsRotated(!isRotated);
