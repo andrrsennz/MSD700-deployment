@@ -558,6 +558,11 @@
     background-color: #60E3D5 !important;
 }
 
+.deleteConfirmationTrue {
+    background-color: #FF7582 !important;
+}
+
+
 
 @media (max-width: 1439px) {
     .mapSection {

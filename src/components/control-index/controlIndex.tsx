@@ -15,13 +15,13 @@ var paN: any
 var movecoor: any = [];
 var isDrag = false;
 var startcoor: any = [];
-var showImage:boolean = false;
-var gridClient:any;
+var showImage: boolean = false;
+var gridClient: any;
 var multiPointMode = false;
 var singlePointMode = false;
 var getInit = false;
 var setHomeBaseMode = false;
-var homePoint:any = null;
+var homePoint: any = null;
 
 export default function Mapping() {
   const [showConfirmClosePageDialog, setShowConfirmClosePageDialog] =
@@ -40,6 +40,7 @@ export default function Mapping() {
   const [showOptions, setShowOptions] = useState(false);
   const [isRotated, setIsRotated] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string>("");
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
 
 
@@ -300,14 +301,14 @@ export default function Mapping() {
     }
   };
 
-    //multi pin point feature
+  //multi pin point feature
   //change to between single and multi pin point mode
   const multiPoint = () => {
     if (multiPointMode == false) {
       multiPointMode = true;
       gridClient.navigator.multiPointMode(true);
       var button = document.getElementById("multiModeButton")
-      if(button != null){
+      if (button != null) {
         button.innerText = "Finish Pin Point Mode"
         console.log("button changes")
       }
@@ -317,7 +318,7 @@ export default function Mapping() {
       multiPointMode = false
       gridClient.navigator.multiPointMode(false);
       var button = document.getElementById("multiModeButton")
-      if(button != null){
+      if (button != null) {
         button.innerText = "Multi Pin Point Mode"
         console.log("button changes")
       }
@@ -329,7 +330,7 @@ export default function Mapping() {
       singlePointMode = true;
       gridClient.navigator.singlePointMode(true);
       var button = document.getElementById("singleModeButton")
-      if(button != null){
+      if (button != null) {
         button.innerText = "Finish Pin Point Mode"
         console.log("button changes")
       }
@@ -339,7 +340,7 @@ export default function Mapping() {
       singlePointMode = false
       gridClient.navigator.singlePointMode(false);
       var button = document.getElementById("singleModeButton")
-      if(button != null){
+      if (button != null) {
         button.innerText = "Single Pin Point Mode"
         console.log("button changes")
       }
@@ -366,7 +367,7 @@ export default function Mapping() {
       getInit = true;
       gridClient.navigator.initPose(true);
       var button = document.getElementById("initButton")
-      if(button != null){
+      if (button != null) {
         button.innerText = "Done Initial Pose"
         console.log("button changes")
       }
@@ -377,7 +378,7 @@ export default function Mapping() {
       getInit = false
       gridClient.navigator.initPose(false);
       var button = document.getElementById("initButton")
-      if(button != null){
+      if (button != null) {
         button.innerText = "Initial Pose"
         console.log("button changes")
       }
@@ -392,7 +393,7 @@ export default function Mapping() {
       setHomeBaseMode = true;
       gridClient.navigator.setHomeBasePoint(true);
       var button = document.getElementById("setHomebtn")
-      if(button != null){
+      if (button != null) {
         button.innerText = "Done Set Home Base"
         console.log("button changes")
       }
@@ -402,7 +403,7 @@ export default function Mapping() {
       gridClient.navigator.setHomeBasePoint(false);
       getHomeBasePoint();
       var button = document.getElementById("setHomebtn")
-      if(button != null){
+      if (button != null) {
         button.innerText = "Set Home Base"
         console.log("button changes")
       }
@@ -437,12 +438,43 @@ export default function Mapping() {
     setIsRotated(!isRotated);
   };
 
-  const selectedModeListButton = (id: string) => () => {
+  const selectedModeListButton = (id: string) => {
+    console.log("222", id);
+
     if (isRotated) {
       id == selectedOption ? setSelectedOption("") : ""
       selectedOption == "" ? setSelectedOption(id) : ""
     }
   };
+
+  const ModeListFunction = (id: string) => () => {
+    // Define a map of id to corresponding functions
+    const idToFunctionMap: { [key: string]: () => void } = {
+      "mode-list-1": singlePoint,
+      "mode-list-2": multiPoint,
+      "mode-list-3": setHomeBase,
+      "mode-list-4": initPose
+    };
+
+    // Retrieve the corresponding function from the map using the id
+    const selectedFunction = idToFunctionMap[id];
+
+    // Call the selected function if it exists
+    if (selectedFunction) {
+      selectedModeListButton(id); // Call selectedModeListButton regardless of the function
+      selectedFunction(); // Call the corresponding function
+    }
+  };
+
+
+
+  const deletePinPoint = () => {
+    if (selectedOption == "mode-list-1" || selectedOption == "mode-list-2") {
+      setDeleteConfirmation(!deleteConfirmation)
+      deleteConfirmation ? removeallMarker : ""
+    }
+  }
+
 
 
   return (
@@ -567,28 +599,45 @@ export default function Mapping() {
                     />
                   </div>
 
-                  <div id="mode-list-1" className={`${showOptions || selectedOption == "mode-list-1" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-1" ? styles.activeDisableModeListButton : ""}`} onClick={() => {selectedModeListButton("mode-list-1"); singlePoint();}}>
+                  <div
+                    id="mode-list-1"
+                    className={`${showOptions || selectedOption === "mode-list-1" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption !== "" ? styles.disableModeListButton : ""} ${selectedOption !== "" && selectedOption === "mode-list-1" ? styles.activeDisableModeListButton : ""}`}
+                    onClick={ModeListFunction("mode-list-1")}
+                  >
                     <img src="/icons/Marker.svg" alt="" />
-                    {selectedOption == "mode-list-1" ? <p>Finish Pinpoint</p> : <p>Single Pinpoint</p>}
+                    {selectedOption === "mode-list-1" ? <p>Finish Pinpoint</p> : <p>Single Pinpoint</p>}
                   </div>
-                  <div id="mode-list-2" className={`${showOptions || selectedOption == "mode-list-2" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-2" ? styles.activeDisableModeListButton : ""}`} onClick={() =>{selectedModeListButton("mode-list-2"); multiPoint();}}>
+
+                  <div id="mode-list-2"
+                    className={`${showOptions || selectedOption == "mode-list-2" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-2" ? styles.activeDisableModeListButton : ""}`}
+                    onClick={ModeListFunction("mode-list-2")}
+                  >
                     <img src="/icons/Marker.svg" alt="" />
                     {selectedOption == "mode-list-2" ? <p>Finish Pinpoint</p> : <p>Multiple Pinpoint</p>}
                   </div>
-                  <div id="mode-list-3" className={`${showOptions || selectedOption == "mode-list-3" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-3" ? styles.activeDisableModeListButton : ""}`} onClick={() => {selectedModeListButton("mode-list-3"); setHomeBase();}}>
+
+                  <div id="mode-list-3"
+                    className={`${showOptions || selectedOption == "mode-list-3" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-3" ? styles.activeDisableModeListButton : ""}`}
+                    onClick={ModeListFunction("mode-list-3")}
+                  >
                     <img src="/icons/Home.svg" alt="" />
                     {selectedOption == "mode-list-3" ? <p>Finish Home Base</p> : <p>Set Home Base</p>}
                   </div>
-                  <div id="mode-list-4" className={`${showOptions || selectedOption == "mode-list-4" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-4" ? styles.activeDisableModeListButton : ""}`} onClick={() => {selectedModeListButton("mode-list-4"); initPose();}}>
+
+                  <div id="mode-list-4"
+                    className={`${showOptions || selectedOption == "mode-list-4" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-4" ? styles.activeDisableModeListButton : ""}`}
+                    onClick={ModeListFunction("mode-list-4")}
+                  >
                     <img src="/icons/Position.svg" alt="" />
                     {selectedOption == "mode-list-4" ? <p>Finish Initial Pose</p> : <p>Initial Pose</p>}
                   </div>
-                  <div id="mode-list-5" className={`${showOptions || selectedOption == "mode-list-1" || selectedOption == "mode-list-2" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.deleteOption} ${selectedOption !== "mode-list-1" && selectedOption !== "mode-list-2" ? styles.disableModeListButton : ""}`} onClick={removeallMarker}>
+                  <div id="mode-list-5" className={`${showOptions || selectedOption == "mode-list-1" || selectedOption == "mode-list-2" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.deleteOption} ${selectedOption !== "mode-list-1" && selectedOption !== "mode-list-2" ? styles.disableModeListButton : ""} ${deleteConfirmation ? styles.deleteConfirmationTrue : ""}`} onClick={deletePinPoint}>
                     <img src="/icons/delete_mode_list.svg" alt="" />
-                    <p>Delete All Pinpoints</p>
+                    <p>{deleteConfirmation ? "Click To Delete" : "Delete All Pinpoints"}</p>
                   </div>
 
                 </div>
+
 
                 <div className={styles.buttonNavigation}>
                   <div className={styles.zoomIn} onClick={zoomIn}>
