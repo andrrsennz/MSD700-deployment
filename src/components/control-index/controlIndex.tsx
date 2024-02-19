@@ -170,8 +170,8 @@ export default function Mapping() {
     // Create the main viewer.
     viewer = new (window as any).ROS2D.Viewer({
       divID: 'map',
-      width: mapRef.current?.clientWidth || 1870,
-      height: mapRef.current?.clientHeight || 958,
+      width: mapRef.current?.clientWidth || 1070,
+      height: mapRef.current?.clientHeight || 1070,
       background: "#7F7F7F",
     });
 
@@ -298,6 +298,27 @@ export default function Mapping() {
     if (isDrag) {
       // Perform the action when the mouse is clicked and moving
       paN.pan(e.clientX, e.clientY);
+    }
+  };
+
+  const whenTouchDown = (event: any) => {
+    // event.preventDefault();
+    if (event.touches.length === 2) {
+      paN.startPan(event.touches[0].clientX, event.touches[0].clientY);
+      isDrag = true;
+      startcoor[0] = event.touches[0].clientX;
+      startcoor[1] = event.touches[0].clientX;
+    }
+  }
+
+  const whenTouchUp = (event: any) => {
+    isDrag = false;
+  }
+
+  const whenTouchMove = (e: any) => {
+    if (isDrag && e.touches.length === 2) {
+      // Perform the action when the mouse is clicked and moving
+      paN.pan(e.touches[0].clientX, e.touches[0].clientY);
     }
   };
 
@@ -471,7 +492,7 @@ export default function Mapping() {
   const deletePinPoint = () => {
     if (selectedOption == "mode-list-1" || selectedOption == "mode-list-2") {
       setDeleteConfirmation(!deleteConfirmation)
-      deleteConfirmation ? removeallMarker : ""
+      deleteConfirmation ? removeallMarker() : ""
     }
   }
 
@@ -576,7 +597,7 @@ export default function Mapping() {
                 <img src="/icons/Home.svg" alt="" />
               </div>
             </div>
-            <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp}>
+            <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp} onTouchStart={whenTouchDown} onTouchMove={whenTouchMove} onTouchEnd={whenTouchUp}>
 
               <div className={styles.navigationSection}>
 

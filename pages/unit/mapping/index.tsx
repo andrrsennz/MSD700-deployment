@@ -212,9 +212,9 @@ export default function Mapping(props: MappingProps): JSX.Element {
         // Create the main viewer.
         viewer = new (window as any).ROS2D.Viewer({
             divID: 'map',
-            width: mapRef.current?.clientWidth || 1870,
-            height: mapRef.current?.clientHeight || 958,
-            background: "#DCDCDC",
+            width: mapRef.current?.clientWidth || 1070,
+            height: mapRef.current?.clientHeight || 1070,
+            background: "#7F7F7F",
         });
 
         paN = new (window as any).ROS2D.PanView({

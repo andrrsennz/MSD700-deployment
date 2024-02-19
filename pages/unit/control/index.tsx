@@ -93,9 +93,10 @@ const Control: React.FC = () => {
                 <Footer status={false /* or false */} />
               </div>
             </div>
-          ) : (
+            ) : (
             <ControlIndex />
-          )}
+            )}
+       
 
           <ButtonInformation onClick={handleInfoIconClick} />
 
