@@ -926,10 +926,6 @@
 }
 
 @media (min-width: 2560px) {
-  /* .centerSection {
-    margin-top: 1%;
-  } */
-
   .centerSection .greetings {
     font-size: 60px !important;
     margin-top: 25px;
@@ -1007,7 +1003,7 @@
   }
 
   .tableSection {
-    max-height: 2000px;
+    max-height: 2500px;
   }
 
 

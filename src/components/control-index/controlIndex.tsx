@@ -170,7 +170,7 @@ export default function Mapping() {
     // Create the main viewer.
     viewer = new (window as any).ROS2D.Viewer({
       divID: 'map',
-      width: mapRef.current?.clientWidth || 1870,
+      width: mapRef.current?.clientWidth || 1900,
       height: mapRef.current?.clientHeight || 958,
       background: "#7F7F7F",
     });
