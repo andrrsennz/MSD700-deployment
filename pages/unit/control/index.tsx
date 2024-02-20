@@ -20,6 +20,7 @@ const Control: React.FC = () => {
   const [render, setRender] = useState<boolean>(true);
   const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
   const [showControlInstruction, setShowControlInstruction] = useState<boolean>(false); // Added state
+  const [firstLoaded, setFirstLoaded] = useState<string>('false')
   const router = useRouter();
 
   useEffect(() => {
@@ -28,6 +29,8 @@ const Control: React.FC = () => {
         ? -1
         : parseInt(sessionStorage.getItem('mapIndex') || '0', 10)
     );
+
+    setFirstLoaded(sessionStorage.getItem('firstLoadControlPage') === null ? 'true' : 'false');
 
     // async function checkToken() {
     //   await axios.get(`${backendUrl}`, {
@@ -65,6 +68,8 @@ const Control: React.FC = () => {
 
   const handleControlInstructionClick = () => {
     setShowControlInstruction(false);
+    sessionStorage.setItem('firstLoadControlPage', 'false')
+    setFirstLoaded('false')
   };
 
 
@@ -81,7 +86,7 @@ const Control: React.FC = () => {
             status={showConfirmDialog}
             onCancel={handleCancel}
           />
-          {showControlInstruction && <ControlInstruction onClick={handleControlInstructionClick} imgUrl='/images/instruction_ control.png'/>}
+          {showControlInstruction || firstLoaded == 'true' ? <ControlInstruction onClick={handleControlInstructionClick} imgUrl='/images/instruction_ control.png' /> : ''}
           {mapIndex < 0 ? (
             <div className={styles.container}>
               <div className={styles.parents}>
@@ -96,6 +101,7 @@ const Control: React.FC = () => {
           ) : (
             <ControlIndex />
           )}
+
 
           <ButtonInformation onClick={handleInfoIconClick} />
 

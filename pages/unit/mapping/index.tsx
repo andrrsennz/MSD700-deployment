@@ -63,6 +63,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
     const [showControlInstruction, setShowControlInstruction] = useState<boolean>(false);
     const [showMenu, setShowMenu] = useState<boolean>(false);
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+    const [firstLoaded, setFirstLoaded] = useState<string>('false')
 
     const handleOptionClick = (text: string): void => {
         if (text === 'Delete All Pinpoints') {
@@ -212,8 +213,8 @@ export default function Mapping(props: MappingProps): JSX.Element {
         // Create the main viewer.
         viewer = new (window as any).ROS2D.Viewer({
             divID: 'map',
-            width: mapRef.current?.clientWidth || 1870,
-            height: mapRef.current?.clientHeight || 958,
+            width: mapRef.current?.clientWidth || 1070,
+            height: mapRef.current?.clientHeight || 1070,
             background: "#DCDCDC",
         });
 
@@ -271,6 +272,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
         const mapNameFromSession = sessionStorage.getItem('mapName');
         setMapName(mapNameFromSession ?? ''); // If mapNameFromSession is null, use an empty string
 
+        setFirstLoaded(sessionStorage.getItem('firstLoadMappingPage') === null ? 'true' : 'false');
 
         return () => {
             // clean up when exiting the page
@@ -368,6 +370,8 @@ export default function Mapping(props: MappingProps): JSX.Element {
 
     const handleControlInstructionClick = () => {
         setShowControlInstruction(false);
+        sessionStorage.setItem('firstLoadMappingPage', 'false')
+        setFirstLoaded('false')
     };
 
     return (
@@ -392,7 +396,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
                     <MapSaving status={savingConfirmDialog} />
 
                     <div className={styles.container}>
-                        {showControlInstruction && <ControlInstruction onClick={handleControlInstructionClick} height={80} width={90} imgUrl='/images/instruction_mapping.png' />}
+                        {showControlInstruction || firstLoaded == 'true' ? <ControlInstruction onClick={handleControlInstructionClick} height={80} width={90} imgUrl='/images/instruction_mapping.svg' /> : ''}
                         <div className={styles.parents}>
                             <div className={styles.statusSection}>
                                 <div

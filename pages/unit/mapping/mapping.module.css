@@ -363,7 +363,7 @@
     display: flex;
     justify-content: space-between;
     position: absolute;
-    top: 88%;
+    top: 90%;
     padding-left: 30px;
     width: 90%;
     /* background-color: red; */
@@ -644,8 +644,8 @@
     }
 
     .centerDiv .buttonNavigation div {
-        height: 60px !important;
-        width: 60px;
+        height: 50px !important;
+        width: 50px;
         background-color: #0C98B4;
         border: 3.5px solid #60E3D5;
         border-radius: 8px;
@@ -668,7 +668,7 @@
     }
 
     .footerMap {
-        top: 85%;
+        top: 88%;
         padding-left: 30px;
         width: 90%;
     }

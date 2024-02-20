@@ -42,15 +42,10 @@ export default function Mapping() {
   const [selectedOption, setSelectedOption] = useState<string>("");
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
-
-
   const onConfirmButtonClick = () => {
     setShowConfirmClosePageDialog(true);
   };
 
-  const onConfirmMappingButtonClick = () => {
-    setShowConfirmMappingDialog(true);
-  };
 
   const handleCancel = () => {
     setShowConfirmClosePageDialog(false);
@@ -136,9 +131,7 @@ export default function Mapping() {
   }
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Update the state with the new checkbox value
     setIsChecked(event.target.checked);
-    // isChecked === false ? changeStatus("Idle") : "";
     if (event.target.checked) {
       setOwnMap(true, sessionStorage.getItem("mapName") || '');
       setLidar(true, true);
@@ -167,16 +160,27 @@ export default function Mapping() {
       console.log('Connection to ROS is closed.');
     });
 
+    const mapPreview = new (window as any).ROS2D.Viewer({
+      divID: 'mapPreview',
+      width: mapRef.current?.clientWidth || 355,
+      height: mapRef.current?.clientHeight || 240,
+      background: "#DCDCDC",
+    });
+
     // Create the main viewer.
     viewer = new (window as any).ROS2D.Viewer({
       divID: 'map',
       width: mapRef.current?.clientWidth || 1900,
       height: mapRef.current?.clientHeight || 958,
-      background: "#7F7F7F",
+      background: "#DCDCDC",
     });
 
     paN = new (window as any).ROS2D.PanView({
       rootObject: viewer.scene,
+    });
+
+    const panPreview = new (window as any).ROS2D.PanView({
+      rootObject: mapPreview.scene,
     });
 
     // Setup the map client.
@@ -184,6 +188,15 @@ export default function Mapping() {
       ros: ros,
       rootObject: viewer.scene,
       viewer: viewer,
+      withOrientation: true,
+      withCommand: true,
+      continuous: true
+    });
+
+    const gridClientPreview = new (window as any).NAV2D.OccupancyGridClientNav({
+      ros: ros,
+      rootObject: mapPreview.scene,
+      viewer: mapPreview,
       withOrientation: true,
       withCommand: true,
       continuous: true
@@ -298,6 +311,27 @@ export default function Mapping() {
     if (isDrag) {
       // Perform the action when the mouse is clicked and moving
       paN.pan(e.clientX, e.clientY);
+    }
+  };
+
+  const whenTouchDown = (event: any) => {
+    // event.preventDefault();
+    if (event.touches.length === 2) {
+      paN.startPan(event.touches[0].clientX, event.touches[0].clientY);
+      isDrag = true;
+      startcoor[0] = event.touches[0].clientX;
+      startcoor[1] = event.touches[0].clientX;
+    }
+  }
+
+  const whenTouchUp = (event: any) => {
+    isDrag = false;
+  }
+
+  const whenTouchMove = (e: any) => {
+    if (isDrag && e.touches.length === 2) {
+      // Perform the action when the mouse is clicked and moving
+      paN.pan(e.touches[0].clientX, e.touches[0].clientY);
     }
   };
 
@@ -439,12 +473,8 @@ export default function Mapping() {
   };
 
   const selectedModeListButton = (id: string) => {
-    console.log("222", id);
-
-    if (isRotated) {
-      id == selectedOption ? setSelectedOption("") : ""
-      selectedOption == "" ? setSelectedOption(id) : ""
-    }
+    id == selectedOption ? setSelectedOption("") : ""
+    selectedOption == "" ? setSelectedOption(id) : ""
   };
 
   const ModeListFunction = (id: string) => () => {
@@ -471,7 +501,7 @@ export default function Mapping() {
   const deletePinPoint = () => {
     if (selectedOption == "mode-list-1" || selectedOption == "mode-list-2") {
       setDeleteConfirmation(!deleteConfirmation)
-      deleteConfirmation ? removeallMarker : ""
+      deleteConfirmation ? removeallMarker() : ""
     }
   }
 
@@ -576,13 +606,13 @@ export default function Mapping() {
                 <img src="/icons/Home.svg" alt="" />
               </div>
             </div>
-            <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp}>
+            <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp} onTouchStart={whenTouchDown} onTouchMove={whenTouchMove} onTouchEnd={whenTouchUp}>
 
               <div className={styles.navigationSection}>
 
                 <div className={styles.mapPreview}>
-                  <div className={styles.map}>
-                    <img src="/images/map.png" alt="" />
+                  <div className={styles.map} id="mapPreview">
+                    {/* <img src="/images/map.png" alt="" /> */}
                   </div>
                 </div>
 

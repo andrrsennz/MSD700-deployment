@@ -149,6 +149,7 @@ NAV2D.Navigator = function (options) {
   var seq = 0;
   var pause = false;
   var rtrnHome = false;
+  var touchCount = 0;
 
   this.multigoalMark = [];
   this.multiPose = [];
@@ -164,7 +165,8 @@ NAV2D.Navigator = function (options) {
     actionName: actionName,
     serverName: serverName,
   });
-
+  
+  createjs.Touch.enable(that.rootObject);
   /**
    * Send a goal to the navigation stack with the given pose.
    *
@@ -212,7 +214,31 @@ NAV2D.Navigator = function (options) {
           that.goalMarker = null;
         }
       });
+
+    // createjs.Touch.enable(that.goalMarker);
+    that.goalMarker.addEventListener("mousedown", function (event) {
+      if (navigationStart == false) {
+        touchCount++;
+        console.log("touch count: ",touchCount);
+        if (touchCount === 2) {
+          var markCont = altgoalmark;
+          that.rootObject.removeChild(markCont);
+          console.log("child removed");
+          that.singlePose = null;
+          that.goalMarker = null;
+          touchCount = 0;
+        }
+        else {
+          setTimeout(() => {
+            touchCount = 0;
+          },1000)
+        }
+
+      }
+    });
     }
+
+
     that.goalMarker.x = pose.position.x;
     that.goalMarker.y = -pose.position.y;
     that.goalMarker.rotation = stage.rosQuaternionToGlobalTheta(
@@ -298,6 +324,39 @@ NAV2D.Navigator = function (options) {
           console.log("number of seq: "+seq);
         }
       });
+      // createjs.Touch.enable(markerCont);
+      markerCont.addEventListener("mousedown", function (event) {
+        if (navigationStart == false) {
+          touchCount++;
+          if (touchCount === 1) {
+            var markCont = markerCont;
+            index = that.rootObject.getChildIndex(markCont);
+            console.log(index);
+            console.log(event.target);
+            that.rootObject.removeChildAt(index);
+            console.log("child removed");
+            var arrin = index-1;
+            that.multigoalMark.splice(arrin,1);
+            that.multiPose.splice(arrin,1);
+            var lengtharr = that.multigoalMark.length;
+            console.log("new arr length: "+lengtharr);
+            console.log(that.multigoalMark);
+            for(var i = arrin; i<lengtharr; i++) {
+              var text = that.multigoalMark[i].getChildAt(1);
+              text.text = i+1;
+            }
+            console.log("number of seq: "+seq);
+            touchCount = 0;
+          }
+          else {
+            setTimeout(() => {
+              touchCount = 0;
+            },1000)
+          }
+
+        }
+      });
+
 
 
       // that.multigoalMark[x].addEventListener("dblclick", function (event) {
@@ -442,9 +501,9 @@ NAV2D.Navigator = function (options) {
       if (pause == false) {
         that.rootObject.removeChild(that.goalMarker);
         that.goalMarker = null;
-        navigationStart = false;
       }
       that.overlayMarker.visible = false;
+      navigationStart = false;
 
       // that.rootObject.removeChild(that.multigoalMark[i]);
     });
@@ -468,10 +527,9 @@ NAV2D.Navigator = function (options) {
     that.currentGoal = goal;
 
     goal.on("result", function () {
-      if (pause == false) {
-        navigationStart = false;
-      }
+
       rtrnhomeMarker.visible = false;
+      navigationStart = false;
 
       // that.rootObject.removeChild(that.multigoalMark[i]);
     });
@@ -736,7 +794,7 @@ NAV2D.Navigator = function (options) {
 
     var mouseEventHandler = function (event, mouseState) {
       if (withCommand === true && navigationStart === false && getInput === true) {
-      if (event.nativeEvent.button === 0) {
+      if (event.nativeEvent.button === 0 || event.touches !== null) {
       if (mouseState === "down") {
         // get position when mouse button is pressed down
         position = stage.globalToRos(event.stageX, event.stageY);
@@ -895,6 +953,7 @@ NAV2D.Navigator = function (options) {
         else if (init_pose == false && setHomeBase == true) {
           updateHomeBasePosition(pose.position,pose.orientation);
           that.homeBasePoint = pose;
+          that.rootObject.removeChild(orientationMarker);
           console.log("home base position updated");
         }
       }
@@ -958,6 +1017,18 @@ NAV2D.Navigator = function (options) {
 
     this.rootObject.addEventListener("dblclick", function(event) {
       mouseEventHandler(event,"dblclick");
+    });
+
+    this.rootObject.addEventListener("touchstart", function (event) {
+      mouseEventHandler(event, "down");
+    });
+
+    this.rootObject.addEventListener("touchmove", function (event) {
+      mouseEventHandler(event, "move");
+    });
+
+    this.rootObject.addEventListener("touchend", function (event) {
+      mouseEventHandler(event, "up");
     });
   
 }
@@ -1102,6 +1173,7 @@ NAV2D.Navigator = function (options) {
 
   NAV2D.Navigator.prototype.returnToHome = function(hpose) {
     console.log("robot return to home");
+    pause = false;
     var pose = new ROSLIB.Pose({
       position: hpose.position,
       orientation: hpose.orientation,

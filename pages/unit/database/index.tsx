@@ -44,6 +44,7 @@ export default function Database(): JSX.Element {
     const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || 'http://localhost:5000');
     const [isEditing, setIsEditing] = useState<Record<number, boolean>>({});
     const [render, setRender] = useState<boolean>(true);
+    const [firstLoaded, setFirstLoaded] = useState<string>('false')
     const [showControlInstruction, setShowControlInstruction] = useState<boolean>(false);
 
     useEffect(() => {
@@ -63,6 +64,8 @@ export default function Database(): JSX.Element {
             }
         }
         fetchData();
+
+        setFirstLoaded(sessionStorage.getItem('firstLoadDatabasePage') === null ? 'true' : 'false');
     }, []);
 
     function sortByDate(data: DataItem[], sortDateOrder: 'asc' | 'desc'): DataItem[] {
@@ -327,8 +330,9 @@ export default function Database(): JSX.Element {
 
     const handleControlInstructionClick = () => {
         setShowControlInstruction(false);
+        sessionStorage.setItem('firstLoadDatabasePage', 'false')
+        setFirstLoaded('false')
     };
-
     return (
         <>  {render ?
             (
@@ -349,7 +353,7 @@ export default function Database(): JSX.Element {
                         onCancel={handleCancelDelete}
                         onConfirm={() => deleteItem(indexDelete)}
                     />
-                    {showControlInstruction && <ControlInstruction onClick={handleControlInstructionClick} width={80} height={80} imgUrl='/images/instruction_database.png' />}
+                    {showControlInstruction || firstLoaded == 'true' ? <ControlInstruction onClick={handleControlInstructionClick} width={80} height={80} imgUrl='/images/instruction_database.svg' /> : ''}
                     <div className={styles.container}>
                         <div className={styles.parents}>
                             <CloseButton onClick={onConfirmButtonClick} />
