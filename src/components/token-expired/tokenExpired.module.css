@@ -20,20 +20,21 @@
 }
 
 .confirmationDialog {
-    /* height: 10vh; */
-    width: 300px;
-    height: 121px;
+
+    background: linear-gradient(#60E3D533, #60E3D533), url('/images/Walpaper_without_watermark.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    /* width: 300px; */
+    height: auto;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #D9FEFA;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
+    border-radius: 50px;
     text-align: center;
     z-index: 5;
-    border: 3px solid #60E3D5;
-    border-radius: 5px;
 
     gap: 10px;
     padding-bottom: 10px;
@@ -47,6 +48,10 @@
     text-align: left;
 
     color: #0567A6;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
 }
 
@@ -93,12 +98,72 @@
     background-color: #8DAAC0 !important;
 }
 
+.expiredMessage {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    font-family: Inter;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 34px;
+    letter-spacing: 0em;
+    text-align: left;
+
+    color: #FFFFFF;
+
+    background-color: #0567A6;
+    width: auto;
+    height: auto;
+
+    border-radius: 20px;
+    padding: 20px;
+    
+
+}
+
+.confirmationDialog img {
+    width: 80%;
+    text-shadow: 4px 4px 50px 0px #0C98B4;
+
+}
+
+.expiredMessage img {
+    width: 50px;
+    height: 50px;
+}
+
+.buttonLogin{
+    display: flex;
+    width: auto;
+    align-items: center;
+
+    background-color: #F6F0F0;
+    border: 5px solid #60E3D5;
+    padding: 0 !important;
+    margin: 0 !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+
+    border-radius: 8px;
+}
+
+.buttonLogin:hover{
+    cursor: pointer;
+    box-shadow: 0px 4px 4px 0px #0567A680;
+    transition: all 0.5s ease;
+}
+
+.buttonLogin  img{
+    width: 30px;
+    height: 30px;
+}
+
 @media (min-width: 2560px) and (min-height:1200px) {
     .confirmationDialog {
-        width: 480px;
-        height: 183px;
+        width: 800px;
+        height: auto;
         padding: 15px;
-        border-radius: 5px;
         border: 4px;
         gap: 8px;
 
@@ -137,5 +202,19 @@
 
     .cancelButton {
         background-color: #8DAAC0 !important;
+    }
+
+    .expiredMessage {
+        display: flex;
+
+        font-family: Inter;
+        font-size: 28px;
+        font-weight: 500;
+        line-height: 34px;
+        letter-spacing: 0em;
+        text-align: left;
+
+        color: #FFFFFF;
+
     }
 }

@@ -13,6 +13,7 @@ import Head from 'next/head';
 import axios from 'axios';
 import ControlInstruction from '@/components/control-instruction/controlInstruction';
 import ButtonInformation from '@/components/unit-information-button/unitInformationButton';
+import TokenExpired from '@/components/token-expired/tokenExpired';
 
 const Control: React.FC = () => {
   const [mapIndex, setMapIndex] = useState<number>(-1);
@@ -21,6 +22,8 @@ const Control: React.FC = () => {
   const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
   const [showControlInstruction, setShowControlInstruction] = useState<boolean>(false); // Added state
   const [firstLoaded, setFirstLoaded] = useState<string>('false')
+  const [tokenExpired, setTokenExpired] = useState<boolean>(false);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -32,24 +35,24 @@ const Control: React.FC = () => {
 
     setFirstLoaded(sessionStorage.getItem('firstLoadControlPage') === null ? 'true' : 'false');
 
-    // async function checkToken() {
-    //   await axios.get(`${backendUrl}`, {
-    //     headers: {
-    //       'Authorization': `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
-    //     }
-    //   })
-    //     .then((response) => {
-    //       if (response.status === 200) {
-    //         setRender(true);
-    //       } else {
-    //         router.push('/');
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       router.push('/');
-    //     });
-    // }
-    // checkToken();
+    async function checkToken() {
+      await axios.get(`${backendUrl}`, {
+        headers: {
+          'Authorization': `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
+        }
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            setRender(true);
+          } else {
+            router.push('/');
+          }
+        })
+        .catch((error) => {
+          setTokenExpired(false)
+        });
+    }
+    checkToken();
   }, []);
 
   const searchParams = useSearchParams();
@@ -86,6 +89,7 @@ const Control: React.FC = () => {
             status={showConfirmDialog}
             onCancel={handleCancel}
           />
+          <TokenExpired status={tokenExpired} />
           {showControlInstruction || firstLoaded == 'true' ? <ControlInstruction onClick={handleControlInstructionClick} imgUrl='/images/instruction_ control.png' /> : ''}
           {mapIndex < 0 ? (
             <div className={styles.container}>

@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import mqtt from "mqtt";
 import ButtonInformation from "@/components/unit-information-button/unitInformationButton";
 import ControlInstruction from "@/components/control-instruction/controlInstruction";
+import TokenExpired from "@/components/token-expired/tokenExpired";
 
 interface MappingProps { }
 
@@ -64,6 +65,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
     const [showMenu, setShowMenu] = useState<boolean>(false);
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
     const [firstLoaded, setFirstLoaded] = useState<string>('false')
+    const [tokenExpired, setTokenExpired] = useState<boolean>(false);
 
     const handleOptionClick = (text: string): void => {
         if (text === 'Delete All Pinpoints') {
@@ -191,7 +193,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
                     }
                 })
                 .catch((error) => {
-                    router.push('/');
+                    setTokenExpired(false)
                 });
         }
         checkToken();
@@ -394,7 +396,7 @@ export default function Mapping(props: MappingProps): JSX.Element {
                         onConfirm={onConfirmSaveMappingButtonClick}
                     />
                     <MapSaving status={savingConfirmDialog} />
-
+                    <TokenExpired status={tokenExpired} />
                     <div className={styles.container}>
                         {showControlInstruction || firstLoaded == 'true' ? <ControlInstruction onClick={handleControlInstructionClick} height={80} width={90} imgUrl='/images/instruction_mapping.svg' /> : ''}
                         <div className={styles.parents}>

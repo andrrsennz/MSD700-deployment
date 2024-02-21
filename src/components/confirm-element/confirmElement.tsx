@@ -36,7 +36,7 @@ const ConfirmElement: FC<ConfirmElementProps> = (props) => {
           <button className={styles.buttonConfirm} onClick={confirmClick}>
             Confirm
           </button>
-          <button className={styles.buttonConfirm} onClick={handleCancelClick}>
+          <button className={`${styles.buttonConfirm} ${styles.cancelButton}`} onClick={handleCancelClick}>
             Cancel
           </button>
         </div>

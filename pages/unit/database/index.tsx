@@ -11,6 +11,7 @@ import axios from 'axios';
 import Head from 'next/head';
 import ButtonInformation from '@/components/unit-information-button/unitInformationButton';
 import ControlInstruction from '@/components/control-instruction/controlInstruction';
+import TokenExpired from '@/components/token-expired/tokenExpired';
 
 interface DataItem {
     map_name: string;
@@ -46,6 +47,7 @@ export default function Database(): JSX.Element {
     const [render, setRender] = useState<boolean>(true);
     const [firstLoaded, setFirstLoaded] = useState<string>('false')
     const [showControlInstruction, setShowControlInstruction] = useState<boolean>(false);
+    const [tokenExpired, setTokenExpired] = useState<boolean>(false);
 
     useEffect(() => {
         async function fetchData() {
@@ -66,6 +68,26 @@ export default function Database(): JSX.Element {
         fetchData();
 
         setFirstLoaded(sessionStorage.getItem('firstLoadDatabasePage') === null ? 'true' : 'false');
+
+        async function checkToken() {
+            await axios.get(`${backendUrl}`, {
+                headers: {
+                    'Authorization': `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
+                }
+            })
+                .then((response) => {
+                    if (response.status === 200) {
+                        setRender(true);
+                    } else {
+                        router.push('/');
+                    }
+                })
+                .catch((error) => {
+                    setTokenExpired(false)
+                });
+        }
+        checkToken();
+
     }, []);
 
     function sortByDate(data: DataItem[], sortDateOrder: 'asc' | 'desc'): DataItem[] {
@@ -353,6 +375,10 @@ export default function Database(): JSX.Element {
                         onCancel={handleCancelDelete}
                         onConfirm={() => deleteItem(indexDelete)}
                     />
+
+                    <TokenExpired status={tokenExpired} />
+
+
                     {showControlInstruction || firstLoaded == 'true' ? <ControlInstruction onClick={handleControlInstructionClick} width={80} height={80} imgUrl='/images/instruction_database.svg' /> : ''}
                     <div className={styles.container}>
                         <div className={styles.parents}>
