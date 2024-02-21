@@ -8,7 +8,7 @@ interface UnitInformationButton {
 const ButtonInformation: React.FC<UnitInformationButton> = ({ onClick }) => {
     return (
         <div className={styles.bottomLeftElement} onClick={onClick}>
-            <img src="/icons/info.svg" alt="" />
+            <img src="/icons/Info.svg" alt="" />
         </div>
     );
 };

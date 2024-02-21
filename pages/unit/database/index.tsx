@@ -50,27 +50,8 @@ export default function Database(): JSX.Element {
     const [tokenExpired, setTokenExpired] = useState<boolean>(false);
 
     useEffect(() => {
-        async function fetchData() {
-            try {
-                const response_axios = await axios.get(`${backendUrl}/api/pgm_data`, {
-                    headers: {
-                        'Authorization': `Bearer ${sessionStorage.getItem('token')}`
-                    }
-                });
-                const data = response_axios.data.data;
-                setData(data);
-                setRender(true);
-            } catch (error) {
-                router.push('/');
-                console.error('Error fetching data:', error);
-            }
-        }
-        fetchData();
-
-        setFirstLoaded(sessionStorage.getItem('firstLoadDatabasePage') === null ? 'true' : 'false');
-
-        async function checkToken() {
-            await axios.get(`${backendUrl}`, {
+        function checkToken() {
+            axios.get(`${backendUrl}`, {
                 headers: {
                     'Authorization': `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
                 }
@@ -79,14 +60,31 @@ export default function Database(): JSX.Element {
                     if (response.status === 200) {
                         setRender(true);
                     } else {
-                        router.push('/');
+                        setTokenExpired(true);
                     }
                 })
                 .catch((error) => {
-                    setTokenExpired(false)
+                    setTokenExpired(true)
                 });
         }
+        
+        function fetchData() {
+            axios.get(`${backendUrl}/api/pgm_data`, {
+                headers: {
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                }
+            }).then((response) => {
+                const data = response.data.data;
+                setData(data);
+                setRender(true);
+            }).catch((error) => {
+
+            });
+        }
+
         checkToken();
+        fetchData();
+        setFirstLoaded(sessionStorage.getItem('firstLoadDatabasePage') === null ? 'true' : 'false');
 
     }, []);
 

@@ -189,11 +189,11 @@ export default function Mapping(props: MappingProps): JSX.Element {
                         enableRos = true;
                     }
                     else {
-                        router.push('/');
+                        setTokenExpired(true);
                     }
                 })
                 .catch((error) => {
-                    setTokenExpired(false)
+                    setTokenExpired(true)
                 });
         }
         checkToken();
