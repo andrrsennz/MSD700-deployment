@@ -45,11 +45,11 @@ const Control: React.FC = () => {
           if (response.status === 200) {
             setRender(true);
           } else {
-            setTokenExpired(true);
+            router.push('/');
           }
         })
         .catch((error) => {
-          setTokenExpired(true);
+          setTokenExpired(false)
         });
     }
     checkToken();

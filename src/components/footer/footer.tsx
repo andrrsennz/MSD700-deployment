@@ -9,7 +9,7 @@ const Footer: React.FC<FooterProps> = (props) => {
   return (
     <footer className={styles.theFooter}>
       {props.status === true ? (
-        <div className={styles.container}>
+        <div className={`${styles.container} ${styles.mobileHide}`}>
           <div className={styles.handlingInstructions}>
             <img src="/icons/new-book.svg" alt="" />
             <p>

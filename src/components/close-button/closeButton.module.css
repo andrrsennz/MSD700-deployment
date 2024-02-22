@@ -17,6 +17,11 @@
     z-index: 3;
 }
 
+.closeButton img{
+    width: 30px;
+    height: 30px;
+}
+
 .closeButton:hover {
     box-shadow: -4px 4px 4px 0px #00000040;
     transition: 1s;
@@ -28,5 +33,15 @@
         height: 60px;
         width: 60px;
         border-radius: 8.11px;
+    }
+}
+
+@media (max-width:361px) {
+    .closeButton {
+        border-radius: 5px;
+    }
+    .closeButton img{
+        width: 20px;
+        height: 20px;
     }
 }

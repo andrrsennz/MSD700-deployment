@@ -13,7 +13,7 @@ const CloseButton: FC<CloseButtonProps> = ({ onClick }) => {
       className={styles.closeButton}
       onClick={onClick}
     >
-      <Image src="/icons/Exit.svg" alt="" width={30} height={30} />
+      <img src="/icons/Exit.svg" alt="" />
     </button>
   );
 };

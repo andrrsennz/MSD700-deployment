@@ -274,7 +274,7 @@
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  
+
 }
 
 /* Table Section */
@@ -399,6 +399,7 @@
 
 .table tbody tr {
   transition: background-color 0.3s ease;
+  margin-bottom: 3px;
 }
 
 .table tbody tr:hover td {
@@ -454,7 +455,7 @@
   cursor: pointer;
 }
 
-.alertBox img{
+.alertBox img {
   width: 30px;
   height: 30px;
 }
@@ -779,6 +780,10 @@
   border: 3px solid #FF7582;
 }
 
+.displayNone {
+  display: none;
+}
+
 @media (max-height: 899px) {
 
   .tableUnit {
@@ -973,7 +978,7 @@
   .inputUnit {
     padding-left: 10px;
   }
-  
+
   .inputSection label {
     font-size: 30px;
   }
@@ -1031,11 +1036,12 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: auto; /* Set width to auto */
+    width: auto;
+    /* Set width to auto */
     padding-left: 10px;
     padding-right: 10px;
   }
-  
+
   .loginFormButton {
     width: 118px;
     height: 58px;
@@ -1083,4 +1089,299 @@
     font-size: 19px;
   }
 
+}
+
+@media (max-width:361px) {
+  .mobileHide {
+    display: none;
+  }
+
+  .mobileDisplay {
+    display: block;
+  }
+
+  .mobileDisplayFlex {
+    display: flex;
+  }
+
+  .container {
+    height: 115vh;
+  }
+
+  .centerSection {
+    max-height: none;
+  }
+
+  .topSection {
+    height: 52px;
+    background: #0C98B480;
+    border-bottom: 2px solid #0C98B4;
+
+    font-family: Inter;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-align: center;
+
+    color: #0567A6;
+
+    /* position: static; */
+  }
+
+  .displayFlex {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .topSection img {
+    height: 100%;
+    width: 20%;
+  }
+
+  .centerSection {
+    overflow-y: auto;
+  }
+
+  .centerSection .greetings {
+    font-size: 20px;
+    width: 80%;
+    margin-top: 0 !important;
+  }
+
+  .dataSection {
+    display: block;
+  }
+
+  .dataSection .loginSection .labelSection {
+    width: 237px;
+    font-size: 14px;
+    height: 40px;
+    justify-content: space-between;
+    border: 2px solid #60E3D5;
+  }
+
+  .dataSection .loginSection .labelSection img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .dataSection .loginSection .inputSection {
+    width: 90%;
+    height: auto;
+  }
+
+  .inputSection form {
+    border: 2px solid #60E3D5;
+  }
+
+  .dataSection .loginSection .inputUnit label {
+    font-size: 16px;
+    line-height: 19.36px;
+  }
+
+  .dataSection .loginSection .inputUnit input[type="text"] {
+    width: 90%;
+    height: 29px;
+  }
+
+  .dataSection .loginSection .inputUnit input[type="password"] {
+    width: 90%;
+    height: 29px;
+  }
+
+  .passwordStatusButton {
+    position: absolute;
+    right: 5px;
+  }
+
+  .inputSection button {
+    font-size: 12px;
+    border: 2px solid #60E3D5;
+    border-radius: 5px
+  }
+
+  .incorrectPassword {
+    width: 80%;
+    height: 54px;
+    border: 4px solid #FF7582;
+    font-size: 14px;
+    line-height: 16px;
+    border-radius: 5px;
+    margin-top: 16px !important;
+    padding-left: 15px;
+    padding-right: 15px;
+
+    gap: 5.5px;
+  }
+
+  .incorrectPassword img {
+    width: 20px;
+    height: 18px;
+  }
+
+  /* Table Section */
+  .tableUnit {
+    margin-top: 42px;
+    width: 90%;
+    max-height: 557px;
+  }
+
+  .tableSection {
+    width: 100%;
+    overflow-y: auto;
+    height: auto;
+    max-height: 557px;
+    border-radius: 5px;
+  }
+
+  .tableSection thead {
+    font-size: 12px;
+    line-height: 14.52px;
+    font-weight: 500;
+  }
+
+  .table {
+    font-family: "Inter", "Content";
+    width: 100%;
+    height: auto;
+  }
+
+  .table th,
+  .table td {
+    height: 30px;
+    font-size: 12px;
+  }
+
+  .loginFormButton {
+    width: auto;
+    height: 35px;
+    font-size: 12px;
+
+    font-family: 'Inter';
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+
+  .registerSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .registerSection .textSection {
+    width: auto;
+    border-radius: 3px;
+    background-color: #ECF4F6;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #0C98B4;
+    font-family: Inter;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 15px;
+    letter-spacing: 0em;
+    text-align: center;
+
+  }
+
+  .buttonRegisterUnit {
+    width: auto;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 5px;
+
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 17px;
+    letter-spacing: 0em;
+    text-align: left;
+
+  }
+
+  .buttonRegister {
+    border-radius: 5px;
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 17px;
+    letter-spacing: 0em;
+    text-align: left;
+  }
+
+  .mobileInstruction {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+
+    color: white;
+
+    gap: 10px;
+  }
+
+  .mobileInstruction .buttonInstruction {
+    width: 50px;
+    height: 50px;
+    background-color: #0C98B4;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .mobileInstruction .buttonInstruction img {
+    width: 20px;
+    height: 22px;
+  }
+
+  .instruction {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #D9FEFA;
+    width: auto;
+    height: auto;
+
+    padding-top: 10px;
+    padding-bottom: 10px;
+    gap: 10px;
+
+    border-radius: 5px;
+  }
+
+  .instructionMenu {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #0C98B4;
+
+    font-family: Inter;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 15px;
+    letter-spacing: 0em;
+    text-align: center;
+    padding: 8px;
+    border: 2px solid #60E3D5;
+
+    border-radius: 5px;
+  }
+
+  .instructionMenu img {
+    width: 18px;
+    height: 20px;
+  }
+
+  /* .loginFormButton img {
+    height: 14.57px;
+    width: 12px;
+  } */
 }

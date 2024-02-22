@@ -32,10 +32,10 @@ export default function Home(): JSX.Element {
     { id: 14, unit: "tess", user_id: 1, status: "off", battery: "", uptime: '' },
     { id: 15, unit: "asas", user_id: 1, status: "off", battery: "", uptime: '' },
     { id: 16, unit: "asasasas", user_id: 1, status: "off", battery: "", uptime: '' },
-    { id: 17, unit: "asasasasasas", user_id: 1, status: "off", battery: "", uptime: '' },
-    { id: 18, unit: "asasasasasasasas", user_id: 1, status: "off", battery: "", uptime: '' },
-    { id: 19, unit: "asasasasasasasaasass", user_id: 1, status: "off", battery: "", uptime: '' },
-    { id: 20, unit: "asasasasasasaasassaasass", user_id: 1, status: "off", battery: "", uptime: '' }
+    { id: 17, unit: "asasasa", user_id: 1, status: "off", battery: "", uptime: '' },
+    { id: 18, unit: "asasasas", user_id: 1, status: "off", battery: "", uptime: '' },
+    { id: 19, unit: "asasasasa", user_id: 1, status: "off", battery: "", uptime: '' },
+    { id: 20, unit: "asasasasas", user_id: 1, status: "off", battery: "", uptime: '' }
   ];
 
 
@@ -328,9 +328,17 @@ export default function Home(): JSX.Element {
 
       <div className={styles.container}>
 
-        <div className={styles.topSection}>
+        {/* --------------------------- Mobile Section  ------------------------------*/}
+        <div className={`${styles.topSection} ${styles.displayFlex} ${styles.displayNone}`}>
+          <img src="/images/Backhoe.png" alt="" />
+          <p>Loc Map</p>
           <CloseButton onClick={onConfirmButtonClick} />
-          <div className={styles.register}>
+        </div>
+        {/* -----------------------------------------------------------------------*/}
+
+        <div className={`${styles.topSection} ${styles.mobileHide}`}>
+          <CloseButton onClick={onConfirmButtonClick} />
+          <div className={`${styles.register}`}>
             <p>Don't have an account yet?</p>
             <div className={styles.buttonRegister} onClick={goToSignUpPage}>
               <Image
@@ -344,7 +352,263 @@ export default function Home(): JSX.Element {
           </div>
         </div>
 
-        <div className={styles.centerSection}>
+        {/* --------------------------- Mobile Section  ------------------------------*/}
+        <div className={`${styles.centerSection} ${styles.displayNone} ${styles.mobileDisplayFlex}`}>
+
+          <div className={styles.greetings}>
+            <p>Hello, welcome to the MSD700 application!</p>
+          </div>
+
+          <div className={styles.dataSection}>
+
+            <div className={styles.loginSection}>
+              <div className={styles.labelSection}>
+                <p>
+                  <span>
+                    <Image
+                      src="/icons/information-circle-svgrepo-com.svg"
+                      alt="Picture of the author"
+                      width={500}
+                      height={500}
+                    />
+                  </span>
+                  Please input your login data.
+                </p>
+              </div>
+
+              <div className={styles.inputSection}>
+                <form action="#" method="post">
+                  <div className={styles.inputUnit}>
+                    <label htmlFor="username">Username</label>
+                    <p className={styles.separateElement}>:</p>
+                    <input
+                      type="text"
+                      id="username"
+                      name="username"
+                      defaultValue=""
+                      required
+                      disabled={showUtilSection} // Disable the input if showUtilSection is true
+                    />
+                  </div>
+                  <div className={styles.inputUnit}>
+                    <label htmlFor="password">Password</label>
+                    <p className={styles.separateElement}>:</p>
+                    <div className={styles.passwordInputContainer}>
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        id="password"
+                        name="password"
+                        defaultValue=""
+                        required
+                        disabled={showUtilSection} // Disable the input if showUtilSection is true
+                      />
+                      <div className={styles.passwordStatusButton}>
+                        <Image
+                          src="/icons/Eye.svg"
+                          alt="Picture of the author"
+                          width={30}
+                          height={30}
+                          onClick={() => setShowPassword(!showPassword)}
+                          style={{ cursor: showUtilSection ? 'not-allowed' : 'pointer' }} // Set cursor style based on showUtilSection
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    className={styles.submitButton}
+                    type="submit"
+                    onClick={onProceedButtonClick}
+                    disabled={showUtilSection} // Disable the button if showUtilSection is true
+                  >
+                    Proceed
+                  </button>
+                </form>
+              </div>
+
+              {
+                showIncorrectPassword && (
+                  <div className={styles.incorrectPassword}>
+                    <img src="/icons/warning.svg" alt="" />
+                    <p>The username or password you entered is incorrect.</p>
+                  </div>
+                )
+              }
+
+            </div>
+
+
+            {
+              true ? (
+                <>
+                  <div className={styles.tableUnit}>
+                    <div className={styles.tableSection}>
+                      <table className={styles.table}>
+                        <thead className={styles.headerTable}>
+                          <tr >
+                            <th>No.</th>
+                            <th>MSD700 Unit</th>
+                            <th>Status</th>
+                            <th>Battery</th>
+                            <th>Uptime</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {dummyData.map((item, idx) => (
+                            <tr
+                              key={idx}
+                              onClick={() => handleRowClick(idx)}
+                              className={`${item.status == 'off' ? styles.offRow : styles.onRow} ${selectedRowIdx === idx ? styles.selectedRow : ''}`}
+                            >
+                              <td data-column="0">{idx + 1}</td>
+                              <td data-column="1">{item.unit}</td>
+                              <td data-column="2">{item.status}</td>
+                              <td data-column="3">{item.battery}</td>
+                              <td data-column="4">{item.uptime}</td>
+                            </tr>
+                          ))}
+
+                        </tbody>
+                      </table>
+
+                    </div>
+                    <button
+                      // onClick={goToUnitPage}
+                      aria-label="Submit form Button"
+                      className={styles.loginFormButton}
+                      onClick={handleStartButtonClick}
+                    >
+                      <p>Start</p>
+                      <Image
+                        src="/icons/arrow-right-3-svgrepo-com (1).svg"
+                        alt=""
+                        width={500}
+                        height={500}
+                      />
+                    </button>
+
+                    <AlertComponent />
+                  </div>
+                  {/* <div className={styles.registerUnit}>
+                    <div className={styles.registerUnitForm}>
+                      <div className={styles.registerUnitText}>
+                        <p>Is the unit not registered yet?</p>
+                      </div>
+                      <div className={styles.buttonRegisterUnit} onClick={handleShowRegisterUnitColumn}>
+                        <Image
+                          src="/icons/Car.svg"
+                          alt="Picture of the author"
+                          width={20}
+                          height={20}
+                        />
+                        <p>UNIT REGISTER</p>
+                      </div>
+                    </div>
+                    {showRegisterUnitColumn && (
+                      <div className={styles.registerUnitColumn}>
+                        <div className={styles.inputUnit}>
+                          <label htmlFor="username">Unit ID</label>
+                          <p className={styles.separateElement}>:</p>
+                          <input
+                            type="text"
+                            id="unitid"
+                            name="unitid"
+                            value={unitId} // Bind the input value to the state variable
+                            onChange={handleUnitIdChange} // Update the state variable on input change
+                            required
+                          />
+
+                        </div>
+                        <div className={styles.buttonSection}>
+                          <button
+                            className={styles.registerButton}
+                            type="button"
+                            onClick={handleRegisterButtonClick}
+                            disabled={!unitId} // Disable the button if `unitId` is empty
+                          >
+                            Register
+                          </button>
+                          <button className={styles.cancelButton} type="submit" onClick={handleHideRegisterUnitColumn}>
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    {
+                      registerSuccess && (
+                        <div className={`${styles.registerUnitSuccessInformation} ${styles.registerResponseBox}`}>
+                          <Image
+                            src="/icons/save.svg"
+                            alt="Success icon"
+                            width={20}
+                            height={20}
+                          />
+                          <p>The unit has been registered.</p>
+                        </div>
+                      )
+                    }
+                    {
+                      registerFailure && (
+                        <div className={`${styles.registerUnitFailedInformation} ${styles.registerResponseBox}`}>
+                          <Image
+                            src="/icons/warning.svg" // Change this to an error icon
+                            alt="Error icon"
+                            width={20}
+                            height={20}
+                          />
+                          <p>This unit has previously been registered.</p>
+                        </div>
+                      )
+                    }
+                    {
+                      registerInvalid && (
+                        <div className={styles.registerUnitFailedInformation}>
+                          <Image
+                            src="/icons/error.svg" // Change this to an error icon
+                            alt="Error icon"
+                            width={20}
+                            height={20}
+                          />
+                          <p>Invalid unit name</p>
+                        </div>
+                      )
+                    }
+                  </div> */}
+                </>
+              ) : ""
+            }
+
+          </div>
+
+          <div className={styles.registerSection}>
+            <div className={styles.textSection}>
+              <p>Is the unit not registered yet?</p>
+            </div>
+            <div className={styles.buttonRegisterUnit} onClick={goToSignUpPage}>
+              <Image
+                src="/icons/Car.svg"
+                alt="Sign up icon"
+                width={20}
+                height={20}
+              />
+              <p>UNIT REGISTER</p>
+            </div>
+            <div className={styles.textSection}>
+              <p>Don't have an account yet?</p>
+            </div>
+            <div className={styles.buttonRegister} onClick={goToSignUpPage}>
+              <Image
+                src="/icons/buttonregister.svg"
+                alt="Sign up icon"
+                width={20}
+                height={20}
+              />
+              <p>SIGN UP</p>
+            </div>
+          </div>
+        </div>
+        {/* -----------------------------------------------------------------------*/}
+
+        <div className={`${styles.centerSection} ${styles.mobileHide}`}>
 
           <div className={styles.greetings}>
             <p>Hello, welcome to the MSD700 application!</p>
@@ -585,7 +849,32 @@ export default function Home(): JSX.Element {
 
         </div>
 
-        <div className={styles.bottomSection}>
+        {/* --------------------------- Mobile Section  ------------------------------*/}
+        <div className={`${styles.mobileInstruction} ${styles.displayNone} ${styles.mobileDisplayFlex}`}>
+          <div className={`${styles.instruction}`}>
+            <div className={`${styles.instructionMenu} ${styles.handlingInstructions}`}>
+              <img src="/icons/new-book.svg" alt="" />
+              <p>
+                Handling
+                Instructions
+              </p>
+            </div>
+            <div className={`${styles.instructionMenu} ${styles.safetyPrecautions}`}>
+              <img src="/icons/new-shield.svg" alt="" />
+              <p>
+                Safety
+                Precaution
+              </p>
+            </div>
+          </div>
+          <div className={`${styles.buttonInstruction}`}>
+            <img src="/icons/document.svg" alt="" />
+          </div>
+        </div>
+        {/* -----------------------------------------------------------------------*/}
+
+
+        <div className={`${styles.bottomSection} `}>
           <Footer status={true} />
         </div>
       </div>
