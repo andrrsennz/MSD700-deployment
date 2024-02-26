@@ -8,7 +8,7 @@
     padding-top: 5px;
     border-radius: 10px;
     cursor: pointer;
-    
+
     font-family: 'Inter', sans-serif;
     font-size: 1em;
     font-weight: 500;
@@ -17,7 +17,7 @@
     z-index: 3;
 }
 
-.closeButton img{
+.closeButton img {
     width: 30px;
     height: 30px;
 }
@@ -27,8 +27,8 @@
     transition: 1s;
 }
 
-@media (min-width:2560px){
-    .closeButton{
+@media (min-width:2560px) {
+    .closeButton {
         margin-right: 30px;
         height: 60px;
         width: 60px;
@@ -37,10 +37,15 @@
 }
 
 @media (max-width:361px) {
+    .mobileHide {
+        display: none;
+    }
+
     .closeButton {
         border-radius: 5px;
     }
-    .closeButton img{
+
+    .closeButton img {
         width: 20px;
         height: 20px;
     }

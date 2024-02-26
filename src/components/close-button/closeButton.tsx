@@ -10,7 +10,7 @@ const CloseButton: FC<CloseButtonProps> = ({ onClick }) => {
   return (
     <button
       aria-label="Close the page"
-      className={styles.closeButton}
+      className={`${styles.closeButton}`}
       onClick={onClick}
     >
       <img src="/icons/Exit.svg" alt="" />

@@ -1,0 +1,43 @@
+.topSection {
+    position: fixed;
+    /* Change position to fixed */
+    top: 0;
+    /* Position it at the top of the viewport */
+    left: 0;
+    /* Align it to the left */
+    z-index: 1000;
+    /* Set a high z-index to ensure it stays on top of other content */
+    height: 52px;
+    width: 100%;
+    background: #0C98B480;
+    border-bottom: 2px solid #0C98B4;
+
+    font-family: Inter;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-align: center;
+
+    color: #0567A6;
+}
+
+/* No need to change other styles */
+
+
+.topSection img {
+    height: 100%;
+    /* width: 20%; */
+}
+
+.displayNone {
+    display: none;
+}
+
+@media (max-width:361px) {
+    .displayFlex {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+}

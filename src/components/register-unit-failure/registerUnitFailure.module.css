@@ -1,0 +1,12 @@
+.registerUnitFailedInformation {
+    color: #C66E87;
+    background-color: #F6F0F0;
+    border: 3px solid #FF7582;
+
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 17px;
+    letter-spacing: 0em;
+    text-align: left;
+}

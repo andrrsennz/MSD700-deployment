@@ -20,6 +20,7 @@ import axios from "axios";
 import { cardDetails } from "@/components/carousel/CarouselImages";
 import Head from "next/head";
 import ConfirmRegister from "@/components/confirm-register-user/confirmRegister";
+import MobileTopSection from "@/components/mobile-top-section/mobileTopSection";
 
 export default function Signup(): JSX.Element {
     const router = useRouter();
@@ -225,10 +226,18 @@ export default function Signup(): JSX.Element {
             />
             <ConfirmRegister status={showRegisterDialog} />
 
+
             <div className={styles.container}>
+                {/* --------------------------- Mobile Section  ------------------------------*/}
+                <MobileTopSection />
+                {/* -----------------------------------------------------------------------*/}
+
                 <div className={styles.parents}>
-                    <CloseButton onClick={onConfirmButtonClick} />
-                    <div className={styles.leftSide}>
+                    <div className={styles.mobileHide}>
+                        <CloseButton onClick={onConfirmButtonClick} />
+                    </div>
+
+                    <div className={`${styles.leftSide} ${styles.mobileHide}`}>
                         <div className={styles.imageAnimation}>
                             <AutoplayCarousel></AutoplayCarousel>
                         </div>
@@ -447,17 +456,20 @@ export default function Signup(): JSX.Element {
                             </form>
                         </div>
                         <div className={styles.loginSection}>
-                            <p>I have an account</p>
-                            <div className={styles.buttonLogin} onClick={goToSigninPage}>
-                                <Image
-                                    src="/icons/Login.svg"
-                                    alt="Picture of the author"
-                                    width={30}
-                                    height={30}
-                                />
-                                <p>LOG IN</p>
+                            <div className={styles.loginButton}>
+                                <p className={`${styles.textAccount}`}>I have an account</p>
+                                <div className={`${styles.buttonLogin}`} onClick={goToSigninPage}>
+                                    <Image
+                                        src="/icons/Login.svg"
+                                        alt="Picture of the author"
+                                        width={30}
+                                        height={30}
+                                    />
+                                    <p>LOG IN</p>
+                                </div>
                             </div>
                         </div>
+                        <Footer status={false} />
                     </div>
                 </div>
 

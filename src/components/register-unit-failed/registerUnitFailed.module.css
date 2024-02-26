@@ -1,0 +1,30 @@
+.registerUnitSuccessInformation {
+    background-color: hsla(174, 95%, 92%, 1);
+    border: 4px solid hsla(174, 70%, 63%, 1);
+}
+
+.registerUnitFailedInformation {
+    color: #C66E87;
+    background-color: #F6F0F0;
+    border: 3px solid #FF7582;
+}
+
+.registerResponseBox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: 0;
+    margin-top: 10px;
+    font-size: 14px;
+
+    width: max-content;
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 17px;
+    letter-spacing: 0em;
+    text-align: left;
+}

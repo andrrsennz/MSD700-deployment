@@ -9,6 +9,11 @@ import CloseButton from "@/components/close-button/closeButton";
 import Footer from "@/components/footer/footer";
 import styles from "./page.module.css";
 import axios from "axios";
+import MobileRegisterUnit from "@/components/mobile-register-unit/mobileRegisterUnit";
+import RegisterUnitSuccess from "@/components/register-unit-success/registerUnitSuccess";
+import RegisterUnitFailed from "@/components/register-unit-failed/registerUnitFailed";
+import RegisterUnitFailure from "@/components/register-unit-failure/registerUnitFailure";
+import MobileTopSection from "@/components/mobile-top-section/mobileTopSection";
 
 export default function Home(): JSX.Element {
   const router = useRouter();
@@ -19,6 +24,7 @@ export default function Home(): JSX.Element {
   const [registerSuccess, setRegisterSuccess] = useState(false);
   const [registerFailure, setRegisterFailure] = useState(false);
   const [unitId, setUnitId] = useState(''); // Add this line to create a state variable for the unit ID input
+  const [instructionShowed, setInstructionShowed] = useState<boolean>(false);
 
   const [registerInvalid, setRegisterInvalid] = useState(false);
 
@@ -318,6 +324,10 @@ export default function Home(): JSX.Element {
     setUnitId(event.target.value);
   };
 
+  const setInstructionShow = () => {
+    setInstructionShowed(!instructionShowed)
+  }
+
   return (
     <>
       <ConfirmElement
@@ -326,14 +336,74 @@ export default function Home(): JSX.Element {
         onCancel={handleCancel}
       />
 
+      {showRegisterUnitColumn ? (
+        <>
+          <div className={`${styles.mobileRegisterUnit} ${styles.displayNone} ${styles.mobileDisplay} `}>
+            <div className={styles.confirmationDialog}>
+              <div className={styles.registerUnitColumn}>
+                <div className={styles.inputUnit}>
+                  <label htmlFor="username">Unit ID</label>
+                  <p className={styles.separateElement}>:</p>
+                  <input
+                    type="text"
+                    id="unitid"
+                    name="unitid"
+                    value={unitId} // Bind the input value to the state variable
+                    onChange={handleUnitIdChange} // Update the state variable on input change
+                    required
+                  />
+
+                </div>
+                <div className={styles.buttonSection}>
+                  <button
+                    className={styles.registerButton}
+                    type="button"
+                    onClick={handleRegisterButtonClick}
+                    disabled={!unitId} // Disable the button if `unitId` is empty
+                  >
+                    Register
+                  </button>
+                  <button className={styles.cancelButton} type="submit" onClick={handleHideRegisterUnitColumn}>
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div></>) : ""
+      }
+      {
+        registerSuccess && (
+          <div className={`${styles.mobileRegisterUnit} ${styles.mobileDisplayFlex}`}>
+            <div className={styles.registerContainer}>
+              <RegisterUnitSuccess />
+            </div>
+
+          </div>
+        )
+      }
+      {
+        registerFailure && (
+          <div className={`${styles.mobileRegisterUnit} ${styles.mobileDisplayFlex}`}>
+            <div className={styles.registerContainer}>
+              <RegisterUnitFailed />
+            </div>
+          </div>
+        )
+      }
+      {
+        registerInvalid && (
+          <div className={`${styles.mobileRegisterUnit} ${styles.mobileDisplayFlex}`}>
+            <div className={styles.registerContainer}>
+              <RegisterUnitFailed />
+            </div>
+          </div>
+        )
+      }
+
       <div className={styles.container}>
 
         {/* --------------------------- Mobile Section  ------------------------------*/}
-        <div className={`${styles.topSection} ${styles.displayFlex} ${styles.displayNone}`}>
-          <img src="/images/Backhoe.png" alt="" />
-          <p>Loc Map</p>
-          <CloseButton onClick={onConfirmButtonClick} />
-        </div>
+        <MobileTopSection />
         {/* -----------------------------------------------------------------------*/}
 
         <div className={`${styles.topSection} ${styles.mobileHide}`}>
@@ -387,7 +457,7 @@ export default function Home(): JSX.Element {
                       name="username"
                       defaultValue=""
                       required
-                      disabled={showUtilSection} // Disable the input if showUtilSection is true
+                    // Disable the input if showUtilSection is true
                     />
                   </div>
                   <div className={styles.inputUnit}>
@@ -400,7 +470,7 @@ export default function Home(): JSX.Element {
                         name="password"
                         defaultValue=""
                         required
-                        disabled={showUtilSection} // Disable the input if showUtilSection is true
+                      // Disable the input if showUtilSection is true
                       />
                       <div className={styles.passwordStatusButton}>
                         <Image
@@ -418,7 +488,7 @@ export default function Home(): JSX.Element {
                     className={styles.submitButton}
                     type="submit"
                     onClick={onProceedButtonClick}
-                    disabled={showUtilSection} // Disable the button if showUtilSection is true
+                  // Disable the button if showUtilSection is true
                   >
                     Proceed
                   </button>
@@ -438,7 +508,7 @@ export default function Home(): JSX.Element {
 
 
             {
-              true ? (
+              showUtilSection ? (
                 <>
                   <div className={styles.tableUnit}>
                     <div className={styles.tableSection}>
@@ -488,91 +558,6 @@ export default function Home(): JSX.Element {
 
                     <AlertComponent />
                   </div>
-                  {/* <div className={styles.registerUnit}>
-                    <div className={styles.registerUnitForm}>
-                      <div className={styles.registerUnitText}>
-                        <p>Is the unit not registered yet?</p>
-                      </div>
-                      <div className={styles.buttonRegisterUnit} onClick={handleShowRegisterUnitColumn}>
-                        <Image
-                          src="/icons/Car.svg"
-                          alt="Picture of the author"
-                          width={20}
-                          height={20}
-                        />
-                        <p>UNIT REGISTER</p>
-                      </div>
-                    </div>
-                    {showRegisterUnitColumn && (
-                      <div className={styles.registerUnitColumn}>
-                        <div className={styles.inputUnit}>
-                          <label htmlFor="username">Unit ID</label>
-                          <p className={styles.separateElement}>:</p>
-                          <input
-                            type="text"
-                            id="unitid"
-                            name="unitid"
-                            value={unitId} // Bind the input value to the state variable
-                            onChange={handleUnitIdChange} // Update the state variable on input change
-                            required
-                          />
-
-                        </div>
-                        <div className={styles.buttonSection}>
-                          <button
-                            className={styles.registerButton}
-                            type="button"
-                            onClick={handleRegisterButtonClick}
-                            disabled={!unitId} // Disable the button if `unitId` is empty
-                          >
-                            Register
-                          </button>
-                          <button className={styles.cancelButton} type="submit" onClick={handleHideRegisterUnitColumn}>
-                            Cancel
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                    {
-                      registerSuccess && (
-                        <div className={`${styles.registerUnitSuccessInformation} ${styles.registerResponseBox}`}>
-                          <Image
-                            src="/icons/save.svg"
-                            alt="Success icon"
-                            width={20}
-                            height={20}
-                          />
-                          <p>The unit has been registered.</p>
-                        </div>
-                      )
-                    }
-                    {
-                      registerFailure && (
-                        <div className={`${styles.registerUnitFailedInformation} ${styles.registerResponseBox}`}>
-                          <Image
-                            src="/icons/warning.svg" // Change this to an error icon
-                            alt="Error icon"
-                            width={20}
-                            height={20}
-                          />
-                          <p>This unit has previously been registered.</p>
-                        </div>
-                      )
-                    }
-                    {
-                      registerInvalid && (
-                        <div className={styles.registerUnitFailedInformation}>
-                          <Image
-                            src="/icons/error.svg" // Change this to an error icon
-                            alt="Error icon"
-                            width={20}
-                            height={20}
-                          />
-                          <p>Invalid unit name</p>
-                        </div>
-                      )
-                    }
-                  </div> */}
                 </>
               ) : ""
             }
@@ -580,18 +565,21 @@ export default function Home(): JSX.Element {
           </div>
 
           <div className={styles.registerSection}>
-            <div className={styles.textSection}>
-              <p>Is the unit not registered yet?</p>
-            </div>
-            <div className={styles.buttonRegisterUnit} onClick={goToSignUpPage}>
-              <Image
-                src="/icons/Car.svg"
-                alt="Sign up icon"
-                width={20}
-                height={20}
-              />
-              <p>UNIT REGISTER</p>
-            </div>
+            {true ? (<>
+              <div className={styles.textSection}>
+                <p>Is the unit not registered yet?</p>
+              </div>
+              <div className={styles.buttonRegisterUnit} onClick={handleShowRegisterUnitColumn}>
+                <Image
+                  src="/icons/Car.svg"
+                  alt="Sign up icon"
+                  width={20}
+                  height={20}
+                />
+                <p>UNIT REGISTER</p>
+              </div>
+            </>) : ""}
+
             <div className={styles.textSection}>
               <p>Don't have an account yet?</p>
             </div>
@@ -605,6 +593,8 @@ export default function Home(): JSX.Element {
               <p>SIGN UP</p>
             </div>
           </div>
+
+          <Footer status={true} />
         </div>
         {/* -----------------------------------------------------------------------*/}
 
@@ -641,7 +631,7 @@ export default function Home(): JSX.Element {
                       name="username"
                       defaultValue=""
                       required
-                      disabled={showUtilSection} // Disable the input if showUtilSection is true
+                    // Disable the input if showUtilSection is true
                     />
                   </div>
                   <div className={styles.inputUnit}>
@@ -654,7 +644,7 @@ export default function Home(): JSX.Element {
                         name="password"
                         defaultValue=""
                         required
-                        disabled={showUtilSection} // Disable the input if showUtilSection is true
+                      // Disable the input if showUtilSection is true
                       />
                       <div className={styles.passwordStatusButton}>
                         <Image
@@ -672,7 +662,7 @@ export default function Home(): JSX.Element {
                     className={styles.submitButton}
                     type="submit"
                     onClick={onProceedButtonClick}
-                    disabled={showUtilSection} // Disable the button if showUtilSection is true
+                  // Disable the button if showUtilSection is true
                   >
                     Proceed
                   </button>
@@ -755,6 +745,7 @@ export default function Home(): JSX.Element {
 
                     <AlertComponent />
                   </div>
+
                   <div className={styles.registerUnit}>
                     <div className={styles.registerUnitForm}>
                       <div className={styles.registerUnitText}>
@@ -771,7 +762,7 @@ export default function Home(): JSX.Element {
                       </div>
                     </div>
                     {showRegisterUnitColumn && (
-                      <div className={styles.registerUnitColumn}>
+                      <div className={`${styles.registerUnitColumn} ${styles.mobileHide}`}>
                         <div className={styles.inputUnit}>
                           <label htmlFor="username">Unit ID</label>
                           <p className={styles.separateElement}>:</p>
@@ -802,41 +793,17 @@ export default function Home(): JSX.Element {
                     )}
                     {
                       registerSuccess && (
-                        <div className={`${styles.registerUnitSuccessInformation} ${styles.registerResponseBox}`}>
-                          <Image
-                            src="/icons/save.svg"
-                            alt="Success icon"
-                            width={20}
-                            height={20}
-                          />
-                          <p>The unit has been registered.</p>
-                        </div>
+                        <RegisterUnitSuccess />
                       )
                     }
                     {
                       registerFailure && (
-                        <div className={`${styles.registerUnitFailedInformation} ${styles.registerResponseBox}`}>
-                          <Image
-                            src="/icons/warning.svg" // Change this to an error icon
-                            alt="Error icon"
-                            width={20}
-                            height={20}
-                          />
-                          <p>This unit has previously been registered.</p>
-                        </div>
+                        <RegisterUnitFailed />
                       )
                     }
                     {
                       registerInvalid && (
-                        <div className={styles.registerUnitFailedInformation}>
-                          <Image
-                            src="/icons/error.svg" // Change this to an error icon
-                            alt="Error icon"
-                            width={20}
-                            height={20}
-                          />
-                          <p>Invalid unit name</p>
-                        </div>
+                        <RegisterUnitFailure />
                       )
                     }
                   </div>
@@ -850,8 +817,10 @@ export default function Home(): JSX.Element {
         </div>
 
         {/* --------------------------- Mobile Section  ------------------------------*/}
+
+
         <div className={`${styles.mobileInstruction} ${styles.displayNone} ${styles.mobileDisplayFlex}`}>
-          <div className={`${styles.instruction}`}>
+          {instructionShowed ? (<div className={`${styles.instruction}`}>
             <div className={`${styles.instructionMenu} ${styles.handlingInstructions}`}>
               <img src="/icons/new-book.svg" alt="" />
               <p>
@@ -866,15 +835,16 @@ export default function Home(): JSX.Element {
                 Precaution
               </p>
             </div>
-          </div>
-          <div className={`${styles.buttonInstruction}`}>
+          </div>) : ""}
+
+          <div onClick={setInstructionShow} className={`${styles.buttonInstruction}`}>
             <img src="/icons/document.svg" alt="" />
           </div>
         </div>
         {/* -----------------------------------------------------------------------*/}
 
 
-        <div className={`${styles.bottomSection} `}>
+        <div className={`${styles.bottomSection} ${styles.mobileHide}`}>
           <Footer status={true} />
         </div>
       </div>
