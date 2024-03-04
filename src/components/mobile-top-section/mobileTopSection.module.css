@@ -40,4 +40,36 @@
         gap: 10px;
         align-items: center;
     }
+
+    .mobileDisplayNone {
+        display: none;
+    }
+
+    .greetings {
+        display: flex;
+        align-items: center;
+        gap: 2.5px;
+        background-color: #0567A6;
+
+        border-radius: 14px;
+        border: 2px solid #60E3D5;
+        width: auto;
+        height: auto;
+        padding-left: 7px;
+        padding-right: 7px;
+
+        font-family: Inter;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 15px;
+        letter-spacing: 0em;
+        text-align: left;
+        color: #fff;
+
+    }
+
+    .greetings img {
+        width: 13px;
+        height: 15px;
+    }
 }

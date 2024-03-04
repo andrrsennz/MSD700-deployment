@@ -18,6 +18,10 @@
 
 .parents {
     height: 100%;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+
     position: relative;
 }
 
@@ -325,6 +329,12 @@
     background-image: url("/icons/Stop.svg");
 }
 
+.displayNone {
+    display: none ;
+}
+
+
+
 @media (min-height: 1440px) {
     .leftSide .information .feature {
         font-size: 2vh !important;
@@ -577,10 +587,16 @@
     }
 
     .mobileDisplay {
-        display: block;
+        display: block !important;
     }
 
     .parents {
+        height: 100%;
+        display: block;
+        margin-left: 0;
+        margin-right: 0;
+
+        position: relative;
         width: 100%;
     }
 
@@ -604,11 +620,12 @@
         line-height: 19px;
         letter-spacing: 0em;
         text-align: left;
+        margin-top: 5px;
     }
 
     .formSection [type="text"] {
         width: 99%;
-        height: 38px;
+        height: 35px;
         border-radius: 5px;
         border: 2px solid #0567A6;
 
@@ -623,6 +640,12 @@
         padding-left: 10px;
     }
 
+    .formSection [type="password"] {
+        width: 99%;
+        height: 35px;
+    }
+
+
     .formSection button[type="submit"] {
         width: 100%;
         height: 40px;
@@ -633,6 +656,7 @@
         line-height: 19px;
         letter-spacing: 0em;
         text-align: center;
+        margin-top: 10px;
     }
 
     .passwordSection {
@@ -644,7 +668,8 @@
         align-items: center;
         justify-content: center;
         margin-left: auto;
-        margin-top: 25px;
+        height: auto;
+        margin-bottom: 0;
     }
 
     .loginButton {
@@ -659,7 +684,6 @@
         padding-right: 35px;
         padding-top: 5px;
         padding-bottom: 5px;
-        margin-top: 25px;
     }
 
 
@@ -685,4 +709,130 @@
         height: 22px;
     }
 
+    .bottomSection {
+        width: 100%;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .divPasswordSection {
+        margin-bottom: 0;
+    }
+
+    .buttonInstruction {
+        width: 50px;
+        height: 50px;
+        background-color: #0C98B4;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: 2px solid #60E3D5;
+        margin-left: 10px;
+    }
+
+    .buttonInstruction img {
+        width: 25px;
+        height: 27px;
+    }
+
+    .mobileRegisterUnit::before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        /* Your desired color */
+        opacity: 0.2;
+        /* Adjust the opacity to control the color intensity */
+        z-index: 3;
+        /* Place it in front of other content */
+    }
+
+    .mobileDisplayFlex {
+        display: flex;
+        z-index: 1000;
+        align-items: center;
+    }
+
+    .registerContainer {
+        width: auto;
+        height: auto;
+        position: fixed;
+        top: 50%;
+        margin-top: 50px;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        z-index: 5;
+        color: #0567A6;
+
+        background-color: #0C98B4;
+        position: relative;
+        border-radius: 10px;
+    }
+
+    .registerContainer .imageAnimation {
+        height: 55vh;
+        padding-top: 30px;
+    }
+
+    .registerContainer .information {
+        align-items: center;
+        padding: 12px;
+        font-size: 14px;
+        /* padding-left: 48px;
+        padding-right: 48px; */
+    }
+
+    .registerContainer .information h1 {
+        font-family: Inter;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 14px;
+        letter-spacing: 0em;
+        text-align: left;
+        color: #ECF4F6;
+
+        text-align: center;
+    }
+
+    .registerContainer .information h3 {
+        outline: none;
+        margin: 0;
+    }
+
+    .registerContainer .information .feature {
+        font-family: Inter;
+        font-weight: 600;
+        letter-spacing: 0em;
+        text-align: left;
+        color: #ECF4F6;
+    }
+
+    .iconStatusColumnButton{
+        top: 65% !important;
+    }
+
+    .iconStatusColumnButton img{
+        width: 17px;
+        height: 17px;
+    }
+
+    .tooltip {
+        margin-top: -15px;
+        margin-bottom: 0;
+        color: #C66E87;
+        font-family: Inter;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 17px;
+        letter-spacing: 0em;
+        text-align: left;
+    }
 }

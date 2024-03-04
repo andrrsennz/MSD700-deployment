@@ -24,3 +24,9 @@
     width: 45px;
     height: 45px;
 }
+
+@media (max-width:361px) {
+    .mobileDisplayNone {
+        display: none;
+    }
+}

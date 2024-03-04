@@ -70,6 +70,7 @@ const Navigation: React.FC<NavigationProps> = ({ imageSrc }) => {
               <p>Control Mode</p>
             </Link>
           </div>
+
           <div
             className={`${styles.mapping} ${isActive('/unit/mapping') && styles.active
               }`}
@@ -80,6 +81,7 @@ const Navigation: React.FC<NavigationProps> = ({ imageSrc }) => {
               <p>Mapping</p>
             </Link>
           </div>
+
           <div
             className={`${styles.database} ${isActive('/unit/database') && styles.active
               }`}
@@ -90,6 +92,7 @@ const Navigation: React.FC<NavigationProps> = ({ imageSrc }) => {
               <p>Database</p>
             </Link>
           </div>
+          
         </div>
 
         <div className={styles.mapStream}>

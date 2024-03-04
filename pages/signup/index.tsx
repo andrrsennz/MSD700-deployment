@@ -21,6 +21,7 @@ import { cardDetails } from "@/components/carousel/CarouselImages";
 import Head from "next/head";
 import ConfirmRegister from "@/components/confirm-register-user/confirmRegister";
 import MobileTopSection from "@/components/mobile-top-section/mobileTopSection";
+import RegisterUnitSuccess from "@/components/register-unit-success/registerUnitSuccess";
 
 export default function Signup(): JSX.Element {
     const router = useRouter();
@@ -50,11 +51,16 @@ export default function Signup(): JSX.Element {
 
     const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 
+    const [instructionShowed, setInstructionShowed] = useState<boolean>(false);
+    const [mobileShowAnimation, setMobileShowAnimation] = useState<boolean>(false);
+
+
     const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");
 
     const onConfirmButtonClick = (): void => {
         setShowConfirmDialog(true);
     };
+
     const handleCancel = (): void => {
         setShowConfirmDialog(false);
     };
@@ -211,7 +217,13 @@ export default function Signup(): JSX.Element {
         router.push("/");
     }
 
+    const setMobileAnimation = () => {
+        setMobileShowAnimation(!mobileShowAnimation)
+    }
 
+    const handleCloseButtonClick = () => {
+        setShowConfirmDialog(true); // or false, depending on your logic
+    };
 
     return (
         <>
@@ -226,10 +238,33 @@ export default function Signup(): JSX.Element {
             />
             <ConfirmRegister status={showRegisterDialog} />
 
+            {mobileShowAnimation ? (
+                <div className={`${styles.mobileRegisterUnit} ${styles.displayNone} ${styles.mobileDisplayFlex}`} onClick={setMobileAnimation}>
+                    <div className={styles.registerContainer}>
+                        <div className={styles.imageAnimation}>
+                            <AutoplayCarousel />
+                        </div>
+                        <div className={styles.information}>
+                            <h1>MSD700</h1>
+                            <div className={styles.feature}>
+                                <h3>Features</h3>
+                                <ul>
+                                    <li>Blade / bucket type</li>
+                                    <li>Backhoe / dump type</li>
+                                    <li>Customized to suit on-site conditions</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div >) : ""
+            }
+
+
 
             <div className={styles.container}>
                 {/* --------------------------- Mobile Section  ------------------------------*/}
-                <MobileTopSection />
+                <MobileTopSection onConfirmButtonClick={handleCloseButtonClick} />
                 {/* -----------------------------------------------------------------------*/}
 
                 <div className={styles.parents}>
@@ -361,11 +396,11 @@ export default function Signup(): JSX.Element {
                                             ) : null}
                                         </div>
                                     </div>
-                                    {/* {formValues.email && (
+                                    {formValues.email && (
                                         <div className={styles.tooltip}>
                                             <p>Wrong Email | Please fill in with the correct email e.g. email-name@gmail.com</p>
                                         </div>
-                                    )} */}
+                                    )}
                                     {
                                         !isEmailValid && formValues.email.trim() !== '' ?
                                             <div className={styles.tooltip}>
@@ -468,8 +503,21 @@ export default function Signup(): JSX.Element {
                                     <p>LOG IN</p>
                                 </div>
                             </div>
+                            <div className={styles.mobileHide}>
+                                <Footer status={false} />
+                            </div>
+
                         </div>
-                        <Footer status={false} />
+
+                        <div className={`${styles.bottomSection} ${styles.displayNone} `}>
+                            <div onClick={setMobileAnimation} className={`${styles.buttonInstruction}`}>
+                                <img src="/icons/Play.svg" alt="" />
+                            </div>
+                            <Footer status={false} />
+                        </div>
+
+
+
                     </div>
                 </div>
 

@@ -1,0 +1,144 @@
+.displayNone{
+    display: none;
+}
+
+@media (max-width:361px) {
+    .mobileLidarSection {
+        display: flex;
+        align-items: center;
+        width: auto;
+        height: auto;
+        margin-top: 60px;
+        padding-left: 5px;
+
+        gap: 10px;
+    }
+
+    .mobileLidarSection div {
+        max-height: 38px;
+    }
+
+    .routeSection {
+        display: flex;
+        align-items: center;
+        background-color: #60E3D5;
+        border: 2px solid #0567A6;
+        border-radius: 30px;
+        padding-left: 20px;
+        padding-right: 20px;
+        /* padding-top: 10px;
+        padding-bottom: 10px; */
+        gap: 8px;
+
+        font-family: Inter;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 19px;
+        letter-spacing: 0em;
+        text-align: left;
+        color: #fff;
+
+    }
+
+    .routeSection img {
+        width: 18px;
+        height: 18px;
+    }
+
+
+
+    .lidarSection {
+        display: flex;
+        align-items: center;
+
+        width: max-content;
+        height: auto;
+        background-color: #0567A6;
+        border: 2px solid #60E3D5;
+        border-radius: 30px;
+        padding: 0;
+        padding-left: 15px;
+        padding-right: 15px;
+
+
+        font-family: Inter;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 17px;
+        letter-spacing: 0em;
+        text-align: left;
+        color: #FFFFFF;
+
+    }
+
+
+    .toggleSwitch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+    }
+
+    .toggleInput {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #60E3D5;
+        /* Default color */
+        transition: 0.4s;
+        border-radius: 12px;
+
+        /* Half of the height to make it a circle */
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        /* Height of the knob */
+        width: 20px;
+        /* Width of the knob */
+        left: 2px;
+        /* Adjust based on knob size */
+        bottom: 2px;
+        /* Adjust based on knob size */
+        background-color: #60E3D5;
+        /* Default knob color */
+        transition: 0.4s;
+        border-radius: 50%;
+        /* Make it circular */
+        border: 5px solid #0567A6;
+        /* Add border to create a hole in the center */
+        box-sizing: border-box;
+        /* Include border in dimensions */
+    }
+
+    input:checked+.slider {
+        background-color: #0567A6;
+        /* Color when checked */
+    }
+
+    input:focus+.slider {
+        box-shadow: 0 0 1px #2196f3;
+    }
+
+    input:checked+.slider:before {
+        transform: translateX(26px);
+        /* Move knob when checked */
+        background-color: #60E3D5;
+        /* Knob color when checked */
+        border-color: #60E3D5;
+        /* Border color when checked */
+    }
+
+
+}

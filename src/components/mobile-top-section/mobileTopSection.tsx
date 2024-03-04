@@ -1,20 +1,39 @@
-import { FC, useState } from 'react'; // Import FC (FunctionComponent) for type annotations
-import { useRouter } from 'next/navigation';
+// mobiletopsection.tsx
+import { FC, useEffect, useState } from 'react';
 import styles from './mobileTopSection.module.css';
 import CloseButton from "@/components/close-button/closeButton";
+import { usePathname } from 'next/navigation'
 
-const MobileTopSection = () => {
-    const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
+interface MobileTopSectionProps {
+    onConfirmButtonClick: () => void;
+}
 
-    const onConfirmButtonClick = (): void => {
-        setShowConfirmDialog(true);
-    };
+const MobileTopSection: FC<MobileTopSectionProps> = ({ onConfirmButtonClick }) => {
+    const [username, setUsername] = useState<string>('');
+    const [full_name, setFull_name] = useState<string>('');
+    const [unit_name, setUnit_name] = useState<string>('');
+
+    useEffect(() => {
+        setUsername(sessionStorage.getItem('username') || '');
+        setFull_name(sessionStorage.getItem('full_name') || '');
+        setUnit_name(sessionStorage.getItem('unit_name') || '');
+    })
+
+    const pathname = usePathname()
+
+    console.log(pathname);
+
+
 
     return (
         <>
             <div className={`${styles.topSection} ${styles.displayFlex} ${styles.displayNone}`}>
                 <img src="/images/Backhoe.png" alt="" />
-                <p>Loc Map</p>
+                <p className={pathname != "/" ? styles.mobileDisplayNone : ''}>Loc Map</p>
+                <div className={`${styles.displayNone} ${pathname != "/" ? styles.greetings : ""}`}>
+                    <img src="/icons/Icon-person-white.svg" alt="" />
+                    <p>{`Welcome, ${full_name} - (${unit_name})!`}</p>
+                </div>
                 <CloseButton onClick={onConfirmButtonClick} />
             </div>
         </>

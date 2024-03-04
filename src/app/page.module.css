@@ -1251,7 +1251,7 @@
     width: 100%;
     overflow-y: auto;
     height: auto;
-    max-height: 557px;
+    max-height: 420px;
     border-radius: 5px;
   }
 
@@ -1264,7 +1264,7 @@
   .table {
     font-family: "Inter", "Content";
     width: 100%;
-    height: auto;
+    height: 80%;
   }
 
   .table th,
@@ -1400,9 +1400,25 @@
     height: 20px;
   }
 
+  .alertBox {
+    border: 2px solid rgba(255, 117, 130, 1);
+    border-radius: 3px;
+    padding: 0;
+    padding-left: 15px;
+    padding-right: 15px;
 
-  /* .loginFormButton img {
-    height: 14.57px;
-    width: 12px;
-  } */
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 17px;
+    letter-spacing: 0em;
+    text-align: left;
+
+  }
+
+  .alertBox img {
+    width: 23px;
+    height: 23px;
+  }
+
 }

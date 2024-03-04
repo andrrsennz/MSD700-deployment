@@ -6,7 +6,7 @@ import CloseButton from '@/components/close-button/closeButton';
 import Footer from '@/components/footer/footer';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
-import ControlNonIndex from '@/components/control-non-index/controlNonIndex';
+
 import ControlIndex from '@/components/control-index/controlIndex';
 import Script from 'next/script';
 import Head from 'next/head';
@@ -14,6 +14,10 @@ import axios from 'axios';
 import ControlInstruction from '@/components/control-instruction/controlInstruction';
 import ButtonInformation from '@/components/unit-information-button/unitInformationButton';
 import TokenExpired from '@/components/token-expired/tokenExpired';
+import MobileTopSection from '@/components/mobile-top-section/mobileTopSection';
+import MobileNavigation from '@/components/mobile-navigation/mobileNavigation';
+import ControlNonIndex from '@/components/control-non-index/controlNonIndex';
+import MobileInstruction from '@/components/mobile-instruction/mobileInstruction';
 
 const Control: React.FC = () => {
   const [mapIndex, setMapIndex] = useState<number>(-1);
@@ -23,6 +27,8 @@ const Control: React.FC = () => {
   const [showControlInstruction, setShowControlInstruction] = useState<boolean>(false); // Added state
   const [firstLoaded, setFirstLoaded] = useState<string>('false')
   const [tokenExpired, setTokenExpired] = useState<boolean>(false);
+  const [mobileNavigation, setMobileNavigation] = useState<boolean>(false);
+  const [mobileInstruction, setMobileInstruction] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -75,9 +81,22 @@ const Control: React.FC = () => {
     setFirstLoaded('false')
   };
 
+  const handleCloseButtonClick = () => {
+    setShowConfirmDialog(true); // or false, depending on your logic
+  };
+
+  const handleMobileNavigation = () => {
+    setMobileNavigation(!mobileNavigation);
+  }
+
+  const handleMobileInstruction = () => {
+    setMobileInstruction(!mobileInstruction);
+  }
 
   return (
     <>
+
+
       {render ? (
         <>
           <Head>
@@ -91,15 +110,29 @@ const Control: React.FC = () => {
           />
           <TokenExpired status={tokenExpired} />
           {showControlInstruction || firstLoaded == 'true' ? <ControlInstruction onClick={handleControlInstructionClick} imgUrl='/images/instruction_ control.png' /> : ''}
+          {mobileNavigation ? <MobileNavigation onClick={handleMobileNavigation} /> : ""}
+          {mobileInstruction ? <MobileInstruction onClick={handleMobileInstruction} imgUrl={"/images/mobile_instruction_control.svg"} /> : ""}
+
           {mapIndex < 0 ? (
             <div className={styles.container}>
-              <div className={styles.parents}>
-                <CloseButton onClick={onConfirmButtonClick} />
-                <div className={styles.navigation}>
+              {/* --------------------------- Mobile Section  ------------------------------*/}
+              <MobileTopSection onConfirmButtonClick={handleCloseButtonClick} />
+              {/* -----------------------------------------------------------------------*/}
+
+              <div className={`${styles.parents}`}>
+                <div className={`${styles.mobileHide}`}>
+                  <CloseButton onClick={onConfirmButtonClick} />
+                </div>
+
+                {/* --------------------------- Mobile Section  ------------------------------*/}
+                <div className={`${styles.topSection} ${styles.displayNone}`}></div>
+                {/* -----------------------------------------------------------------------*/}
+
+                <div className={`${styles.navigation}  ${styles.mobileHide}`}>
                   <Navigation />
                 </div>
-                <ControlNonIndex />
-                <Footer status={false /* or false */} />
+                <ControlNonIndex handleMobileNavigation={handleMobileNavigation} handleMobileInstruction={handleMobileInstruction} />
+
               </div>
             </div>
           ) : (

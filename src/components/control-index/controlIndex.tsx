@@ -351,11 +351,6 @@ export default function Mapping() {
     else if (multiPointMode == true) {
       multiPointMode = false
       gridClient.navigator.multiPointMode(false);
-      var button = document.getElementById("multiModeButton")
-      if (button != null) {
-        button.innerText = "Multi Pin Point Mode"
-        console.log("button changes")
-      }
     }
   }
 
@@ -363,21 +358,11 @@ export default function Mapping() {
     if (singlePointMode == false) {
       singlePointMode = true;
       gridClient.navigator.singlePointMode(true);
-      var button = document.getElementById("singleModeButton")
-      if (button != null) {
-        button.innerText = "Finish Pin Point Mode"
-        console.log("button changes")
-      }
     }
 
     else if (singlePointMode == true) {
       singlePointMode = false
       gridClient.navigator.singlePointMode(false);
-      var button = document.getElementById("singleModeButton")
-      if (button != null) {
-        button.innerText = "Single Pin Point Mode"
-        console.log("button changes")
-      }
     }
   }
   //start navigation after multi pin point arranged
@@ -400,23 +385,11 @@ export default function Mapping() {
     if (getInit == false) {
       getInit = true;
       gridClient.navigator.initPose(true);
-      var button = document.getElementById("initButton")
-      if (button != null) {
-        button.innerText = "Done Initial Pose"
-        console.log("button changes")
-      }
-      console.log("initial pose")
     }
 
     else if (getInit == true) {
       getInit = false
       gridClient.navigator.initPose(false);
-      var button = document.getElementById("initButton")
-      if (button != null) {
-        button.innerText = "Initial Pose"
-        console.log("button changes")
-      }
-      console.log("initial pose done")
     }
   }
 
@@ -426,21 +399,11 @@ export default function Mapping() {
     if (setHomeBaseMode == false) {
       setHomeBaseMode = true;
       gridClient.navigator.setHomeBasePoint(true);
-      var button = document.getElementById("setHomebtn")
-      if (button != null) {
-        button.innerText = "Done Set Home Base"
-        console.log("button changes")
-      }
     }
     else if (setHomeBaseMode == true) {
       setHomeBaseMode = false;
       gridClient.navigator.setHomeBasePoint(false);
       getHomeBasePoint();
-      var button = document.getElementById("setHomebtn")
-      if (button != null) {
-        button.innerText = "Set Home Base"
-        console.log("button changes")
-      }
     }
 
   }
@@ -495,8 +458,6 @@ export default function Mapping() {
       selectedFunction(); // Call the corresponding function
     }
   };
-
-
 
   const deletePinPoint = () => {
     if (selectedOption == "mode-list-1" || selectedOption == "mode-list-2") {

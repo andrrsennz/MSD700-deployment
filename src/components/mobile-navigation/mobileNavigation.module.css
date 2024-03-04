@@ -1,0 +1,84 @@
+.displayNone {
+    display: none;
+}
+
+@media (max-width:361px) {
+    .mobileNavigation::before {
+        content: "";
+        display: block !important;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        /* Your desired color */
+        opacity: 0.2;
+        /* Adjust the opacity to control the color intensity */
+        z-index: 3;
+        /* Place it in front of other content */
+    }
+
+    .mobileDisplayFlex {
+        display: flex;
+        z-index: 1000;
+    }
+
+    .navigationSection {
+        width: auto;
+        height: auto;
+        gap: 20px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        z-index: 5;
+
+        display: flex;
+        flex-direction: column;
+
+        background-color: #D0E1E7;
+        border: 3px solid #0C98B4;
+        border-radius: 20px;
+
+        padding: 20px;
+    }
+
+    .divNavigation {
+        width: 200px;
+        /* Set a fixed width for all divNavigation elements */
+        display: flex;
+        align-items: center;
+        /* Align items vertically center */
+        justify-content: flex-start;
+        /* Align items horizontally to the start */
+        gap: 8px;
+        background: #0567a6;
+        font-family: Inter;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 19px;
+        letter-spacing: 0em;
+        text-align: left;
+        color: #ffffff;
+        border: 2px solid #60e3d5;
+        border-radius: 25px;
+        padding-left: 20px;
+    }
+
+    .active {
+        background-color: #60e3d5;
+        /* Use !important to ensure overriding other styles */
+    }
+
+    .emergencyButton {
+        margin-top: 12px;
+        background-color: #C66E87;
+        border: 2px solid #FF7582;
+    }
+
+    .emergencyButton:hover {
+        background-color: #FF7582;
+    }
+}

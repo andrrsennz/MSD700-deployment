@@ -30,6 +30,10 @@
     z-index: 3;
 }
 
+.displayNone {
+    display: none;
+}
+
 
 
 
@@ -61,4 +65,15 @@
     .parents {
         max-width: 100%;
     }
+}
+
+@media (max-width:361px) {
+    .mobileHide {
+        display: none;
+    }
+
+    .container {
+        background-image: url('/images/Walpaper_without_watermark.png');
+    }
+
 }

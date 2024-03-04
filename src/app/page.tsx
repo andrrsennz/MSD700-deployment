@@ -328,6 +328,11 @@ export default function Home(): JSX.Element {
     setInstructionShowed(!instructionShowed)
   }
 
+  const handleCloseButtonClick = () => {
+    setShowConfirmDialog(true); // or false, depending on your logic
+  };
+
+
   return (
     <>
       <ConfirmElement
@@ -403,7 +408,7 @@ export default function Home(): JSX.Element {
       <div className={styles.container}>
 
         {/* --------------------------- Mobile Section  ------------------------------*/}
-        <MobileTopSection />
+        <MobileTopSection onConfirmButtonClick={handleCloseButtonClick} />
         {/* -----------------------------------------------------------------------*/}
 
         <div className={`${styles.topSection} ${styles.mobileHide}`}>
@@ -817,7 +822,6 @@ export default function Home(): JSX.Element {
         </div>
 
         {/* --------------------------- Mobile Section  ------------------------------*/}
-
 
         <div className={`${styles.mobileInstruction} ${styles.displayNone} ${styles.mobileDisplayFlex}`}>
           {instructionShowed ? (<div className={`${styles.instruction}`}>

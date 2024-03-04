@@ -88,7 +88,7 @@
     gap: 10px;
 }
 
-.loginButton:hover{
+.loginButton:hover {
     cursor: pointer;
     box-shadow: 0px 4px 4px 0px #0567A680;
     transition: 0.5s;
@@ -100,4 +100,73 @@
     bottom: 0;
     right: 0;
     padding: 20px;
+}
+
+@media (max-width:361px) {
+
+    .centerDiv {
+        width: auto;
+    }
+
+    .centerDiv .text img {
+        width: 13px;
+        height: 13px;
+        margin-left: 10px;
+    }
+
+    .text {
+        width: max-content;
+        height: max-content;
+        border: 2px solid #60E3D5;
+        border-radius: 5px;
+        padding-right: 10px;
+
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 17px;
+        letter-spacing: 0em;
+        text-align: left;
+
+    }
+
+    .loginButton {
+        width: auto;
+        height: auto;
+        border: 2px solid #60E3D5;
+        border-radius: 5px;
+
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 17px;
+        letter-spacing: 0em;
+        text-align: left;
+
+        gap: 10px;
+        padding: 0;
+        padding-left: 8px;
+        padding-right: 8px;
+        /* padding-top: 7px;
+        padding-bottom: 7px; */
+    }
+
+    .loginButton img{
+        width: 20px;
+        height: 20px;
+    }
+    
+    .loginButton:hover {
+        cursor: pointer;
+        box-shadow: 0px 4px 4px 0px #0567A680;
+        transition: 0.5s;
+
+    }
+
+    .footer {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        padding: 20px;
+
+        z-index: 100;
+    }
 }

@@ -28,7 +28,7 @@ const ClosingPage: React.FC = () => {
         </div>
         <div className={style.loginButton} onClick={goToSigninPage}>
           <img src="/icons/Login.svg" alt=""  />
-          <p>Go to LOGIN page</p>
+          <p>LOG IN</p>
         </div>
       </div>
 
