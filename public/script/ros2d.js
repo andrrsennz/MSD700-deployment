@@ -1368,3 +1368,43 @@ ROS2D.Rotate.prototype.resetRotate = function() {
   this.stage.rotation = 0;
 
 };
+
+/**
+ * @fileOverview
+ * @author Bart van Vliet - bart@dobots.nl
+ */
+
+/**
+ * Adds rotate map view feature
+ *
+ * @constructor
+ * @param options - object with following keys:
+ *   * rootObject (optional) - the root object to apply rotation to
+ */
+ROS2D.FocusView = function(options) {
+	options = options || {};
+	this.rootObject = options.rootObject;
+
+	// get a handle to the stage
+	if (this.rootObject instanceof createjs.Stage) {
+		this.stage = this.rootObject;
+	}
+	else {
+		this.stage = this.rootObject.getStage();
+	}
+
+	// this.startPos = new ROSLIB.Vector3();
+};
+
+
+ROS2D.FocusView.prototype.updateStagePos = function(x,y) {
+  var containerWidth = this.stage.canvas.width;
+  var containerHeight = this.stage.canvas.height;
+  this.stage.x = containerWidth/2 - x*50;
+  this.stage.y = containerHeight/2 - y*50 - 150;
+  console.log("stage x: ",this.stage.x);
+  console.log("stage y: ",this.stage.y);
+  console.log("position updated");
+
+};
+
