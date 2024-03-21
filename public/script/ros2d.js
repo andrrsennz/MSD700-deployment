@@ -1401,7 +1401,7 @@ ROS2D.FocusView.prototype.updateStagePos = function(x,y) {
   var containerWidth = this.stage.canvas.width;
   var containerHeight = this.stage.canvas.height;
   this.stage.x = containerWidth/2 - x*50;
-  this.stage.y = containerHeight/2 - y*50 - 150;
+  this.stage.y = containerHeight/2 - y*50 - (containerHeight/1070*120);
   console.log("stage x: ",this.stage.x);
   console.log("stage y: ",this.stage.y);
   console.log("position updated");

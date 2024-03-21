@@ -361,30 +361,6 @@ NAV2D.Navigator = function (options) {
   
     }
 
-    function overlayPose(pose) {
-
-      that.overlayPoint = pose;
-
-      that.overlayMarker = new ROS2D.NavigationImage({
-        size: 25,
-        strokeSize: 1,
-        fillColor: createjs.Graphics.getRGB(0, 0, 255, 0.66),
-        pulse: false,
-        imageUrl: "/icons/pin-point.png",
-      });
-      that.rootObject.addChild(that.overlayMarker);
-  
-
-      that.overlayMarker.x = pose.position.x;
-      that.overlayMarker.y = -pose.position.y;
-      that.overlayMarker.rotation = stage.rosQuaternionToGlobalTheta(
-        pose.orientation
-      );
-      that.overlayMarker.scaleX = 1.0 / stage.scaleX;
-      that.overlayMarker.scaleY = 1.0 / stage.scaleY;
-  
-    }
-
       /**
    * Send a goal to the navigation stack with the given pose.
    *
@@ -423,22 +399,6 @@ NAV2D.Navigator = function (options) {
    *
    * @param pose - the goal pose
    */
-  async function startNav(){
-        // create a goal
-        var length = that.multiPose.length;
-        navigationStart = true;
-        for(var i=0;i<length;i++){
-          await asyncFunc(i);
-          that.rootObject.removeChild(that.multigoalMark[i]);
-
-        }
-        that.multigoalMark = [];
-        that.multiPose = [];
-        that.poseList = [];
-        navigationStart = false;
-        withCommand = true;
-
-  }
 
   function startSingleNav(){
     navigationStart = true;
@@ -638,8 +598,15 @@ NAV2D.Navigator = function (options) {
     robotMarker.y = -pose.y;
     if (focusView) {
       console.log("x coordinate: ",pose.x);
-      console.log("y coordinate: ",-pose.y);
-      focusV.updateStagePos(pose.x,-pose.y);
+      console.log("y coordinate: ",pose.y);
+      if (mapRotated) {
+        var posroted = rotateCoordinates(pose.x,pose.y,-degreeRot);
+        var posex = posroted.x;
+        var posey = posroted.y;
+        focusV.updateStagePos(posex,-posey);
+      } else {
+        focusV.updateStagePos(pose.x,-pose.y);
+      }
     }
     // console.log(initScaleSet);
     if (!initScaleSet) {
@@ -651,6 +618,17 @@ NAV2D.Navigator = function (options) {
       that.overlayMarker.scaleY = 1.0 / stage.scaleY;
       rtrnhomeMarker.scaleX = 1.0 / stage.scaleX;
       rtrnhomeMarker.scaleY = 1.0 / stage.scaleY;
+      if (that.goalMarker !== null) {
+        that.goalMarker.scaleX = 1.0 / stage.scaleX;
+        that.goalMarker.scaleY = 1.0 / stage.scaleY;
+      }
+      if (that.multigoalMark !== null) {
+        var length = that.multigoalMark.length;
+        for (var i=0; i<length; i++) {
+          that.multigoalMark[i].scaleX = 1.0 / stage.scaleX;
+          that.multigoalMark[i].scaleY = 1.0 / stage.scaleY;
+        }
+      }
       initScaleSet = true;
     }
     // change the angle
