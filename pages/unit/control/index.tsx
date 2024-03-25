@@ -91,6 +91,7 @@ const Control: React.FC = () => {
 
   const handleMobileInstruction = () => {
     setMobileInstruction(!mobileInstruction);
+    sessionStorage.setItem('firstLoadControlPage', 'false')
   }
 
   return (
@@ -111,7 +112,7 @@ const Control: React.FC = () => {
           <TokenExpired status={tokenExpired} />
           {showControlInstruction || firstLoaded == 'true' ? <ControlInstruction onClick={handleControlInstructionClick} imgUrl='/images/instruction_ control.png' /> : ''}
           {mobileNavigation ? <MobileNavigation onClick={handleMobileNavigation} /> : ""}
-          {mobileInstruction ? <MobileInstruction onClick={handleMobileInstruction} imgUrl={"/images/mobile_instruction_control.svg"} /> : ""}
+          {mobileInstruction || firstLoaded == 'true' ? <MobileInstruction onClick={handleMobileInstruction} imgUrl={"/images/mobile_instruction_control.svg"} /> : ""}
 
           {mapIndex < 0 ? (
             <div className={styles.container}>
@@ -132,11 +133,14 @@ const Control: React.FC = () => {
                   <Navigation />
                 </div>
                 <ControlNonIndex handleMobileNavigation={handleMobileNavigation} handleMobileInstruction={handleMobileInstruction} />
-
               </div>
             </div>
           ) : (
-            <ControlIndex />
+            <>
+              {/* --------------------------- Mobile Section  ------------------------------*/}
+              <MobileTopSection onConfirmButtonClick={handleCloseButtonClick} />
+              <ControlIndex handleMobileNavigation={handleMobileNavigation} handleMobileInstruction={handleMobileInstruction} />
+            </>
           )}
 
 

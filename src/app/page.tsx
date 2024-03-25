@@ -30,20 +30,6 @@ export default function Home(): JSX.Element {
 
   const [data, setData] = useState<any[]>([]);
 
-  var dummyData = [
-    { id: 1, unit: "Unit A", user_id: 1, status: "on", battery: "", uptime: '' },
-    { id: 2, unit: "Unit B", user_id: 1, status: "on", battery: "", uptime: '' },
-    { id: 7, unit: "Unit C", user_id: 1, status: "on", battery: "", uptime: '' },
-    { id: 13, unit: "Unit D", user_id: 1, status: "off", battery: "", uptime: '' },
-    { id: 14, unit: "tess", user_id: 1, status: "off", battery: "", uptime: '' },
-    { id: 15, unit: "asas", user_id: 1, status: "off", battery: "", uptime: '' },
-    { id: 16, unit: "asasasas", user_id: 1, status: "off", battery: "", uptime: '' },
-    { id: 17, unit: "asasasa", user_id: 1, status: "off", battery: "", uptime: '' },
-    { id: 18, unit: "asasasas", user_id: 1, status: "off", battery: "", uptime: '' },
-    { id: 19, unit: "asasasasa", user_id: 1, status: "off", battery: "", uptime: '' },
-    { id: 20, unit: "asasasasas", user_id: 1, status: "off", battery: "", uptime: '' }
-  ];
-
 
   const [showIncorrectPassword, setShowIncorrectPassword] = useState<boolean>(false);
 
@@ -64,6 +50,9 @@ export default function Home(): JSX.Element {
 
   const onProceedButtonClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
+    setShowUtilSection(false);
+    setData([]);
+
     const username = document.getElementById("username") as HTMLInputElement;
     const password = document.getElementById("password") as HTMLInputElement;
     axios.post(`${backendUrl}/user/login`, {
@@ -296,6 +285,7 @@ export default function Home(): JSX.Element {
 
         if (response.data.success) {
           setRegisterSuccess(true);
+          setShowRegisterUnitColumn(false);
           setTimeout(() => setRegisterSuccess(false), 2000); // Hide the success message after 2 seconds
           fetchUnitData(token); // Fetch unit data again to update the list
         } else {
@@ -468,24 +458,26 @@ export default function Home(): JSX.Element {
                   <div className={styles.inputUnit}>
                     <label htmlFor="password">Password</label>
                     <p className={styles.separateElement}>:</p>
-                    <div className={styles.passwordInputContainer}>
+                    <div className={`${styles.passwordInputContainer} ${showIncorrectPassword ? styles.passwordInputInvalid : ''}`}>
                       <input
                         type={showPassword ? 'text' : 'password'}
                         id="password"
                         name="password"
                         defaultValue=""
                         required
+                        className={true ? styles.passwordInput : ""}
                       // Disable the input if showUtilSection is true
                       />
                       <div className={styles.passwordStatusButton}>
-                        <Image
+                        <img src="/icons/Eye.svg" alt="Picture of the author" onClick={() => setShowPassword(!showPassword)} style={{ cursor: showUtilSection ? 'not-allowed' : 'pointer' }} />
+                        {/* <Image
                           src="/icons/Eye.svg"
                           alt="Picture of the author"
                           width={30}
                           height={30}
-                          onClick={() => setShowPassword(!showPassword)}
-                          style={{ cursor: showUtilSection ? 'not-allowed' : 'pointer' }} // Set cursor style based on showUtilSection
-                        />
+                          
+                           // Set cursor style based on showUtilSection
+                        /> */}
                       </div>
                     </div>
                   </div>
@@ -528,7 +520,7 @@ export default function Home(): JSX.Element {
                           </tr>
                         </thead>
                         <tbody>
-                          {dummyData.map((item, idx) => (
+                          {data.map((item, idx) => (
                             <tr
                               key={idx}
                               onClick={() => handleRowClick(idx)}
@@ -570,7 +562,7 @@ export default function Home(): JSX.Element {
           </div>
 
           <div className={styles.registerSection}>
-            {true ? (<>
+            {showUtilSection ? (<>
               <div className={styles.textSection}>
                 <p>Is the unit not registered yet?</p>
               </div>
@@ -583,11 +575,16 @@ export default function Home(): JSX.Element {
                 />
                 <p>UNIT REGISTER</p>
               </div>
+              <p className={styles.orText}>OR</p>
             </>) : ""}
 
-            <div className={styles.textSection}>
-              <p>Don't have an account yet?</p>
-            </div>
+
+
+            {!showUtilSection ? <>
+              <div className={styles.textSection}>
+                <p>Don't have an account yet?</p>
+              </div>
+            </> : <></>}
             <div className={styles.buttonRegister} onClick={goToSignUpPage}>
               <Image
                 src="/icons/buttonregister.svg"
@@ -599,7 +596,9 @@ export default function Home(): JSX.Element {
             </div>
           </div>
 
-          <Footer status={true} />
+          <div className={styles.footer}>
+            <Footer status={true} />
+          </div>
         </div>
         {/* -----------------------------------------------------------------------*/}
 
@@ -715,7 +714,7 @@ export default function Home(): JSX.Element {
                           </tr>
                         </thead>
                         <tbody>
-                          {dummyData.map((item, idx) => (
+                          {data.map((item, idx) => (
                             <tr
                               key={idx}
                               onClick={() => handleRowClick(idx)}

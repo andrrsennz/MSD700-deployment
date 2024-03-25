@@ -509,11 +509,15 @@ export default function Signup(): JSX.Element {
 
                         </div>
 
+                        <div onClick={setMobileAnimation} className={`${styles.buttonInstruction}`}>
+                            <img src="/icons/Play.svg" alt="" />
+                        </div>
+
                         <div className={`${styles.bottomSection} ${styles.displayNone} `}>
-                            <div onClick={setMobileAnimation} className={`${styles.buttonInstruction}`}>
-                                <img src="/icons/Play.svg" alt="" />
+
+                            <div className={styles.mobileFooter}>
+                                <Footer status={false} />
                             </div>
-                            <Footer status={false} />
                         </div>
 
 

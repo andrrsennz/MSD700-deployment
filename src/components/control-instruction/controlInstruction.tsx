@@ -15,7 +15,7 @@ const ControlInstruction: React.FC<ControlInstructionProps> = ({ onClick, imgUrl
   };
 
   return (
-    <div className={styles.ControlInstruction} onClick={onClick}>
+    <div className={`${styles.ControlInstruction} ${styles.mobileHide}`} onClick={onClick}>
       <img src={imgUrl} alt="" style={style} />
     </div>
   );

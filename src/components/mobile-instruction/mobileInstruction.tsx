@@ -21,7 +21,7 @@ const MobileInstruction: React.FC<mobileInstruction> = ({ onClick, imgUrl }) => 
             className={`${styles.displayNone} ${styles.mobileInstructionBackground} ${styles.mobileDisplayFlex}`}
             onClick={onClick}
         >
-            <div className={styles.mobileInstruction}>
+            <div className={`${styles.mobileInstruction} ${pathname == "/unit/mapping" || pathname == "/unit/database" ? styles.mobileFitContent : ""}`}  onClick={onClick}>
                 <img src={`${imgUrl}`} alt="" />
             </div>
         </div>

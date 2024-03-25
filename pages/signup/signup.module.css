@@ -330,7 +330,7 @@
 }
 
 .displayNone {
-    display: none ;
+    display: none;
 }
 
 
@@ -696,7 +696,7 @@
         text-align: left;
 
         width: 85px;
-        height: 35px;
+        height: 25px;
         padding: 5px;
         border-radius: 3.94px;
         border: 2px solid #60E3D5;
@@ -710,10 +710,17 @@
     }
 
     .bottomSection {
+        margin-top: 15px;
         width: 100%;
         display: flex !important;
         align-items: center;
-        justify-content: center;
+        justify-content: end;
+    }
+
+    .bottomSection .mobileFooter{
+        padding-top: 20px;
+        padding-right: 10px;
+        
     }
 
     .divPasswordSection {
@@ -731,6 +738,10 @@
         align-items: center;
         border: 2px solid #60E3D5;
         margin-left: 10px;
+
+        position: absolute;
+        bottom: 70px;
+        left: 0;
     }
 
     .buttonInstruction img {
@@ -815,11 +826,11 @@
         color: #ECF4F6;
     }
 
-    .iconStatusColumnButton{
+    .iconStatusColumnButton {
         top: 65% !important;
     }
 
-    .iconStatusColumnButton img{
+    .iconStatusColumnButton img {
         width: 17px;
         height: 17px;
     }

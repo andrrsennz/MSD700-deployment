@@ -22,3 +22,9 @@
 .ControlInstruction:hover {
     cursor: pointer;
 }
+
+@media (max-width:361px) {
+    .mobileHide {
+        display: none;
+    }
+}

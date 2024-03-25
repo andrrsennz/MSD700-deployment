@@ -21,10 +21,6 @@ const MobileTopSection: FC<MobileTopSectionProps> = ({ onConfirmButtonClick }) =
 
     const pathname = usePathname()
 
-    console.log(pathname);
-
-
-
     return (
         <>
             <div className={`${styles.topSection} ${styles.displayFlex} ${styles.displayNone}`}>

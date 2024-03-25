@@ -14,8 +14,17 @@ import mqtt from "mqtt";
 import ButtonInformation from "@/components/unit-information-button/unitInformationButton";
 import ControlInstruction from "@/components/control-instruction/controlInstruction";
 import TokenExpired from "@/components/token-expired/tokenExpired";
+import MobileLidarSection from "@/components/mobile-lidar-section/mobileLidarSection";
+import MobileTopSection from "@/components/mobile-top-section/mobileTopSection";
+import MapPreviewSection from "@/components/mobile-map-preview-section/mobileMapPreviewSection";
+import MobileBottomSection from "@/components/mobile-bottom-section/mobileBottomSection";
+import MobileNavigation from "@/components/mobile-navigation/mobileNavigation";
+import MobileInstruction from "@/components/mobile-instruction/mobileInstruction";
 
-interface MappingProps { }
+interface MappingProps {
+    handleMobileNavigation: () => void; // Define handleMobileNavigation prop
+    handleMobileInstruction: () => void;
+}
 
 var ros: any
 var viewer: any
@@ -44,7 +53,7 @@ const options: Option[] = [
     { icon: '/icons/2.svg', text: 'Delete All Pinpoints' },
 ];
 
-export default function Mapping(props: MappingProps): JSX.Element {
+const Mapping: React.FC<MappingProps> = () => {
     const [showConfirmClosePageDialog, setShowConfirmClosePageDialog] =
         useState<boolean>(false);
     const [showConfirmMappingDialog, setShowConfirmMappingDialog] =
@@ -66,6 +75,13 @@ export default function Mapping(props: MappingProps): JSX.Element {
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
     const [firstLoaded, setFirstLoaded] = useState<string>('false')
     const [tokenExpired, setTokenExpired] = useState<boolean>(false);
+    const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
+    const [mapPreview, setMapPreview] = useState(false);
+    const [mapPreviewStatus, setMapPreviewStatus] = useState(0);
+    const [lidarExtend, setLidarExtend] = useState<Boolean>(false);
+    const [controlExtend, setControlExtend] = useState<Boolean>(false);
+    const [mobileNavigation, setMobileNavigation] = useState<boolean>(false);
+    const [mobileInstruction, setMobileInstruction] = useState<boolean>(false);
 
     const handleOptionClick = (text: string): void => {
         if (text === 'Delete All Pinpoints') {
@@ -376,6 +392,36 @@ export default function Mapping(props: MappingProps): JSX.Element {
         setFirstLoaded('false')
     };
 
+    const handleCloseButtonClick = () => {
+        setShowConfirmDialog(true); // or false, depending on your logic
+    };
+
+    const handleMapPreview = () => {
+        setMapPreview(!mapPreview)
+    }
+
+    const handleMapPreviewStatus = (value: any) => {
+        setMapPreviewStatus(value)
+    }
+
+    const handleLidarExtend = () => {
+        setLidarExtend(!lidarExtend)
+    }
+
+    const handleControlExtend = () => {
+        setControlExtend(!controlExtend)
+    }
+
+    const handleMobileNavigation = () => {
+        setMobileNavigation(!mobileNavigation);
+    }
+
+    const handleMobileInstruction = () => {
+        setMobileInstruction(!mobileInstruction);
+        sessionStorage.setItem('firstLoadMappingPage', 'false')
+        setFirstLoaded('false')
+    }
+
     return (
         <> {render ?
             (
@@ -397,10 +443,20 @@ export default function Mapping(props: MappingProps): JSX.Element {
                     />
                     <MapSaving status={savingConfirmDialog} />
                     <TokenExpired status={tokenExpired} />
+                    {mobileNavigation ? <MobileNavigation onClick={handleMobileNavigation} /> : ""}
+                    {mobileInstruction || firstLoaded == 'true' ? <MobileInstruction onClick={handleMobileInstruction} imgUrl={"/images/mobile_instruction_mapping.svg"} /> : ""}
+
                     <div className={styles.container}>
                         {showControlInstruction || firstLoaded == 'true' ? <ControlInstruction onClick={handleControlInstructionClick} height={80} width={90} imgUrl='/images/instruction_mapping.svg' /> : ''}
+
                         <div className={styles.parents}>
-                            <div className={styles.statusSection}>
+                            <MobileTopSection onConfirmButtonClick={handleCloseButtonClick} />
+                            <MobileLidarSection // Use the new component here
+                                isChecked={isChecked}
+                                handleCheckboxChange={handleCheckboxChange}
+                            />
+
+                            <div className={`${styles.statusSection} ${styles.mobileDisplayNone}`}>
                                 <div
                                     className={`${styles.status} ${status === "Idle" ? styles.idle : ""
                                         }`}
@@ -427,14 +483,17 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                     </label>
                                 </div>
                             </div>
-                            <CloseButton onClick={onConfirmButtonClick} />
-                            <div className={styles.navigation}>
+
+                            <div className={styles.mobileDisplayNone}>
+                                <CloseButton onClick={onConfirmButtonClick} />
+                            </div>
+
+                            <div className={`${styles.navigation} ${styles.mobileDisplayNone}`}>
                                 <Navigation imageSrc={imageBlob ? URL.createObjectURL(imageBlob) : undefined} />
                             </div>
-                            <div>
-                            </div>
-                            <div className={styles.mapSection}>
-                                <div className={styles.topDiv}>
+
+                            <div className={`${styles.mapSection} ${mapPreview ? "" : styles.mapSectionWithoutPreview}`}>
+                                <div className={`${styles.topDiv} ${styles.mobileDisplayNone}`}>
                                     <p>Create a New Map</p>
                                     <div
                                         className={`${styles.playButton} ${status == "On Progress" ? styles.buttonActive : ""
@@ -500,8 +559,11 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                         <p>Please turn on the LIDAR before mapping.</p>
                                     </div> */}
                                 </div>
+
+
+
                                 <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp}>
-                                    <div className={styles.buttonNavigation}>
+                                    <div className={`${styles.buttonNavigation} ${styles.mobileDisplayNone}`}>
                                         <div className={styles.zoomIn} onClick={zoomIn}>
                                             <img src="/icons/zoomin.svg" alt="" />
                                         </div>
@@ -515,15 +577,53 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                             <img src="/icons/new reload.svg" alt="" />
                                         </div>
                                     </div>
-                                    <div className={styles.footerMap}>
-                                        <div className={styles.emergencyButton}>
-                                            <img src="/icons/emergency.svg" alt="" />
-                                            <p>Emergency Button</p>
+
+                                    <div className={`${styles.displayNone} ${styles.controlLidarButton}`}>
+                                        <div className={`${styles.lidarButton} ${lidarExtend ? styles.mainLidarButtonActive : ""}`} onClick={handleLidarExtend}>
+                                            {lidarExtend ? <img src="/icons/plus.svg" alt="" /> : <img src="/icons/minus.svg" alt="" />}
                                         </div>
-                                        <div className={styles.mapName}>{mapName}</div>
+                                        {lidarExtend ? (
+                                            <>
+                                                <div className={`${styles.lidarButton}`}>
+                                                    <img src="/icons/3.svg" alt="" />
+                                                </div>
+                                                <div className={`${styles.lidarButton}`}>
+                                                    <img src="/icons/1.svg" alt="" />
+                                                </div>
+                                                <div className={`${styles.lidarButton} ${styles.lidarButtonActive}`}>
+                                                    <img src="/icons/Home.svg" alt="" />
+                                                </div>
+                                            </>
+                                        ) : ""}
                                     </div>
 
-                                    <div className={styles.footerMap}>
+                                    <div className={`${styles.displayNone} ${styles.controlButtonSection} `}>
+                                        <div className={`${styles.controlButton} ${controlExtend ? styles.mainControlButtonActive : ""}`} onClick={handleControlExtend}>
+                                            <img src="/icons/Dots.svg" alt="" />
+                                        </div>
+                                        {controlExtend ? <>
+                                            <div className={`${styles.controlButton}`} onClick={zoomIn}>
+                                                <img src="/icons/zoomin.svg" alt="" />
+                                            </div>
+                                            <div className={`${styles.controlButton}`} onClick={zoomOut}>
+                                                <img src="/icons/zoomout.svg" alt="" />
+                                            </div>
+                                            <div className={`${styles.controlButton}`} onClick={restart}>
+                                                <img src="/icons/Maximize.svg" alt="" />
+                                            </div>
+                                            <div className={`${styles.controlButton}`} onClick={rotateCW}>
+                                                <img src="/icons/new reload.svg" alt="" />
+                                            </div>
+                                        </> : ""}
+                                    </div>
+
+                                    <div className={`${styles.displayNone} ${styles.focusButton}`}>
+                                        <p>Focus View</p>
+                                        <img src="/icons/focus_button.svg" alt="" />
+                                    </div>
+
+
+                                    <div className={`${styles.footerMap} ${styles.mobileDisplayNone}`}>
                                         <div className={styles.emergencyButton}>
                                             <img src="/icons/emergency.svg" alt="" />
                                             <p>Emergency Button</p>
@@ -533,7 +633,32 @@ export default function Mapping(props: MappingProps): JSX.Element {
                                     {/* <img src="/icons/Frame.svg" alt="" /> */}
                                 </div>
                             </div>
-                            <Footer status={false} />
+
+                            <MapPreviewSection
+                                mapPreview={mapPreview}
+                                mapPreviewStatus={mapPreviewStatus}
+                                handleMapPreviewStatus={handleMapPreviewStatus}
+                            />
+
+                            <div className={`${styles.displayNone} ${styles.mobileBottomSection}`}>
+                                <div className={`${styles.navigationMobileButton} ${styles.bottomSectionButton}`} onClick={handleMobileNavigation}>
+                                    <img src="/icons/list.svg" alt="" />
+                                </div>
+
+                                <div className={`${styles.webcamButton} ${styles.webcamIcon} ${styles.bottomSectionButton}`} onClick={handleMapPreview}>
+                                    <img src="/icons/Webcam.svg" alt="" />
+                                </div>
+
+                                <div className={`${styles.webcamButton} ${styles.webcamIcon} ${styles.bottomSectionButton}`} onClick={handleMobileInstruction}>
+                                    <img src="/icons/information-circle-svgrepo-com.svg" alt="" />
+                                </div>
+
+                                <Footer status={false /* or false */} />
+                            </div>
+
+                            <div className={styles.mobileDisplayNone}>
+                                {/* <Footer status={false} /> */}
+                            </div>
                         </div>
                     </div>
 
@@ -549,3 +674,5 @@ export default function Mapping(props: MappingProps): JSX.Element {
         </>
     );
 }
+
+export default Mapping;

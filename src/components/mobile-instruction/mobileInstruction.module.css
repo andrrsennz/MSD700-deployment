@@ -25,8 +25,8 @@
     }
 
     .mobileInstruction {
-        width: 80%;
-        height: 60%;
+        width: 90%;
+        height: 80%;
         position: fixed;
         top: 50%;
         left: 50%;
@@ -42,5 +42,9 @@
         background-color: #D0E1E7;
         /* border: 3px solid #0C98B4; */
         border-radius: 20px;
+    }
+
+    .mobileFitContent{
+        height: fit-content;
     }
 }

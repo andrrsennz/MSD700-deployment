@@ -89,7 +89,7 @@
   align-items: center;
 
   width: 120px;
-  height: 43px;
+  height: 30px;
   background-color: #F6F0F0;
   gap: 10px;
   border-radius: 10px;
@@ -606,6 +606,21 @@
   line-height: 23px;
   letter-spacing: 0em;
   outline: none;
+}
+
+.passwordInputInvalid input[type="password"]:valid {
+  background-color: #D498A9 !important;
+}
+
+.passwordInputInvalid input[type="password"]:focus {
+  background-color: #D498A9 !important;
+  outline-color: #D498A9 !important; 
+}
+
+
+
+.passwordInput {
+  background-color: #97E5F4;
 }
 
 .passwordStatusButton {
@@ -1233,6 +1248,9 @@
     padding-right: 15px;
 
     gap: 5.5px;
+
+    top: 400px;
+    position: absolute;
   }
 
   .incorrectPassword img {
@@ -1288,7 +1306,9 @@
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    margin-top: 20px;
+    margin-top: 30px;
+    height: 170px;
+    /* background-color: red; */
   }
 
   .registerSection .textSection {
@@ -1304,6 +1324,21 @@
     line-height: 15px;
     letter-spacing: 0em;
     text-align: center;
+
+    margin-top: auto;
+  }
+
+  .orText {
+    font-family: Inter;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 15px;
+    letter-spacing: 0em;
+    text-align: center;
+    color: #0C98B4;
+
+    margin: 0;
+    padding: 0;
 
   }
 
@@ -1330,6 +1365,8 @@
     line-height: 17px;
     letter-spacing: 0em;
     text-align: left;
+    padding-top: 6.5px;
+    padding-bottom: 6.5px;
   }
 
   .mobileInstruction {
@@ -1419,6 +1456,11 @@
   .alertBox img {
     width: 23px;
     height: 23px;
+  }
+
+  .footer {
+    width: 95%;
+    margin-top: 78px;
   }
 
 }

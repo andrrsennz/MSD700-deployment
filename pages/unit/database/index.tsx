@@ -5,13 +5,16 @@ import styles from './database.module.css';
 import CloseButton from '@/components/close-button/closeButton';
 import Footer from '@/components/footer/footer';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import ConfirmDelete from '@/components/confirm-delete/confirmDelete';
 import axios from 'axios';
 import Head from 'next/head';
 import ButtonInformation from '@/components/unit-information-button/unitInformationButton';
 import ControlInstruction from '@/components/control-instruction/controlInstruction';
 import TokenExpired from '@/components/token-expired/tokenExpired';
+import MobileTopSection from '@/components/mobile-top-section/mobileTopSection';
+import MobileNavigation from '@/components/mobile-navigation/mobileNavigation';
+import MobileInstruction from '@/components/mobile-instruction/mobileInstruction';
 
 interface DataItem {
     map_name: string;
@@ -38,6 +41,7 @@ export default function Database(): JSX.Element {
     const [data, setData] = useState<DataItem[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+    const [sortOrderStatus, setSortOrderStatus] = useState<String>('name');
     const [sortDateOrder, setDateSortOrder] = useState<'asc' | 'desc'>('asc');
     const [deleteItemConfirm, setDeleteItemConfirm] = useState<boolean>(false);
     const [indexDelete, setIndexDelete] = useState<number>(0);
@@ -48,6 +52,11 @@ export default function Database(): JSX.Element {
     const [firstLoaded, setFirstLoaded] = useState<string>('false')
     const [showControlInstruction, setShowControlInstruction] = useState<boolean>(false);
     const [tokenExpired, setTokenExpired] = useState<boolean>(false);
+    const [mobileNavigation, setMobileNavigation] = useState<boolean>(false);
+    const [mobileInstruction, setMobileInstruction] = useState<boolean>(false);
+    const [mobileSorterDisplay, setMobileSorterDisplay] = useState<boolean>(false);
+    const [mobileMapDisplay, setMobileMapDisplay] = useState<boolean>(false);
+
 
     useEffect(() => {
         function checkToken() {
@@ -67,7 +76,7 @@ export default function Database(): JSX.Element {
                     setTokenExpired(true)
                 });
         }
-        
+
         function fetchData() {
             axios.get(`${backendUrl}/api/pgm_data`, {
                 headers: {
@@ -75,6 +84,17 @@ export default function Database(): JSX.Element {
                 }
             }).then((response) => {
                 const data = response.data.data;
+                data.forEach((item: any) => {
+                    // Convert modified_time string to a Date object
+                    const originalDate = new Date(item.modified_time);
+
+                    // Format the date
+                    const formattedDate = `${originalDate.getFullYear()}/${('0' + (originalDate.getMonth() + 1)).slice(-2)}/${('0' + originalDate.getDate()).slice(-2)} ${('0' + originalDate.getHours()).slice(-2)}:${('0' + originalDate.getMinutes()).slice(-2)}`;
+
+                    // Update the modified_time property with the formatted date
+                    item.modified_time = formattedDate;
+                });
+
                 setData(data);
                 setRender(true);
             }).catch((error) => {
@@ -129,16 +149,32 @@ export default function Database(): JSX.Element {
         return sortedData;
     };
 
-    const handleSortClick = () => {
-        setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-        const sortedData = sortDataByMapName(data, sortOrder);
-        setData(sortedData);
+    const handleSortClick = (status: any, condition: any) => {
+        if (status == "date") {
+            setSortOrderStatus('date')
+            if (condition.length > 0) {
+                setSortOrder(condition)
+            } else {
+                setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+            }
+            const sortedDataByDate = sortByDate(data, sortOrder);
+            setData(sortedDataByDate);
+        } else {
+            setSortOrderStatus('name')
+            if (condition.length > 0) {
+                setSortOrder(condition)
+            } else {
+                setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+            }
+
+            const sortedData = sortDataByMapName(data, sortOrder);
+            setData(sortedData);
+
+        }
     };
 
     const handleDateSortClick = () => {
-        setDateSortOrder(sortDateOrder === "asc" ? "desc" : "asc");
-        const sortedDataByDate = sortByDate(data, sortDateOrder);
-        setData(sortedDataByDate);
+
     };
 
     const onConfirmButtonClick = () => {
@@ -353,6 +389,52 @@ export default function Database(): JSX.Element {
         sessionStorage.setItem('firstLoadDatabasePage', 'false')
         setFirstLoaded('false')
     };
+
+    const handleCloseButtonClick = () => {
+        setShowConfirmDialog(true); // or false, depending on your logic
+    };
+
+    let pathname = usePathname()
+    let iconPage;
+
+    if (pathname == "/unit/control") {
+        pathname = "Unit Control"
+        iconPage = "/icons/Marker.svg"
+    }
+
+    if (pathname == "/unit/mapping") {
+        pathname = "Mapping"
+        iconPage = "/icons/mapping.svg"
+    }
+
+    if (pathname == "/unit/database") {
+        pathname = "Database"
+        iconPage = "/icons/database.svg"
+    }
+
+    const handleMobileNavigation = () => {
+        setMobileNavigation(!mobileNavigation);
+    }
+
+    const handleMobileInstruction = () => {
+        setMobileInstruction(!mobileInstruction);
+        console.log("ttt");
+
+        sessionStorage.setItem('firstLoadDatabasePage', 'false')
+        setFirstLoaded('false')
+
+    }
+
+    const handleMobileSorterDisplay = () => {
+        setMobileSorterDisplay(!mobileSorterDisplay)
+    }
+
+    const handleMobileMapDisplay = () => {
+        setMobileMapDisplay(!mobileMapDisplay)
+    }
+
+
+
     return (
         <>  {render ?
             (
@@ -374,18 +456,116 @@ export default function Database(): JSX.Element {
                         onConfirm={() => deleteItem(indexDelete)}
                     />
 
+                    {mobileNavigation ? <MobileNavigation onClick={handleMobileNavigation} /> : ""}
+                    {mobileInstruction || firstLoaded == 'true' ? <MobileInstruction onClick={handleMobileInstruction} imgUrl={"/images/mobile_instruction_database.svg"} /> : ""}
+
+
                     <TokenExpired status={tokenExpired} />
+
+                    <div
+                        className={`${styles.displayNone}  ${mobileSorterDisplay ? styles.mobileSortingnBackground : ""} ${mobileSorterDisplay ? styles.mobileDisplayFlex : ""}`}
+                        onClick={handleMobileSorterDisplay}
+                    >
+                        <div className={`${styles.mobileSorting}`}>
+                            <div className={styles.topSection}>
+                                <p>Sort By</p>
+                            </div>
+
+                            <div className={styles.mainSection}>
+                                <div className={`${styles.mapNameSection} ${styles.columnSection}`}>
+                                    <div className={styles.title}>
+                                        <p>Map Name</p>
+                                    </div>
+                                    <div className={styles.iconSection}>
+                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'name' && sortOrder == 'desc' ? styles.sortIconActive : ""}`} onClick={() => handleSortClick('name', 'desc')}>
+                                            <img src="/icons/dsc_icon.svg" alt="" />
+                                        </div>
+                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'name' && sortOrder == 'asc' ? styles.sortIconActive : ""}`} onClick={() => handleSortClick('name', 'asc')}>
+                                            <img src="/icons/asc_icon.svg" alt="" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className={`${styles.dateModifiedSection} ${styles.columnSection}`}>
+                                    <div className={styles.title}>
+                                        <p>Date Modified</p>
+                                    </div>
+                                    <div className={styles.iconSection}>
+                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'date' && sortOrder == 'desc' ? styles.sortIconActive : ""}`} onClick={() => handleSortClick('date', 'desc')}>
+                                            <img src="/icons/dsc_icon.svg" alt="" />
+                                        </div>
+                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'date' && sortOrder == 'asc' ? styles.sortIconActive : ""}`} onClick={() => handleSortClick('date', 'asc')}>
+                                            <img src="/icons/asc_icon.svg" alt="" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className={styles.titleBottomSection}>
+                                <p>Tap outside this box to exit</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        className={`${styles.displayNone}  ${mobileMapDisplay ? styles.mobileMapSelectorBackground : ""} ${mobileMapDisplay ? styles.mobileDisplayFlex : ""}`}
+                    >
+                        <div className={`${styles.mobileMapSelector}`}>
+                            <div className={`${styles.mobileMapPreview}`}>
+                                <img src="/images/map.png" alt="" />
+                            </div>
+                            <div className={`${styles.mobileMapName}`}>
+                                <p>20230804_RoomA.pgm</p>
+                            </div>
+                            <div className={`${styles.mobileMapButtonSection}`}>
+                                <div className={`${styles.editNameButton}`}>
+                                    <img src="/icons/pencil.svg" alt="" />
+                                </div>
+                                <div className={`${styles.removeButton}`}>
+                                    <img src="/icons/delete_mode_list.svg" alt="" />
+                                </div>
+                            </div>
+                            <div className={`${styles.mobileGoToMap}`}>
+                                <div
+                                    className={`${styles.confirmMappingChoosed}`}
+                                    onClick={goToControlWithIndex}
+                                >
+                                    <p>Go to the Map</p>
+                                    <Image src="/icons/3.svg" width={20} height={20} alt="play" />
+                                </div>
+                            </div>
+                            <div className={`${styles.mobileMapSelectorButton}`} onClick={handleMobileMapDisplay}>
+                                <p>Choose Another Map</p>
+                            </div>
+                        </div>
+                    </div>
 
 
                     {showControlInstruction || firstLoaded == 'true' ? <ControlInstruction onClick={handleControlInstructionClick} width={80} height={80} imgUrl='/images/instruction_database.svg' /> : ''}
                     <div className={styles.container}>
                         <div className={styles.parents}>
-                            <CloseButton onClick={onConfirmButtonClick} />
-                            <div className={styles.navigation}>
+                            <MobileTopSection onConfirmButtonClick={handleCloseButtonClick} />
+
+                            <div className={styles.mobileDisplayNone}>
+                                <CloseButton onClick={onConfirmButtonClick} />
+                            </div>
+
+                            <div className={`${styles.navigation} ${styles.mobileDisplayNone}`}>
                                 <Navigation />
                             </div>
+
+
+                            <div className={`${styles.displayNone} ${styles.mobileLidarSection}`}>
+                                <div className={styles.routeSection}>
+                                    <img src={iconPage} alt="" />
+                                    <p>{pathname}</p>
+                                </div>
+                                <div className={styles.mapCollection}>
+                                    <p>Map Collection</p>
+                                </div>
+                            </div>
+
                             <div className={styles.mapSection}>
-                                <div className={styles.topSection}>
+                                <div className={`${styles.topSection} ${styles.mobileDisplayNone}`}>
                                     <div className="">
                                         <p>Map Collection</p>
                                     </div>
@@ -401,7 +581,19 @@ export default function Database(): JSX.Element {
                                     </div>
                                 </div>
 
+
                                 <div className={styles.mainSection}>
+
+                                    <div className={`${styles.displayNone} ${styles.searchBarMobile} `}>
+                                        <input
+                                            type="text"
+                                            placeholder="Search..."
+                                            value={searchQuery} // Set the input value to searchQuery
+                                            onChange={handleSearchInputChange} // Call the handler on input change
+                                        />
+                                        <img src="/icons/search_icon.svg" alt="" className={styles.largeScreenImage} />
+                                    </div>
+
                                     <table className={styles.theTable}>
                                         <thead>
                                             <tr className={styles.header}>
@@ -410,11 +602,12 @@ export default function Database(): JSX.Element {
                                                     <div className={styles.headerContent}>
                                                         <span>Map Name</span>
                                                         <Image
+                                                            className={styles.mobileDisplayNone}
                                                             alt=""
                                                             src={`/icons/${sortOrder}ending.svg`}
                                                             width={40}
                                                             height={40}
-                                                            onClick={handleSortClick}
+                                                            onClick={() => handleSortClick('name', '')}
                                                         />
                                                     </div>
                                                 </th>
@@ -422,24 +615,25 @@ export default function Database(): JSX.Element {
                                                     <div className={styles.headerContent}>
                                                         <span>Date Modified</span>
                                                         <Image
+                                                            className={styles.mobileDisplayNone}
                                                             alt=""
                                                             src={`/icons/${sortDateOrder}ending.svg`}
                                                             width={40}
                                                             height={40}
-                                                            onClick={handleDateSortClick}
+                                                            onClick={() => handleSortClick('date', '')}
                                                         />
                                                     </div>
                                                 </th>
-                                                <th className={styles.fileType}>File Type</th>
-                                                <th className={styles.fileSize}>Size</th>
-                                                <th className={styles.selectedMap}>Selected<br /> Map to Load</th>
-                                                <th className={styles.delete}>Delete</th>
+                                                <th className={`${styles.fileType} ${styles.mobileDisplayNone}`}>File Type</th>
+                                                <th className={`${styles.fileSize} ${styles.mobileDisplayNone}`}>Size</th>
+                                                <th className={`${styles.selectedMap} ${styles.mobileDisplayNone}`}>Selected<br /> Map to Load</th>
+                                                <th className={`${styles.delete} ${styles.mobileDisplayNone}`}>Delete</th>
                                             </tr>
                                         </thead>
 
                                         <tbody>
                                             {currentData.map((item, index) => (
-                                                <tr key={index}>
+                                                <tr key={index} onClick={handleMobileMapDisplay}>
                                                     <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
 
                                                     <td onDoubleClick={() => handleDoubleClick(index)}>
@@ -456,10 +650,10 @@ export default function Database(): JSX.Element {
                                                         )}
                                                     </td>
 
-                                                    <td>{item.modified_time}</td>
-                                                    <td>{item.file_type}</td>
-                                                    <td className={styles.fileSize}>{item.file_size}</td>
-                                                    <td className={`${styles.dark} `}>
+                                                    <td className={styles.sortableHeader}>{item.modified_time}</td>
+                                                    <td className={`${styles.mobileDisplayNone}`}>{item.file_type}</td>
+                                                    <td className={`${styles.fileSize} ${styles.mobileDisplayNone}`}>{item.file_size}</td>
+                                                    <td className={`${styles.dark} ${styles.mobileDisplayNone}`}>
                                                         <div className={`${styles.inputContainer}`}>
                                                             <input
                                                                 type="checkbox"
@@ -470,7 +664,7 @@ export default function Database(): JSX.Element {
                                                             <label htmlFor={`checklistItem${index}`}></label>
                                                         </div>
                                                     </td>
-                                                    <td className={`${styles.dark} ${styles.delete}`}>
+                                                    <td className={`${styles.dark} ${styles.delete} ${styles.mobileDisplayNone}`}>
                                                         <Image
                                                             src="/icons/Delete.svg"
                                                             alt="Delete icons"
@@ -497,7 +691,7 @@ export default function Database(): JSX.Element {
                                         className={`${styles.confirmMappingChoosed} ${(initialCheckedIndex !== null && parseInt(initialCheckedIndex) > -1) || mapIndex > -1
                                             ? ""
                                             : styles.disable
-                                            }`}
+                                            } ${styles.mobileDisplayNone}`}
                                         onClick={goToControlWithIndex}
                                     >
                                         <p>Go to the Map</p>
@@ -582,7 +776,23 @@ export default function Database(): JSX.Element {
                                 </div>
                             </div>
                             <ButtonInformation onClick={handleInfoIconClick} />
-                            <Footer status={false} />
+
+                            <div className={`${styles.displayNone} ${styles.mobileBottomSection}`}>
+                                <div className={`${styles.navigationMobileButton} ${styles.bottomSectionButton}`} onClick={handleMobileNavigation}>
+                                    <img src="/icons/list.svg" alt="" />
+                                </div>
+
+                                <div className={`${styles.webcamButton} ${styles.webcamIcon} ${styles.bottomSectionButton}`} onClick={handleMobileSorterDisplay}>
+                                    <img src="/icons/arrange_icon.svg" alt="" />
+                                </div>
+
+                                <div className={`${styles.webcamButton} ${styles.sircleIcon} ${styles.bottomSectionButton}`} onClick={handleMobileInstruction}>
+                                    <img src="/icons/information-circle-svgrepo-com.svg" alt="" />
+                                </div>
+
+                                <Footer status={false /* or false */} />
+                            </div>
+                            {/* <Footer status={false} /> */}
                         </div>
                     </div>
                 </>

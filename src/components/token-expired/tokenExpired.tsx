@@ -43,7 +43,7 @@ const TokenExpired: FC<TokenExpiredProps> = (props) => {
                 <div className={styles.buttonContainer}>
                     <div className={styles.buttonLogin} onClick={goToSigninPage}>
                         <img src="/icons/Login.svg" alt="" />
-                        <p>Go to LOGIN page</p>
+                        <p>LOG IN</p>
                     </div>
                 </div>
             </div>
