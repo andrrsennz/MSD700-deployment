@@ -39,6 +39,7 @@ var getInit = false;
 var setHomeBaseMode = false;
 var homePoint: any = null;
 var navmode = false;
+var focusViewMode = false;
 
 interface Option {
     icon: string;
@@ -233,7 +234,7 @@ const Mapping: React.FC<MappingProps> = () => {
             divID: 'map',
             width: mapRef.current?.clientWidth || 1070,
             height: mapRef.current?.clientHeight || 1070,
-            background: "#DCDCDC",
+            background: "#7F7F7F",
         });
 
         paN = new (window as any).ROS2D.PanView({
@@ -312,7 +313,8 @@ const Mapping: React.FC<MappingProps> = () => {
         const zoomInConst = 1.2
         firstZoomVar = firstZoomVar * zoomInConst;
         zoom.zoom(zoomInConst);
-        zoomCrossConst.push(zoomInConst)
+        zoomCrossConst.push(zoomInConst);
+        gridClient.navigator.reScale();
     }
 
     const zoomOut = () => {
@@ -324,14 +326,16 @@ const Mapping: React.FC<MappingProps> = () => {
         const zoomOutConst = 0.8
         firstZoomVar = firstZoomVar * zoomOutConst
         zoom.zoom(zoomOutConst);
-        zoomCrossConst.push(zoomOutConst)
+        zoomCrossConst.push(zoomOutConst);
+        gridClient.navigator.reScale();
     }
 
     const rotateCW = () => {
         var rotate = new (window as any).ROS2D.Rotate({
             rootObject: viewer.scene
         });
-        rotate.startRotate(20);
+        rotate.startRotate(90);
+        gridClient.navigator.reScale();
     }
 
     const restart = () => {
@@ -345,9 +349,11 @@ const Mapping: React.FC<MappingProps> = () => {
         rotate.resetRotate();
         zoom.startZoom(250, 250);
         var result = zoomCrossConst.reduce((accumulator, currentValue) => accumulator * currentValue, 1);
-        var newConst = 1 / result;
-        zoom.zoom(newConst)
-        zoomCrossConst = []
+        var newConst = 1 / firstZoomVar;
+        zoom.zoom(newConst);
+        firstZoomVar = 1;
+        zoomCrossConst = [];
+        gridClient.navigator.reScale();
     }
 
     const whenMouseDown = (event: MouseEvent) => {
@@ -371,6 +377,27 @@ const Mapping: React.FC<MappingProps> = () => {
         }
     };
 
+    const whenTouchDown = (event: any) => {
+        // event.preventDefault();
+        if (event.touches.length === 2) {
+            paN.startPan(event.touches[0].clientX, event.touches[0].clientY);
+            isDrag = true;
+            startcoor[0] = event.touches[0].clientX;
+            startcoor[1] = event.touches[0].clientX;
+        }
+    }
+
+    const whenTouchUp = (event: any) => {
+        isDrag = false;
+    }
+
+    const whenTouchMove = (e: any) => {
+        if (isDrag && e.touches.length === 2) {
+            // Perform the action when the mouse is clicked and moving
+            paN.pan(e.touches[0].clientX, e.touches[0].clientY);
+        }
+    };
+
     //get home base point from SLAM initial point
     const getHomeBasePoint = () => {
         if (gridClient.navigator != null) {
@@ -380,6 +407,28 @@ const Mapping: React.FC<MappingProps> = () => {
             console.log("navigator null")
         }
 
+    }
+
+    //set focus view on robot
+    const focusView = () => {
+        if (focusViewMode == false) {
+            focusViewMode = true;
+            gridClient.navigator.setFocusView(true);
+            var button = document.getElementById("setFocusBtn")
+            if (button != null) {
+                button.innerText = "Focus View On"
+                console.log("button changes")
+            }
+        }
+        else if (focusViewMode == true) {
+            focusViewMode = false;
+            gridClient.navigator.setFocusView(false);
+            var button = document.getElementById("setFocusBtn")
+            if (button != null) {
+                button.innerText = "Focus View Off"
+                console.log("button changes")
+            }
+        }
     }
 
     const handleInfoIconClick = () => {
@@ -553,17 +602,23 @@ const Mapping: React.FC<MappingProps> = () => {
                                         <p>Stop</p>
                                         <img src="/icons/2.svg" alt="" />
                                     </div>
+                                    <div
+                                        id="setFocusBtn"
+                                        className={styles.stopButton}
+                                        onClick={() => {
+                                            focusView();
+                                        }}
+                                    >
+                                        <p>Focus View Mode Off</p>
+                                    </div>
 
                                     {/* <div className={styles.settingsButton}>
                                         <img src="/icons/Setting.svg" alt="" />
                                         <p>Please turn on the LIDAR before mapping.</p>
                                     </div> */}
                                 </div>
-
-
-
-                                <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp}>
-                                    <div className={`${styles.buttonNavigation} ${styles.mobileDisplayNone}`}>
+                                <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp} onTouchStart={whenTouchDown} onTouchMove={whenTouchMove} onTouchEnd={whenTouchUp}>
+                                    <div className={styles.buttonNavigation}>
                                         <div className={styles.zoomIn} onClick={zoomIn}>
                                             <img src="/icons/zoomin.svg" alt="" />
                                         </div>
@@ -660,7 +715,7 @@ const Mapping: React.FC<MappingProps> = () => {
                                 {/* <Footer status={false} /> */}
                             </div>
                         </div>
-                    </div>
+                    </div >
 
                     <ButtonInformation onClick={handleInfoIconClick} />
                     <Script src="/script/Nav2D.js" strategy="beforeInteractive" />

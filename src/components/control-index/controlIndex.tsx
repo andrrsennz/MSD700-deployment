@@ -12,19 +12,21 @@ import MobileLidarSection from "@/components/mobile-lidar-section/mobileLidarSec
 import MapPreviewSection from "@/components/mobile-map-preview-section/mobileMapPreviewSection";
 import MobileBottomSection from "@/components/mobile-bottom-section/mobileBottomSection";
 
-var ros: any
-var viewer: any
+var ros: any;
+var viewer: any;
+var prevViewer: any;
 var paN: any
-var movecoor: any = [];
 var isDrag = false;
 var startcoor: any = [];
 var showImage: boolean = false;
 var gridClient: any;
+var prevGridClient: any;
 var multiPointMode = false;
 var singlePointMode = false;
 var getInit = false;
 var setHomeBaseMode = false;
 var homePoint: any = null;
+var focusViewMode = false;
 
 interface ControlIndexProps {
   handleMobileNavigation: () => void; // Define handleMobileNavigation prop
@@ -172,28 +174,27 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
       console.log('Connection to ROS is closed.');
     });
 
-    const mapPreview = new (window as any).ROS2D.Viewer({
-      divID: 'mapPreview',
-      width: mapRef.current?.clientWidth || 355,
-      height: mapRef.current?.clientHeight || 240,
-      background: "#DCDCDC",
-    });
 
     // Create the main viewer.
     viewer = new (window as any).ROS2D.Viewer({
       divID: 'map',
-      width: mapRef.current?.clientWidth || 1900,
-      height: mapRef.current?.clientHeight || 958,
-      background: "#DCDCDC",
+      width: mapRef.current?.clientWidth || 1070,
+      height: mapRef.current?.clientHeight || 1070,
+      background: "#7F7F7F",
     });
+
+    prevViewer = new (window as any).ROS2D.Viewer({
+      divID: 'preview-map',
+      width: mapRef.current?.clientWidth || 180,
+      height: mapRef.current?.clientHeight || 180,
+      background: "#7F7F7F",
+    });
+
 
     paN = new (window as any).ROS2D.PanView({
       rootObject: viewer.scene,
     });
 
-    const panPreview = new (window as any).ROS2D.PanView({
-      rootObject: mapPreview.scene,
-    });
 
     // Setup the map client.
     gridClient = new (window as any).NAV2D.OccupancyGridClientNav({
@@ -205,12 +206,12 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
       continuous: true
     });
 
-    const gridClientPreview = new (window as any).NAV2D.OccupancyGridClientNav({
+    prevGridClient = new (window as any).NAV2D.PreviewGridClientNav({
       ros: ros,
-      rootObject: mapPreview.scene,
-      viewer: mapPreview,
+      rootObject: prevViewer.scene,
+      viewer: prevViewer,
       withOrientation: true,
-      withCommand: true,
+      withCommand: false,
       continuous: true
     });
 
@@ -267,7 +268,8 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
     const zoomInConst = 1.2
     firstZoomVar = firstZoomVar * zoomInConst;
     zoom.zoom(zoomInConst);
-    zoomCrossConst.push(zoomInConst)
+    zoomCrossConst.push(zoomInConst);
+    gridClient.navigator.reScale();
   }
 
   const zoomOut = () => {
@@ -279,7 +281,8 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
     const zoomOutConst = 0.8
     firstZoomVar = firstZoomVar * zoomOutConst
     zoom.zoom(zoomOutConst);
-    zoomCrossConst.push(zoomOutConst)
+    zoomCrossConst.push(zoomOutConst);
+    gridClient.navigator.reScale();
   }
 
   const restart = () => {
@@ -291,11 +294,14 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
       rootObject: viewer.scene
     });
     rotate.resetRotate();
+    gridClient.navigator.resetRotateMap();
     zoom.startZoom(250, 250);
     var result = zoomCrossConst.reduce((accumulator, currentValue) => accumulator * currentValue, 1);
-    var newConst = 1 / result;
-    zoom.zoom(newConst)
-    zoomCrossConst = []
+    var newConst = 1 / firstZoomVar;
+    zoom.zoom(newConst);
+    firstZoomVar = 1;
+    zoomCrossConst = [];
+    gridClient.navigator.reScale();
   }
 
   const whenMouseDown = (event: MouseEvent) => {
@@ -312,7 +318,9 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
     var rotate = new (window as any).ROS2D.Rotate({
       rootObject: viewer.scene
     });
-    rotate.startRotate(20);
+    rotate.startRotate(90);
+    gridClient.navigator.rotateMap(90);
+    gridClient.navigator.reScale();
   }
 
   const whenMouseUp = (event: MouseEvent) => {
@@ -416,6 +424,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
       setHomeBaseMode = false;
       gridClient.navigator.setHomeBasePoint(false);
       getHomeBasePoint();
+      updateHomeBase();
     }
 
   }
@@ -430,8 +439,11 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
   //update home base and initial pose estimate when control page launched
   const updateHomeBase = () => {
     if (homePoint != null) {
-      if (gridClient.navigator != null) {
-        gridClient.navigator.updateHome(homePoint);
+      if (prevGridClient.prevNavigator != null) {
+        // gridClient.navigator.changeRoot(prevViewer.scene);
+        prevGridClient.prevNavigator.updateHome(homePoint);
+        // gridClient.navigator.changeRoot(viewer.scene);
+
       }
     }
   }
@@ -442,6 +454,27 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
     }
   }
 
+  //set focus view on robot
+  const focusView = () => {
+    if (focusViewMode == false) {
+      focusViewMode = true;
+      gridClient.navigator.setFocusView(true);
+      var button = document.getElementById("setFocusBtn")
+      if (button != null) {
+        button.innerText = "Focus View On"
+        console.log("button changes")
+      }
+    }
+    else if (focusViewMode == true) {
+      focusViewMode = false;
+      gridClient.navigator.setFocusView(false);
+      var button = document.getElementById("setFocusBtn")
+      if (button != null) {
+        button.innerText = "Focus View Off"
+        console.log("button changes")
+      }
+    }
+  }
   const toggleOptions = () => {
     setShowOptions(!showOptions);
     setIsRotated(!isRotated);
@@ -603,6 +636,15 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                 <p>Return Home</p>
                 <img src="/icons/Home.svg" alt="" />
               </div>
+              <div
+                id="setFocusBtn"
+                className={styles.stopButton}
+                onClick={() => {
+                  focusView();
+                }}
+              >
+                <p>Focus View Mode Off</p>
+              </div>
             </div>
 
             <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp} onTouchStart={whenTouchDown} onTouchMove={whenTouchMove} onTouchEnd={whenTouchUp}>
@@ -734,8 +776,9 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
 
               <div className={`${styles.navigationSection}  ${styles.mobileDisplayNone}`}>
 
-                <div className={styles.mapPreview}>
-                  <div className={styles.map} id="mapPreview">
+              <div className={styles.mapPreview}>
+                  <div id="preview-map" className={styles.map}>
+                    {/* <div id="preview-map"></div> */}
                     {/* <img src="/images/map.png" alt="" /> */}
                   </div>
                 </div>
