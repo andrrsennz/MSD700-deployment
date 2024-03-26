@@ -56,6 +56,11 @@ export default function Database(): JSX.Element {
     const [mobileInstruction, setMobileInstruction] = useState<boolean>(false);
     const [mobileSorterDisplay, setMobileSorterDisplay] = useState<boolean>(false);
     const [mobileMapDisplay, setMobileMapDisplay] = useState<boolean>(false);
+    const [mobileMapName, setMobileMapName] = useState<string>('');
+    const [mobileEditNameDisplay, setMobileEditNameDisplay] = useState<boolean>(false);
+    const [newName, setNewName] = useState('');
+
+
 
 
     useEffect(() => {
@@ -173,9 +178,6 @@ export default function Database(): JSX.Element {
         }
     };
 
-    const handleDateSortClick = () => {
-
-    };
 
     const onConfirmButtonClick = () => {
         setShowConfirmDialog(true);
@@ -376,6 +378,47 @@ export default function Database(): JSX.Element {
         setIsEditing({ ...isEditing, [index]: false });
     };
 
+    const updateMapNameMobile = (index: any, newName: string, oldName: string) => {
+        console.log("index: ", index);
+        console.log("newName: ", newName);
+        console.log("oldName: ", oldName);
+
+        // if (newName !== oldName) {
+        //     axios.put(`${backendUrl}/api/pgm_data`, {
+        //         map_name: oldName,
+        //         new_map_name: newName
+        //     }, {
+        //         headers: {
+        //             'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+        //         }
+        //     })
+        //         .then(response => {
+        //             console.log('PGM Data Update Response:', response);
+        //             if (response.status === 200) {
+        //                 axios.get(`${backendUrl}/api/pgm_data`, {
+        //                     headers: {
+        //                         'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+        //                     }
+        //                 })
+        //                     .then(res => {
+        //                         const data = res.data.data
+        //                         setData(data);
+        //                         alert("Map name updated successfully");
+        //                     })
+        //                     .catch(err => {
+        //                         alert("Error refreshing data");
+        //                     })
+        //             }
+        //             else {
+        //                 alert("Map failed to update")
+        //             }
+        //         })
+        //         .catch(error => {
+        //             console.error('Error updating map name:', error);
+        //         });
+        // }
+    };
+
     function getBaseName(fileName: any) {
         return fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
     }
@@ -418,22 +461,29 @@ export default function Database(): JSX.Element {
 
     const handleMobileInstruction = () => {
         setMobileInstruction(!mobileInstruction);
-        console.log("ttt");
 
         sessionStorage.setItem('firstLoadDatabasePage', 'false')
         setFirstLoaded('false')
-
     }
 
     const handleMobileSorterDisplay = () => {
         setMobileSorterDisplay(!mobileSorterDisplay)
     }
 
-    const handleMobileMapDisplay = () => {
+    const handleMobileMapDisplay = (mapName: any, index: any) => {
+        setMobileMapName(mapName)
+        setCheckedIndex(startIndex + parseInt(index));
         setMobileMapDisplay(!mobileMapDisplay)
     }
 
+    const handleMobileEditName = () => {
+        setMobileEditNameDisplay(!mobileEditNameDisplay)
+        setMobileMapDisplay(!mobileMapDisplay)
+    }
 
+    const handleNewNameChange = (event: any) => {
+        setNewName(event.target.value);
+    };
 
     return (
         <>  {render ?
@@ -514,10 +564,10 @@ export default function Database(): JSX.Element {
                                 <img src="/images/map.png" alt="" />
                             </div>
                             <div className={`${styles.mobileMapName}`}>
-                                <p>20230804_RoomA.pgm</p>
+                                <p>{mobileMapName}</p>
                             </div>
                             <div className={`${styles.mobileMapButtonSection}`}>
-                                <div className={`${styles.editNameButton}`}>
+                                <div className={`${styles.editNameButton}`} onClick={handleMobileEditName}>
                                     <img src="/icons/pencil.svg" alt="" />
                                 </div>
                                 <div className={`${styles.removeButton}`}>
@@ -533,8 +583,47 @@ export default function Database(): JSX.Element {
                                     <Image src="/icons/3.svg" width={20} height={20} alt="play" />
                                 </div>
                             </div>
-                            <div className={`${styles.mobileMapSelectorButton}`} onClick={handleMobileMapDisplay}>
+                            <div className={`${styles.mobileMapSelectorButton}`} onClick={() => handleMobileMapDisplay("", "-1")}>
                                 <p>Choose Another Map</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={`${styles.displayNone}  ${mobileEditNameDisplay ? styles.mobileEditNameBackground : ""} ${mobileEditNameDisplay ? styles.mobileDisplayFlex : ""}`}>
+                        <div className={styles.mobileEditName}>
+
+                            <div className={styles.columnName}>
+                                <div className={styles.title}>
+                                    Current
+                                </div>
+                                <div className={styles.input}>
+                                    <p>:</p>
+                                    <input type="text" placeholder={mobileMapName} disabled />
+                                </div>
+                            </div>
+
+                            <div className={styles.columnName}>
+                                <div className={styles.title}>
+                                    New Name
+                                </div>
+                                <div className={styles.input}>
+                                    <p>:</p>
+                                    <input
+                                        type="text"
+                                        autoFocus
+                                        value={newName}
+                                        onChange={handleNewNameChange}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className={`${styles.buttonSection}`}>
+                                <div className={`${styles.rename}`} onClick={() => updateMapNameMobile(checkedIndex, newName, mobileMapName)}>
+                                    <p>Rename</p>
+                                </div>
+                                <div className={`${styles.cancel}`} onClick={handleMobileEditName}>
+                                    <p>Cancel</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -633,7 +722,7 @@ export default function Database(): JSX.Element {
 
                                         <tbody>
                                             {currentData.map((item, index) => (
-                                                <tr key={index} onClick={handleMobileMapDisplay}>
+                                                <tr key={index} onClick={() => handleMobileMapDisplay(item.map_name, index)}>
                                                     <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
 
                                                     <td onDoubleClick={() => handleDoubleClick(index)}>

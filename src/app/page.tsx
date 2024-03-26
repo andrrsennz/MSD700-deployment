@@ -586,12 +586,8 @@ export default function Home(): JSX.Element {
               </div>
             </> : <></>}
             <div className={styles.buttonRegister} onClick={goToSignUpPage}>
-              <Image
-                src="/icons/buttonregister.svg"
-                alt="Sign up icon"
-                width={20}
-                height={20}
-              />
+              <img src="/icons/buttonregister.svg"
+                alt="Sign up icon" />
               <p>SIGN UP</p>
             </div>
           </div>

@@ -91,6 +91,7 @@ const Control: React.FC = () => {
 
   const handleMobileInstruction = () => {
     setMobileInstruction(!mobileInstruction);
+    setFirstLoaded('false')
     sessionStorage.setItem('firstLoadControlPage', 'false')
   }
 

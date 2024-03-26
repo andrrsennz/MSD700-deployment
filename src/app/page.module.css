@@ -614,7 +614,7 @@
 
 .passwordInputInvalid input[type="password"]:focus {
   background-color: #D498A9 !important;
-  outline-color: #D498A9 !important; 
+  outline-color: #D498A9 !important;
 }
 
 
@@ -1354,19 +1354,34 @@
     line-height: 17px;
     letter-spacing: 0em;
     text-align: left;
-
   }
 
   .buttonRegister {
     border-radius: 5px;
+
     font-family: Inter;
-    font-size: 14px;
+
     font-weight: 500;
     line-height: 17px;
     letter-spacing: 0em;
     text-align: left;
-    padding-top: 6.5px;
-    padding-bottom: 6.5px;
+
+    height: fit-content;
+    width: fit-content;
+
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .buttonRegister img {
+    width: 22px;
+    height: 22px;
+  }
+
+  .buttonRegister p {
+    font-size: 14px !important;
   }
 
   .mobileInstruction {

@@ -268,6 +268,7 @@ export default function Signup(): JSX.Element {
                 {/* -----------------------------------------------------------------------*/}
 
                 <div className={styles.parents}>
+                    
                     <div className={styles.mobileHide}>
                         <CloseButton onClick={onConfirmButtonClick} />
                     </div>
@@ -427,7 +428,7 @@ export default function Signup(): JSX.Element {
                                                 onChange={handleChange}
                                             />
                                             <div className={styles.iconStatusColumnButton}>
-                                                {!isPasswordValid ? (
+                                                {true ? (
                                                     <Image
                                                         src="/icons/Info-alert.svg"
                                                         alt="Alert icon"
