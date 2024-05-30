@@ -52,17 +52,10 @@ const Navigation: React.FC<NavigationProps> = ({ imageSrc }) => {
   return (
     <>
       <div className={`${styles.sideSection}`}>
-        <div
-          className={`${styles.greetings} ${isActive('/unit/control') && styles.active
-            }`}
-        >
-          <img src="/icons/Icon-person-white.svg" alt="" />
-          <p>{`Welcome, ${full_name} (${username}) - ${unit_name}`}</p>
-        </div>
         <div className={styles.menu}>
           <div
             className={`${styles.controlMode} ${isActive('/unit/control') && styles.active
-              }`}
+              } ${styles.option}`}
             onClick={goToControlPage}
           >
             <Link href="/unit/control" className={styles.buttonLink}>
@@ -73,7 +66,7 @@ const Navigation: React.FC<NavigationProps> = ({ imageSrc }) => {
 
           <div
             className={`${styles.mapping} ${isActive('/unit/mapping') && styles.active
-              }`}
+              } ${styles.option}`}
             onClick={goToMappingPage}
           >
             <Link href="/unit/mapping" className={styles.buttonLink}>
@@ -84,7 +77,7 @@ const Navigation: React.FC<NavigationProps> = ({ imageSrc }) => {
 
           <div
             className={`${styles.database} ${isActive('/unit/database') && styles.active
-              }`}
+              } ${styles.option}`}
             onClick={goToDatabasePage}
           >
             <Link href="/unit/database" className={styles.buttonLink}>
@@ -97,7 +90,7 @@ const Navigation: React.FC<NavigationProps> = ({ imageSrc }) => {
 
         <div className={styles.mapStream}>
           <div className={styles.mapName}>
-            <p>Live Camera Stream</p>
+            <p>Camera - Front View</p>
           </div>
           <div className={styles.mapDisplay}>
             {imageSrc ? <img src={imageSrc} alt="Streamed Image" className={styles.map}  /> : (<div className={styles.map} />)}
@@ -105,7 +98,7 @@ const Navigation: React.FC<NavigationProps> = ({ imageSrc }) => {
         </div>
       </div>
 
-      <div className={`${styles.centerSection}`}>
+      {/* <div className={`${styles.centerSection}`}>
         <div
           className={`${styles.greetings} ${isActive('/unit/control') && styles.active
             }`}
@@ -126,7 +119,7 @@ const Navigation: React.FC<NavigationProps> = ({ imageSrc }) => {
             ))}
           </select>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

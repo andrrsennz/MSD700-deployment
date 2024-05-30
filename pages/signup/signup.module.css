@@ -23,8 +23,7 @@
 }
 
 .leftSide {
-    height: 100vh;
-
+    height: 100%;
     width: 30%;
 
     border-right: 10px solid #60E3D5;
@@ -77,11 +76,11 @@
 
 .rightSide {
     width: 70%;
+    height: 100%;
 
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 1%;
 }
 
 .rightSide .tagline {
@@ -100,6 +99,10 @@
 .formSection button[type="submit"]:hover {
     box-shadow: 0px 4px 4px 0px #00000040;
     transition: 1s;
+}
+
+.column {
+    margin-bottom: 30px;
 }
 
 
@@ -241,6 +244,7 @@
     line-height: 19px;
     letter-spacing: 0em;
     float: right;
+    margin-top: 30px;
 }
 
 .loginSection {
@@ -253,7 +257,6 @@
     color: #0C98B4;
 
     margin-right: auto;
-    margin-left: 20px;
 
     display: flex;
 
@@ -263,7 +266,6 @@
     justify-content: space-between;
     align-items: center;
     margin-top: auto;
-    margin-bottom: 2vh;
 }
 
 .loginButton {
@@ -322,7 +324,7 @@
     display: none;
 }
 
-@media (max-width:361px) {
+@media (max-width:1400px) {
 
     .mobileHide {
         display: none;
@@ -345,6 +347,7 @@
     .rightSide {
         width: 100%;
         padding-top: 55px;
+        height: max-content;
     }
 
     .rightSide .tagline {
@@ -383,9 +386,6 @@
         padding-left: 10px;
     }
 
-  
-
-
     .formSection button[type="submit"] {
         width: 100%;
         height: 40px;
@@ -406,10 +406,14 @@
     }
 
     .divPasswordSection {
-        margin-bottom: 0;
+        margin-bottom: 0px;
         width: auto !important;
     }
-    
+
+    .column {
+        margin-bottom: 0px;
+    }
+
 
     .formSection [type="password"] {
         width: 100%;
@@ -418,7 +422,6 @@
 
 
     .loginSection {
-
         align-items: center;
         justify-content: center;
         margin-left: auto;
@@ -472,7 +475,7 @@
     }
 
     .bottomSection .mobileFooter {
-        padding-top: 20px;
+        padding-top: 35px;
         padding-right: 10px;
     }
 
@@ -595,244 +598,236 @@
     }
 }
 
-/* @media (min-height: 1440px) {
-    .leftSide .information .feature {
-        font-size: 2vh !important;
-    }
-}
-
-@media (max-height: 1300px) {
-    .leftSide .information .feature {
-        font-size: 1.5vh !important;
-    }
-}
-
-@media (min-height: 1024px) {
+@media (max-width: 2200px) and (min-width:1401px) {
     .iconStatusColumnButton {
-        position: absolute;
-        right: 10px;
-        
-        top: 40%;
-        transform: translateY(-100%);
-        
-        
-    }
-}
-
-@media (max-height: 1000px) {
-    .iconStatusColumnButton {
-        position: absolute;
-        right: 10px;
-        
-        top: 50%;
-        transform: translateY(-100%);
-        
-        
-    }
-}
-
-@media (max-width: 1250px) {
-    .passwordSection {
-        flex-direction: column;
-        
-        align-items: center;
-        
+        top: 65%;
     }
 
-    .passwordSection {
-        width: 100%;
-
-        margin-bottom: 20px;
-        
-    }
-
-    .divPasswordSection {
-        width: 100% !important;
-
-        margin-bottom: 20px;
-        
-    }
-
-}
-
-@media (max-width: 1000px) {
-    .formSection input {
-        margin-bottom: 1.5vh;
-    }
-}
-
-@media (max-width: 768px) {
-    .formSection {
-        width: 90%;
-        
-        padding: 0 15px;
-        
-    }
-
-    .passwordSection .divPasswordSection,
-    .iconStatusColumn input {
-        width: 100%;
-        
-    }
-}
-
-@media (max-width: 1024px) and (max-height:1366px) {
-    .leftSide .imageAnimation {
-        height: 80vh;
-        max-height: 80%;
-        padding-top: 30px;
-        
-    }
-}
-
-@media (max-height: 900px) and (max-width: 1000px) {
-    .iconStatusColumnButton {
-        position: absolute;
-        right: 10px;
-        
-        top: 70% !important;
-        transform: translateY(-100%);
-        
-        
-    }
-
-    .leftSide .imageAnimation {
-        height: 70vh;
-        max-height: 80%;
-        padding-top: 30px;
-        
-    }
-
-}
-
-
-@media (max-width: 1100px) and (max-height:800px) {
-    .formSection input {
-        margin-bottom: 1vh;
-    }
-
-    .iconStatusColumnButton {
-        position: absolute;
-        right: 10px;
-        
-        top: 75% !important;
-        transform: translateY(-100%);
-        
-        
-    }
-
-    .leftSide .imageAnimation {
-        height: 75vh;
-        
-        padding-top: 30px;
-    }
-}
-
-@media (min-width: 2560px) {
-    .tagline p {
-        font-size: 54px;
-    }
-
-    .formSection .label {
-        font-size: 28px;
-        line-height: 34px;
-    }
-
-    .formSection [type="text"] {
-        height: 70px;
-        font-size: 22px;
-    }
-
-    .information .feature {
-        font-size: 32px;
-    }
-
-    .formSection [type="password"] {
-        height: 70px;
-        font-size: 22px;
+    .iconStatusColumnButton img{
+        width: 20px;
+        height: 20px;
     }
 
     .passwordSection .divPasswordSection {
-        width: 620px;
+        width: 45%;
+    }
+
+    .leftSide .imageAnimation {
+        height: 70%;
+        max-height: 90%;
+        padding-top: 30px;
+    }
+
+    .feature {
+        font-size: 19px;
     }
 
     .loginSection {
+        margin-left: 0;
+        width: 100%;
+        margin-left: 30px;
+    }
+
+    .information p {
+        font-family: Inter;
+        font-size: 26px;
+        font-weight: 700;
+        line-height: 31.47px;
+        text-align: left;
+    }
+
+    .leftSide .information h1 {
+        font-family: Inter;
+        font-size: 26px;
+        font-weight: 700;
+        line-height: 31.47px;
+        text-align: center;        
+    }
+
+    .tooltip {
+        font-family: Inter;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 16.94px;
+        text-align: left;
+
+        margin-top: -15px;
+        position: absolute;
+    }
+
+    .theFooter {
+        margin-right: 30px;
+    }
+}
+
+@media (min-width:2201px) {
+    .iconStatusColumnButton {
+        top: 70%;
+    }
+
+    .leftSide {
+        width: 100%;
+        max-width: 889px;
+    }
+
+    .leftSide .imageAnimation {
+        height: 73%;
+        max-height: 90%;
+        padding-top: 30px;
+    }
+
+    .leftSide .information {
+        align-items: center;
+        padding-left: 130px;
+        padding-right: 130px;
+
+    }
+
+    .rightSide {
+        width: 100%;
+    }
+
+    .rightSide .tagline {
+        font-family: Inter;
+        font-size: 54px;
+        font-weight: 600;
+        line-height: 65.35px;
+        text-align: center;
+    }
+
+
+    .formSection {
+        width: 100%;
+        max-width: 85%;
+    }
+
+    .formSection input {
+        margin-bottom: 40px;
+    }
+
+    .formSection .label {
+        font-family: Inter;
+        font-size: 28px;
+        font-weight: 500;
+        line-height: 33.89px;
+        text-align: left;
+        margin-bottom: 22px;
+    }
+
+    .formSection [type="text"] {
+        width: 99%;
+        height: 70px;
+
         font-family: Inter;
         font-size: 22px;
         font-weight: 500;
-        line-height: 27px;
-        letter-spacing: 0em;
+        line-height: 26.63px;
         text-align: left;
-        width: 100%;
-        
+
+        padding-left: 20px;
     }
 
-    .buttonLogin {
-        width: max-content;
-        height: 60px;
-        font-size: 19px;
-    }
-
-    .buttonLogin:hover {
-        box-shadow: 0px 4px 4px 0px #60E3D5;
-        transition: 1s;
-        cursor: pointer;
-    }
-
-    .tooltip {
-        font-size: 19px;
-    }
-
-    .formSection button[type="submit"] {
-        width: 407px;
-        height: 89px;
-        font-size: 32px;
-    }
-}
-
-@media (width: 1440px) and (height:1024px) {
-    .tagline p {
-        font-size: 32px;
-    }
-
-    .formSection .label {
-        font-size: 16px;
-        line-height: 19.36px;
-    }
-
-    .formSection [type="text"] {
-        height: 45px;
-        font-size: 16px;
-    }
 
     .formSection [type="password"] {
-        height: 45px;
-        font-size: 16px;
+        width: 99%;
+        height: 70px;
+
+        font-family: Inter;
+        font-size: 22px;
+        font-weight: 500;
+        line-height: 26.63px;
+        text-align: left;
+
+        padding-left: 20px;
     }
+
 
     .passwordSection .divPasswordSection {
-        width: 350px;
+        width: 45%;
     }
 
-    .loginSection {
-        font-size: 16px;
-        width: 28%;
-        
+    .iconStatusColumnButton {
+        position: absolute;
+        right: 10px;
+
+        top: 50%;
+        transform: translateY(-100%);
     }
 
-    .buttonLogin {
-        width: 110px;
-        height: 43px;
-        font-size: 14px;
+
+    .feature {
+        font-size: 32px;
     }
 
     .tooltip {
-        font-size: 14px;
+        font-family: Inter;
+        font-size: 19px;
+        font-weight: 500;
+        line-height: 22.99px;
+        text-align: left;
+
     }
 
     .formSection button[type="submit"] {
-        width: 236px;
-        height: 53px;
-        font-size: 19px;
+        width: auto;
+        height: auto;
+
+        padding-left: 100px;
+        padding-right: 100px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+
+        border-radius: 5px;
+        background-color: #0C98B4;
+        border: 2px solid #60E3D5;
+        font-family: Inter;
+        font-size: 32px;
+        font-weight: 500;
+        line-height: 38.73px;
+        text-align: center;
+
+        float: right;
+        margin-top: 30px;
     }
-} */
+
+    .textAccount {
+        font-family: Inter;
+        font-size: 22px;
+        font-weight: 500;
+        line-height: 26.63px;
+        text-align: left;
+        margin-left: 20px;
+    }
+
+    .buttonLogin {
+        font-family: Inter;
+        font-size: 19px;
+        font-weight: 500;
+        line-height: 22.99px;
+        text-align: left;
+
+    }
+
+    .copyright {
+        margin-top: 0;
+    }
+
+
+    .theFooter {
+        /* margin-right: 30px; */
+    }
+
+
+    .leftSide .information h1 {
+        font-family: Inter;
+        font-size: 45px !important;
+        font-weight: 700;
+        line-height: 54.46px;
+        text-align: center;
+    }
+
+    .loginButton {
+        margin-left: 56px;
+        margin-bottom: 20px;
+    }
+}

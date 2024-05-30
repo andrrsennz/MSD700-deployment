@@ -15,8 +15,12 @@ import TokenExpired from '@/components/token-expired/tokenExpired';
 import MobileTopSection from '@/components/mobile-top-section/mobileTopSection';
 import MobileNavigation from '@/components/mobile-navigation/mobileNavigation';
 import MobileInstruction from '@/components/mobile-instruction/mobileInstruction';
+import GreetingsUnit from '@/components/greetings-unit/greetingsUnit';
+import MobileBottomSection from '@/components/mobile-bottom-section/mobileBottomSection';
+import MobileLidarSection from '@/components/mobile-lidar-section/mobileLidarSection';
 
 interface DataItem {
+    mapId: any;
     map_name: string;
     modified_time: string;
     file_type: string;
@@ -37,6 +41,7 @@ export default function Database(): JSX.Element {
         mapIndex = parseInt(sessionStorage.getItem('mapIndex') || '', 10);
     }
 
+    const [isChecked, setIsChecked] = useState<boolean>(false);
     const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
     const [data, setData] = useState<DataItem[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -60,10 +65,8 @@ export default function Database(): JSX.Element {
     const [mobileEditNameDisplay, setMobileEditNameDisplay] = useState<boolean>(false);
     const [newName, setNewName] = useState('');
 
-
-
-
     useEffect(() => {
+
         function checkToken() {
             axios.get(`${backendUrl}`, {
                 headers: {
@@ -89,7 +92,7 @@ export default function Database(): JSX.Element {
                 }
             }).then((response) => {
                 const data = response.data.data;
-                data.forEach((item: any) => {
+                data.forEach((item: any, index: any) => {
                     // Convert modified_time string to a Date object
                     const originalDate = new Date(item.modified_time);
 
@@ -98,9 +101,14 @@ export default function Database(): JSX.Element {
 
                     // Update the modified_time property with the formatted date
                     item.modified_time = formattedDate;
+
+                    // Add unique id (use uuidv4() if using UUIDs)
+                    item.mapId = index; // or uuidv4() if UUIDs
                 });
 
-                setData(data);
+                const sortedData = data.sort((a: any, b: any) => a.map_name.localeCompare(b.map_name));
+
+                setData(sortedData);
                 setRender(true);
             }).catch((error) => {
 
@@ -155,6 +163,11 @@ export default function Database(): JSX.Element {
     };
 
     const handleSortClick = (status: any, condition: any) => {
+        console.log("status : ", status);
+        console.log("condition : ", condition);
+
+
+
         if (status == "date") {
             setSortOrderStatus('date')
             if (condition.length > 0) {
@@ -211,15 +224,21 @@ export default function Database(): JSX.Element {
     };
 
     const handleCheckboxChange = (index: string) => {
-        if (mapIndex == startIndex + parseInt(index)) {
+
+        if (mapIndex == parseInt(index)) {
             sessionStorage.setItem("mapIndex", "-1");
             setCheckedIndex(-1);
         } else {
+            console.log("CCCC");
             setCheckedIndex(startIndex + parseInt(index));
             sessionStorage.setItem("mapIndex", String(startIndex + parseInt(index)));
+            console.log("nnnn : ", data[startIndex + parseInt(index)].map_name);
+
             sessionStorage.setItem("mapName", data[startIndex + parseInt(index)].map_name)
         }
     };
+
+    const handleLidarChecked = () => { }
 
     const goToControlWithIndex = () => {
         if (checkedIndex != -1) {
@@ -337,6 +356,7 @@ export default function Database(): JSX.Element {
         if (inputElement instanceof HTMLInputElement) {
             const oldName = data[startIndex + index].map_name;
             const newName = `${inputElement.value}.pgm`;
+
             if (newName !== oldName) {
                 axios.put(`${backendUrl}/api/pgm_data`, {
                     map_name: oldName,
@@ -379,44 +399,44 @@ export default function Database(): JSX.Element {
     };
 
     const updateMapNameMobile = (index: any, newName: string, oldName: string) => {
-        console.log("index: ", index);
-        console.log("newName: ", newName);
-        console.log("oldName: ", oldName);
 
-        // if (newName !== oldName) {
-        //     axios.put(`${backendUrl}/api/pgm_data`, {
-        //         map_name: oldName,
-        //         new_map_name: newName
-        //     }, {
-        //         headers: {
-        //             'Authorization': `Bearer ${sessionStorage.getItem('token')}`
-        //         }
-        //     })
-        //         .then(response => {
-        //             console.log('PGM Data Update Response:', response);
-        //             if (response.status === 200) {
-        //                 axios.get(`${backendUrl}/api/pgm_data`, {
-        //                     headers: {
-        //                         'Authorization': `Bearer ${sessionStorage.getItem('token')}`
-        //                     }
-        //                 })
-        //                     .then(res => {
-        //                         const data = res.data.data
-        //                         setData(data);
-        //                         alert("Map name updated successfully");
-        //                     })
-        //                     .catch(err => {
-        //                         alert("Error refreshing data");
-        //                     })
-        //             }
-        //             else {
-        //                 alert("Map failed to update")
-        //             }
-        //         })
-        //         .catch(error => {
-        //             console.error('Error updating map name:', error);
-        //         });
-        // }
+        if (newName.length > 0 && newName !== oldName) {
+            axios.put(`${backendUrl}/api/pgm_data`, {
+                map_name: `${oldName}.pgm`,
+                new_map_name: `${newName}.pgm`
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                }
+            })
+                .then(response => {
+                    console.log('PGM Data Update Response:', response);
+                    if (response.status === 200) {
+                        axios.get(`${backendUrl}/api/pgm_data`, {
+                            headers: {
+                                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                            }
+                        })
+                            .then(res => {
+                                const data = res.data.data
+                                setData(data);
+                                alert("Map name updated successfully");
+                            })
+                            .catch(err => {
+                                alert("Error refreshing data");
+                            })
+                    }
+                    else {
+                        alert("Map failed to update")
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating map name:', error);
+                });
+        } else {
+            console.log("newName cannot be null");
+
+        }
     };
 
     function getBaseName(fileName: any) {
@@ -441,7 +461,7 @@ export default function Database(): JSX.Element {
     let iconPage;
 
     if (pathname == "/unit/control") {
-        pathname = "Unit Control"
+        pathname = "Control Mode"
         iconPage = "/icons/Marker.svg"
     }
 
@@ -470,11 +490,30 @@ export default function Database(): JSX.Element {
         setMobileSorterDisplay(!mobileSorterDisplay)
     }
 
-    const handleMobileMapDisplay = (mapName: any, index: any) => {
-        setMobileMapName(mapName)
-        setCheckedIndex(startIndex + parseInt(index));
-        setMobileMapDisplay(!mobileMapDisplay)
+    // Define the media query for max-width: 360px
+    const mediaQuery = window.matchMedia("(max-width: 1400px)");
+
+    // Check if the media query matches and call the function if it does
+    function handleMobileMapDisplay(mapName: any, index: any) {
+        const width = window.innerWidth;
+
+        if (width < 1400) {
+            if (mapIndex == startIndex + parseInt(index)) {
+                sessionStorage.setItem("mapIndex", "-1");
+                setCheckedIndex(-1);
+            } else {
+                setCheckedIndex(startIndex + parseInt(index));
+                sessionStorage.setItem("mapIndex", String(startIndex + parseInt(index)));
+            }
+
+            let dotIndex = mapName.lastIndexOf(".");
+
+            setMobileMapName(mapName.substring(0, dotIndex))
+            setCheckedIndex(startIndex + parseInt(index));
+            setMobileMapDisplay(!mobileMapDisplay)
+        }
     }
+
 
     const handleMobileEditName = () => {
         setMobileEditNameDisplay(!mobileEditNameDisplay)
@@ -484,6 +523,10 @@ export default function Database(): JSX.Element {
     const handleNewNameChange = (event: any) => {
         setNewName(event.target.value);
     };
+
+    const handleMapPreview = () => {}
+
+    const handlePseudo = () => { }
 
     return (
         <>  {render ?
@@ -512,6 +555,7 @@ export default function Database(): JSX.Element {
 
                     <TokenExpired status={tokenExpired} />
 
+                    {/* MOBILE SECTION */}
                     <div
                         className={`${styles.displayNone}  ${mobileSorterDisplay ? styles.mobileSortingnBackground : ""} ${mobileSorterDisplay ? styles.mobileDisplayFlex : ""}`}
                         onClick={handleMobileSorterDisplay}
@@ -527,10 +571,10 @@ export default function Database(): JSX.Element {
                                         <p>Map Name</p>
                                     </div>
                                     <div className={styles.iconSection}>
-                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'name' && sortOrder == 'desc' ? styles.sortIconActive : ""}`} onClick={() => handleSortClick('name', 'desc')}>
+                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'name' && sortOrder == 'asc' ? styles.sortIconActive : ""}`} onClick={() => handleSortClick('name', 'asc')}>
                                             <img src="/icons/dsc_icon.svg" alt="" />
                                         </div>
-                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'name' && sortOrder == 'asc' ? styles.sortIconActive : ""}`} onClick={() => handleSortClick('name', 'asc')}>
+                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'name' && sortOrder == 'desc' ? styles.sortIconActive : ""}`} onClick={() => handleSortClick('name', 'desc')}>
                                             <img src="/icons/asc_icon.svg" alt="" />
                                         </div>
                                     </div>
@@ -540,10 +584,10 @@ export default function Database(): JSX.Element {
                                         <p>Date Modified</p>
                                     </div>
                                     <div className={styles.iconSection}>
-                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'date' && sortOrder == 'desc' ? styles.sortIconActive : ""}`} onClick={() => handleSortClick('date', 'desc')}>
+                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'date' && sortOrder == 'asc' ? styles.sortIconActive : ""}`} onClick={() => handleSortClick('date', 'asc')}>
                                             <img src="/icons/dsc_icon.svg" alt="" />
                                         </div>
-                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'date' && sortOrder == 'asc' ? styles.sortIconActive : ""}`} onClick={() => handleSortClick('date', 'asc')}>
+                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'date' && sortOrder == 'desc' ? styles.sortIconActive : ""}`} onClick={() => handleSortClick('date', 'desc')}>
                                             <img src="/icons/asc_icon.svg" alt="" />
                                         </div>
                                     </div>
@@ -627,69 +671,72 @@ export default function Database(): JSX.Element {
                             </div>
                         </div>
                     </div>
+                    {/* ----------------- */}
 
-
-                    {showControlInstruction || firstLoaded == 'true' ? <ControlInstruction onClick={handleControlInstructionClick} width={80} height={80} imgUrl='/images/instruction_database.svg' /> : ''}
                     <div className={styles.container}>
+                        {showControlInstruction || firstLoaded == 'true' ? <ControlInstruction onClick={handleControlInstructionClick} height={80} imgUrl='/images/instruction_database.svg' /> : ''}
+
                         <div className={styles.parents}>
+                            <div className={`${styles.topSection} ${styles.mobileDisplayNone}`}>
+                                <GreetingsUnit />
+                            </div>
+
                             <MobileTopSection onConfirmButtonClick={handleCloseButtonClick} />
 
                             <div className={styles.mobileDisplayNone}>
                                 <CloseButton onClick={onConfirmButtonClick} />
                             </div>
 
-                            <div className={`${styles.navigation} ${styles.mobileDisplayNone}`}>
-                                <Navigation />
-                            </div>
 
-
-                            <div className={`${styles.displayNone} ${styles.mobileLidarSection}`}>
-                                <div className={styles.routeSection}>
-                                    <img src={iconPage} alt="" />
-                                    <p>{pathname}</p>
-                                </div>
-                                <div className={styles.mapCollection}>
-                                    <p>Map Collection</p>
-                                </div>
-                            </div>
-
-                            <div className={styles.mapSection}>
-                                <div className={`${styles.topSection} ${styles.mobileDisplayNone}`}>
-                                    <div className="">
-                                        <p>Map Collection</p>
-                                    </div>
-
-                                    <div className={styles.searchBar}>
-                                        <input
-                                            type="text"
-                                            placeholder="Search..."
-                                            value={searchQuery} // Set the input value to searchQuery
-                                            onChange={handleSearchInputChange} // Call the handler on input change
-                                        />
-                                        <img src="/icons/search-cion.svg" alt="" className={styles.largeScreenImage} />
-                                    </div>
+                            <div className={styles.unitParents}>
+                                <div className={`${styles.navigation} ${styles.mobileDisplayNone}`}>
+                                    <Navigation />
                                 </div>
 
+                                <MobileLidarSection // Use the new component here
+                                    isChecked={isChecked}
+                                    handleCheckboxChange={handleLidarChecked}
+                                />
 
-                                <div className={styles.mainSection}>
+                                {/* MOBILE SECTION */}
+                                <div className={styles.mapSection}>
+                                    <div className={`${styles.topSection} ${styles.mobileDisplayNone}`}>
+                                        <div className="">
+                                            <p>Map Collection</p>
+                                        </div>
 
-                                    <div className={`${styles.displayNone} ${styles.searchBarMobile} `}>
-                                        <input
-                                            type="text"
-                                            placeholder="Search..."
-                                            value={searchQuery} // Set the input value to searchQuery
-                                            onChange={handleSearchInputChange} // Call the handler on input change
-                                        />
-                                        <img src="/icons/search_icon.svg" alt="" className={styles.largeScreenImage} />
+                                        <div className={styles.searchBar}>
+                                            <input
+                                                type="text"
+                                                placeholder="Search..."
+                                                value={searchQuery} // Set the input value to searchQuery
+                                                onChange={handleSearchInputChange} // Call the handler on input change
+                                            />
+                                            <img src="/icons/search_icon.svg" alt="" className={styles.largeScreenImage} />
+                                        </div>
                                     </div>
 
-                                    <table className={styles.theTable}>
-                                        <thead>
-                                            <tr className={styles.header}>
-                                                <th className={styles.idColumn}>No.</th>
-                                                <th className={styles.sortableHeader}>
-                                                    <div className={styles.headerContent}>
-                                                        <span>Map Name</span>
+
+                                    <div className={styles.mainSection}>
+
+                                        <div className={`${styles.displayNone} ${styles.searchBarMobile} `}>
+                                            <input
+                                                type="text"
+                                                placeholder="Search..."
+                                                value={searchQuery} // Set the input value to searchQuery
+                                                onChange={handleSearchInputChange} // Call the handler on input change
+                                            />
+                                            <img src="/icons/search_icon.svg" alt="" className={styles.largeScreenImage} />
+                                        </div>
+
+                                        <table className={styles.theTable}>
+                                            <thead>
+                                                <tr className={styles.header}>
+                                                    <th className={styles.idColumn} >No.</th>
+                                                    <th className={`${styles.sortableHeader} ${styles.mapNameColumn} `}>
+                                                        <div className={`${styles.headerContent} ${styles.spanSorter} `}>
+                                                            <span>Map Name</span>
+                                                        </div>
                                                         <Image
                                                             className={styles.mobileDisplayNone}
                                                             alt=""
@@ -698,11 +745,11 @@ export default function Database(): JSX.Element {
                                                             height={40}
                                                             onClick={() => handleSortClick('name', '')}
                                                         />
-                                                    </div>
-                                                </th>
-                                                <th className={styles.sortableHeader}>
-                                                    <div className={styles.headerContent}>
-                                                        <span>Date Modified</span>
+                                                    </th>
+                                                    <th className={`${styles.sortableHeader} ${styles.dateModifiedColumn}`}>
+                                                        <div className={`${styles.headerContent} ${styles.spanSorter} `}>
+                                                            <span>Date Modified</span>
+                                                        </div>
                                                         <Image
                                                             className={styles.mobileDisplayNone}
                                                             alt=""
@@ -711,177 +758,168 @@ export default function Database(): JSX.Element {
                                                             height={40}
                                                             onClick={() => handleSortClick('date', '')}
                                                         />
-                                                    </div>
-                                                </th>
-                                                <th className={`${styles.fileType} ${styles.mobileDisplayNone}`}>File Type</th>
-                                                <th className={`${styles.fileSize} ${styles.mobileDisplayNone}`}>Size</th>
-                                                <th className={`${styles.selectedMap} ${styles.mobileDisplayNone}`}>Selected<br /> Map to Load</th>
-                                                <th className={`${styles.delete} ${styles.mobileDisplayNone}`}>Delete</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-                                            {currentData.map((item, index) => (
-                                                <tr key={index} onClick={() => handleMobileMapDisplay(item.map_name, index)}>
-                                                    <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-
-                                                    <td onDoubleClick={() => handleDoubleClick(index)}>
-                                                        {isEditing[index] ? (
-                                                            <input
-                                                                type="text"
-                                                                id={`mapNameInput${index}`} // Assign the ID here
-                                                                defaultValue={getBaseName(item.map_name)} // Remove the extension before editing
-                                                                onBlur={() => updateMapName(index)}
-                                                                autoFocus
-                                                            />
-                                                        ) : (
-                                                            getBaseName(item.map_name) // Display the name without the extension
-                                                        )}
-                                                    </td>
-
-                                                    <td className={styles.sortableHeader}>{item.modified_time}</td>
-                                                    <td className={`${styles.mobileDisplayNone}`}>{item.file_type}</td>
-                                                    <td className={`${styles.fileSize} ${styles.mobileDisplayNone}`}>{item.file_size}</td>
-                                                    <td className={`${styles.dark} ${styles.mobileDisplayNone}`}>
-                                                        <div className={`${styles.inputContainer}`}>
-                                                            <input
-                                                                type="checkbox"
-                                                                id={`checklistItem${index}`}
-                                                                checked={checkedIndex == startIndex + index}
-                                                                onChange={() => handleCheckboxChange(index.toString())}
-                                                            />
-                                                            <label htmlFor={`checklistItem${index}`}></label>
-                                                        </div>
-                                                    </td>
-                                                    <td className={`${styles.dark} ${styles.delete} ${styles.mobileDisplayNone}`}>
-                                                        <Image
-                                                            src="/icons/Delete.svg"
-                                                            alt="Delete icons"
-                                                            height={30}
-                                                            width={30}
-                                                            onClick={() => handleDeleteItem(index)}
-                                                        />
-                                                    </td>
+                                                    </th>
+                                                    <th className={`${styles.fileType} ${styles.mobileDisplayNone}`}>File Type</th>
+                                                    <th className={`${styles.fileSize} ${styles.mobileDisplayNone}`}>Size</th>
+                                                    <th className={`${styles.selectedMap} ${styles.mobileDisplayNone}`}>Selected<br /> Map to Load</th>
+                                                    <th className={`${styles.delete} ${styles.mobileDisplayNone}`}>Delete</th>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
+                                            </thead>
 
-                                <div className={styles.bottomSection}>
-                                    {/* <div className={styles.warning}>
-                                        <img
-                                            src="/icons/information-circle-svgrepo-com (1).svg"
-                                            alt=""
-                                        />
-                                        <p>Rename the map by double-click the name</p>
-                                    </div> */}
-                                    <div
-                                        className={`${styles.confirmMappingChoosed} ${(initialCheckedIndex !== null && parseInt(initialCheckedIndex) > -1) || mapIndex > -1
-                                            ? ""
-                                            : styles.disable
-                                            } ${styles.mobileDisplayNone}`}
-                                        onClick={goToControlWithIndex}
-                                    >
-                                        <p>Go to the Map</p>
-                                        <Image src="/icons/3.svg" width={20} height={20} alt="play" />
+                                            <tbody>
+                                                {currentData.map((item, index) => (
+                                                    <tr key={index} onClick={() => handleMobileMapDisplay(item.map_name, index)}>
+                                                        <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
+
+                                                        <td onDoubleClick={() => handleDoubleClick(index)}>
+                                                            {isEditing[index] ? (
+                                                                <input
+                                                                    type="text"
+                                                                    id={`mapNameInput${index}`} // Assign the ID here
+                                                                    defaultValue={getBaseName(item.map_name)} // Remove the extension before editing
+                                                                    onBlur={() => updateMapName(index)}
+                                                                    autoFocus
+                                                                />
+                                                            ) : (
+                                                                getBaseName(item.map_name) // Display the name without the extension
+                                                            )}
+                                                        </td>
+
+                                                        <td className={styles.sortableHeader}>{item.modified_time}</td>
+                                                        <td className={`${styles.mobileDisplayNone}`}>{item.file_type}</td>
+                                                        <td className={`${styles.fileSize} ${styles.mobileDisplayNone}`}>{item.file_size}</td>
+                                                        <td className={`${styles.dark} ${styles.mobileDisplayNone}`}>
+                                                            <div className={`${styles.inputContainer}`}>
+                                                                <input
+                                                                    type="checkbox"
+                                                                    id={`checklistItem${index}`}
+                                                                    checked={checkedIndex == item.mapId}
+                                                                    onChange={() => handleCheckboxChange(item.mapId)}
+                                                                />
+                                                                <label htmlFor={`checklistItem${index}`}></label>
+                                                            </div>
+                                                        </td>
+                                                        <td className={`${styles.dark} ${styles.delete} ${styles.mobileDisplayNone}`}>
+                                                            <Image
+                                                                src="/icons/Delete.svg"
+                                                                alt="Delete icons"
+                                                                height={30}
+                                                                width={30}
+                                                                onClick={() => handleDeleteItem(index)}
+                                                            />
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
                                     </div>
 
-                                    <div className={styles.pagination}>
-                                        <button
-                                            className={`${styles.bottonPagination} ${currentPage === 1 ? styles.buttonDisable : ""
-                                                }`}
-                                            onClick={() => handlePaginationButtonClick("first")}
-                                            disabled={currentPage === 1}
+                                    <div className={styles.bottomSection}>
+                                        <div
+                                            className={`${styles.confirmMappingChoosed} ${(initialCheckedIndex !== null && parseInt(initialCheckedIndex) > -1) || mapIndex > -1
+                                                ? ""
+                                                : styles.disable
+                                                } ${styles.mobileDisplayNone}`}
+                                            onClick={goToControlWithIndex}
                                         >
-                                            <Image
-                                                src="/icons/2 left.svg"
-                                                alt="button left"
-                                                width={10}
-                                                height={10}
-                                            />
-                                        </button>
-                                        <button
-                                            className={`${styles.bottonPagination} ${currentPage === 1 ? styles.buttonDisable : ""
-                                                }`}
-                                            onClick={() => handlePaginationButtonClick("prev")}
-                                            disabled={currentPage === 1}
-                                        >
-                                            <Image
-                                                src="/icons/1 left.svg"
-                                                alt="button left"
-                                                width={10}
-                                                height={10}
-                                            />
-                                        </button>
-
-                                        <div className={styles.currentPage}>
-                                            <input
-                                                className={styles.pageInput}
-                                                type="text"
-                                                value={currentPage}
-                                                onChange={(e) => {
-                                                    const newValue = e.target.value;
-                                                    if (
-                                                        /^[0-9]*$/.test(newValue) &&
-                                                        parseInt(newValue) >= 1 &&
-                                                        parseInt(newValue) <= totalPages
-                                                    ) {
-                                                        setCurrentPage(parseInt(newValue));
-                                                    }
-                                                }}
-                                            />
+                                            <p>Go to the Map</p>
+                                            <Image src="/icons/3.svg" width={20} height={20} alt="play" />
                                         </div>
 
-                                        <p>of</p>
-                                        <p>{totalPages}</p>
-                                        <button
-                                            className={`${styles.bottonPagination} ${currentPage === totalPages ? styles.buttonDisable : ""
-                                                }`}
-                                            onClick={() => handlePaginationButtonClick("next")}
-                                            disabled={currentPage === totalPages}
-                                        >
-                                            <Image
-                                                src="/icons/1 right.svg"
-                                                alt="button 1 right"
-                                                width={10}
-                                                height={10}
-                                            />
-                                        </button>
-                                        <button
-                                            className={`${styles.bottonPagination} ${currentPage === totalPages ? styles.buttonDisable : ""
-                                                }`}
-                                            onClick={() => handlePaginationButtonClick("last")}
-                                            disabled={currentPage === totalPages}
-                                        >
-                                            <Image
-                                                src="/icons/2 right.svg"
-                                                alt="button 2 right"
-                                                width={10}
-                                                height={10}
-                                            />
-                                        </button>
+                                        <div className={styles.pagination}>
+                                            <button
+                                                className={`${styles.bottonPagination} ${currentPage === 1 ? styles.buttonDisable : ""
+                                                    }`}
+                                                onClick={() => handlePaginationButtonClick("first")}
+                                                disabled={currentPage === 1}
+                                            >
+                                                <Image
+                                                    src="/icons/2 left.svg"
+                                                    alt="button left"
+                                                    width={10}
+                                                    height={10}
+                                                />
+                                            </button>
+                                            <button
+                                                className={`${styles.bottonPagination} ${currentPage === 1 ? styles.buttonDisable : ""
+                                                    }`}
+                                                onClick={() => handlePaginationButtonClick("prev")}
+                                                disabled={currentPage === 1}
+                                            >
+                                                <Image
+                                                    src="/icons/1 left.svg"
+                                                    alt="button left"
+                                                    width={10}
+                                                    height={10}
+                                                />
+                                            </button>
+
+                                            <div className={styles.currentPage}>
+                                                <input
+                                                    className={styles.pageInput}
+                                                    type="text"
+                                                    value={currentPage}
+                                                    onChange={(e) => {
+                                                        const newValue = e.target.value;
+                                                        if (
+                                                            /^[0-9]*$/.test(newValue) &&
+                                                            parseInt(newValue) >= 1 &&
+                                                            parseInt(newValue) <= totalPages
+                                                        ) {
+                                                            setCurrentPage(parseInt(newValue));
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+
+                                            <p>of</p>
+                                            <p>{totalPages}</p>
+                                            <button
+                                                className={`${styles.bottonPagination} ${currentPage === totalPages ? styles.buttonDisable : ""
+                                                    }`}
+                                                onClick={() => handlePaginationButtonClick("next")}
+                                                disabled={currentPage === totalPages}
+                                            >
+                                                <Image
+                                                    src="/icons/1 right.svg"
+                                                    alt="button 1 right"
+                                                    width={10}
+                                                    height={10}
+                                                />
+                                            </button>
+                                            <button
+                                                className={`${styles.bottonPagination} ${currentPage === totalPages ? styles.buttonDisable : ""
+                                                    }`}
+                                                onClick={() => handlePaginationButtonClick("last")}
+                                                disabled={currentPage === totalPages}
+                                            >
+                                                <Image
+                                                    src="/icons/2 right.svg"
+                                                    alt="button 2 right"
+                                                    width={10}
+                                                    height={10}
+                                                />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
+
+                                <MobileBottomSection
+                                    handleMobileNavigation={handleMobileNavigation}
+                                    handleMapPreview={handleMapPreview}
+                                    handleMobileInstruction={handleMobileInstruction}
+                                    handleMobileSorterDisplay={handleMobileSorterDisplay}
+                                    mapIndex={false}
+                                />
+
                             </div>
+
                             <ButtonInformation onClick={handleInfoIconClick} />
 
-                            <div className={`${styles.displayNone} ${styles.mobileBottomSection}`}>
-                                <div className={`${styles.navigationMobileButton} ${styles.bottomSectionButton}`} onClick={handleMobileNavigation}>
-                                    <img src="/icons/list.svg" alt="" />
-                                </div>
 
-                                <div className={`${styles.webcamButton} ${styles.webcamIcon} ${styles.bottomSectionButton}`} onClick={handleMobileSorterDisplay}>
-                                    <img src="/icons/arrange_icon.svg" alt="" />
-                                </div>
-
-                                <div className={`${styles.webcamButton} ${styles.sircleIcon} ${styles.bottomSectionButton}`} onClick={handleMobileInstruction}>
-                                    <img src="/icons/information-circle-svgrepo-com.svg" alt="" />
-                                </div>
-
-                                <Footer status={false /* or false */} />
+                            <div className={`${styles.mobileDisplayNone}`}>
+                                <Footer status={false} />
                             </div>
-                            {/* <Footer status={false} /> */}
                         </div>
                     </div>
                 </>

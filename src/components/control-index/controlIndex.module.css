@@ -1,7 +1,5 @@
 .container {
-    /* background: url('/images/Walpaper_without_watermark.png'), #4E6CB1; */
     background: linear-gradient(rgba(78, 108, 177, 0.5), rgba(78, 108, 177, 0.5)), url('/images/Walpaper_without_watermark.png');
-    /* background-color: #4E6CB1; */
     background-size: cover;
     background-repeat: no-repeat;
     width: 100%;
@@ -15,11 +13,11 @@
 }
 
 .parents {
+
     display: flex;
+    flex-direction: column;
     margin-left: auto;
     margin-right: auto;
-
-    /* max-width: 1440px; */
     height: 100%;
 
     position: relative;
@@ -29,13 +27,11 @@
     width: 40%;
     min-width: 480px;
     padding-top: 10px;
-    position: absolute;
     right: 150px;
     display: flex;
     gap: 20px;
-    /* align-items: center; */
-    /* z-index: 2; */
 }
+
 
 .statusSection div {
     height: 100%;
@@ -44,11 +40,11 @@
 .statusSection .status {
     width: 279px;
     min-width: 279px;
-    height: 57px;
+    height: 52px;
     display: flex;
     align-items: center;
     background-color: #0C98B4;
-    border: 4px solid #60E3D5;
+    border: 3px solid #60E3D5;
     border-radius: 20px;
 
     font-family: 'Inter', sans-serif;
@@ -83,7 +79,7 @@
 .statusSection .lidar {
     margin-left: auto;
     min-width: 94px;
-    height: 57px;
+    height: 52px;
     text-align: center;
     display: flex;
     /* Use flex display */
@@ -145,13 +141,13 @@
     content: "";
     height: 15px;
     width: 15px;
-    left: 4px;
-    bottom: 4px;
+    left: 2px;
     border: 10px solid #0567A6;
     /* background-color: red; */
     border-radius: 50%;
     /* Round indicator to create a circle */
     transition: 0.4s;
+    transform: translateX(100%);
     /* Transition effect to create smooth sliding */
 }
 
@@ -170,7 +166,7 @@
 
 /* Move the indicator to the right when toggled on */
 .toggleInput:checked+.slider::before {
-    transform: translateX(100%);
+    transform: translateX(5%);
     background-color: #0567A6;
     border: 10px solid #60E3D5;
     /* Color of the indicator when checked */
@@ -180,34 +176,26 @@
 /* MAP SECTION */
 
 .mapSection {
-    width: 1050px;
-    /* min-width: 1000px; */
-    max-height: 800px;
+    width: 1102px;
     min-height: 800px;
-    /* min-height: 900px; */
+
     height: 80%;
     background-color: #D0E1E7;
-    border: 4.15px solid #0C98B4;
+    border: 2px solid #0C98B4;
     border-radius: 45px;
-
-    /* Horizontally center the content */
-
-    /* margin-top: 10vh; */
 
     box-shadow: -10px 10px 4px 0px #00000040;
     position: absolute;
-    margin-top: 110px;
-    right: 25px;
+    margin-bottom: 20px;
 
     z-index: 2;
 
     display: flex;
     flex-direction: column;
-    /* align-items: center; */
+    align-items: center;
     /* justify-content: center; */
-
-    margin-bottom: 20px;
 }
+
 
 /* --------------------------------------------- */
 
@@ -216,84 +204,54 @@
 .topDiv {
     display: flex;
     align-items: center;
-    /* Vertically align elements in the flex container */
+
     font-family: 'Inter', sans-serif;
     font-size: 26px;
     font-weight: 500;
-    /* line-height: 31px; */
+
     letter-spacing: 0em;
     color: #0567A6;
-    gap: 20px;
+    gap: 10px;
 
     width: 95%;
     margin-left: auto;
     margin-right: auto;
-
     height: 40px;
     margin-top: 46px;
-    margin-bottom: 64.1px;
-
+    margin-bottom: 65px;
+    padding-left: 20px;
 }
-
 
 
 .topDiv .playButton,
 .topDiv .pauseButton,
 .topDiv .stopButton,
+.topDiv .focusButton,
 .topDiv .settingsButton {
     display: flex;
 }
 
 .topDiv .playButton,
-.topDiv .pauseButton {
+.topDiv .pauseButton,
+.topDiv .stopButton,
+.topDiv .focusButton {
     height: 20px;
-    /* width: 8%; */
+    width: max-content;
     background-color: #0C98B4;
     border: 2px solid #60E3D5;
     border-radius: 10px;
     justify-content: space-between;
-    padding: 10px;
+    padding: 8px;
 
     display: flex;
     align-items: center;
-    /* Vertically center the content */
-}
-
-.topDiv .playButton {
-    width: 74px
-}
-
-.topDiv .pauseButton {
-    width: 88px
-}
-
-.topDiv .stopButton {
-    width: 140px;
-    height: 20px;
-    background-color: #0C98B4;
-    border: 2px solid #60E3D5;
-    border-radius: 10px;
-    justify-content: space-between;
-    padding: 10px;
-
-    display: flex;
-    align-items: center;
-
-    font-size: 16px;
-}
-
-.topDiv .playButton:hover,
-.topDiv .pauseButton:hover,
-.topDiv .stopButton:hover {
-    box-shadow: -5px 5px 4px 0px #00000040;
-    transition: 0.5s;
-    cursor: pointer;
 
 }
 
 .topDiv .playButton p,
 .topDiv .pauseButton p,
-.topDiv .stopButton p {
+.topDiv .stopButton p,
+.topDiv .focusButton p {
     margin: 0;
     font-family: 'Inter', sans-serif;
     font-size: 16px;
@@ -307,19 +265,31 @@
 
 .topDiv .playButton img,
 .topDiv .pauseButton img,
-.topDiv .stopButton img {
-    width: 16px;
-    /* Adjust image width as needed */
-    height: 16px;
-    /* Adjust image height as needed */
+.topDiv .stopButton img,
+.topDiv .focusButton img {
+    width: 25px;
+
+    height: 25px;
+
     margin-right: 5px;
-    /* Add some spacing between image and text */
+
 }
+
+.topDiv .playButton:hover,
+.topDiv .pauseButton:hover,
+.topDiv .stopButton:hover,
+.topDiv .focusButton:hover {
+    box-shadow: -5px 5px 4px 0px #00000040;
+    transition: 0.5s;
+    cursor: pointer;
+
+}
+
+
 
 .topDiv .settingsButton {
     margin-left: auto;
-    height: 54px;
-    width: 343px;
+    height: 20px;
     background-color: #F6F0F0;
     border: 3px solid #60E3D5;
     font-size: 14px;
@@ -327,13 +297,11 @@
     gap: 10px;
     display: flex;
     align-items: center;
-
-    color: #0C98B4;
 }
 
 .topDiv .settingsButton img {
-    height: 23px;
-    width: 23px;
+    height: 16px;
+    width: 16px;
 }
 
 .buttonActive {
@@ -341,10 +309,11 @@
 }
 
 
+
 /* Center Div */
 .centerDiv {
     width: 95%;
-    height: 625px;
+    height: 675px;
     border-radius: 30px;
     border: 3px solid #0C98B4;
     margin-left: auto;
@@ -363,6 +332,7 @@
 .centerDiv .navigationSection {
     display: flex;
     position: absolute;
+    width: 100%;
 }
 
 .mapPreview {
@@ -392,18 +362,19 @@
     flex-direction: column;
     height: 115px;
     width: 37px;
-    /* background-color: red; */
+
     position: absolute;
     z-index: 10;
     gap: 10px;
-
-    margin-left: 930px;
+    left: 89%;
     margin-top: 25px;
+
 }
 
 .centerDiv .buttonNavigation div {
-    height: 37px;
-    width: 37px;
+    height: 20px;
+    width: 20px;
+    display: flex;
     background-color: #0C98B4;
     border: 5px solid #60E3D5;
     border-radius: 5px;
@@ -419,33 +390,34 @@
     display: flex;
     justify-content: space-between;
     position: absolute;
-    top: 90%;
-    padding-left: 20px;
-    width: 90%;
-    /* background-color: red; */
+    top: 773px;
+    padding-left: 15px;
+    width: 91%;
+
 }
 
 .emergencyButton {
     background-color: #FF7582;
     display: flex;
-    width: 150px;
-    height: 37.1px;
-    border-radius: 20px;
+    border-radius: 14px;
     border: 2.1px solid #FF7582;
     color: #FFFFFF;
+
     font-family: Inter;
-    font-size: 13px;
+    font-size: 13.3px;
     font-weight: 500;
-    line-height: 23px;
-    letter-spacing: 0em;
+    line-height: 16.1px;
     text-align: left;
-    padding-left: 15px;
-    padding-right: 15px;
+
+    padding: 10.5px;
 
     align-items: center;
-    gap: 10px;
+    gap: 7px;
     justify-content: center;
+}
 
+.emergencyButton p {
+    margin: 0;
 }
 
 .emergencyButton img {
@@ -459,26 +431,29 @@
 
 .mapName {
     font-family: Inter;
-    font-size: 25px;
+    font-size: 16px;
     font-weight: 500;
-    line-height: 23px;
-    letter-spacing: 0em;
+    line-height: 19.36px;
     text-align: left;
+
     display: flex;
     align-items: center;
 
     color: #0567A6;
+    margin-top: auto;
 }
 
 /* MODE LIST */
 .modeListSection {
     display: flex;
     flex-direction: column;
+    position: absolute;
     margin-left: auto;
     margin-right: 10%;
     margin-top: 25px;
     gap: 12px;
-    margin-left: 700px;
+    /* right: 80px; */
+    left: 65%;
 }
 
 .modeListSection img {
@@ -565,268 +540,97 @@
     background-color: #FF7582 !important;
 }
 
-
-
-@media (max-width: 1439px) {
-    .mapSection {
-        position: relative;
-        right: 0;
-        margin-top: 0;
-    }
-
-    .statusSection {
-        /* background-color: red; */
-        margin-top: 5px;
-        z-index: 1;
-        /* display: none; */
-    }
-
-    .navigation {
-        width: 780px;
-        z-index: 10;
-    }
-
-    .container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    .parents {
-        flex-direction: column;
-        align-items: center;
-        display: inline;
-        margin-left: auto;
-        margin-right: auto;
-    }
+.displayNone {
+    display: none;
 }
 
-@media (min-width: 2560px) and (min-height:1200px) {
-    .parents {
-        max-width: 100%;
-    }
-
-    .statusSection {
-        width: 50%;
-        height: 105px;
-        align-items: center;
-    }
-
-    .statusSection .status {
-        width: 375px;
-        height: 75px;
-        border-radius: 28px;
-
-        font-size: 28px;
-    }
-
-    .statusSection .status img {
-        margin-left: 35px;
-        width: 35px;
-        height: 35px;
-    }
-
-    .statusSection .lidar {
-        width: 141px;
-        height: 74px;
-        font-size: 28px;
-        border-radius: 30px;
-        margin-left: 30%;
-    }
-
-    .slider {
-        margin-top: 20%;
-        width: 112.55px;
-        height: 56.28px;
-        border-radius: 56.28px;
-    }
-
-    .slider::before {
-        width: 20px;
-        height: 20px;
-        border: 15px solid #0567A6;
-    }
-
-    .toggleInput:checked+.slider::before {
-        border: 15px solid #60E3D5;
-        /* Color of the indicator when checked */
-    }
-
-    .topDiv {
-        font-size: 38px;
-        font-weight: 600;
-    }
-
-    .mapSection {
-        margin-top: 155px;
-        width: 2000px !important;
-        height: 1160px;
-        max-height: 100%;
-        border: 5px solid #0C98B4;
-    }
-
-    .topDiv .playButton,
-    .topDiv .pauseButton {
-        height: 52px;
-        border: 2.4px solid #60E3D5;
-        border-radius: 10px;
-    }
-
-    .topDiv .playButton,
-    .topDiv .pauseButton,
-    .topDiv .stopButton {
-        width: auto;
-        height: auto;
-        border: 2.4px solid #60E3D5;
-        border-radius: 10px;
-    }
-
-    .topDiv .playButton p,
-    .topDiv .pauseButton p,
-    .topDiv .stopButton p {
-        font-size: 19px;
-        line-height: 22.99px;
-    }
-
-    .topDiv .playButton img,
-    .topDiv .pauseButton img,
-    .topDiv .stopButton img {
-        width: 20px;
-        /* Adjust image width as needed */
-        height: 20px;
-        /* Add some spacing between image and text */
-    }
-
-    .topDiv .settingsButton {
-        margin-top: 22.5px;
-        height: 121px;
-        width: 560px;
-        border: 4px solid #60E3D5;
-        border-radius: 5px;
-        font-size: 22px;
-        font-weight: 500;
-        padding: 0;
-        padding-left: 25px;
-    }
-
-    .topDiv .settingsButton img {
-        height: 30px;
-        width: 30px;
-    }
-
-    /* Center Div */
-    .centerDiv {
-        width: 95%;
-        height: 950px;
-        border-radius: 45px;
-        border: 4.15px solid #0C98B4;
-        box-shadow: 0px 5.529412269592285px 5.529412269592285px 0px #0567A6;
-    }
-
-    .centerDiv .buttonNavigation {
-        height: 115px;
-        width: 37px;
-
-        margin-left: 1750px;
-        margin-top: 50px;
-    }
-
-    .centerDiv .buttonNavigation div {
-        height: 50px !important;
-        width: 50px;
-        background-color: #0C98B4;
-        border: 3.5px solid #60E3D5;
-        border-radius: 8px;
-        padding: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .centerDiv .buttonNavigation div img {
-        width: 28px;
-        height: 28px;
-        padding: 20px;
-    }
-
-    .centerDiv .buttonNavigation div:hover {
-        background-color: #8DAAC0;
-        cursor: pointer;
-
-    }
-
-    .footerMap {
-        top: 88%;
-        padding-left: 30px;
-        width: 90%;
-    }
-
-    .emergencyButton {
-        width: 225px;
-        height: 60px;
-        border-radius: 20px;
-        font-size: 20px;
-        font-weight: 500;
-        line-height: 23px;
-        letter-spacing: 0em;
-        text-align: left;
-        padding-left: 15px;
-        padding-right: 15px;
-
-        align-items: center;
-        gap: 10px;
-        justify-content: center;
-
-    }
-
-    .emergencyButton img {
-        width: 30px;
-        height: 30px;
-    }
-
-    /* MODE LIST */
-    .modeListSection {
-        margin-top: 50px;
-        margin-left: 1450px;
-    }
-
-    .modeListParents {
-        width: 217px !important;
-        height: 52px !important;
-        border: 3px solid #60E3D5;
-        font-size: 19px;
-    }
-
-    .mapPreview {
-        width: 375px;
-        height: 281.25px;
-        border-radius: 10px;
-        top: 30px;
-        left: 30px;
-    }
-
-    .mapPreview .map {
-        width: 355px;
-        height: 238px;
-    }
+.topSection {
+    display: flex;
+    align-items: center;
 
 }
 
+.unitParents {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
 
-@media (max-width:361px) {
+.topDivInformation {
+    background-color: #F6F0F0;
+    display: flex;
+    gap: 15px;
+    border: 4px solid #60E3D5;
+
+    padding: 10px;
+
+    font-family: Inter;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 26.63px;
+    text-align: left;
+    color: #0C98B4;
+
+    margin-left: auto;
+
+    align-items: center;
+}
+
+
+.topDivInformation img {
+    width: 30px;
+    height: 30px;
+}
+
+.topDivInformation p {
+    margin: 0;
+}
+
+
+
+@media (max-width:1400px) {
 
     .container {
         background-image: url('/images/Walpaper_without_watermark.png');
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .parents {
+        flex-direction: column;
+        align-items: center;
+        display: flex;
+        margin-left: auto;
+        margin-right: auto;
+        width: 90%;
 
     }
 
-    /* ${styles.mobileDisplayNone} */
+    .unitParents {
+        display: flex;
+        flex-direction: column;
+        height: 99%;
+        align-items: center;
+    }
+
+    .centerDiv {
+        height: 100%;
+        font-family: Inter;
+        font-size: 32px;
+        font-weight: 600;
+        line-height: 38.73px;
+        text-align: center;
+    }
+
+
     .mobileDisplayNone {
         display: none !important;
     }
 
     .mapSection {
-        width: 330px;
+        min-width: 330px;
+        width: 90%;
         min-height: 0;
         height: 396px;
 
@@ -836,15 +640,13 @@
         margin-top: 8px;
         margin-bottom: 5px;
 
-        border: 1px solid #0C98B4;
-        box-shadow: -1px 1px 1px 0px #00000040;
+        box-shadow: 0px 0px 0px 0px #00000040;
+
     }
 
     .mapSectionWithoutPreview {
         height: 77.5%;
     }
-
-    /* --------------------------------------------- */
 
     .centerDiv {
         width: 100%;
@@ -856,52 +658,39 @@
         text-align: center;
         border-radius: 0;
         border: none;
-
-        /* padding-left: 56px;
-        padding-right: 56px; */
     }
 
-    .centerDiv .location {
-        width: 15%;
-        height: 15%;
+    .mobileBottomSection {
+        display: flex;
+        justify-content: space-evenly;
+        gap: 8px;
     }
 
-    .informationSection {
-        border: 3px solid #60E3D5;
-        border-radius: 5px;
-        /* padding-left: 7px; */
-        padding-right: 7px;
-
-        width: auto;
+    .bottomSectionButton {
+        height: 90%;
+        width: 50px;
+        background-color: #0C98B4;
+        border: 2px solid #60E3D5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 100%;
+        margin: 0;
+        padding: 0;
     }
 
-    .informationSection:hover {
-        cursor: pointer;
+    .bottomSectionButton img {
+        height: 50%;
+        width: 50%;
+        margin: 0;
+        padding: 0;
     }
 
-    .centerDiv .informationSection img {
-        width: 18px;
-        height: 18px;
-        margin-right: none;
-    }
-
-    .informationSection p {
-        font-family: Inter;
-        font-size: 12px;
-        font-weight: 500;
-        line-height: 15px;
-        letter-spacing: 0em;
-        text-align: left;
-
-        color: #0C98B4;
-        text-align: center;
-        /* Horizontally center the text */
-    }
-
-    .mobileNavigationSection {
-        position: absolute;
-        width: 100%;
-        height: auto;
+    .webcamIcon img {
+        width: 80%;
+        height: 80%;
+        margin: 0;
+        padding: 0;
     }
 
     .controlLidarButton {
@@ -1010,113 +799,415 @@
         width: 15px;
         height: 15px;
     }
+}
 
-    .modeListButtonSection {
-        position: absolute;
-        top: 72px;
-        right: 10px;
+@media (max-width: 2200px) and (min-width:1401px) {
 
+    .menu {
+        width: 240px;
+        height: 259px;
+        padding: 10px;
+
+        background-color: #D0E1E7;
+        border: 5.38px solid #0C98B4;
+        border-radius: 45px;
         display: flex;
+
         flex-direction: column;
-        gap: 8px;
+        justify-content: space-around;
 
-        width: auto;
-        height: auto;
+        box-shadow: -10px 10px 4px 0px #00000040;
     }
 
-    .modeListButton {
-        width: 95px;
-        height: 33px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-
-        font-family: Inter;
-        font-size: 10px;
-        font-weight: 500;
-        line-height: 15px;
-        letter-spacing: 0em;
-        text-align: left;
-        color: #FFFFFF;
-        padding-right: 12px;
-
-        background-color: #0C98B4;
-        border: 2px solid #60E3D5;
-        border-radius: 15px;
+    .mapSection {
+        position: relative;
+        width: 75% !important;
+        height: 850px;
+        max-height: 100%;
+        border: 5px solid #0C98B4;
+        margin-right: 29px;
     }
 
-    .modeListButton img {
-        width: 12px;
-        height: 6px;
-    }
-
-    .modeListButtonIcon img {
-        width: 15px;
-        height: 15px;
-        margin-left: 12px;
-    }
-
-    .modeListButtonIcon p {
-        margin: 0;
-        padding: 0;
-        width: max-content;
-        /* margin-right: 8px; */
-    }
-
-    .modeListParents {
-        padding: 0;
-    }
-
-    .bottomSection {
-        height: auto;
-        width: 100%;
+    .mapPreview {
+        width: 275px;
+        height: 180px;
+        background-color: #ECF4F6;
         position: absolute;
-        bottom: 10px;
-        left: 10px;
-        display: flex;
-    }
-
-    .mobileStatus {
-        height: 35px;
-        width: auto;
+        top: 15px;
+        left: 15px;
+        border-radius: 4px;
+        border-style: solid;
+        border-width: 3px;
+        border-color: #ECF4F6;
+        overflow: hidden;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 20px;
+    }
 
-        background-color: #0C98B4;
-        border: 2px solid #60E3D5;
+    .mapPreview .map {
+        width: 100%;
+        height: 100%;
+    }
 
-        margin: 0;
-        padding-left: 10px;
-        padding-right: 10px;
 
+    .centerDiv {
         font-family: Inter;
-        font-size: 12px;
+        font-size: 32px;
+        font-weight: 600;
+        line-height: 38.73px;
+        text-align: center;
+    }
+
+    .informationSection {
+        width: fit-content;
+        height: auto;
+    }
+
+    .informationSection img {
+        width: 23px !important;
+        height: 23px !important;
+    }
+
+
+    .informationSection p {
+        font-family: Inter;
+        font-size: 14px;
         font-weight: 500;
-        line-height: 15px;
-        letter-spacing: 0em;
+        line-height: 16.94px;
         text-align: left;
-        color: #FFFFFF;
+    }
+
+    .bolder {
+        font-family: Inter;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 16.94px;
+        text-align: left;
 
     }
 
-    .mobileMapName {
+    .statusSection {
+        margin-left: auto;
+        margin-right: 10%;
+
+    }
+
+    .topDiv .playButton img,
+    .topDiv .pauseButton img,
+    .topDiv .stopButton img,
+    .topDiv .focusButton img {
+        width: 12.54px;
+        height: 15.23px;
+        gap: 0px;
+        border: 2.09px 0px 0px 0px;
+        opacity: 0px;
+    }
+
+    .topDiv .playButton p,
+    .topDiv .pauseButton p,
+    .topDiv .stopButton p,
+    .topDiv .focusButton p {
+        margin: 0;
+        padding: 0;
+        padding-right: 5px;
+    }
+
+    .topDivInformation {
+        background-color: #F6F0F0;
         display: flex;
-        align-items: end;
+        gap: 10px;
+        border: 3px solid #60E3D5;
+
+        width: 220px;
+
+        padding: 10px;
+        font-family: Inter;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 16.94px;
+        text-align: left;
+
+        color: #0C98B4;
+
         margin-left: auto;
 
-        padding-right: 20px;
+        align-items: center;
 
-        font-family: Inter;
-        font-size: 12px;
-        font-weight: 500;
-        line-height: 15px;
-        letter-spacing: 0em;
-        text-align: left;
-        color: #0567A6;
+        border-radius: 3px;
 
     }
+
+
+    .topDivInformation img {
+        width: 23px;
+        height: 23px;
+    }
+
+    .runThePrototype {
+        font-family: Inter;
+        font-size: 32px;
+        font-weight: 600;
+        line-height: 38.73px;
+        text-align: left;
+    }
+
+}
+
+@media (min-width:2201px) {
+    .unitParents {
+        height: 1175px;
+        width: 100%;
+    }
+
+    .statusSection {
+        margin-right: 205px !important;
+    }
+
+    .lidar {
+        height: 64px;
+        width: max-content;
+        padding-left: 30px;
+        padding-right: 30px;
+        border-radius: 30px !important;
+    }
+
+    .statusSection .status {
+        height: 60px;
+        width: 370px;
+        border-radius: 28px;
+        gap: 15px;
+
+    }
+
+    .statusSection p {
+        font-family: Inter;
+        font-size: 28px;
+        font-weight: 500;
+        line-height: 33.89px;
+        text-align: left;
+    }
+
+    .statusSection .status img {
+        width: 35px;
+        height: 35px;
+        margin-left: 20px;
+    }
+
+    .statusSection .lidarButton {
+        margin-top: -10px;
+    }
+
+    .statusSection .lidar {
+        height: 59px;
+        width: max-content;
+        padding-left: 30px;
+        padding-right: 30px;
+        border-radius: 30px !important;
+    }
+
+    .slider {
+        width: 112.55px;
+        height: 54.28px;
+
+        border-radius: 54.28px;
+    }
+
+    /* Style for the slider when the toggle is "on" */
+    .slider::before {
+        height: 25px;
+        width: 25px;
+
+        border: 13px solid #0567A6;
+    }
+
+    .menu {
+        width: 240px;
+        height: 259px;
+        padding: 10px;
+
+        background-color: #D0E1E7;
+        border: 5.38px solid #0C98B4;
+        border-radius: 45px;
+        display: flex;
+
+        flex-direction: column;
+        justify-content: space-around;
+
+        box-shadow: -10px 10px 4px 0px #00000040;
+    }
+
+    .mapPreview {
+        width: 375px;
+        height: 281.25px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        left: 30px;
+        top: 30px;
+    }
+
+    .mapPreview .map {
+        width: 95%;
+        height: 95%;
+
+    }
+
+    .mapSection {
+        position: relative;
+        width: 81% !important;
+        height: 100%;
+        max-height: 100%;
+        border: 5px solid #0C98B4;
+        margin-right: 29px;
+    }
+
+    .topDiv {
+        font-family: Inter;
+        font-size: 38px;
+        font-weight: 600;
+        line-height: 45.99px;
+        text-align: left;
+
+        margin-top: 63.5px;
+    }
+
+    .topDiv .playButton,
+    .topDiv .pauseButton,
+    .topDiv .stopButton,
+    .topDiv .focusButton {
+        height: fit-content;
+        width: max-content;
+        background-color: #0C98B4;
+        border: 2px solid #60E3D5;
+        border-radius: 10px;
+        justify-content: space-between;
+        padding: 10px;
+
+        display: flex;
+        align-items: center;
+
+    }
+
+    .topDiv .playButton p,
+    .topDiv .pauseButton p,
+    .topDiv .stopButton p,
+    .topDiv .focusButton p {
+        margin: 0;
+
+        font-family: Inter;
+        font-size: 19px;
+        font-weight: 500;
+        line-height: 22.99px;
+        text-align: center;
+
+        text-align: center;
+        color: #FFFFFF;
+        padding: 5px;
+    }
+
+    .topDiv .playButton img,
+    .topDiv .pauseButton img,
+    .topDiv .stopButton img,
+    .topDiv .focusButton img {
+        width: 14.4px;
+        height: 17.49px;
+        gap: 0px;
+        border: 2px 0px 0px 0px;
+        opacity: 0px;
+    }
+
+    .modeListSection {
+        left: 79%;
+        margin-top: 30px;
+    }
+
+    .centerDiv {
+        font-family: Inter;
+        font-size: 40px;
+        font-weight: 600;
+        line-height: 48px;
+        letter-spacing: 0em;
+
+        height: 80%;
+    }
+
+    .informationSection {
+        width: 652px;
+        height: 60px;
+    }
+
+    .informationSection p {
+        font-size: 22px;
+    }
+
+    .statusSection {
+        margin-left: auto;
+        margin-right: 137px;
+        margin-top: -25px;
+    }
+
+    .centerDiv .buttonNavigation {
+        left: 91.5%;
+        margin-top: 30px;
+
+    }
+
+    .buttonNavigation div {
+        padding: 8px !important;
+    }
+
+    .footerMap {
+        top: 1040px;
+        padding-left: 30px;
+    }
+
+    .emergencyButton {
+        border-radius: 20px;
+        border: 2.1px solid #FF7582;
+
+        font-family: Inter;
+        font-size: 19px;
+        font-weight: 500;
+        line-height: 22.99px;
+        text-align: left;
+
+        align-items: center;
+        gap: 10px;
+    }
+
+    .emergencyButton img {
+        width: 25px;
+        height: 25px;
+    }
+
+    .mapName {
+        font-family: Inter;
+        font-size: 19px;
+        font-weight: 500;
+        line-height: 22.99px;
+        text-align: left;
+
+        display: flex;
+        align-items: center;
+
+        color: #0567A6;
+    }
+
+
+    .modeListParents {  
+        font-family: Inter;
+        font-size: 19px;
+        font-weight: 500;
+        line-height: 22.99px;
+        text-align: left;
+
+        height: 47px;
+        justify-content: space-between;
+        padding-right: 23px;
+
+    }
+    
 }

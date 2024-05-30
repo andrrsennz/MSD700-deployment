@@ -6,17 +6,15 @@
   background-repeat: no-repeat;
   width: 100vw;
   height: 100vh;
-  /* 100% of the viewport width */
+
   position: fixed;
-  /* or 'absolute' if needed */
+
   top: 0;
   left: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  /* Center vertically */
-  /* align-items: flex-start; */
-  /* Center horizontally */
+
   overflow: hidden;
 }
 
@@ -26,23 +24,27 @@
 
 .incorrectPassword {
   display: flex;
-  width: 623px;
-  height: 60px;
+  gap: 10px;
   background-color: #F6F0F0;
   border: 4px solid #FF7582;
 
   color: #C66E87;
-  font-family: 'Inter', sans-serif;
-  font-size: 22px;
+  font-family: Inter;
+  font-size: 14px;
   font-weight: 500;
-  line-height: 27px;
-  letter-spacing: 0em;
+  line-height: 16.94px;
   text-align: left;
 
   justify-content: center;
   align-items: center;
-  border-radius: 5px;
+  border-radius: 3px;
   margin-top: 100px;
+  width: 458px;
+}
+
+.incorrectPassword img {
+  width: 23px;
+  height: 23px;
 }
 
 .parents {
@@ -51,16 +53,16 @@
 }
 
 .register {
-  left: 50px;
-  /* margin-left: 30px; */
+  padding-left: 30px;
+
   display: flex;
   align-items: center;
   position: relative;
-  margin-top: 30px;
-  /* padding-top: 30px; */
+  margin-top: 20px;
+
   gap: 15px;
 
-  /* position: absolute; */
+
 }
 
 .registerUnitForm {
@@ -80,7 +82,7 @@
 
   margin: 0;
   padding: 0;
-  /* Remove padding */
+
 }
 
 .buttonRegister {
@@ -88,8 +90,8 @@
   justify-content: center;
   align-items: center;
 
-  width: 120px;
-  height: 30px;
+  /* width: 120px;
+  height: 30px; */
   background-color: #F6F0F0;
   gap: 10px;
   border-radius: 10px;
@@ -106,9 +108,9 @@
 .buttonRegister p {
   font-size: 19px;
   margin: 0;
-  /* Remove margin */
+
   padding: 0;
-  /* Remove padding */
+
 }
 
 
@@ -116,7 +118,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-height: 750px;
+  /* max-height: 750px; */
   margin-left: auto;
   margin-right: auto;
   position: relative;
@@ -125,7 +127,7 @@
 }
 
 .registerUnit {
-  /* margin-top: auto; */
+
   height: 43px;
   font-family: 'Inter', sans-serif;
   font-size: 19px;
@@ -141,9 +143,9 @@
   margin-top: -15%; */
 
   position: absolute;
-  top: 90%;
-  /* left: 40%; */
-  /* left: 25%; */
+  top: 860px;
+
+
 
   display: flex;
   flex-direction: column;
@@ -161,8 +163,8 @@
 
 .buttonRegisterUnit {
   display: flex;
-  width: 168px;
-  height: 43px;
+  /* width: 168px;
+  height: 43px; */
   background-color: #F6F0F0;
 
   justify-content: center;
@@ -186,27 +188,30 @@
 .registerUnit .registerUnitColumn {
   margin-top: 5px;
   padding: 20px !important;
-  width: 85%;
+  /* width: 85%; */
   background-color: #D9FEFA;
   border: 4px solid #60E3D5;
   border-radius: 5px;
+}
 
+.registerUnit .registerUnitColumn .inputUnit {
+  padding: 0;
 }
 
 .registerUnit input[type="text"] {
-  width: 230px;
-  padding: 10px;
   gap: 5px;
   padding: 10px;
   border-radius: 3px;
   border: none;
   background-color: #97E5F4;
   font-family: 'Inter', sans-serif;
-  font-size: 1em;
+  font-size: 24px;
   font-weight: 500;
   line-height: 23px;
   letter-spacing: 0em;
   outline: none;
+
+  width: 230px;
 }
 
 .registerUnitColumn .buttonSection input[type="text"]:focus {
@@ -217,7 +222,7 @@
 
 .registerUnitColumn .buttonSection button {
   width: fit-content;
-  height: 39.9px;
+  /* height: 39.9px; */
   color: #fff;
   border: none;
   padding: 10px;
@@ -276,22 +281,25 @@
 
 }
 
-/* Table Section */
+
 .tableSection {
-  overflow-y: auto;
+  /* overflow-y: auto; */
   height: 516px;
   max-height: 713px;
-  /* Initially set to hidden */
+
   transition: max-height 0.3s ease;
   background-color: #ECF4F6;
   border: 3px solid #60E3D5;
   border-radius: 7px;
-  /* Optional: for smooth transition */
+
 }
 
 .tableSection thead {
   position: sticky;
   top: 0;
+  background-color: #f2f2f2;
+  z-index: 1;
+
 
   font-family: 'Inter';
   font-size: 19px;
@@ -302,27 +310,25 @@
 
 }
 
-.tableSection::-webkit-scrollbar {
-  width: 20px;
+/* WebKit-based browsers (Chrome, Safari) */
+.tableWrapper::-webkit-scrollbar {
+  width: 12px;
 }
 
-/* Track */
-.tableSection::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px grey;
-  border-radius: 10px;
+.tableWrapper::-webkit-scrollbar-track {
+  border: 1px solid #60E3D5;
 }
 
-/* Handle */
-.tableSection::-webkit-scrollbar-thumb {
-  background: #0C98B4;
-  border-radius: 10px;
+.tableWrapper::-webkit-scrollbar-thumb {
+  background-color: #0C98B4;
+  border-radius: 6px;
+  border: 1px solid #0C98B4;
 }
-
 
 .tableUnit {
-  width: 530px;
+  width: 100%;
   max-height: 615px;
-  /* background-color: rebeccapurple; */
+
   margin-left: auto;
   margin-right: auto;
   display: flex;
@@ -336,9 +342,10 @@
   margin-bottom: 35px;
   top: 300px;
   border-radius: 5px;
-  gap: 10px;
+  gap: 4px;
   display: flex;
   justify-content: center;
+  align-items: center;
   background-color: #0567A6;
   border: 4px solid #60E3D5;
   font-family: 'Inter', sans-serif;
@@ -354,7 +361,7 @@
 }
 
 .table {
-  width: 418px;
+  width: 100%;
   border-radius: 7px;
   border-collapse: separate;
   font-family: 'Inter', sans-serif;
@@ -365,6 +372,7 @@
   text-align: center;
 
   color: #FFFFFF;
+
 }
 
 
@@ -376,7 +384,7 @@
   border-radius: 4px;
   white-space: nowrap;
   overflow: hidden;
-  /* text-overflow: ellipsis; */
+
 }
 
 .table th {
@@ -419,30 +427,30 @@
   bottom: 0;
   display: flex;
   align-items: center;
-  /* Center vertically */
+
   justify-content: center;
-  /* Center horizontally */
+
   background-color: rgba(0, 0, 0, 0.5);
-  /* Dim the background */
+
   z-index: 1000;
-  /* Ensure it's above other content */
+
   cursor: pointer;
 }
 
 .alertBox {
   display: flex;
-  /* Use flexbox for alignment */
+
   align-items: center;
-  /* Align items vertically */
+
   gap: 10px;
-  /* Space between image and text */
+
   padding: 20px;
   color: rgba(255, 117, 130, 1);
   background-color: hsla(0, 25%, 95%, 1);
   border: 5px solid rgba(255, 117, 130, 1);
   border-radius: 5px;
   z-index: 1001;
-  /* Ensure the box is above the overlay */
+
 
   font-family: 'Inter', sans-serif;
   font-size: 22px;
@@ -459,13 +467,13 @@
   height: 30px;
 }
 
-/* --------------------------------------------------------------------- */
+
 
 
 .loginFormButton {
   margin-top: 20px;
-  width: 98px;
   height: 47px;
+  /* width: 98px; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -494,40 +502,41 @@
   width: 30px;
 }
 
-/* Add this CSS to your existing styles */
+
 .table th:hover+tbody tr td:nth-child(1),
 .table th:hover+tbody tr td:nth-child(2),
 .table th:hover+tbody tr td:nth-child(3),
 .table th:hover+tbody tr td:nth-child(4),
 .table th:hover+tbody tr td:nth-child(5) {
   box-shadow: 0px 4px 4px 0px #0567A680 !important;
-  /* Use !important to ensure styles are applied */
+
   transition: 0.3s;
 }
 
-/*  */
+
 
 .loginSection {
   margin-left: auto;
   margin-right: auto;
   display: flex;
-  /* width: 100%; */
+
   flex-direction: column;
-  /* Updated to column to align children vertically */
+
   align-items: center;
-  /* justify-content: center; */
-  /* Center children horizontally */
-  /* Center children vertically */
+
+
+
 }
 
 .loginSection .labelSection {
   color: #FFFFFF;
   margin-bottom: 35px;
   top: 300px;
-  border-radius: 10px;
-  gap: 10px;
+  border-radius: 3px;
+  gap: 3px;
   display: flex;
   justify-content: center;
+  align-items: center;
   background-color: #0567A6;
   border: 4px solid #60E3D5;
   font-family: 'Inter', sans-serif;
@@ -542,8 +551,8 @@
 }
 
 .labelSection img {
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
   vertical-align: middle;
   margin-right: 0.2em;
 }
@@ -554,8 +563,8 @@
 }
 
 .inputSection {
-  width: 446px;
-  height: 188.9px;
+  /* width: 446px;
+  height: 188.9px; */
   top: 392px;
   border-radius: 10px;
   border: 3px;
@@ -583,25 +592,26 @@
   gap: 10px;
   align-items: center;
   position: relative;
-  /* Make .inputUnit a positioned container */
+  justify-content: space-between;
+
 }
 
 .passwordInputContainer {
   display: flex;
   align-items: center;
   position: relative;
-  /* Make .passwordInputContainer a positioned container */
+  width: 100%;
 }
 
 .passwordInputContainer input {
   width: 100%;
-  height: 43px;
+  /* height: 43px; */
   padding: 10px;
   border-radius: 3px;
   border: none;
   background-color: #97E5F4;
   font-family: 'Inter', sans-serif;
-  font-size: 1em;
+  font-size: 24px;
   font-weight: 500;
   line-height: 23px;
   letter-spacing: 0em;
@@ -626,10 +636,15 @@
 .passwordStatusButton {
   position: absolute;
   right: 10px;
-  /* Adjust the right distance as needed */
+
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
+}
+
+.passwordStatusButton img {
+  width: 18px;
+  height: 12.8px;
 }
 
 
@@ -651,6 +666,8 @@
 
 .separateElement {
   margin-left: auto;
+  padding: 0;
+  margin: 0;
 }
 
 .inputSection label {
@@ -664,11 +681,11 @@
   text-align: left;
   justify-content: start;
   align-items: flex-start;
+  width: 151px;
 }
 
+
 .inputSection input[type="text"] {
-  width: 230px;
-  height: 43px;
   padding: 10px;
   gap: 5px;
   padding: 10px;
@@ -691,8 +708,8 @@
 }
 
 .inputSection input[type="password"] {
-  width: 230px;
-  height: 43px;
+  /* width: 230px;
+  height: 43px; */
   padding: 10px;
   gap: 5px;
   padding: 10px;
@@ -742,8 +759,8 @@
 
 .dataUtil form {
   margin-top: 10px;
-  width: 272px;
-  height: 103px;
+  /* width: 272px;
+  height: 103px; */
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -762,12 +779,10 @@
 .bottomSection {
   margin-top: auto;
   width: 100%;
-  /* height: 100px; */
+
 }
 
 .theFooter Footer {
-  /* background-color: blue; */
-  /* width: 100vw !important; */
   max-width: 100%;
 }
 
@@ -784,15 +799,15 @@
   width: 100%;
   height: 100%;
   background-color: black;
-  /* Your desired color */
+
   opacity: 0.2;
-  /* Adjust the opacity to control the color intensity */
+
   z-index: 3;
-  /* Place it in front of other content */
+
 }
 
 .confirmationDialog {
-  /* height: 10vh; */
+
   width: auto;
   height: auto;
   position: fixed;
@@ -824,314 +839,31 @@
   width: max-content;
 }
 
-@media (max-height: 899px) {
-
-  .tableUnit {
-    max-height: 500px;
-    /* Adjust this value as needed */
-  }
-
-  .tableSection {
-    overflow: auto;
-    /* Enable scrolling if the table is larger than the container */
-  }
+.tableSection {
+  display: flex;
+  flex-direction: column;
+  max-height: 495px;
+  /* Adjust based on your requirement */
 }
 
-
-@media (min-height: 1080px) {
-  .registerUnit {
-    margin-top: -5%;
-  }
-
-  .greetings {
-    margin-top: 0 !important;
-  }
-
+.tableWrapper {
+  overflow-y: auto;
+  /* Adjust based on your requirement */
 }
 
-@media (min-width: 1600px) {
-  .registerUnit {
-    left: 40%;
-  }
+.headerTable th,
+.bodyTable td {
+  text-align: center;
 }
 
-@media (width: 1440px) and (height: 1024px) {
-  .centerSection .greetings {
-    font-size: 32px;
-    margin-top: 25px;
-  }
-
-  .register p {
-    font-size: 19px;
-    /* Remove padding */
-  }
-
-  .buttonRegister {
-    width: 120px;
-  }
-
-  .buttonRegister p {
-    font-size: 14px;
-  }
-
-  .loginSection .labelSection {
-    width: 358px;
-    font-size: 22px;
-  }
-
-  .inputSection {
-    width: 446px;
-  }
-
-  .inputSection label {
-    font-size: 22px;
-  }
-
-  .inputSection input[type="text"] {
-    width: 230px;
-    font-size: 19px;
-  }
-
-  .inputSection input[type="password"] {
-    width: 230px;
-    font-size: 19px;
-  }
-
-  .tableUnit {
-    max-height: 2000px;
-  }
-
-  .tableSection thead {
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 19px;
-    letter-spacing: 0em;
-    text-align: center;
-
-  }
-
-  .tableSection {
-    /* height: 550px; */
-    max-height: 2000px;
-  }
-
-
-  .tableUnit .labelSection {
-    font-size: 22px;
-    width: 414px;
-  }
-
-  .table {
-    width: 530px;
-    font-size: 19px;
-    row-gap: 10px;
-    padding: 5px;
-    /* border-collapse: separate;  */
-    /* border-spacing: 5em; */
-    border-spacing: 4px 8px;
-  }
-
-  .tableSection th,
-  .tableSection td {
-    height: 30px !important;
-    border: 3px solid #0C98B4;
-    padding-left: 5px;
-    padding-right: 5px;
-  }
-
-  .loginFormButton {
-    width: 94px;
-    height: 47px;
-    font-size: 19px;
-    margin-right: 40px;
-  }
-
-  .registerUnit {
-    height: 43px;
-    font-size: 19px;
-    margin-top: 0 !important;
-    top: 70%;
-    left: 7%;
-  }
-
-  .registerUnitText {
-    height: 54px !important;
-  }
-
-  .buttonRegisterUnit {
-    width: 168px;
-    height: 38.4px;
-  }
-
-  .buttonRegisterUnit p {
-    font-size: 14px;
-  }
-
-
+.headerTable th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  border-radius: 3px;
 }
 
-@media (min-width: 2560px) {
-  .centerSection .greetings {
-    font-size: 60px !important;
-    margin-top: 25px;
-  }
-
-  .register p {
-    font-size: 24px;
-    /* Remove padding */
-  }
-
-  .buttonRegister {
-    width: 147px;
-    height: 60px;
-  }
-
-  .buttonRegister img {
-    width: 30px;
-    height: 30px;
-  }
-
-  .buttonRegister p {
-    font-size: 22px;
-  }
-
-  .loginSection .labelSection {
-    width: 459px;
-    margin-left: 50px;
-    padding: 0 !important;
-    font-size: 28px;
-    height: 65px;
-    padding: 15px;
-    /* padding: 0 !important; */
-  }
-
-
-  .loginSection .labelSection img {
-    width: 40px;
-    height: 40px;
-  }
-
-  .inputSection {
-    width: 598px;
-  }
-
-  .inputUnit {
-    padding-left: 10px;
-  }
-
-  .inputSection label {
-    font-size: 30px;
-  }
-
-  .inputSection input[type="text"] {
-    width: 300px;
-    font-size: 28px;
-  }
-
-  .inputSection input[type="password"] {
-    width: 300px;
-    font-size: 28px;
-  }
-
-  .inputSection form {
-    width: 598px;
-    padding: 30px;
-    border-radius: 8px;
-    border: 4px solid #60E3D5;
-    gap: 25px
-  }
-
-  .tableUnit {
-    height: auto;
-    max-height: 1040px;
-    width: fit-content;
-  }
-
-  .tableSection {
-    max-height: 2500px;
-  }
-
-
-  .tableUnit .labelSection {
-    font-size: 28px;
-    width: 530px;
-  }
-
-  .table {
-    width: 530px;
-    font-size: 19px;
-    row-gap: 10px;
-    padding: 5px;
-    /* border-collapse: separate;  */
-    /* border-spacing: 5em; */
-    border-spacing: 4px 8px;
-  }
-
-  .tableSection th,
-  .tableSection td {
-    height: 56px !important;
-    text-align: center;
-    border: 3px solid #0C98B4;
-    border-radius: 4px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: auto;
-    /* Set width to auto */
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-
-  .loginFormButton {
-    width: 118px;
-    height: 58px;
-    font-size: 28px;
-    /* margin-right: -70px; */
-  }
-
-
-
-  .alertOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    /* Center vertically */
-    justify-content: center;
-    /* Center horizontally */
-    background-color: rgba(0, 0, 0, 0.5);
-    /* Dim the background */
-    z-index: 1000;
-    /* Ensure it's above other content */
-    cursor: pointer;
-  }
-
-  .registerUnit {
-    height: 59px;
-    font-size: 24px;
-    top: 130%;
-    left: 35%;
-  }
-
-  .registerUnitText {
-    height: 54px !important;
-  }
-
-  .buttonRegisterUnit {
-    width: 213px;
-    height: 54px;
-  }
-
-  .buttonRegisterUnit p {
-    font-size: 19px;
-  }
-
-}
-
-@media (max-width:361px) {
+@media (max-width:1400px) {
   .registerContainer {
     width: auto;
     height: auto;
@@ -1203,6 +935,7 @@
 
   .dataSection .loginSection .inputSection {
     width: 90%;
+    max-width: 400px;
     height: auto;
   }
 
@@ -1213,6 +946,7 @@
   .dataSection .loginSection .inputUnit label {
     font-size: 16px;
     line-height: 19.36px;
+    width: 130px;
   }
 
   .dataSection .loginSection .inputUnit input[type="text"] {
@@ -1221,7 +955,7 @@
   }
 
   .dataSection .loginSection .inputUnit input[type="password"] {
-    width: 90%;
+    width: 100%;
     height: 29px;
   }
 
@@ -1258,10 +992,11 @@
     height: 18px;
   }
 
-  /* Table Section */
+
   .tableUnit {
     margin-top: 42px;
     width: 90%;
+    max-width: 400px;
     max-height: 557px;
   }
 
@@ -1299,6 +1034,7 @@
     font-family: 'Inter';
     border-radius: 5px;
     margin-top: 10px;
+    margin-right: 0px !important;
   }
 
   .registerSection {
@@ -1308,7 +1044,7 @@
     gap: 10px;
     margin-top: 30px;
     height: 170px;
-    /* background-color: red; */
+
   }
 
   .registerSection .textSection {
@@ -1478,4 +1214,493 @@
     margin-top: 78px;
   }
 
+}
+
+@media (max-width: 2200px) and (min-width:1401px) {
+  .container {
+    overflow: auto;
+  }
+
+  .buttonRegister {
+    height: 25px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    border-radius: 3px;
+  }
+
+  .buttonRegister p {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16.94px;
+    text-align: left;
+  }
+
+  .greetings p {
+    font-family: Inter;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 38.73px;
+    text-align: center;
+  }
+
+  .dataSection .loginSection .inputSection {
+    width: max-content;
+    height: auto;
+  }
+
+  .dataSection {
+    justify-content: center;
+
+  }
+
+  .dataSection .labelSection p {
+    padding: 0;
+    margin: 0;
+  }
+
+  .dataSection .labelSection {
+    padding-left: 9px;
+    padding-right: 9px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .dataSection .loginSection {
+    width: 100%;
+  }
+
+  .dataSection .tableUnit .tableSection {
+    padding: 8px;
+    height: auto;
+
+    /* max-height: 50vh; */
+    /* overflow-y: auto; */
+  }
+
+  .dataSection .tableUnit .tableSection .table th {
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19.36px;
+    text-align: center;
+
+    padding-left: 7px;
+    padding-right: 7px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .table thead {
+    background-color: red !important;
+  }
+
+  .dataSection .tableUnit .tableSection .table td {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .leftSection {
+    width: auto;
+    height: max-content;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .registerUnit {
+    position: relative;
+    top: 80px;
+    /* right: 25px; */
+  }
+
+  .registerUnit .buttonRegisterUnit {
+    height: 37px;
+
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .registerUnit .buttonRegisterUnit p {
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16.94px;
+    text-align: left;
+
+    padding: 0;
+    margin: 0;
+  }
+
+  .registerUnit .buttonSection {
+    margin-top: 25px;
+  }
+
+  .passwordInputContainer {
+    width: 64%;
+    max-width: 230px !important;
+  }
+
+  .inputUnit {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .inputUnit label {
+    width: 110px;
+  }
+
+  .inputSection form {
+    padding: 0px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    width: 446px;
+  }
+
+  .inputSection input[type="text"] {
+    max-width: 210px;
+  }
+
+  .inputSection button {
+    margin-right: 20px;
+  }
+
+}
+
+/* 
+@media (max-width: 1440px) and (min-width:1001px) and (max-height:) { */
+
+@media (min-width:2201px) {
+  .container {
+    overflow: auto;
+  }
+
+  .hidexl {
+    display: none;
+  }
+
+  .displayxl {
+    display: block;
+  }
+
+  .register p {
+    font-family: Inter;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 26.63px;
+    text-align: left;
+  }
+
+  .buttonRegister {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 18.5px;
+    padding-bottom: 18.5px;
+
+    border-radius: 3px;
+  }
+
+  .buttonRegister p {
+    font-family: Inter;
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 22.99px;
+    text-align: left;
+
+  }
+
+  .greetings p {
+    font-family: Inter;
+    font-size: 54px;
+    font-weight: 600;
+    line-height: 65.35px;
+    text-align: center;
+  }
+
+  .loginSection .labelSection img {
+    width: 35px;
+    height: 35px;
+  }
+
+  .loginSection .labelSection {
+    font-family: Inter;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 33.89px;
+    text-align: left;
+
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+
+  .dataSection .loginSection .inputSection {
+    width: max-content;
+    max-width: 598px;
+    height: auto;
+
+    font-family: Inter;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 29.05px;
+    text-align: center;
+
+  }
+
+  .dataSection .loginSection .inputUnit {
+    padding: 0;
+    padding-right: 30.5px;
+    padding-top: 30px;
+
+    justify-content: space-between;
+  }
+
+  .dataSection .loginSection .inputUnit label {
+    font-family: Inter;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 33.89px;
+    text-align: center;
+
+    width: 200px;
+
+  }
+
+  .inputSection .submitButton {
+    padding: 10px 20px;
+    border-radius: 7px;
+    background-color: #0C98B4;
+    border: 4px solid #60E3D5;
+
+    font-family: Inter;
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 22.99px;
+    text-align: center;
+
+    margin-right: 30px;
+    margin-top: 20px;
+  }
+
+  .dataSection {
+    justify-content: center;
+
+  }
+
+  .dataSection .labelSection p {
+    padding: 0;
+    margin: 0;
+  }
+
+  .dataSection .labelSection {
+    padding-left: 9px;
+    padding-right: 9px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    font-family: Inter;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 33.89px;
+    text-align: left;
+
+  }
+
+  .dataSection .loginSection {
+    width: 100%;
+  }
+
+  .dataSection .tableUnit .tableSection {
+    padding: 9px;
+    height: auto;
+
+    max-height: 50vh;
+    /* overflow-y: auto; */
+    width: 518px;
+  }
+
+  .dataSection .tableUnit .tableSection .table {
+    border-collapse: separate;
+    border-spacing: 3px 8px;
+    font-size: 19px;
+  }
+
+  .dataSection .tableUnit .tableSection .table th {
+    font-family: Inter;
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 22.99px;
+    text-align: center;
+
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .dataSection .tableUnit .labelSection {
+    width: 504px;
+  }
+
+  .table thead {
+    background-color: red !important;
+    height: 56px;
+  }
+
+  .dataSection .tableUnit .tableSection .table td {
+    padding-top: 17px;
+    padding-bottom: 17px;
+  }
+
+  .dataSection .loginFormButton p {
+    margin: 0;
+  }
+
+  .dataSection .loginFormButton {
+    font-family: Inter;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 33.89px;
+    text-align: center;
+
+    padding: 10px;
+  }
+
+  .leftSection {
+    width: auto;
+    height: max-content;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .registerUnit .buttonRegisterUnit {
+    height: 37px;
+
+    padding-left: 15px;
+    padding-right: 15px;
+
+  }
+
+  .registerUnitText {
+    font-family: Inter;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 29.05px;
+    text-align: left;
+
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  .registerUnit .buttonRegisterUnit p {
+    font-family: Inter;
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 22.99px;
+    text-align: left;
+
+
+    padding: 0;
+    margin: 0;
+  }
+
+  .registerUnitColumn .inputUnit label {
+    width: 100%;
+
+    font-family: Inter;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 33.89px;
+
+  }
+
+  .registerUnitColumn .inputUnit input[type="text"] {
+    width: 300px !important;
+  }
+
+  .registerUnitColumn .separateElement {
+    font-family: Inter;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 29.05px;
+    text-align: center;
+  }
+
+  .registerUnitColumn .buttonSection {
+    margin-top: 25px;
+  }
+
+  .registerUnitColumn .buttonSection .registerButton {
+    font-family: Inter;
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 22.99px;
+    text-align: center;
+  }
+
+  .registerUnitColumn .buttonSection .cancelButton {
+    font-family: Inter;
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 22.99px;
+    text-align: center;
+  }
+
+  .passwordInputContainer {
+    width: 60%;
+  }
+
+  .inputUnit label {
+    width: 200px;
+  }
+
+  .inputSection form {
+    padding: 0px;
+    padding-bottom: 30px;
+  }
+
+  .separateElement {
+    width: 30px;
+  }
+
+  .inputSection input[type="text"] {
+    width: 300px;
+  }
+
+  .tableUnit .labelSection img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .incorrectPassword {
+    display: flex;
+    /* width: 623px;
+    height: 60px; */
+    background-color: #F6F0F0;
+    border: 4px solid #FF7582;
+
+    color: #C66E87;
+    font-family: 'Inter', sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 27px;
+    letter-spacing: 0em;
+    text-align: left;
+
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    margin-top: 100px;
+
+    width: 700px;
+  }
+
+  .passwordStatusButton img {
+    width: 24px;
+    height: 17.07px;
+  }
 }

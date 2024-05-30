@@ -7,7 +7,7 @@
     /* Align it to the left */
     z-index: 1000;
     /* Set a high z-index to ensure it stays on top of other content */
-    height: 52px;
+    height: 50px;
     width: 100%;
     background: #0C98B480;
     border-bottom: 2px solid #0C98B4;
@@ -34,7 +34,7 @@
     display: none;
 }
 
-@media (max-width:361px) {
+@media (max-width:1400px) {
     .displayFlex {
         display: flex;
         gap: 10px;
@@ -69,7 +69,11 @@
     }
 
     .greetings img {
-        width: 13px;
-        height: 15px;
+        width: 20px;
+        height: 20px; 
+    }
+
+    .greetingsMessage img{
+
     }
 }

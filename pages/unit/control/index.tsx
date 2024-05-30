@@ -4,7 +4,7 @@ import Navigation from '@/components/unit-navigation/navigation';
 import styles from './controle.module.css';
 import CloseButton from '@/components/close-button/closeButton';
 import Footer from '@/components/footer/footer';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 
 import ControlIndex from '@/components/control-index/controlIndex';
@@ -18,6 +18,9 @@ import MobileTopSection from '@/components/mobile-top-section/mobileTopSection';
 import MobileNavigation from '@/components/mobile-navigation/mobileNavigation';
 import ControlNonIndex from '@/components/control-non-index/controlNonIndex';
 import MobileInstruction from '@/components/mobile-instruction/mobileInstruction';
+import GreetingsUnit from '@/components/greetings-unit/greetingsUnit';
+
+
 
 const Control: React.FC = () => {
   const [mapIndex, setMapIndex] = useState<number>(-1);
@@ -61,8 +64,6 @@ const Control: React.FC = () => {
     checkToken();
   }, []);
 
-  const searchParams = useSearchParams();
-
   const onConfirmButtonClick = () => {
     setShowConfirmDialog(true);
   };
@@ -95,6 +96,8 @@ const Control: React.FC = () => {
     sessionStorage.setItem('firstLoadControlPage', 'false')
   }
 
+  const handlePseudo = () => { }
+
   return (
     <>
 
@@ -111,7 +114,7 @@ const Control: React.FC = () => {
             onCancel={handleCancel}
           />
           <TokenExpired status={tokenExpired} />
-          {showControlInstruction || firstLoaded == 'true' ? <ControlInstruction onClick={handleControlInstructionClick} imgUrl='/images/instruction_ control.png' /> : ''}
+          {showControlInstruction || firstLoaded == 'true' ? <ControlInstruction onClick={handleControlInstructionClick} width={895} imgUrl='/images/instruction_ control.png' /> : ''}
           {mobileNavigation ? <MobileNavigation onClick={handleMobileNavigation} /> : ""}
           {mobileInstruction || firstLoaded == 'true' ? <MobileInstruction onClick={handleMobileInstruction} imgUrl={"/images/mobile_instruction_control.svg"} /> : ""}
 
@@ -126,26 +129,38 @@ const Control: React.FC = () => {
                   <CloseButton onClick={onConfirmButtonClick} />
                 </div>
 
+                <GreetingsUnit />
+
                 {/* --------------------------- Mobile Section  ------------------------------*/}
                 <div className={`${styles.topSection} ${styles.displayNone}`}></div>
                 {/* -----------------------------------------------------------------------*/}
 
-                <div className={`${styles.navigation}  ${styles.mobileHide}`}>
-                  <Navigation />
+                <div className={styles.unitParents}>
+
+                  <div className={`${styles.navigation}  ${styles.mobileHide}`}>
+                    <Navigation />
+                  </div>
+
+                  <ControlNonIndex handleMobileSorterDisplay={handlePseudo} handleMobileNavigation={handleMobileNavigation} handleMobileInstruction={handleMobileInstruction} />
                 </div>
-                <ControlNonIndex handleMobileNavigation={handleMobileNavigation} handleMobileInstruction={handleMobileInstruction} />
+                <div className={`${styles.mobileHide} ${styles.bottomSection}`}>
+                  <Footer status={false} />
+                </div>
               </div>
+
             </div>
           ) : (
             <>
               {/* --------------------------- Mobile Section  ------------------------------*/}
               <MobileTopSection onConfirmButtonClick={handleCloseButtonClick} />
               <ControlIndex handleMobileNavigation={handleMobileNavigation} handleMobileInstruction={handleMobileInstruction} />
+              <ButtonInformation onClick={handleInfoIconClick} />
             </>
+            
           )}
 
 
-          <ButtonInformation onClick={handleInfoIconClick} />
+          {/* <ButtonInformation onClick={handleInfoIconClick} /> */}
 
           <Script src="/script/Nav2D.js" strategy="beforeInteractive" />
           <Script src="/script/roslib.js" strategy="beforeInteractive" />

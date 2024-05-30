@@ -1,11 +1,15 @@
 import React from 'react'; // Import React for type annotations
 import styles from './footer.module.css';
+import { usePathname } from 'next/navigation';
 
 interface FooterProps {
   status: boolean;
 }
 
 const Footer: React.FC<FooterProps> = (props) => {
+
+  const pathname = usePathname()
+
   return (
     <footer className={styles.theFooter}>
       {props.status === true ? (
@@ -30,7 +34,7 @@ const Footer: React.FC<FooterProps> = (props) => {
         ''
       )}
 
-      <div className={styles.copyright}>
+      <div className={`${styles.copyright} ${pathname?.includes('/unit') || pathname?.includes('control') || pathname?.includes('mapping') || pathname?.includes('database') ? styles.copyrightUnit : ''}`}>
         <p>
           <span>&#169;</span> 2023 ITBdeLabo
         </p>

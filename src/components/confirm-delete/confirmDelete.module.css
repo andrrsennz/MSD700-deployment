@@ -44,7 +44,7 @@
     font-weight: 500;
     line-height: 23px;
     letter-spacing: 0em;
-    text-align: left;
+    text-align: center;
 
     color: #0567A6;
 
@@ -137,5 +137,30 @@
 
     .cancelButton {
         background-color: #8DAAC0 !important;
+    }
+}
+
+@media (min-width:2201px) {
+    .confirmationDialog {
+        width: 440px;
+        height: 183px;
+        font-family: Inter;
+        font-size: 30px;
+        font-weight: 500;
+        line-height: 36.31px;
+        text-align: center;
+
+    }
+
+    .buttonConfirm {
+        width: 97px;
+        height: 47px;
+        
+        font-family: Inter;
+        font-size: 19px;
+        font-weight: 500;
+        line-height: 22.99px;
+        text-align: center;
+
     }
 }

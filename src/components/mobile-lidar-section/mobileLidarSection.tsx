@@ -13,7 +13,7 @@ const MobileLidarSection: React.FC<MobileLidarSectionProps> = ({ isChecked, hand
   let iconPage;
 
   if (pathname == "/unit/control") {
-    pathname = "Unit Control"
+    pathname = "Control Mode"
     iconPage = "/icons/Marker.svg"
   }
 
@@ -27,6 +27,8 @@ const MobileLidarSection: React.FC<MobileLidarSectionProps> = ({ isChecked, hand
     iconPage = "/icons/database.svg"
   }
 
+  console.log(pathname);
+  console.log(pathname == "/unit/database");
 
   return (
     <div className={`${styles.displayNone} ${styles.mobileLidarSection}`}>
@@ -34,21 +36,31 @@ const MobileLidarSection: React.FC<MobileLidarSectionProps> = ({ isChecked, hand
         <img src={iconPage} alt="" />
         <p>{pathname}</p>
       </div>
-      <div className={styles.lidarSection}>
-        <p>LIDAR</p>
-      </div>
 
-      <div className={styles.lidarButton}>
-        <label className={styles.toggleSwitch}>
-          <input
-            type="checkbox"
-            className={styles.toggleInput}
-            checked={isChecked}
-            onChange={handleCheckboxChange}
-          />
-          <span className={styles.slider}></span>
-        </label>
-      </div>
+      {
+        pathname == "/unit/database" || pathname == "Database" ?
+          <div className={styles.mapCollection}>
+            <p>Map Collection</p>
+          </div>
+          :
+          <>
+            <div className={styles.lidarSection}>
+              <p>LIDAR</p>
+            </div>
+            <div className={styles.lidarButton}>
+              <label className={styles.toggleSwitch}>
+                <input
+                  type="checkbox"
+                  className={styles.toggleInput}
+                  checked={isChecked}
+                  onChange={handleCheckboxChange}
+                />
+                <span className={styles.slider}></span>
+              </label>
+            </div>
+          </>
+      }
+
     </div>
   );
 }

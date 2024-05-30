@@ -21,14 +21,15 @@ const ClosingPage: React.FC = () => {
         <div className={style.text}>
           <img className="icon" src="/icons/Icon-person-white.svg" alt="" />
           <p>
-            Thank you for using this app.
+            Thank you for using this apps.
             <br />
             See you again.
           </p>
         </div>
         <div className={style.loginButton} onClick={goToSigninPage}>
           <img src="/icons/Login.svg" alt=""  />
-          <p>LOG IN</p>
+          <p className={style.mobile}>LOG IN</p>
+          <p className={style.desktop}>Go to LOGIN page</p>
         </div>
       </div>
 
