@@ -32,7 +32,8 @@
 .unitParents {
     display: flex;
     width: 100%;
-    justify-content: space-between;
+    justify-content: start;
+    gap: 27px;
 }
 
 
@@ -72,22 +73,6 @@
 }
 
 @media (max-width: 2200px) and (min-width:1401px) {
-
-    .parents {
-        display: flex;
-        justify-content: start;
-        margin-left: auto;
-        margin-right: auto;
-        height: 100%;
-
-        position: relative;
-    }
-
-    .theFooter {
-        padding-bottom: 100px;
-        height: 100%;
-        background-color: red;
-    }
 }
 
 @media (min-width:2201px) {
@@ -97,6 +82,13 @@
     
     .unitParents{
         height: 85%;
+        /* min-height: 1225px; */
         width: 100%;
+
+        display: flex;
+        width: 100%;
+        justify-content: start;
+        gap: 40px;
+        
     }
 }

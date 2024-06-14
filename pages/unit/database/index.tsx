@@ -37,13 +37,84 @@ export default function Database(): JSX.Element {
 
     let mapIndex: number = -1;
 
-    if (typeof window !== 'undefined' && window.sessionStorage) {
-        mapIndex = parseInt(sessionStorage.getItem('mapIndex') || '', 10);
-    }
+    // if (typeof window !== 'undefined' && window.sessionStorage) {
+    //     mapIndex = parseInt(sessionStorage.getItem('mapIndex') || '', 10);
+    // }
 
     const [isChecked, setIsChecked] = useState<boolean>(false);
     const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
-    const [data, setData] = useState<DataItem[]>([]);
+    const [data, setData] = useState<DataItem[]>([
+        {
+            "mapId": "1",
+            "map_name": "20230804_Room A",
+            "modified_time": "2023/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "2",
+            "map_name": "20230804_Room B",
+            "modified_time": "2023/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "3",
+            "map_name": "20230804_Room C",
+            "modified_time": "2023/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "4",
+            "map_name": "20230804_Room D",
+            "modified_time": "2023/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "5",
+            "map_name": "20230804_Room E",
+            "modified_time": "2023/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "6",
+            "map_name": "20230804_Room F",
+            "modified_time": "2023/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "7",
+            "map_name": "20230804_Room G",
+            "modified_time": "2023/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "8",
+            "map_name": "20230804_Room H",
+            "modified_time": "2023/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "9",
+            "map_name": "20230804_Room I",
+            "modified_time": "2023/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "10",
+            "map_name": "20230804_Room J",
+            "modified_time": "2023/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        }
+    ]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
     const [sortOrderStatus, setSortOrderStatus] = useState<String>('name');
@@ -65,24 +136,25 @@ export default function Database(): JSX.Element {
     const [mobileEditNameDisplay, setMobileEditNameDisplay] = useState<boolean>(false);
     const [newName, setNewName] = useState('');
 
-    useEffect(() => {
 
+
+    useEffect(() => {
         function checkToken() {
-            axios.get(`${backendUrl}`, {
-                headers: {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
-                }
-            })
-                .then((response) => {
-                    if (response.status === 200) {
-                        setRender(true);
-                    } else {
-                        setTokenExpired(true);
-                    }
-                })
-                .catch((error) => {
-                    setTokenExpired(true)
-                });
+            // axios.get(`${backendUrl}`, {
+            //     headers: {
+            //         'Authorization': `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
+            //     }
+            // })
+            //     .then((response) => {
+            //         if (response.status === 200) {
+            //             setRender(true);
+            //         } else {
+            //             setTokenExpired(true);
+            //         }
+            //     })
+            //     .catch((error) => {
+            //         setTokenExpired(true)
+            //     });
         }
 
         function fetchData() {
@@ -147,6 +219,7 @@ export default function Database(): JSX.Element {
             return 0;
         });
     }
+
     // Function to sort data by map_name
     const sortDataByMapName = (data: DataItem[], sortOrder: 'asc' | 'desc'): DataItem[] => {
         const sortedData = [...data];
@@ -163,11 +236,6 @@ export default function Database(): JSX.Element {
     };
 
     const handleSortClick = (status: any, condition: any) => {
-        console.log("status : ", status);
-        console.log("condition : ", condition);
-
-
-
         if (status == "date") {
             setSortOrderStatus('date')
             if (condition.length > 0) {
@@ -225,6 +293,7 @@ export default function Database(): JSX.Element {
 
     const handleCheckboxChange = (index: string) => {
 
+
         if (mapIndex == parseInt(index)) {
             sessionStorage.setItem("mapIndex", "-1");
             setCheckedIndex(-1);
@@ -232,7 +301,7 @@ export default function Database(): JSX.Element {
             console.log("CCCC");
             setCheckedIndex(startIndex + parseInt(index));
             sessionStorage.setItem("mapIndex", String(startIndex + parseInt(index)));
-            console.log("nnnn : ", data[startIndex + parseInt(index)].map_name);
+            // console.log("nnnn : ", data[startIndex + parseInt(index)].map_name);
 
             sessionStorage.setItem("mapName", data[startIndex + parseInt(index)].map_name)
         }
@@ -323,11 +392,23 @@ export default function Database(): JSX.Element {
         return item.map_name.toLowerCase().includes(searchQuery.toLowerCase());
     });
 
-
-
     const itemsPerPage = 10;
     const totalItems = filteredData.length;
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    const pageOfDataChecker = (data: any) => {
+        if (data.length <= 10 && data.length > 0) {
+            console.log("1111");
+            return 1
+        } else if (data.length > 10) {
+            console.log("2222");
+
+            return Math.ceil(totalItems / itemsPerPage)
+        } else {
+            console.log("3333");
+            return 0
+        }
+    }
+    const totalPages = pageOfDataChecker(data);
 
     // Ensure currentPage doesn't exceed totalPages when search is used
     useEffect(() => {
@@ -491,7 +572,6 @@ export default function Database(): JSX.Element {
     }
 
     // Define the media query for max-width: 360px
-    const mediaQuery = window.matchMedia("(max-width: 1400px)");
 
     // Check if the media query matches and call the function if it does
     function handleMobileMapDisplay(mapName: any, index: any) {
@@ -524,7 +604,7 @@ export default function Database(): JSX.Element {
         setNewName(event.target.value);
     };
 
-    const handleMapPreview = () => {}
+    const handleMapPreview = () => { }
 
     const handlePseudo = () => { }
 
@@ -709,8 +789,8 @@ export default function Database(): JSX.Element {
                                             <input
                                                 type="text"
                                                 placeholder="Search..."
-                                                value={searchQuery} // Set the input value to searchQuery
-                                                onChange={handleSearchInputChange} // Call the handler on input change
+                                                value={searchQuery}
+                                                onChange={handleSearchInputChange}
                                             />
                                             <img src="/icons/search_icon.svg" alt="" className={styles.largeScreenImage} />
                                         </div>
@@ -734,30 +814,35 @@ export default function Database(): JSX.Element {
                                                 <tr className={styles.header}>
                                                     <th className={styles.idColumn} >No.</th>
                                                     <th className={`${styles.sortableHeader} ${styles.mapNameColumn} `}>
-                                                        <div className={`${styles.headerContent} ${styles.spanSorter} `}>
-                                                            <span>Map Name</span>
+                                                        <div className={`${styles.sortableHeaderContainer}`}>
+                                                            <div className={`${styles.headerContent} ${styles.spanSorter} `}>
+                                                                <span>Map Name</span>
+                                                            </div>
+                                                            <Image
+                                                                className={styles.mobileDisplayNone}
+                                                                alt=""
+                                                                src={`/icons/${sortOrder}ending.svg`}
+                                                                width={40}
+                                                                height={40}
+                                                                onClick={() => handleSortClick('name', '')}
+                                                            />
                                                         </div>
-                                                        <Image
-                                                            className={styles.mobileDisplayNone}
-                                                            alt=""
-                                                            src={`/icons/${sortOrder}ending.svg`}
-                                                            width={40}
-                                                            height={40}
-                                                            onClick={() => handleSortClick('name', '')}
-                                                        />
                                                     </th>
+
                                                     <th className={`${styles.sortableHeader} ${styles.dateModifiedColumn}`}>
-                                                        <div className={`${styles.headerContent} ${styles.spanSorter} `}>
-                                                            <span>Date Modified</span>
-                                                        </div>
-                                                        <Image
-                                                            className={styles.mobileDisplayNone}
-                                                            alt=""
-                                                            src={`/icons/${sortDateOrder}ending.svg`}
-                                                            width={40}
-                                                            height={40}
-                                                            onClick={() => handleSortClick('date', '')}
-                                                        />
+                                                        <div className={`${styles.sortableHeaderContainer}`}>
+                                                            <div className={`${styles.headerContent} ${styles.spanSorter} `}>
+                                                                <span>Date Modified</span>
+                                                            </div>
+                                                            <Image
+                                                                className={styles.mobileDisplayNone}
+                                                                alt=""
+                                                                src={`/icons/${sortOrder}ending.svg`}
+                                                                width={40}
+                                                                height={40}
+                                                                onClick={() => handleSortClick('date', '')}
+                                                            /></div>
+
                                                     </th>
                                                     <th className={`${styles.fileType} ${styles.mobileDisplayNone}`}>File Type</th>
                                                     <th className={`${styles.fileSize} ${styles.mobileDisplayNone}`}>Size</th>
@@ -767,49 +852,53 @@ export default function Database(): JSX.Element {
                                             </thead>
 
                                             <tbody>
-                                                {currentData.map((item, index) => (
-                                                    <tr key={index} onClick={() => handleMobileMapDisplay(item.map_name, index)}>
-                                                        <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
+                                                {currentData.map((item, index) => {
+                                                    return (
+                                                        (
+                                                            <tr key={index} onClick={() => handleMobileMapDisplay(item.map_name, index)}>
+                                                                <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
 
-                                                        <td onDoubleClick={() => handleDoubleClick(index)}>
-                                                            {isEditing[index] ? (
-                                                                <input
-                                                                    type="text"
-                                                                    id={`mapNameInput${index}`} // Assign the ID here
-                                                                    defaultValue={getBaseName(item.map_name)} // Remove the extension before editing
-                                                                    onBlur={() => updateMapName(index)}
-                                                                    autoFocus
-                                                                />
-                                                            ) : (
-                                                                getBaseName(item.map_name) // Display the name without the extension
-                                                            )}
-                                                        </td>
+                                                                <td onDoubleClick={() => handleDoubleClick(index)}>
+                                                                    {isEditing[index] ? (
+                                                                        <input
+                                                                            type="text"
+                                                                            id={`mapNameInput${index}`} // Assign the ID here
+                                                                            defaultValue={getBaseName(item.map_name)} // Remove the extension before editing
+                                                                            onBlur={() => updateMapName(index)}
+                                                                            autoFocus
+                                                                        />
+                                                                    ) : (
+                                                                        getBaseName(item.map_name) // Display the name without the extension
+                                                                    )}
+                                                                </td>
 
-                                                        <td className={styles.sortableHeader}>{item.modified_time}</td>
-                                                        <td className={`${styles.mobileDisplayNone}`}>{item.file_type}</td>
-                                                        <td className={`${styles.fileSize} ${styles.mobileDisplayNone}`}>{item.file_size}</td>
-                                                        <td className={`${styles.dark} ${styles.mobileDisplayNone}`}>
-                                                            <div className={`${styles.inputContainer}`}>
-                                                                <input
-                                                                    type="checkbox"
-                                                                    id={`checklistItem${index}`}
-                                                                    checked={checkedIndex == item.mapId}
-                                                                    onChange={() => handleCheckboxChange(item.mapId)}
-                                                                />
-                                                                <label htmlFor={`checklistItem${index}`}></label>
-                                                            </div>
-                                                        </td>
-                                                        <td className={`${styles.dark} ${styles.delete} ${styles.mobileDisplayNone}`}>
-                                                            <Image
-                                                                src="/icons/Delete.svg"
-                                                                alt="Delete icons"
-                                                                height={30}
-                                                                width={30}
-                                                                onClick={() => handleDeleteItem(index)}
-                                                            />
-                                                        </td>
-                                                    </tr>
-                                                ))}
+                                                                <td className={styles.sortableHeader}>{item.modified_time}</td>
+                                                                <td className={`${styles.mobileDisplayNone}`}>{item.file_type}</td>
+                                                                <td className={`${styles.fileSize} ${styles.mobileDisplayNone}`}>{item.file_size}</td>
+                                                                <td className={`${styles.dark} ${styles.mobileDisplayNone}`}>
+                                                                    <div className={`${styles.inputContainer}`}>
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            id={`checklistItem${index}`}
+                                                                            checked={checkedIndex == item.mapId}
+                                                                            onChange={() => handleCheckboxChange(item.mapId)}
+                                                                        />
+                                                                        <label htmlFor={`checklistItem${index}`}></label>
+                                                                    </div>
+                                                                </td>
+                                                                <td className={`${styles.dark} ${styles.delete} ${styles.mobileDisplayNone}`}>
+                                                                    <Image
+                                                                        src="/icons/Delete.svg"
+                                                                        alt="Delete icons"
+                                                                        height={30}
+                                                                        width={30}
+                                                                        onClick={() => handleDeleteItem(index)}
+                                                                    />
+                                                                </td>
+                                                            </tr>
+                                                        )
+                                                    )
+                                                })}
                                             </tbody>
                                         </table>
                                     </div>

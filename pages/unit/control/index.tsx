@@ -45,21 +45,21 @@ const Control: React.FC = () => {
     setFirstLoaded(sessionStorage.getItem('firstLoadControlPage') === null ? 'true' : 'false');
 
     async function checkToken() {
-      await axios.get(`${backendUrl}`, {
-        headers: {
-          'Authorization': `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
-        }
-      })
-        .then((response) => {
-          if (response.status === 200) {
-            setRender(true);
-          } else {
-            router.push('/');
-          }
-        })
-        .catch((error) => {
-          setTokenExpired(false)
-        });
+      // await axios.get(`${backendUrl}`, {
+      //   headers: {
+      //     'Authorization': `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
+      //   }
+      // })
+      //   .then((response) => {
+      //     if (response.status === 200) {
+      //       setRender(true);
+      //     } else {
+      //       router.push('/');
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     setTokenExpired(false)
+      //   });
     }
     checkToken();
   }, []);
@@ -118,7 +118,8 @@ const Control: React.FC = () => {
           {mobileNavigation ? <MobileNavigation onClick={handleMobileNavigation} /> : ""}
           {mobileInstruction || firstLoaded == 'true' ? <MobileInstruction onClick={handleMobileInstruction} imgUrl={"/images/mobile_instruction_control.svg"} /> : ""}
 
-          {mapIndex < 0 ? (
+          {mapIndex < -1 ? (
+          // {true ? (
             <div className={styles.container}>
               {/* --------------------------- Mobile Section  ------------------------------*/}
               <MobileTopSection onConfirmButtonClick={handleCloseButtonClick} />
@@ -156,7 +157,7 @@ const Control: React.FC = () => {
               <ControlIndex handleMobileNavigation={handleMobileNavigation} handleMobileInstruction={handleMobileInstruction} />
               <ButtonInformation onClick={handleInfoIconClick} />
             </>
-            
+
           )}
 
 

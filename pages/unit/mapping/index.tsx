@@ -85,6 +85,7 @@ const Mapping: React.FC<MappingProps> = () => {
     const [mobileInstruction, setMobileInstruction] = useState<boolean>(false);
     const [buttonMapStatus, setButtonMapStatus] = useState<string>()
     const [playButtonClicked, setPlayButtonClicked] = useState<boolean>(false);
+    const [emergencyStatus, setEmergencyStatus] = useState<boolean>(false);
 
 
     const onConfirmButtonClick = (): void => {
@@ -190,23 +191,23 @@ const Mapping: React.FC<MappingProps> = () => {
     useEffect(() => {
         var enableRos = false;
         async function checkToken() {
-            await axios.get(`${backendUrl}`, {
-                headers: {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
-                }
-            })
-                .then((response) => {
-                    if (response.status === 200) {
-                        setRender(true);
-                        enableRos = true;
-                    }
-                    else {
-                        setTokenExpired(true);
-                    }
-                })
-                .catch((error) => {
-                    setTokenExpired(true)
-                });
+            // await axios.get(`${backendUrl}`, {
+            //     headers: {
+            //         'Authorization': `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
+            //     }
+            // })
+            //     .then((response) => {
+            //         if (response.status === 200) {
+            //             setRender(true);
+            //             enableRos = true;
+            //         }
+            //         else {
+            //             setTokenExpired(true);
+            //         }
+            //     })
+            //     .catch((error) => {
+            //         setTokenExpired(true)
+            //     });
         }
         checkToken();
         const ROSLIB = (window as any).ROSLIB;
@@ -482,6 +483,10 @@ const Mapping: React.FC<MappingProps> = () => {
 
     const handleLidarChecked = () => { }
 
+    const handleEmergencyStatus = () => {
+        setEmergencyStatus(!emergencyStatus)
+    }
+
     return (
         <> {render ?
             (
@@ -692,7 +697,7 @@ const Mapping: React.FC<MappingProps> = () => {
 
 
                                         <div className={`${styles.footerMap} ${styles.mobileDisplayNone}`}>
-                                            <div className={styles.emergencyButton}>
+                                            <div className={`${styles.emergencyButton} ${emergencyStatus ? styles.emergencyButtonActive : ''}`} onClick={handleEmergencyStatus}>
                                                 <img src="/icons/emergency.svg" alt="" />
                                                 <p>Emergency Stop</p>
                                             </div>

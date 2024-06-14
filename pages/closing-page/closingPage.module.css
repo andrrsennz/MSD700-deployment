@@ -47,8 +47,8 @@
 }
 
 .text {
-    width: 392px;
-    height: 84px;
+    width: 386px;
+    height: 78px;
     gap: 10px;
     display: flex;
     justify-content: center;
@@ -68,8 +68,8 @@
 }
 
 .loginButton {
-    width: 184px;
-    height: 43px;
+    width: 166px;
+    height: 10px;
     border: 4px solid #60E3D5;
     background-color: #F6F0F0;
     color: #0C98B4;
@@ -88,6 +88,11 @@
     gap: 10px;
 }
 
+.loginButton img {
+    width: 23px;
+    height: 23px;
+}
+
 .loginButton:hover {
     cursor: pointer;
     box-shadow: 0px 4px 4px 0px #0567A680;
@@ -100,7 +105,8 @@
     position: fixed;
     bottom: 0;
     right: 0;
-    padding: 20px;
+    padding-bottom: 16px;
+    /* padding: 20px; */
 }
 
 .mobile {
@@ -130,10 +136,11 @@
     }
 
     .text {
-        width: max-content;
-        height: max-content;
+        width: 235px;
+        height: 50px;
+
         border: 2px solid #60E3D5;
-        border-radius: 5px;
+        border-radius: 3px;
         padding-right: 10px;
 
         font-size: 14px;
@@ -142,11 +149,18 @@
         letter-spacing: 0em;
         text-align: left;
 
+        gap: 7px;
+
+        margin-bottom: 25px;
     }
 
     .loginButton {
-        width: auto;
-        height: auto;
+        width: 86.69px;
+        height: 31px;
+
+        display: flex;
+        justify-content: center;
+
         border: 2px solid #60E3D5;
         border-radius: 5px;
 
@@ -156,10 +170,8 @@
         letter-spacing: 0em;
         text-align: left;
 
-        gap: 10px;
+        gap: 8px;
         padding: 0;
-        padding-left: 8px;
-        padding-right: 8px;
         /* padding-top: 7px;
         padding-bottom: 7px; */
     }
@@ -178,47 +190,23 @@
 
     .footer {
         position: fixed;
-        bottom: 0;
+        bottom: 1px;
         right: 0;
-        padding: 20px;
+        padding: 0px;
 
         z-index: 100;
     }
 }
 
-@media (min-width:1401px) {
-    .loginButton {
-        width: auto;
-        height: 43px;
-        border: 4px solid #60E3D5;
-        background-color: #F6F0F0;
-        color: #0C98B4;
-        display: flex;
-        align-items: center;
-        padding: 10px 0 15px 10px;
-        border-radius: 5px;
 
-        font-family: Inter;
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 17px;
-        letter-spacing: 0em;
-        text-align: left;
-
-        padding-right: 15px;
-        gap: 10px;
-    }
-
-}
-
-@media (min-width:1501px) {
+@media (min-width:2201px) {
     .text {
-        width: max-content;
-        height: max-content;
+        width: 457px;
+        height: 102px;
         padding-left: 20px;
         padding-right: 20px;
 
-        gap: 10px;
+        gap: 15px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -236,6 +224,16 @@
         color: #FFFFFF;
     }
 
+    .text img {
+        width: 30px;
+        height: 33.75px;
+    }
+
+    .loginButton p {
+        margin: 0;
+        padding: 0;
+    }
+
     .loginButton {
         font-family: Inter;
         font-size: 19px;
@@ -243,6 +241,18 @@
         line-height: 22.99px;
         text-align: left;
 
+        width: 220px;
+        height: 27px;
+    }
+
+    .loginButton img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .footer {
+        padding-bottom: 30px;
+        /* padding: 20px; */
     }
 
 }

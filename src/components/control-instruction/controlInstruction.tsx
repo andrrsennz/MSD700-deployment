@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './controlInstruction.module.css';
-
+import { usePathname } from 'next/navigation';
 interface ControlInstructionProps {
   onClick: () => void;
   imgUrl: string;
@@ -9,15 +9,18 @@ interface ControlInstructionProps {
 }
 
 const ControlInstruction: React.FC<ControlInstructionProps> = ({ onClick, imgUrl, width, height }) => {
-  const style = {
-    width:  `auto`,
-    height:  `auto`,
-    borderRadius:`12px`,
+
+  const pathname = usePathname();
+  const routeName = pathname ? pathname.split('/').filter(Boolean).pop() : '';
+
+  const handleImageClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
   };
 
   return (
-    <div className={`${styles.ControlInstruction} ${styles.mobileHide}`} onClick={onClick}>
-      <img src={imgUrl} alt="" style={style} />
+    <div className={`${styles.ControlInstruction} ${styles.mobileHide} ${routeName && styles[routeName]}`}
+      onClick={onClick}>
+      <img src={imgUrl} alt="" onClick={handleImageClick} />
     </div>
   );
 };

@@ -23,18 +23,19 @@ export default function Signup(): JSX.Element {
     const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
     const [showRegisterDialog, setShowRegisterDialog] = useState<boolean>(false);
 
-    const [usernameColumn, setUsernameColumn] = useState<boolean>(false);
+    const [usernameColumn, setUsernameColumn] = useState<string>("");
     const [isUsernameValid, setIsUsernameValid] = useState(true);
     const [isUsernameRegistered, setIsUsernameRegistered] = useState<boolean>(false);
 
-    const [fullNameColumn, setFullNameColumn] = useState<boolean>(false);
+    const [fullNameColumn, setFullNameColumn] = useState<string>("");
     const [isFullNameValid, setIsFullNameValid] = useState(true);
 
-    const [emailColumn, setEmailColumn] = useState<boolean>(false);
+    const [emailColumn, setEmailColumn] = useState<string>("");
     const [isEmailValid, setIsEmailValid] = useState(true);
     const [isEmailRegistered, setIsEmailRegistered] = useState<boolean>(false);
 
-
+    const [passwordColumn, setPasswordColumn] = useState<string>("");
+    const [confirmPasswordColumn, setConfirmPasswordColumn] = useState<string>("");
     const [isPasswordValid, setIsPasswordValid] = useState(true);
     const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(true);
 
@@ -66,17 +67,54 @@ export default function Signup(): JSX.Element {
         const { name, value } = e.target;
         setFormValues({ ...formValues, [name]: value });
 
-        if (!value.trim()) {
-            // If the value is empty or contains only whitespace, return early
-            return;
-        }
-
         // If we are changing the username, reset the attemptedSubmit and set isUsernameValid to true
         if (name === 'username') {
+            setUsernameColumn(value)
+            setIsUsernameValid(true)
+        }
+
+        if (name === 'fullname') {
+            setFullNameColumn(value)
+            setIsFullNameValid(true)
+        }
+
+        if (name === 'email') {
+            setEmailColumn(value)
+            setIsEmailValid(true)
+        }
+
+        if (name === 'password') {
+            setPasswordColumn(value)
+            setIsPasswordValid(true)
+
+            if (passwordColumn == confirmPasswordColumn) {
+                setIsConfirmPasswordValid(true)
+            }
+        }
+
+        if (name === 'confirmPassword') {
+            setConfirmPasswordColumn(value)
+            if (passwordColumn == confirmPasswordColumn) {
+                setIsConfirmPasswordValid(true)
+            }
+            // setIsConfirmPasswordValid(true)
+        }
+    };
+
+
+    const handleSubmit = (e: any) => {
+        e.preventDefault();
+        // Mark that a submit attempt has been made
+        setAttemptedSubmit(true);
+
+        const isUsernameFilled = formValues.username.trim() !== '';
+        if (!isUsernameFilled) {
+            setIsUsernameValid(false);
+        } else {
             setIsUsernameRegistered(false)
             setAttemptedSubmit(false);
             axios.post(`${backendUrl}/user/check-username`, {
-                username: value
+                username: usernameColumn
             })
                 .then(function (response: any) {
                     if (response.status === 200) {
@@ -92,71 +130,6 @@ export default function Signup(): JSX.Element {
                     setIsUsernameRegistered(true)
                     setIsUsernameValid(false);
                 });
-        }
-
-        if (name === 'fullname') {
-            setAttemptedSubmit(false);
-            setIsFullNameValid(true); // Assume the input is valid as the user types
-        }
-
-        if (name === 'email') {
-            setAttemptedSubmit(false);
-            axios.post(`${backendUrl}/user/check-email`, {
-                email: value
-            })
-                .then(function (response) {
-                    if (response.status === 200) {
-                        setIsEmailValid(true);
-                        setIsEmailRegistered(false)
-                    }
-                })
-                .catch(function (error) {
-                    if (error.response.status === 409) {
-                        setIsEmailValid(true);
-                        setIsEmailRegistered(true)
-                    }
-                    else {
-                        setIsEmailValid(false);
-                        setIsEmailRegistered(false)
-                    }
-                });
-        }
-
-        if (name === 'password') {
-            setAttemptedSubmit(false);
-            if (value !== '') {
-                setIsPasswordValid(true);
-                if (formValues.confirmPassword !== value) {
-                    setIsConfirmPasswordValid(false);
-                }else{
-                    setIsConfirmPasswordValid(true);
-                }
-            }
-            else {
-                setIsPasswordValid(false);
-            }
-        }
-
-        if (name === 'confirmPassword') {
-            setAttemptedSubmit(false);
-            if (value === formValues.password && formValues.password !== '') {
-                setIsConfirmPasswordValid(true);
-            }
-            else {
-                setIsConfirmPasswordValid(false);
-            }
-        }
-    };
-
-
-    const handleSubmit = (e: any) => {
-        e.preventDefault();
-        // Mark that a submit attempt has been made
-        setAttemptedSubmit(true);
-
-        const isUsernameFilled = formValues.username.trim() !== '';
-        if (!isUsernameFilled) {
-            setIsUsernameValid(false);
         }
 
         const isFullNameFilled = formValues.fullname.trim() !== '';
@@ -275,7 +248,7 @@ export default function Signup(): JSX.Element {
                         <div className={styles.information}>
                             <h1>MSD700</h1>
                             <div className={styles.feature}>
-                                <h3>Features</h3>
+                                <p>Features</p>
                                 <ul>
                                     <li>Blade / bucket type</li>
                                     <li>Backhoe / dump type</li>
@@ -294,18 +267,18 @@ export default function Signup(): JSX.Element {
                                     <div className={styles.label}>
                                         <label htmlFor="username">Username</label>
                                     </div>
-                                    <div className={`${styles.iconStatusColumn} ${!isUsernameValid && formValues.username.trim() !== '' || isUsernameRegistered && formValues.username.trim() !== '' ? styles.invalid : ''}`}>
+                                    <div className={`${styles.iconStatusColumn} ${!isUsernameValid || isUsernameRegistered && formValues.username.trim() !== '' ? styles.invalid : ''}`}>
                                         <input
                                             type="text"
                                             id="username"
                                             name="username"
-                                            placeholder={isUsernameValid ? "Username" : "Fill in this data"}
+                                            placeholder={isUsernameValid ? "" : "Fill in this data"}
                                             required
                                             onChange={handleChange}
                                             autoComplete="off"
                                         />
                                         <div className={styles.iconStatusColumnButton}>
-                                            {!isUsernameValid && formValues.username.trim() !== '' || isUsernameRegistered && formValues.username.trim() !== '' ? (
+                                            {!isUsernameValid || isUsernameRegistered && formValues.username.trim() !== '' ? (
                                                 <Image
                                                     src="/icons/Info-alert.svg"
                                                     alt="Alert icon"
@@ -338,7 +311,7 @@ export default function Signup(): JSX.Element {
                                             type="text"
                                             id="fullname"
                                             name="fullname"
-                                            placeholder={isFullNameValid ? "Fullname" : "Fill in this data"}
+                                            placeholder={isFullNameValid ? "" : "Fill in this data"}
                                             required
                                             onChange={handleChange}
                                         />
@@ -366,17 +339,17 @@ export default function Signup(): JSX.Element {
                                     <div className={styles.label}>
                                         <label htmlFor="email">Email</label>
                                     </div>
-                                    <div className={`${styles.iconStatusColumn} ${!isEmailValid && formValues.email.trim() !== '' || isEmailRegistered && formValues.email.trim() !== '' ? styles.invalid : ''}`}>
+                                    <div className={`${styles.iconStatusColumn} ${!isEmailValid ? styles.invalid : ''}`}>
                                         <input
                                             type="text"
                                             id="email"
                                             name="email"
-                                            placeholder={isEmailValid ? "Email" : "Fill in this data"}
+                                            placeholder={isEmailValid ? "" : "Fill in this data"}
                                             required
                                             onChange={handleChange}
                                         />
                                         <div className={styles.iconStatusColumnButton}>
-                                            {!isEmailValid && formValues.email.trim() !== '' || isEmailRegistered && formValues.email.trim() !== '' ? (
+                                            {!isEmailValid ? (
                                                 <Image
                                                     src="/icons/Info-alert.svg"
                                                     alt="Alert icon"
@@ -419,11 +392,11 @@ export default function Signup(): JSX.Element {
                                                 type="password"
                                                 id="password"
                                                 name="password"
-                                                placeholder={isPasswordValid ? "Password" : "Fill in this data"}
+                                                placeholder={isPasswordValid ? "" : "Fill in this data"}
                                                 required
                                                 onChange={handleChange}
                                             />
-                                            <div className={styles.iconStatusColumnButton}>
+                                            <div className={`${styles.iconStatusColumnButton} ${styles.iconStatusColumnPasswordButton}`}>
                                                 {!isPasswordValid ? (
                                                     <Image
                                                         src="/icons/Info-alert.svg"
@@ -447,24 +420,25 @@ export default function Signup(): JSX.Element {
                                         <div className={styles.label}>
                                             <label htmlFor="confirmPassword">Confirm Password</label>
                                         </div>
-                                        <div className={`${styles.iconStatusColumn} ${!isConfirmPasswordValid  ? styles.invalid : ''}`}>
+
+                                        <div className={`${styles.iconStatusColumn} ${passwordColumn.length >= 0 && passwordColumn !== confirmPasswordColumn || !isConfirmPasswordValid ? styles.invalid : ''}`}>
                                             <input
                                                 type="password"
                                                 id="confirmPassword"
                                                 name="confirmPassword"
-                                                placeholder={isConfirmPasswordValid ? "Confirm Password" : "Fill in this data"}
+                                                placeholder={isConfirmPasswordValid ? "" : "Fill in this data"}
                                                 required
                                                 onChange={handleChange}
                                             />
-                                            <div className={styles.iconStatusColumnButton}>
-                                                {!isConfirmPasswordValid ? (
+                                            <div className={`${styles.iconStatusColumnButton} ${styles.iconStatusColumnPasswordButton}`}>
+                                                {passwordColumn.length >= 0 && passwordColumn !== confirmPasswordColumn || !isConfirmPasswordValid ? (
                                                     <Image
                                                         src="/icons/Info-alert.svg"
                                                         alt="Alert icon"
                                                         width={30}
                                                         height={30}
                                                     />
-                                                ) : formValues.password.trim() !== '' ? (
+                                                ) : formValues.password.trim() !== '' && confirmPasswordColumn == passwordColumn ? (
                                                     <Image
                                                         src="/icons/Check-circle.svg"
                                                         alt="Check icon"
@@ -474,8 +448,8 @@ export default function Signup(): JSX.Element {
                                                 ) : null}
                                             </div>
                                         </div>
-                                        {!isConfirmPasswordValid && formValues.password.trim() !== '' ? (
-                                            <div className={styles.tooltip}>
+                                        {passwordColumn.length >= 0 && passwordColumn !== confirmPasswordColumn ? (
+                                            <div className={`${styles.tooltip} ${styles.tooltipPassword}`}>
                                                 <p>Wrong Password</p>
                                             </div>
                                         ) : null}
@@ -511,14 +485,10 @@ export default function Signup(): JSX.Element {
                         </div>
 
                         <div className={`${styles.bottomSection} ${styles.displayNone} `}>
-
                             <div className={styles.mobileFooter}>
                                 <Footer status={false} />
                             </div>
                         </div>
-
-
-
                     </div>
                 </div>
 

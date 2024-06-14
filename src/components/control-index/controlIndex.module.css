@@ -13,25 +13,20 @@
 }
 
 .parents {
-
     display: flex;
     flex-direction: column;
     margin-left: auto;
     margin-right: auto;
     height: 100%;
-
     position: relative;
 }
 
 .statusSection {
-    width: 40%;
-    min-width: 480px;
-    padding-top: 10px;
-    right: 150px;
+    left: 702px;
+    padding-top: 17px;
     display: flex;
-    gap: 20px;
+    position: absolute;
 }
-
 
 .statusSection div {
     height: 100%;
@@ -39,7 +34,6 @@
 
 .statusSection .status {
     width: 279px;
-    min-width: 279px;
     height: 52px;
     display: flex;
     align-items: center;
@@ -52,9 +46,8 @@
     font-weight: 500;
     line-height: 27px;
     letter-spacing: 0em;
-    /* justify-content: center; */
+
     gap: 5px;
-    /* margin-left: auto; */
 }
 
 .idle {
@@ -62,36 +55,30 @@
     justify-content: start !important;
 }
 
-.idle img {
-    margin-left: 20%;
-}
 
 .statusSection p {
     color: #FFFFFF;
 }
 
 .statusSection .status img {
-    width: 30px;
-    height: 30px;
-    margin-left: 10px;
+    width: 25px;
+    height: 25px;
+    margin-left: 15px;
 }
 
 .statusSection .lidar {
-    margin-left: auto;
-    min-width: 94px;
+    width: 94px;
     height: 52px;
+
     text-align: center;
     display: flex;
-    /* Use flex display */
     align-items: center;
-    /* Vertically center the content */
     justify-content: center;
-    /* Horizontally center the content */
-    /* margin-left: auto; */
 
     background-color: #0567A6;
     border: 3px solid #60E3D5;
     border-radius: 20px;
+
     font-family: 'Inter', sans-serif;
     font-size: 22px;
     font-weight: 500;
@@ -99,11 +86,14 @@
     letter-spacing: 0em;
     justify-content: center;
     gap: 5px;
+    margin-left: 128px;
 }
 
-.statusSection .lidarButton {
+.lidarButton {
+    margin-left: 10.65px;
     margin-top: -5px;
 }
+
 
 /* Style for the toggle switch container */
 .toggleSwitch {
@@ -131,24 +121,24 @@
     background-color: #0567A6;
     border-radius: 20px;
     transition: 0.4s;
-    /* Transition effect to create smooth sliding */
-    padding-top: 2px;
 }
 
 /* Style for the slider when the toggle is "on" */
 .slider::before {
     position: absolute;
     content: "";
-    height: 15px;
-    width: 15px;
-    left: 2px;
-    border: 10px solid #0567A6;
-    /* background-color: red; */
+    height: 14px;
+    /* Adjust the height as needed */
+    width: 14px;
+    /* Adjust the width as needed */
+    left: 15px;
+    top: 50%;
+    /* Center vertically */
+    transform: translateY(-50%) translateX(100%);
+    /* Center vertically and move to initial position */
+    border: 7px solid #0567A6;
     border-radius: 50%;
-    /* Round indicator to create a circle */
     transition: 0.4s;
-    transform: translateX(100%);
-    /* Transition effect to create smooth sliding */
 }
 
 /* Style for the slider when the toggle is "on" */
@@ -166,60 +156,63 @@
 
 /* Move the indicator to the right when toggled on */
 .toggleInput:checked+.slider::before {
-    transform: translateX(5%);
-    background-color: #0567A6;
-    border: 10px solid #60E3D5;
-    /* Color of the indicator when checked */
+    transform: translateY(-50%) translateX(-10px);
+    /* Center vertically and move to checked position */
+    background-color: #60E3D5;
+    border: 7px solid #60E3D5;
 }
 
 
 /* MAP SECTION */
 
 .mapSection {
-    width: 1102px;
-    min-height: 800px;
-
-    height: 80%;
+    width: 76.5% !important;
+    min-height: 817px;
+    /* height: 850px; */
     background-color: #D0E1E7;
-    border: 2px solid #0C98B4;
+    border: 3px solid #0C98B4;
     border-radius: 45px;
-
     box-shadow: -10px 10px 4px 0px #00000040;
     position: absolute;
     margin-bottom: 20px;
+    position: relative;
+    /* margin-right: 29px; */
 
     z-index: 2;
 
     display: flex;
     flex-direction: column;
-    align-items: center;
-    /* justify-content: center; */
+
+    padding-top: 30px;
 }
 
 
 /* --------------------------------------------- */
 
 /* TOP DIV */
+.topDiv p {
+    margin: 0;
+}
+
 
 .topDiv {
     display: flex;
+    justify-self: start;
     align-items: center;
+    gap: 10px;
 
-    font-family: 'Inter', sans-serif;
-    font-size: 26px;
-    font-weight: 500;
+    font-family: Inter;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 38.73px;
+    text-align: left;
+
 
     letter-spacing: 0em;
     color: #0567A6;
-    gap: 10px;
 
-    width: 95%;
-    margin-left: auto;
-    margin-right: auto;
-    height: 40px;
-    margin-top: 46px;
-    margin-bottom: 65px;
-    padding-left: 20px;
+    padding-left: 50px;
+    margin-bottom: 49px;
 }
 
 
@@ -238,14 +231,15 @@
     height: 20px;
     width: max-content;
     background-color: #0C98B4;
-    border: 2px solid #60E3D5;
+    border: 2.09px solid #60E3D5;
     border-radius: 10px;
     justify-content: space-between;
-    padding: 8px;
-
     display: flex;
     align-items: center;
+    height: 35.9px;
 
+    padding-left: 9px;
+    padding-right: 9px;
 }
 
 .topDiv .playButton p,
@@ -260,19 +254,15 @@
     letter-spacing: 0em;
     text-align: center;
     color: #FFFFFF;
-    padding: 5px;
 }
 
 .topDiv .playButton img,
 .topDiv .pauseButton img,
 .topDiv .stopButton img,
 .topDiv .focusButton img {
-    width: 25px;
-
-    height: 25px;
-
-    margin-right: 5px;
-
+    width: 12.54px;
+    height: 15.23px;
+    margin-left: 8px;
 }
 
 .topDiv .playButton:hover,
@@ -282,10 +272,7 @@
     box-shadow: -5px 5px 4px 0px #00000040;
     transition: 0.5s;
     cursor: pointer;
-
 }
-
-
 
 .topDiv .settingsButton {
     margin-left: auto;
@@ -308,25 +295,21 @@
     background-color: #8DAAC0 !important;
 }
 
-
-
 /* Center Div */
 .centerDiv {
     width: 95%;
-    height: 675px;
+    height: 669px;
     border-radius: 30px;
     border: 3px solid #0C98B4;
     margin-left: auto;
     margin-right: auto;
     background-color: #DCDCDC;
     overflow: hidden;
-    box-shadow: 0px 4px 4px 0px #0567A6;
 }
 
-
 .centerDiv img {
-    width: 100%;
-    height: 100%;
+    width: 18px;
+    height: 18px;
 }
 
 .centerDiv .navigationSection {
@@ -336,8 +319,8 @@
 }
 
 .mapPreview {
-    width: 180px;
-    height: 150px;
+    width: 194px;
+    height: 144px;
     background-color: #ECF4F6;
     position: absolute;
     top: 15px;
@@ -353,30 +336,32 @@
 }
 
 .mapPreview .map {
-    width: 180px;
-    height: 180px;
+    width: 100%;
+    height: 100%;
 }
 
 .centerDiv .buttonNavigation {
     display: flex;
     flex-direction: column;
-    height: 115px;
-    width: 37px;
+    height: auto;
+    width: auto;
 
     position: absolute;
     z-index: 10;
     gap: 10px;
-    left: 89%;
+    right: 7%;
     margin-top: 25px;
 
 }
 
 .centerDiv .buttonNavigation div {
-    height: 20px;
-    width: 20px;
+    height: 25px;
+    width: 25px;
     display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: #0C98B4;
-    border: 5px solid #60E3D5;
+    border: 2px solid #60E3D5;
     border-radius: 5px;
     padding: 4px;
 }
@@ -397,6 +382,9 @@
 }
 
 .emergencyButton {
+    width: 150.5px;
+    height: 37.1px;
+
     background-color: #FF7582;
     display: flex;
     border-radius: 14px;
@@ -408,8 +396,6 @@
     font-weight: 500;
     line-height: 16.1px;
     text-align: left;
-
-    padding: 10.5px;
 
     align-items: center;
     gap: 7px;
@@ -426,6 +412,10 @@
 }
 
 .emergencyButton:hover {
+    cursor: pointer;
+}
+
+.emergencyButtonActive {
     background-color: #C66E87;
 }
 
@@ -449,20 +439,22 @@
     flex-direction: column;
     position: absolute;
     margin-left: auto;
-    margin-right: 10%;
+    /* margin-right: 10%; */
     margin-top: 25px;
     gap: 12px;
     /* right: 80px; */
-    left: 65%;
+    /* left: 65%; */
+    right: 13%;
 }
 
-.modeListSection img {
-    width: 22px;
-    height: 22px;
+
+.modeListParents p {
+    margin: 0;
+    padding: 0;
 }
 
 .modeListParents {
-    width: 189px;
+    width: 175px;
     height: 40px;
     border: 3px solid #60E3D5;
     border-radius: 24px;
@@ -478,9 +470,11 @@
     color: #FFFFFF;
 
     display: flex;
+    gap: 8px;
     align-items: center;
+    justify-content: space-between;
     padding-left: 12px;
-    gap: 2px;
+    padding-right: 17px;
 }
 
 .modeListParents:hover {
@@ -488,10 +482,11 @@
 }
 
 .modeListOption {
-    gap: 40%;
+    /* gap: 40%; */
 }
 
 .modeListSection .option {
+    justify-content: start;
     background-color: #0567A6;
 }
 
@@ -528,10 +523,6 @@
     background-color: #8DAAC0 !important;
 }
 
-.displayNone {
-    display: none;
-}
-
 .activeDisableModeListButton {
     background-color: #60E3D5 !important;
 }
@@ -546,40 +537,44 @@
 
 .topSection {
     display: flex;
-    align-items: center;
-
 }
 
 .unitParents {
     display: flex;
     width: 100%;
-    justify-content: space-between;
+    justify-content: start;
+
+    gap: 27px;
 }
 
 .topDivInformation {
     background-color: #F6F0F0;
     display: flex;
-    gap: 15px;
+    gap: 10px;
+    padding: 10px 15px 10px 15px;
+
     border: 4px solid #60E3D5;
 
-    padding: 10px;
-
     font-family: Inter;
-    font-size: 22px;
+    font-size: 14px;
     font-weight: 500;
-    line-height: 26.63px;
+    line-height: 16.94px;
     text-align: left;
     color: #0C98B4;
 
     margin-left: auto;
+    margin-right: 25px;
 
     align-items: center;
+
+    width: 206px;
+    height: 43px;
 }
 
 
 .topDivInformation img {
-    width: 30px;
-    height: 30px;
+    width: 23px;
+    height: 23px;
 }
 
 .topDivInformation p {
@@ -801,183 +796,31 @@
     }
 }
 
-@media (max-width: 2200px) and (min-width:1401px) {
-
-    .menu {
-        width: 240px;
-        height: 259px;
-        padding: 10px;
-
-        background-color: #D0E1E7;
-        border: 5.38px solid #0C98B4;
-        border-radius: 45px;
-        display: flex;
-
-        flex-direction: column;
-        justify-content: space-around;
-
-        box-shadow: -10px 10px 4px 0px #00000040;
-    }
-
-    .mapSection {
-        position: relative;
-        width: 75% !important;
-        height: 850px;
-        max-height: 100%;
-        border: 5px solid #0C98B4;
-        margin-right: 29px;
-    }
-
-    .mapPreview {
-        width: 275px;
-        height: 180px;
-        background-color: #ECF4F6;
-        position: absolute;
-        top: 15px;
-        left: 15px;
-        border-radius: 4px;
-        border-style: solid;
-        border-width: 3px;
-        border-color: #ECF4F6;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .mapPreview .map {
-        width: 100%;
-        height: 100%;
-    }
-
-
-    .centerDiv {
-        font-family: Inter;
-        font-size: 32px;
-        font-weight: 600;
-        line-height: 38.73px;
-        text-align: center;
-    }
-
-    .informationSection {
-        width: fit-content;
-        height: auto;
-    }
-
-    .informationSection img {
-        width: 23px !important;
-        height: 23px !important;
-    }
-
-
-    .informationSection p {
-        font-family: Inter;
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 16.94px;
-        text-align: left;
-    }
-
-    .bolder {
-        font-family: Inter;
-        font-size: 14px;
-        font-weight: 700;
-        line-height: 16.94px;
-        text-align: left;
-
-    }
-
-    .statusSection {
-        margin-left: auto;
-        margin-right: 10%;
-
-    }
-
-    .topDiv .playButton img,
-    .topDiv .pauseButton img,
-    .topDiv .stopButton img,
-    .topDiv .focusButton img {
-        width: 12.54px;
-        height: 15.23px;
-        gap: 0px;
-        border: 2.09px 0px 0px 0px;
-        opacity: 0px;
-    }
-
-    .topDiv .playButton p,
-    .topDiv .pauseButton p,
-    .topDiv .stopButton p,
-    .topDiv .focusButton p {
-        margin: 0;
-        padding: 0;
-        padding-right: 5px;
-    }
-
-    .topDivInformation {
-        background-color: #F6F0F0;
-        display: flex;
-        gap: 10px;
-        border: 3px solid #60E3D5;
-
-        width: 220px;
-
-        padding: 10px;
-        font-family: Inter;
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 16.94px;
-        text-align: left;
-
-        color: #0C98B4;
-
-        margin-left: auto;
-
-        align-items: center;
-
-        border-radius: 3px;
-
-    }
-
-
-    .topDivInformation img {
-        width: 23px;
-        height: 23px;
-    }
-
-    .runThePrototype {
-        font-family: Inter;
-        font-size: 32px;
-        font-weight: 600;
-        line-height: 38.73px;
-        text-align: left;
-    }
-
-}
+@media (max-width: 2200px) and (min-width:1401px) {}
 
 @media (min-width:2201px) {
     .unitParents {
-        height: 1175px;
+        height: 85%;
         width: 100%;
+
+        display: flex;
+        width: 100%;
+        justify-content: start;
+        gap: 40px;
+
     }
 
     .statusSection {
         margin-right: 205px !important;
     }
 
-    .lidar {
-        height: 64px;
-        width: max-content;
-        padding-left: 30px;
-        padding-right: 30px;
-        border-radius: 30px !important;
-    }
-
     .statusSection .status {
-        height: 60px;
-        width: 370px;
+        height: 57px;
+        width: 367px;
         border-radius: 28px;
         gap: 15px;
 
+        border: 4px solid #60E3D5;
     }
 
     .statusSection p {
@@ -994,31 +837,38 @@
         margin-left: 20px;
     }
 
-    .statusSection .lidarButton {
-        margin-top: -10px;
-    }
-
     .statusSection .lidar {
         height: 59px;
         width: max-content;
-        padding-left: 30px;
-        padding-right: 30px;
+        padding-left: 28px;
+        padding-right: 28px;
         border-radius: 30px !important;
+
+        margin-left: 361px;
+    }
+
+    .statusSection .lidarButton {
+        margin-top: -10px;
+        margin-left: 16.48px;
     }
 
     .slider {
         width: 112.55px;
-        height: 54.28px;
+        height: 56.28px;
 
         border-radius: 54.28px;
     }
 
     /* Style for the slider when the toggle is "on" */
     .slider::before {
-        height: 25px;
-        width: 25px;
+        height: 20px;
+        width: 20px;
+        border: 11px solid #0567A6;
+    }
 
-        border: 13px solid #0567A6;
+    .toggleInput:checked+.slider::before {
+        transform: translateY(-50%) translateX(-7px);
+        border: 11px solid #60E3D5;
     }
 
     .menu {
@@ -1037,31 +887,17 @@
         box-shadow: -10px 10px 4px 0px #00000040;
     }
 
-    .mapPreview {
-        width: 375px;
-        height: 281.25px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        left: 30px;
-        top: 30px;
-    }
-
-    .mapPreview .map {
-        width: 95%;
-        height: 95%;
-
-    }
-
     .mapSection {
         position: relative;
-        width: 81% !important;
-        height: 100%;
-        max-height: 100%;
+        width: 80% !important;
+        /* min-width: 2050px; */
+        min-height: 1128px;
         border: 5px solid #0C98B4;
         margin-right: 29px;
+
+        border-radius: 45px;
+        margin-bottom: 40px;
+        padding-top: 46.5px;
     }
 
     .topDiv {
@@ -1071,7 +907,10 @@
         line-height: 45.99px;
         text-align: left;
 
-        margin-top: 63.5px;
+        /* margin-top: 14px; */
+        margin-bottom: 71px;
+
+        gap: 15px;
     }
 
     .topDiv .playButton,
@@ -1084,7 +923,11 @@
         border: 2px solid #60E3D5;
         border-radius: 10px;
         justify-content: space-between;
-        padding: 10px;
+        padding-left: 11px;
+        padding-right: 11px;
+        padding-top: 12.5px;
+        padding-bottom: 12.5px;
+
 
         display: flex;
         align-items: center;
@@ -1105,7 +948,6 @@
 
         text-align: center;
         color: #FFFFFF;
-        padding: 5px;
     }
 
     .topDiv .playButton img,
@@ -1114,15 +956,9 @@
     .topDiv .focusButton img {
         width: 14.4px;
         height: 17.49px;
-        gap: 0px;
-        border: 2px 0px 0px 0px;
-        opacity: 0px;
+        margin-left: 9.6px;
     }
 
-    .modeListSection {
-        left: 79%;
-        margin-top: 30px;
-    }
 
     .centerDiv {
         font-family: Inter;
@@ -1131,8 +967,15 @@
         line-height: 48px;
         letter-spacing: 0em;
 
-        height: 80%;
+        height: 950px;
+        border: 4.15px solid #0C98B4;
     }
+
+    .centerDiv img {
+        width: 28px;
+        height: 28px;
+    }
+
 
     .informationSection {
         width: 652px;
@@ -1146,13 +989,20 @@
     .statusSection {
         margin-left: auto;
         margin-right: 137px;
-        margin-top: -25px;
+        margin-top: 13px;
+
+        left: 1256px;
+    }
+
+    .centerDiv .buttonNavigation div {
+        height: 28px;
+        width: 28px;
+        border: 3.5px solid #60E3D5;
+        border-radius: 8px;
     }
 
     .centerDiv .buttonNavigation {
-        left: 91.5%;
         margin-top: 30px;
-
     }
 
     .buttonNavigation div {
@@ -1160,11 +1010,14 @@
     }
 
     .footerMap {
-        top: 1040px;
+        top: 1050px;
         padding-left: 30px;
     }
 
     .emergencyButton {
+        width: 221px;
+        height: 51px;
+
         border-radius: 20px;
         border: 2.1px solid #FF7582;
 
@@ -1196,18 +1049,62 @@
         color: #0567A6;
     }
 
+    .topDivInformation {
+        gap: 15px;
+        padding-left: 15px;
+        margin-right: 50px;
 
-    .modeListParents {  
+        border: 4px solid #60E3D5;
+
+        font-family: Inter;
+        font-size: 22px;
+        font-weight: 500;
+        line-height: 26.63px;
+        text-align: left;
+        color: #0C98B4;
+
+        width: 821px;
+        height: 22px;
+    }
+
+    .topDivInformation img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .mapPreview {
+        width: 339px;
+        height: 222px;
+
+        top: 30px;
+        left: 30px;
+        border-radius: 9.75px;
+        border-width: 8px;
+    }
+
+    .modeListParents {
+        width: 213px;
+        height: 46px;
+        border: 3px solid #60E3D5;
+        border-radius: 24px;
+
         font-family: Inter;
         font-size: 19px;
         font-weight: 500;
         line-height: 22.99px;
         text-align: left;
 
-        height: 47px;
+        display: flex;
+        gap: 8px;
+        align-items: center;
         justify-content: space-between;
+        padding-left: 20px;
         padding-right: 23px;
-
     }
-    
+
+
+    .displayNone {
+        display: none;
+    }
+
 }

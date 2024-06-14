@@ -18,6 +18,11 @@
   overflow: hidden;
 }
 
+.container p {
+  margin: 0;
+  padding: 0;
+}
+
 .topSection {
   width: 100%;
 }
@@ -38,13 +43,14 @@
   justify-content: center;
   align-items: center;
   border-radius: 3px;
-  margin-top: 100px;
-  width: 458px;
+  margin-top: 30px;
+  width: 404px;
+  height: 35px;
 }
 
 .incorrectPassword img {
-  width: 23px;
-  height: 23px;
+  width: 20.03px;
+  height: 17.35px;
 }
 
 .parents {
@@ -89,6 +95,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 82px;
 
   /* width: 120px;
   height: 30px; */
@@ -127,8 +134,6 @@
 }
 
 .registerUnit {
-
-  height: 43px;
   font-family: 'Inter', sans-serif;
   font-size: 19px;
   font-weight: 500;
@@ -143,7 +148,7 @@
   margin-top: -15%; */
 
   position: absolute;
-  top: 860px;
+  top: 930px;
 
 
 
@@ -154,7 +159,7 @@
 
 .registerUnit .registerUnitText {
   background-color: #ECF4F6;
-  height: 43px;
+  height: 45px;
   display: flex;
   align-items: center;
   padding-left: 10px;
@@ -163,8 +168,6 @@
 
 .buttonRegisterUnit {
   display: flex;
-  /* width: 168px;
-  height: 43px; */
   background-color: #F6F0F0;
 
   justify-content: center;
@@ -186,8 +189,10 @@
 }
 
 .registerUnit .registerUnitColumn {
-  margin-top: 5px;
-  padding: 20px !important;
+  width: 398px;
+  height: 88.9px;
+  padding: 20px;
+  /* height: 165px; */
   /* width: 85%; */
   background-color: #D9FEFA;
   border: 4px solid #60E3D5;
@@ -203,7 +208,7 @@
   padding: 10px;
   border-radius: 3px;
   border: none;
-  background-color: #97E5F4;
+  background-color: #97E5F4 !important;
   font-family: 'Inter', sans-serif;
   font-size: 24px;
   font-weight: 500;
@@ -214,10 +219,16 @@
   width: 230px;
 }
 
+
 .registerUnitColumn .buttonSection input[type="text"]:focus {
   outline-color: #60E3D5;
   outline-style: solid;
   outline-width: medium;
+}
+
+.registerUnitColumn .buttonSection button p {
+  margin: 0;
+  padding: 0;
 }
 
 .registerUnitColumn .buttonSection button {
@@ -225,7 +236,7 @@
   /* height: 39.9px; */
   color: #fff;
   border: none;
-  padding: 10px;
+  padding: 8px;
   cursor: pointer;
   border-radius: 5px;
   background-color: #0C98B4;
@@ -259,6 +270,9 @@
   transition: 1s;
 }
 
+.centerSection .greetings p {
+  margin: 0;
+}
 
 .centerSection .greetings {
   font-family: 'Inter', sans-serif;
@@ -269,8 +283,8 @@
   text-align: center;
   color: #0567A6;
   text-shadow: 0px 7px 7px #60E3D5;
-  margin-bottom: 1%;
-  margin-top: 50px;
+  margin-bottom: 67px;
+  margin-top: 120px;
 }
 
 .dataSection {
@@ -278,7 +292,7 @@
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-
+  height: auto;
 }
 
 
@@ -327,7 +341,7 @@
 
 .tableUnit {
   width: 100%;
-  max-height: 615px;
+  /* max-height: 615px; */
 
   margin-left: auto;
   margin-right: auto;
@@ -339,7 +353,7 @@
 
 .tableUnit .labelSection {
   color: #FFFFFF;
-  margin-bottom: 35px;
+  margin-bottom: 29px;
   top: 300px;
   border-radius: 5px;
   gap: 4px;
@@ -355,8 +369,10 @@
   letter-spacing: 0em;
   text-align: left;
 
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 11px;
+  padding-bottom: 11px;
 
 }
 
@@ -370,12 +386,8 @@
   line-height: 19px;
   letter-spacing: 0em;
   text-align: center;
-
   color: #FFFFFF;
-
 }
-
-
 
 .table th,
 .table td {
@@ -384,7 +396,6 @@
   border-radius: 4px;
   white-space: nowrap;
   overflow: hidden;
-
 }
 
 .table th {
@@ -416,7 +427,10 @@
 }
 
 .table tbody tr.selectedRow td {
-  border: 5px solid #0C98B4;
+  outline: 5px solid #0C98B4;
+  /* Use outline instead of border */
+  outline-offset: -3px;
+  /* Adjust offset to overlap with the existing border */
 }
 
 .alertOverlay {
@@ -441,44 +455,48 @@
   display: flex;
 
   align-items: center;
+  justify-content: center;
 
   gap: 10px;
-
-  padding: 20px;
   color: rgba(255, 117, 130, 1);
   background-color: hsla(0, 25%, 95%, 1);
   border: 5px solid rgba(255, 117, 130, 1);
   border-radius: 5px;
   z-index: 1001;
 
-
-  font-family: 'Inter', sans-serif;
-  font-size: 22px;
+  font-family: Inter;
+  font-size: 14px;
   font-weight: 500;
-  line-height: 17px;
-  letter-spacing: 0em;
+  line-height: 16.94px;
   text-align: left;
 
   cursor: pointer;
+
+  width: 276px;
+  height: 33px;
 }
 
 .alertBox img {
-  width: 30px;
-  height: 30px;
+  width: 20.03px;
+  height: 17.35px;
 }
 
 
-
+.loginFormButton p {
+  margin: 0;
+  padding: 0;
+}
 
 .loginFormButton {
   margin-top: 20px;
-  height: 47px;
-  /* width: 98px; */
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #0C98B4;
   border: 2px solid #60E3D5;
+
+  padding-top: 6px;
+  padding-bottom: 6px;
   padding-left: 10px;
   color: #fff;
   font-family: 'Inter', sans-serif;
@@ -490,6 +508,7 @@
   margin-left: auto;
   margin-bottom: 20px;
 }
+
 
 .loginFormButton:hover {
   cursor: pointer;
@@ -530,10 +549,10 @@
 
 .loginSection .labelSection {
   color: #FFFFFF;
-  margin-bottom: 35px;
+  margin-bottom: 29px;
   top: 300px;
   border-radius: 3px;
-  gap: 3px;
+  gap: 3.5px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -546,8 +565,10 @@
   letter-spacing: 0em;
   text-align: left;
 
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 11px;
+  padding-bottom: 11px;
 }
 
 .labelSection img {
@@ -575,7 +596,7 @@
 }
 
 .inputSection form {
-  border-radius: 8px;
+  border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   background-color: #D9FEFA;
   border: 4px solid #60E3D5;
@@ -649,9 +670,10 @@
 
 
 .inputSection button {
-  width: fit-content;
+  width: 84.9px;
+  height: 40px;
   color: #fff;
-  padding: 10px 20px;
+  /* padding: 10px 20px; */
   cursor: pointer;
   border-radius: 8px;
   background-color: #0C98B4;
@@ -668,6 +690,7 @@
   margin-left: auto;
   padding: 0;
   margin: 0;
+  font-weight: 700;
 }
 
 .inputSection label {
@@ -779,7 +802,9 @@
 .bottomSection {
   margin-top: auto;
   width: 100%;
-
+  margin-bottom: 16px;
+  position: absolute;
+  bottom: 0;
 }
 
 .theFooter Footer {
@@ -790,24 +815,7 @@
   display: none;
 }
 
-.mobileRegisterUnit::before {
-  content: "";
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: black;
-
-  opacity: 0.2;
-
-  z-index: 3;
-
-}
-
 .confirmationDialog {
-
   width: auto;
   height: auto;
   position: fixed;
@@ -864,6 +872,22 @@
 }
 
 @media (max-width:1400px) {
+  .mobileRegisterUnit::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+
+    opacity: 0.2;
+
+    z-index: 3;
+
+  }
+
   .registerContainer {
     width: auto;
     height: auto;
@@ -911,19 +935,43 @@
   }
 
   .centerSection .greetings {
+    font-family: Inter;
     font-size: 20px;
+    font-weight: 500;
+    line-height: 24.2px;
+    text-align: center;
+    text-shadow: 0px 2px 2px #60E3D5;
+
+
     width: 80%;
-    margin-top: 0 !important;
+    margin-top: 40px;
+    margin-bottom: 88px;
+    height: 0;
   }
+
+  .centerSection .greetings p {
+    margin: 0;
+    padding: 0;
+  }
+
 
   .dataSection {
     display: block;
   }
 
   .dataSection .loginSection .labelSection {
-    width: 237px;
+    width: 217px;
+    height: 20px;
+
+    font-family: Inter;
     font-size: 14px;
-    height: 40px;
+    font-weight: 500;
+    line-height: 16.94px;
+    text-align: left;
+
+    padding: 8px;
+
+
     justify-content: space-between;
     border: 2px solid #60E3D5;
   }
@@ -939,24 +987,52 @@
     height: auto;
   }
 
+  .inputSection {
+    align-items: center;
+  }
+
   .inputSection form {
     border: 2px solid #60E3D5;
+    width: 275px;
+    height: 124px;
+    gap: 5px;
+    padding: 15px;
+  }
+
+  .dataSection .loginSection .inputUnit {
+    gap: 0;
+    justify-content: start;
   }
 
   .dataSection .loginSection .inputUnit label {
+    font-family: Inter;
     font-size: 16px;
+    font-weight: 500;
     line-height: 19.36px;
-    width: 130px;
+    text-align: center;
+
+
+    line-height: 19.36px;
+    width: 172px;
   }
 
+  /* .passwordLabel{
+    width: 80px;
+  } */
+
+  .separateElement {
+    margin-right: 10px !important;
+  }
+
+
   .dataSection .loginSection .inputUnit input[type="text"] {
-    width: 90%;
-    height: 29px;
+    width: 140px;
+    height: 19px;
   }
 
   .dataSection .loginSection .inputUnit input[type="password"] {
-    width: 100%;
-    height: 29px;
+    width: 140px;
+    height: 19px;
   }
 
   .passwordStatusButton {
@@ -1042,17 +1118,20 @@
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    margin-top: 30px;
-    height: 170px;
+    /* height: 170px; */
 
   }
 
   .registerSection .textSection {
-    width: auto;
+    width: 176px;
+    height: 35px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     border-radius: 3px;
     background-color: #ECF4F6;
-    padding-left: 10px;
-    padding-right: 10px;
     color: #0C98B4;
     font-family: Inter;
     font-size: 12px;
@@ -1061,7 +1140,7 @@
     letter-spacing: 0em;
     text-align: center;
 
-    margin-top: auto;
+    margin-top: 187px;
   }
 
   .orText {
@@ -1079,10 +1158,10 @@
   }
 
   .buttonRegisterUnit {
-    width: auto;
-    padding-left: 5px;
-    padding-right: 5px;
-    border-radius: 5px;
+    width: 144px;
+    height: 35px;
+
+    border-radius: 4px;
 
     font-family: Inter;
     font-size: 14px;
@@ -1090,6 +1169,13 @@
     line-height: 17px;
     letter-spacing: 0em;
     text-align: left;
+
+    gap: 7px;
+  }
+
+  .buttonRegisterUnit img{
+    width: 22px;
+    height: 17.6px;
   }
 
   .buttonRegister {
@@ -1102,18 +1188,18 @@
     letter-spacing: 0em;
     text-align: left;
 
-    height: fit-content;
-    width: fit-content;
+    height: 31px;
+    width: 91px;
 
-    padding-top: 4px;
-    padding-bottom: 4px;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding-top: 0;
+    gap: 6px;
+
+    border: 2px solid #60E3D5;
   }
 
   .buttonRegister img {
-    width: 22px;
-    height: 22px;
+    width: 14.67px;
+    height: 16.5px;
   }
 
   .buttonRegister p {
@@ -1122,8 +1208,8 @@
 
   .mobileInstruction {
     position: fixed;
-    bottom: 20px;
-    left: 20px;
+    bottom: 10px;
+    left: 10px;
     display: flex;
     flex-direction: column;
 
@@ -1133,14 +1219,15 @@
   }
 
   .mobileInstruction .buttonInstruction {
-    width: 50px;
-    height: 50px;
+    width: 46px;
+    height: 46px;
     background-color: #0C98B4;
     border-radius: 50%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border: 2px solid #60E3D5;
   }
 
   .mobileInstruction .buttonInstruction img {
@@ -1153,8 +1240,8 @@
     flex-direction: column;
     align-items: center;
     background-color: #D9FEFA;
-    width: auto;
-    height: auto;
+    width: 105px;
+    height: 152px;
 
     padding-top: 10px;
     padding-bottom: 10px;
@@ -1179,6 +1266,8 @@
     text-align: center;
     padding: 8px;
     border: 2px solid #60E3D5;
+
+    gap: 5px;
 
     border-radius: 5px;
   }
@@ -1210,8 +1299,14 @@
   }
 
   .footer {
-    width: 95%;
-    margin-top: 78px;
+    width: 100%;
+    margin-top: 65px;
+  }
+
+  .inputSection button {
+    width: 68px;
+    height: 35px;
+    margin-top: 5px;
   }
 
 }
@@ -1223,8 +1318,9 @@
 
   .buttonRegister {
     height: 25px;
-    padding-left: 15px;
-    padding-right: 15px;
+    width: 112px;
+    /* padding-left: 15px;
+    padding-right: 15px; */
     padding-top: 5px;
     padding-bottom: 5px;
 
@@ -1232,10 +1328,16 @@
   }
 
   .buttonRegister p {
+    font-family: Inter;
     font-size: 14px;
     font-weight: 500;
     line-height: 16.94px;
     text-align: left;
+  }
+
+  .buttonRegister img {
+    width: 23px;
+    height: 23px;
   }
 
   .greetings p {
@@ -1259,13 +1361,6 @@
   .dataSection .labelSection p {
     padding: 0;
     margin: 0;
-  }
-
-  .dataSection .labelSection {
-    padding-left: 9px;
-    padding-right: 9px;
-    padding-top: 10px;
-    padding-bottom: 10px;
   }
 
   .dataSection .loginSection {
@@ -1313,15 +1408,15 @@
 
   .registerUnit {
     position: relative;
-    top: 80px;
+    top: 60px;
     /* right: 25px; */
   }
 
   .registerUnit .buttonRegisterUnit {
-    height: 37px;
+    height: 35px;
 
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 13px;
+    padding-right: 13px;
   }
 
   .registerUnit .buttonRegisterUnit p {
@@ -1336,7 +1431,7 @@
   }
 
   .registerUnit .buttonSection {
-    margin-top: 25px;
+    margin-top: 10px;
   }
 
   .passwordInputContainer {
@@ -1355,9 +1450,9 @@
 
   .inputSection form {
     padding: 0px;
-    padding-bottom: 20px;
+    padding-bottom: 18px;
     padding-top: 20px;
-    width: 446px;
+    width: 438px;
   }
 
   .inputSection input[type="text"] {
@@ -1400,7 +1495,9 @@
     padding-top: 18.5px;
     padding-bottom: 18.5px;
 
-    border-radius: 3px;
+    border-radius: 5px;
+    width: 114px;
+    height: 15px;
   }
 
   .buttonRegister p {
@@ -1412,12 +1509,18 @@
 
   }
 
+
   .greetings p {
     font-family: Inter;
     font-size: 54px;
     font-weight: 600;
     line-height: 65.35px;
     text-align: center;
+  }
+
+  .centerSection .greetings {
+    margin-top: 160px;
+    margin-bottom: 65px;
   }
 
   .loginSection .labelSection img {
@@ -1469,7 +1572,8 @@
   }
 
   .inputSection .submitButton {
-    padding: 10px 20px;
+    width: 100px;
+    height: 47px;
     border-radius: 7px;
     background-color: #0C98B4;
     border: 4px solid #60E3D5;
@@ -1495,16 +1599,16 @@
   }
 
   .dataSection .labelSection {
-    padding-left: 9px;
-    padding-right: 9px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    border-radius: 5px;
 
     font-family: Inter;
     font-size: 28px;
     font-weight: 500;
     line-height: 33.89px;
     text-align: left;
+
+    margin-bottom: 60px;
+    height: 43px;
 
   }
 
@@ -1516,7 +1620,7 @@
     padding: 9px;
     height: auto;
 
-    max-height: 50vh;
+    max-height: 51vh;
     /* overflow-y: auto; */
     width: 518px;
   }
@@ -1565,7 +1669,10 @@
     line-height: 33.89px;
     text-align: center;
 
-    padding: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 9px;
+    padding-left: 9px;
   }
 
   .leftSection {
@@ -1660,7 +1767,7 @@
 
   .inputSection form {
     padding: 0px;
-    padding-bottom: 30px;
+    padding-bottom: 17px;
   }
 
   .separateElement {
@@ -1672,14 +1779,13 @@
   }
 
   .tableUnit .labelSection img {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
   }
 
   .incorrectPassword {
     display: flex;
-    /* width: 623px;
-    height: 60px; */
+    height: 52px;
     background-color: #F6F0F0;
     border: 4px solid #FF7582;
 
@@ -1694,13 +1800,64 @@
     justify-content: center;
     align-items: center;
     border-radius: 5px;
-    margin-top: 100px;
+    margin-top: 51px;
 
-    width: 700px;
+    width: 615px;
+  }
+
+  .incorrectPassword img {
+    width: 26.12px;
+    height: 22.63px;
   }
 
   .passwordStatusButton img {
     width: 24px;
     height: 17.07px;
+  }
+
+  .bottomSection {
+    padding-bottom: 14px;
+  }
+
+  .register {
+    margin-top: 30px;
+    padding-left: 51px;
+  }
+
+  .registerUnit .registerUnitColumn {
+    width: 530px;
+    height: 128px;
+    margin-top: 20px;
+    padding: 30px !important;
+    /* width: 85%; */
+    background-color: #D9FEFA;
+    border: 4px solid #60E3D5;
+    border-radius: 5px;
+  }
+
+  .registerUnitForm {
+    width: 598px;
+  }
+
+  .alertBox {
+    gap: 15px;
+
+    border: 4px solid rgba(255, 117, 130, 1);
+    border-radius: 5px;
+    z-index: 1001;
+
+    font-family: Inter;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 26.63px;
+    text-align: left;
+
+    width: 417px;
+    height: 52px;
+  }
+
+  .alertBox img {
+    width: 30px;
+    height: 30px;
   }
 }

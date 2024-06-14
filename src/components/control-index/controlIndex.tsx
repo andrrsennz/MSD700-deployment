@@ -66,6 +66,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
   const [render, setRender] = useState<boolean>(true);
   const [showControlInstruction, setShowControlInstruction] = useState<boolean>(false);
   const [firstLoaded, setFirstLoaded] = useState<string>('false')
+  const [emergencyStatus, setEmergencyStatus] = useState<boolean>(false);
 
 
   const onConfirmButtonClick = () => {
@@ -178,23 +179,23 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
   useEffect(() => {
     var enableRos = false;
     async function checkToken() {
-      await axios.get(`${backendUrl}`, {
-        headers: {
-          'Authorization': `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
-        }
-      })
-        .then((response) => {
-          if (response.status === 200) {
-            setRender(true);
-            enableRos = true;
-          }
-          else {
-            setTokenExpired(true);
-          }
-        })
-        .catch((error) => {
-          setTokenExpired(true)
-        });
+      // await axios.get(`${backendUrl}`, {
+      //   headers: {
+      //     'Authorization': `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
+      //   }
+      // })
+      //   .then((response) => {
+      //     if (response.status === 200) {
+      //       setRender(true);
+      //       enableRos = true;
+      //     }
+      //     else {
+      //       setTokenExpired(true);
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     setTokenExpired(true)
+      //   });
     }
     checkToken();
     // Connect to ROS.
@@ -591,6 +592,11 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
     setShowControlInstruction(!showControlInstruction); // Toggle the state
   };
 
+  const handleEmergencyStatus = () => {
+    setEmergencyStatus(!emergencyStatus)
+  }
+
+
   return (
     <>
       {" "}
@@ -937,12 +943,12 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
 
                 </div>
 
-                <div className={`${styles.footerMap}  ${styles.mobileDisplayNone}`}>
-                  <div className={styles.emergencyButton}>
+                <div className={`${styles.footerMap} ${styles.mobileDisplayNone}`}>
+                  <div className={`${styles.emergencyButton} ${emergencyStatus ? styles.emergencyButtonActive : ''}`} onClick={handleEmergencyStatus}>
                     <img src="/icons/emergency.svg" alt="" />
                     <p>Emergency Stop</p>
                   </div>
-                  <div className={styles.mapName}>{mapName}</div>
+                  <div className={styles.mapName}>Mapping Preview</div>
                 </div>
 
 

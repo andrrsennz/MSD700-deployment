@@ -24,7 +24,7 @@
 
 .leftSide {
     height: 100%;
-    width: 30%;
+    width: 490px;
 
     border-right: 10px solid #60E3D5;
     background-color: #0C98B4;
@@ -33,16 +33,30 @@
 }
 
 .leftSide .imageAnimation {
-    height: 75vh;
+    height: 77%;
     max-height: 80%;
     padding-top: 30px;
+}
 
+.leftSide .information p,
+/* .leftSide .information ul, */
+.leftSide .information h1,
+.leftSide .information h3,
+.leftSide .information li {
+    margin: 0;
+    padding: 0;
+}
+
+.leftSide .information ul {
+    margin-top: 0;
 }
 
 .leftSide .information {
     align-items: center;
-    padding-left: 48px;
-    padding-right: 48px;
+    padding-left: 40px;
+    padding-right: 40px;
+    position: absolute;
+    bottom: 0;
 
 }
 
@@ -56,6 +70,7 @@
     color: #ECF4F6;
 
     text-align: center;
+    margin-bottom: 16px;
 }
 
 .leftSide .information h3 {
@@ -71,11 +86,12 @@
     letter-spacing: 0em;
     text-align: left;
     color: #ECF4F6;
+    width: 100%;
 }
 
 
 .rightSide {
-    width: 70%;
+    width: 100%;
     height: 100%;
 
     display: flex;
@@ -83,7 +99,13 @@
     align-items: center;
 }
 
+.rightSide .tagline p {
+    margin: 0;
+}
+
 .rightSide .tagline {
+    margin-top: 57px;
+    margin-bottom: 42px;
     width: 100%;
 
     font-family: Inter;
@@ -102,40 +124,32 @@
 }
 
 .column {
-    margin-bottom: 30px;
+    /* margin-bottom: 52px; */
 }
-
 
 .formSection {
 
     width: 100%;
-    max-width: 80%;
+    max-width: 83%;
 
     margin: 0 auto;
-    padding-left: 25px;
-    padding-right: 25px;
-
-}
-
-.formSection input {
-    margin-bottom: 10px;
 }
 
 .formSection .label {
     color: #0567A6;
+
     font-family: Inter;
-    font-size: 19px;
+    font-size: 16px;
     font-weight: 500;
-    line-height: 23px;
-    letter-spacing: 0em;
+    line-height: 19.36px;
     text-align: left;
 
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 .formSection [type="text"] {
     width: 99%;
-    height: 45px;
+    height: 39px;
     border-radius: 5px;
     border: 2px solid #0567A6;
 
@@ -148,7 +162,15 @@
 
     padding-left: 10px;
 
+    margin-bottom: 50px;
+
 }
+
+.formSection [type="text"]:focus {
+    outline: none;
+    border: 2px solid #0567A6;
+}
+
 
 .formSection [type="text"]:valid {
     border: 2px solid #60E3D5;
@@ -188,6 +210,12 @@
     background-color: #ECF4F6;
 }
 
+.formSection [type="password"]:focus {
+    outline: none;
+    border: 2px solid #60E3D5;
+    background-color: #ECF4F6;
+}
+
 .invalid [type="password"] {
     border: 2px solid #C66E87;
     background-color: #F6F0F0;
@@ -222,10 +250,19 @@
 
 .iconStatusColumnButton {
     position: absolute;
-    right: 10px;
+    right: 12.5px;
 
-    top: 50%;
+    top: 35px;
     transform: translateY(-100%);
+}
+
+.iconStatusColumnPasswordButton {
+    top: 40px;
+}
+
+.iconStatusColumnButton img {
+    width: 20px;
+    height: 20px;
 }
 
 .formSection button[type="submit"] {
@@ -244,7 +281,7 @@
     line-height: 19px;
     letter-spacing: 0em;
     float: right;
-    margin-top: 30px;
+    margin-top: 68px;
 }
 
 .loginSection {
@@ -268,20 +305,33 @@
     margin-top: auto;
 }
 
+.theFooter {
+    margin-top: 32px;
+}
+
 .loginButton {
     display: flex;
     gap: 15px;
     width: max-content;
+    margin-left: 35px;
+    margin-top: 20px;
+}
+
+.buttonLogin p {
+    margin: 0;
+    padding: 0;
 }
 
 .buttonLogin {
     display: flex;
     align-items: center;
-    width: max-content;
     background-color: #F6F0F0;
     color: #0C98B4;
-    justify-content: space-evenly;
-    gap: 5px;
+    justify-content: center;
+    gap: 10px;
+
+    width: 102px;
+    height: 35px;
 
     font-family: Inter;
     font-size: 14px;
@@ -290,11 +340,13 @@
     letter-spacing: 0em;
     text-align: left;
 
-    padding-left: 15px;
-    padding-right: 15px;
-
     border-radius: 5px;
     border: 4px solid #60E3D5
+}
+
+.buttonLogin img {
+    width: 23px;
+    height: 23px;
 }
 
 .buttonLogin:hover {
@@ -303,9 +355,13 @@
     cursor: pointer;
 }
 
+.tooltip p {
+    margin: 0;
+}
+
 .tooltip {
-    margin-top: -50px;
-    margin-bottom: 30px;
+    margin-top: -45px;
+    margin-bottom: 28px;
     color: #C66E87;
     font-family: Inter;
     font-size: 14px;
@@ -313,6 +369,11 @@
     line-height: 17px;
     letter-spacing: 0em;
     text-align: left;
+}
+
+.tooltipPassword {
+    margin-top: 5px;
+    margin-bottom: -22px;
 }
 
 .form-control.is-valid,
@@ -350,7 +411,14 @@
         height: max-content;
     }
 
+    .rightSide .tagline p {
+        margin: 0;
+    }
+
     .rightSide .tagline {
+        margin-top: 20px;
+        margin-bottom: 32px;
+        margin-bottom: 12px;
         font-family: Inter;
         font-size: 20px;
         font-weight: 500;
@@ -366,12 +434,13 @@
         line-height: 19px;
         letter-spacing: 0em;
         text-align: left;
-        margin-top: 5px;
+
+        margin-bottom: 10px;
     }
 
     .formSection [type="text"] {
         width: 99%;
-        height: 35px;
+        height: 32px;
         border-radius: 5px;
         border: 2px solid #0567A6;
 
@@ -382,8 +451,9 @@
         letter-spacing: 0em;
         text-align: left;
 
-
         padding-left: 10px;
+
+        margin-bottom: 20px;
     }
 
     .formSection button[type="submit"] {
@@ -417,7 +487,8 @@
 
     .formSection [type="password"] {
         width: 100%;
-        height: 35px;
+        height: 32px;
+        margin-bottom: 20px;
     }
 
 
@@ -429,10 +500,15 @@
         margin-bottom: 0;
     }
 
+    .loginButton p {
+        margin: 0;
+    }
+
     .loginButton {
         flex-direction: column;
         gap: 0;
         align-items: center;
+        margin-left: 0px;
     }
 
     .loginButton .textAccount {
@@ -441,6 +517,8 @@
         padding-right: 35px;
         padding-top: 5px;
         padding-bottom: 5px;
+
+        margin-bottom: 8px;
     }
 
 
@@ -467,7 +545,7 @@
     }
 
     .bottomSection {
-        margin-top: 15px;
+        margin-top: 50px;
         width: 100%;
         display: flex !important;
         align-items: center;
@@ -475,13 +553,13 @@
     }
 
     .bottomSection .mobileFooter {
-        padding-top: 35px;
-        padding-right: 10px;
+        padding-top: 0;
+        padding-right: 0;
     }
 
     .buttonInstruction {
-        width: 50px;
-        height: 50px;
+        width: 46px;
+        height: 46px;
         background-color: #0C98B4;
         border-radius: 50%;
         display: flex;
@@ -547,7 +625,7 @@
 
     .registerContainer .information {
         align-items: center;
-        padding: 12px;
+        padding: 17px;
         font-size: 14px;
     }
 
@@ -576,8 +654,12 @@
         color: #ECF4F6;
     }
 
+    .registerContainer .information .feature ul{
+        margin: 0;
+    }
+
     .iconStatusColumnButton {
-        top: 60% !important;
+        top: 55% !important;
     }
 
     .iconStatusColumnButton img {
@@ -586,8 +668,8 @@
     }
 
     .tooltip {
-        margin-top: -20px;
-        margin-bottom: 0;
+        margin-top: -15px;
+        margin-bottom: 20px;
         color: #C66E87;
         font-family: Inter;
         font-size: 14px;
@@ -598,18 +680,14 @@
     }
 }
 
-@media (max-width: 2200px) and (min-width:1401px) {
+
+@media (min-width:2201px) {
     .iconStatusColumnButton {
-        top: 65%;
+        top: 70%;
     }
 
-    .iconStatusColumnButton img{
-        width: 20px;
-        height: 20px;
-    }
-
-    .passwordSection .divPasswordSection {
-        width: 45%;
+    .leftSide {
+        min-width: 871px;
     }
 
     .leftSide .imageAnimation {
@@ -618,69 +696,9 @@
         padding-top: 30px;
     }
 
-    .feature {
-        font-size: 19px;
-    }
-
-    .loginSection {
-        margin-left: 0;
-        width: 100%;
-        margin-left: 30px;
-    }
-
-    .information p {
-        font-family: Inter;
-        font-size: 26px;
-        font-weight: 700;
-        line-height: 31.47px;
-        text-align: left;
-    }
-
-    .leftSide .information h1 {
-        font-family: Inter;
-        font-size: 26px;
-        font-weight: 700;
-        line-height: 31.47px;
-        text-align: center;        
-    }
-
-    .tooltip {
-        font-family: Inter;
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 16.94px;
-        text-align: left;
-
-        margin-top: -15px;
-        position: absolute;
-    }
-
-    .theFooter {
-        margin-right: 30px;
-    }
-}
-
-@media (min-width:2201px) {
-    .iconStatusColumnButton {
-        top: 70%;
-    }
-
-    .leftSide {
-        width: 100%;
-        max-width: 889px;
-    }
-
-    .leftSide .imageAnimation {
-        height: 73%;
-        max-height: 90%;
-        padding-top: 30px;
-    }
-
     .leftSide .information {
         align-items: center;
-        padding-left: 130px;
-        padding-right: 130px;
-
+        padding-left: 91px;
     }
 
     .rightSide {
@@ -688,6 +706,8 @@
     }
 
     .rightSide .tagline {
+        margin-top: 101px;
+        margin-bottom: 93.22px;
         font-family: Inter;
         font-size: 54px;
         font-weight: 600;
@@ -716,7 +736,7 @@
 
     .formSection [type="text"] {
         width: 99%;
-        height: 70px;
+        height: 64px;
 
         font-family: Inter;
         font-size: 22px;
@@ -730,7 +750,7 @@
 
     .formSection [type="password"] {
         width: 99%;
-        height: 70px;
+        height: 64px;
 
         font-family: Inter;
         font-size: 22px;
@@ -739,6 +759,7 @@
         text-align: left;
 
         padding-left: 20px;
+        margin-bottom: 0;
     }
 
 
@@ -748,10 +769,14 @@
 
     .iconStatusColumnButton {
         position: absolute;
-        right: 10px;
+        right: 20px;
 
-        top: 50%;
+        top: 45%;
         transform: translateY(-100%);
+    }
+
+    .iconStatusColumnPasswordButton {
+        top: 75%;
     }
 
 
@@ -766,11 +791,12 @@
         line-height: 22.99px;
         text-align: left;
 
+        margin-bottom: 22px;
     }
 
     .formSection button[type="submit"] {
-        width: auto;
-        height: auto;
+        width: 407px;
+        height: 89px;
 
         padding-left: 100px;
         padding-right: 100px;
@@ -787,7 +813,7 @@
         text-align: center;
 
         float: right;
-        margin-top: 30px;
+        margin-top: 68px;
     }
 
     .textAccount {
@@ -796,7 +822,7 @@
         font-weight: 500;
         line-height: 26.63px;
         text-align: left;
-        margin-left: 20px;
+        /* margin-left: 20px; */
     }
 
     .buttonLogin {
@@ -806,17 +832,14 @@
         line-height: 22.99px;
         text-align: left;
 
+        width: 131px;
+        height: 52px;
     }
 
-    .copyright {
-        margin-top: 0;
+    .buttonLogin img {
+        width: 30px;
+        height: 30px;
     }
-
-
-    .theFooter {
-        /* margin-right: 30px; */
-    }
-
 
     .leftSide .information h1 {
         font-family: Inter;
@@ -829,5 +852,20 @@
     .loginButton {
         margin-left: 56px;
         margin-bottom: 20px;
+        gap: 26.67px;
+    }
+
+    .iconStatusColumnButton img {
+        width: 28px;
+        height: 28px;
+    }
+
+    .tooltipPassword {
+        margin-top: 5px;
+        margin-bottom: -30px;
+    }
+
+    .loginSection {
+        padding-bottom:14px;
     }
 }

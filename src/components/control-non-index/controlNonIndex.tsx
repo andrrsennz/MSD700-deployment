@@ -61,8 +61,10 @@ const ControlNonIndex: React.FC<ControlNonIndexProps> = ({ handleMobileNavigatio
 
       <div className={`${styles.mapSection} ${mapPreview ? "" : styles.mapSectionWithoutPreview}`}>
         <div className={styles.centerDiv}>
-          <img className={styles.location} src="/icons/Icon.svg" alt="" />
-          <p>No map have been selected for navigation yet</p>
+          <div className={styles.centerText}>
+            <img className={styles.location} src="/icons/Icon.svg" alt="" />
+            <p>No map have been selected for navigation yet</p>
+          </div>
 
           <div className={styles.informationSection} onClick={goToDatabasePage}>
             <img src="/icons/information-circle-svgrepo-com (1).svg" alt="" />

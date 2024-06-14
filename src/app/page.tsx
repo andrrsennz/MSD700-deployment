@@ -14,6 +14,7 @@ import RegisterUnitSuccess from "@/components/register-unit-success/registerUnit
 import RegisterUnitFailed from "@/components/register-unit-failed/registerUnitFailed";
 import RegisterUnitFailure from "@/components/register-unit-failure/registerUnitFailure";
 import MobileTopSection from "@/components/mobile-top-section/mobileTopSection";
+import TableComponent from "@/components/table/tableComponent";
 
 export default function Home(): JSX.Element {
   const router = useRouter();
@@ -28,81 +29,95 @@ export default function Home(): JSX.Element {
 
   const [registerInvalid, setRegisterInvalid] = useState(false);
 
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<any[]>(
+    [
+      {
+        "id": 1,
+        "unit": "unit1",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 2,
+        "unit": "tes",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 3,
+        "unit": "tes1",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 4,
+        "unit": "asdd",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 5,
+        "unit": "njjjjj",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 6,
+        "unit": "ttt",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 7,
+        "unit": "asd",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 8,
+        "unit": "asdss",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 9,
+        "unit": "asdssvvv",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 10,
+        "unit": "sdsdsd",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 11,
+        "unit": "asdssvvv",
+        "status": "off",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 12,
+        "unit": "sdsdsd",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+    ]
+  );
 
-  const dummyData = [
-    {
-      "id": 1,
-      "unit": "unit1",
-      "status": "",
-      "battery": "",
-      "uptime": ""
-    },
-    {
-      "id": 2,
-      "unit": "tes",
-      "status": "",
-      "battery": "",
-      "uptime": ""
-    },
-    {
-      "id": 3,
-      "unit": "tes1",
-      "status": "",
-      "battery": "",
-      "uptime": ""
-    },
-    {
-      "id": 4,
-      "unit": "asdd",
-      "status": "",
-      "battery": "",
-      "uptime": ""
-    },
-    {
-      "id": 5,
-      "unit": "njjjjj",
-      "status": "",
-      "battery": "",
-      "uptime": ""
-    },
-    {
-      "id": 6,
-      "unit": "ttt",
-      "status": "",
-      "battery": "",
-      "uptime": ""
-    },
-    {
-      "id": 7,
-      "unit": "asd",
-      "status": "",
-      "battery": "",
-      "uptime": ""
-    },
-    {
-      "id": 8,
-      "unit": "asdss",
-      "status": "",
-      "battery": "",
-      "uptime": ""
-    },
-    {
-      "id": 9,
-      "unit": "asdssvvv",
-      "status": "",
-      "battery": "",
-      "uptime": ""
-    },
-    {
-      "id": 10,
-      "unit": "sdsdsd",
-      "status": "",
-      "battery": "",
-      "uptime": ""
-    },
-
-  ]
 
 
   const [showIncorrectPassword, setShowIncorrectPassword] = useState<boolean>(false);
@@ -129,30 +144,29 @@ export default function Home(): JSX.Element {
 
     const username = document.getElementById("username") as HTMLInputElement;
     const password = document.getElementById("password") as HTMLInputElement;
-    axios.post(`${backendUrl}/user/login`, {
-      username: username.value,
-      password: password.value
-    })
-      .then(function (response: any) {
-        if (response.status === 200) {
-          sessionStorage.setItem("username", response.data.username);
-          sessionStorage.setItem("full_name", response.data.full_name);
-          sessionStorage.setItem("token", response.data.token);
 
-          fetchUnitData(response.data.token);
-          setShowUtilSection(true);
-        }
-        else {
-          alert("Invalid username or password");
-        }
-      })
-      .catch(function (error: any) {
-        console.log(error);
-        setShowIncorrectPassword(true);
-        setTimeout(() => {
-          setShowIncorrectPassword(false);
-        }, 2000);
-      })
+    // axios.post(`${backendUrl}/user/login`, {
+    //   username: username.value,
+    //   password: password.value
+    // })
+    //   .then(function (response: any) {
+    //     if (response.status === 200) {
+    //       sessionStorage.setItem("username", response.data.username);
+    //       sessionStorage.setItem("full_name", response.data.full_name);
+    //       sessionStorage.setItem("token", response.data.token);
+
+    //       fetchUnitData(response.data.token);
+    //       setShowUtilSection(true);
+    //       setShowIncorrectPassword(false);
+    //     }
+    //     else {
+    //       alert("Invalid username or password");
+    //     }
+    //   })
+    //   .catch(function (error: any) {
+    //     console.log(error);
+    //     setShowIncorrectPassword(true);
+    //   })
 
   };
 
@@ -278,6 +292,7 @@ export default function Home(): JSX.Element {
   };
 
   const handleRowClick = (idx: any) => {
+
     if (selectedRowIdx === idx) {
       // If the row is already selected, unselect it
       setSelectedRowIdx(null);
@@ -528,7 +543,7 @@ export default function Home(): JSX.Element {
                     />
                   </div>
                   <div className={styles.inputUnit}>
-                    <label htmlFor="password">Password</label>
+                    <label htmlFor="password" className={styles.passwordLabel}>Password</label>
                     <p className={styles.separateElement}>:</p>
                     <div className={`${styles.passwordInputContainer} ${showIncorrectPassword ? styles.passwordInputInvalid : ''}`}>
                       <input
@@ -541,7 +556,7 @@ export default function Home(): JSX.Element {
                       // Disable the input if showUtilSection is true
                       />
                       <div className={styles.passwordStatusButton}>
-                        <img src="/icons/Eye.svg" alt="Picture of the author" onClick={() => setShowPassword(!showPassword)} style={{ cursor: showUtilSection ? 'not-allowed' : 'pointer' }} />
+                        <img src={showPassword ? "/icons/Eye-off.svg" : "/icons/Eye.svg"} alt="Picture of the author" onClick={() => setShowPassword(!showPassword)} style={{ cursor: showUtilSection ? 'not-allowed' : 'pointer' }} />
                       </div>
                     </div>
                   </div>
@@ -560,7 +575,7 @@ export default function Home(): JSX.Element {
                 showIncorrectPassword && (
                   <div className={styles.incorrectPassword}>
                     <img src="/icons/warning.svg" alt="" />
-                    <p>The username, unit ID, or password you entered is incorrect..</p>
+                    <p>The username or password you entered is incorrect.</p>
                   </div>
                 )
               }
@@ -572,50 +587,7 @@ export default function Home(): JSX.Element {
               showUtilSection ? (
                 <>
                   <div className={styles.tableUnit}>
-                    <div className={styles.tableSection}>
-                      <table className={styles.table}>
-                        <thead className={styles.headerTable}>
-                          <tr >
-                            <th>No.</th>
-                            <th>MSD700 Unit</th>
-                            <th>Status</th>
-                            <th>Battery</th>
-                            <th>Uptime</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {data.map((item, idx) => (
-                            <tr
-                              key={idx}
-                              onClick={() => handleRowClick(idx)}
-                              className={`${item.status == 'off' ? styles.offRow : styles.onRow} ${selectedRowIdx === idx ? styles.selectedRow : ''}`}
-                            >
-                              <td data-column="0">{idx + 1}</td>
-                              <td data-column="1">{item.unit}</td>
-                              <td data-column="2">{item.status}</td>
-                              <td data-column="3">{item.battery}</td>
-                              <td data-column="4">{item.uptime}</td>
-                            </tr>
-                          ))}
-
-                        </tbody>
-                      </table>
-
-                    </div>
-                    <button
-                      // onClick={goToUnitPage}
-                      aria-label="Submit form Button"
-                      className={styles.loginFormButton}
-                      onClick={handleStartButtonClick}
-                    >
-                      <p>Start</p>
-                      <Image
-                        src="/icons/arrow-right-3-svgrepo-com (1).svg"
-                        alt=""
-                        width={500}
-                        height={500}
-                      />
-                    </button>
+                    <TableComponent data={data} handleRowClick={handleRowClick} selectedRowIdx={selectedRowIdx} handleStartButtonClick={handleStartButtonClick} />
 
                     <AlertComponent />
                   </div>
@@ -684,7 +656,7 @@ export default function Home(): JSX.Element {
               </div>
               <div className={styles.leftSection}>
                 <div className={styles.inputSection}>
-                  <form action="#" method="post">
+                  <form autoComplete="none" action="#" method="post">
                     <div className={styles.inputUnit}>
                       <label htmlFor="username">Username</label>
                       <p className={styles.separateElement}>:</p>
@@ -711,7 +683,7 @@ export default function Home(): JSX.Element {
                         />
                         <div className={styles.passwordStatusButton}>
                           <Image
-                            src="/icons/Eye.svg"
+                            src={showPassword ? "/icons/Eye-off.svg" : "/icons/Eye.svg"}
                             alt="Picture of the author"
                             width={30}
                             height={30}
@@ -803,7 +775,7 @@ export default function Home(): JSX.Element {
                 showIncorrectPassword && (
                   <div className={styles.incorrectPassword}>
                     <img src="/icons/warning.svg" alt="" />
-                    <p>The username, unit ID, or password you entered is incorrect.</p>
+                    <p>The username or password you entered is incorrect.</p>
                   </div>
                 )
               }
@@ -890,51 +862,9 @@ export default function Home(): JSX.Element {
                       />
                       <p>Please choose your MSD700 unit.</p>
                     </div>
-                    <div className={styles.tableContainer}>
-                      <div className={styles.tableSection}>
-                        <div className={styles.tableWrapper}>
-                          <table className={styles.table}>
-                            <thead className={styles.headerTable}>
-                              <tr>
-                                <th>No.</th>
-                                <th>MSD700 Unit</th>
-                                <th>Status</th>
-                                <th>Battery</th>
-                                <th>Uptime</th>
-                              </tr>
-                            </thead>
-                            <tbody className={styles.bodyTable}>
-                              {dummyData.map((item, idx) => (
-                                <tr
-                                  key={idx}
-                                  onClick={() => handleRowClick(idx)}
-                                  className={`${item.status == 'off' ? styles.offRow : styles.onRow} ${selectedRowIdx === idx ? styles.selectedRow : ''}`}
-                                >
-                                  <td data-column="0">{idx + 1}</td>
-                                  <td data-column="1">{item.unit}</td>
-                                  <td data-column="2">{item.status}</td>
-                                  <td data-column="3">{item.battery}</td>
-                                  <td data-column="4">{item.uptime}</td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                      <button
-                        aria-label="Submit form Button"
-                        className={styles.loginFormButton}
-                        onClick={handleStartButtonClick}
-                      >
-                        <p>Start</p>
-                        <Image
-                          src="/icons/arrow-right-3-svgrepo-com (1).svg"
-                          alt=""
-                          width={500}
-                          height={500}
-                        />
-                      </button>
-                    </div>
+
+                    <TableComponent data={data} handleRowClick={handleRowClick} selectedRowIdx={selectedRowIdx} handleStartButtonClick={handleStartButtonClick} />
+
                     <AlertComponent />
                   </div>
 

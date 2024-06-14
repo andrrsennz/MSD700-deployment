@@ -14,10 +14,28 @@
 }
 
 .ControlInstruction img {
-    max-width: 100%;
-    max-height: 80%;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
 }
+
+.database img {
+    width: 417px;
+    height: 418.86px;
+}
+
+.control img {
+    width: 895px;
+    height: 852.63px;
+}
+
+.mapping img {
+    width: 514px;
+    height: 688.63px;
+}
+
+
+
 
 .ControlInstruction:hover {
     cursor: pointer;
@@ -26,5 +44,22 @@
 @media (max-width:1400px) {
     .mobileHide {
         display: none;
+    }
+}
+
+@media (min-width:2201px) {
+    .database img {
+        width: 629px;
+        height: 635.29px;
+    }
+
+    .control img {
+        width: 1381px;
+        height: 1320.1px;
+    }
+
+    .mapping img {
+        width: 780px;
+        height: 1047.1px;
     }
 }

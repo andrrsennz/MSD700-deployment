@@ -1,14 +1,15 @@
 .mapSection {
-    width: 1102px;
+    width: 76.5% !important;
     min-height: 800px;
-    
-    height: 80%;
+    height: 847px;
     background-color: #D0E1E7;
-    border: 2px solid #0C98B4;
+    border: 3px solid #0C98B4;
     border-radius: 45px;
     box-shadow: -10px 10px 4px 0px #00000040;
     position: absolute;
     margin-bottom: 20px;
+    position: relative;
+    /* margin-right: 29px; */
 
     z-index: 2;
 
@@ -18,40 +19,57 @@
     justify-content: center;
 }
 
+.centerDiv p {
+    margin: 0;
+}
 
+
+.centerText img {
+    width: 85px;
+    height: 80.75px;
+    margin-bottom: 5px;
+}
 
 .centerDiv {
-    font-family: 'Inter', sans-serif;
-    font-size: 26px;
+    font-family: Inter;
+    font-size: 32px;
     font-weight: 600;
-    line-height: 31px;
-    letter-spacing: 0em;
+    line-height: 38.73px;
     text-align: left;
+
     color: #0C98B4;
 
     text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
 }
 
-.centerDiv .location {
-    width: 30%;
-    height: 30%;
-}
 
 .informationSection {
+    /* margin-top: 50px; */
+    width: 419px;
+    height: 23px;
+
     margin-left: auto;
     margin-right: auto;
     display: flex;
-    
+
     align-items: center;
-    
+
     justify-content: center;
-    
+
     background-color: #F6F0F0;
-    width: 100%;
     border: 5px solid #60E3D5;
     border-radius: 5px;
     padding: 10px;
-    
+
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16.94px;
+    text-align: left;
 }
 
 .informationSection:hover {
@@ -59,41 +77,25 @@
 }
 
 .centerDiv .informationSection img {
-    width: 30px;
-    
-    height: 30px;
-    
+    width: 23px;
+    height: 23px;
     margin-right: 10px;
-    
 }
 
 .informationSection p {
-    align-self: center;
-    
     margin: 0;
-    
-    font-family: 'Inter', sans-serif;
-    font-size: 100%;
-    font-weight: 500;
-    line-height: 27px;
-    letter-spacing: 0em;
-    color: #0C98B4;
-    text-align: center;
-    
 }
 
 .bolder {
     font-weight: 700;
 }
 
-
-
 .displayNone {
     display: none;
 }
 
 @media (max-width:1400px) {
-    
+
 
     .mapSection {
         min-width: 330px;
@@ -115,7 +117,7 @@
         height: 594px;
     }
 
-    
+
 
     .centerDiv {
         font-family: Inter;
@@ -137,7 +139,7 @@
     .informationSection {
         border: 3px solid #60E3D5;
         border-radius: 5px;
-        
+
         padding-right: 7px;
 
         width: auto;
@@ -163,82 +165,14 @@
 
         color: #0C98B4;
         text-align: center;
-        
+
     }
 
 }
 
-@media (max-width: 2200px) and (min-width:1401px) {
-
-    .menu {
-        width: 240px;
-        height: 259px;
-        padding: 10px;
-
-        background-color: #D0E1E7;
-        border: 5.38px solid #0C98B4;
-        border-radius: 45px;
-        display: flex;
-
-        flex-direction: column;
-        justify-content: space-around;
-
-        /* padding-top: 10px;
-        padding-bottom: 10px; */
-
-        box-shadow: -10px 10px 4px 0px #00000040;
-    }
-
-    .mapSection {
-        position: relative;
-        width: 75% !important;
-        height: 850px;
-        max-height: 100%;
-        border: 5px solid #0C98B4;
-        margin-right: 29px;
-    }
-
-
-    .centerDiv {
-        font-family: Inter;
-        font-size: 32px;
-        font-weight: 600;
-        line-height: 38.73px;
-        text-align: center;
-    }
-
-    .informationSection {
-        width: fit-content;
-        height: auto;
-    }
-
-    .informationSection img{
-        width: 23px !important;
-        height: 23px !important;
-    }
-
-
-    .informationSection p {
-        font-family: Inter;
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 16.94px;
-        text-align: left;
-    }
-
-    .bolder {
-        font-family: Inter;
-        font-size: 14px;
-        font-weight: 700;
-        line-height: 16.94px;
-        text-align: left;
-
-    }
-}
+@media (max-width: 2200px) and (min-width:1401px) {}
 
 @media (min-width:2201px) {
-    
-
     .menu {
         width: 240px;
         height: 259px;
@@ -260,9 +194,9 @@
 
     .mapSection {
         position: relative;
-        width: 81% !important;
-        height: 100%;
-        max-height: 100%;
+        width: 80% !important;
+        /* min-width: 2050px; */
+        min-height: 1175px;
         border: 5px solid #0C98B4;
         margin-right: 29px;
     }
@@ -276,12 +210,25 @@
         letter-spacing: 0em;
     }
 
+    .centerText img {
+        width: 135px;
+        height: 128.25px;
+        margin-bottom: 35.88px;
+    }
+
+    .centerDiv .informationSection img {
+        width: 30px;
+        height: 30px;
+        margin-right: 15px;
+    }
+
     .informationSection {
-        width: 652px;
-        height: 60px;
+        width: 637px;
+        height: 40px;
     }
 
     .informationSection p {
         font-size: 22px;
     }
+
 }

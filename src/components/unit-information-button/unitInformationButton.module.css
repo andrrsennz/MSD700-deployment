@@ -1,7 +1,7 @@
 .bottomLeftElement {
     position: fixed;
-    bottom: 30px;
-    left: 30px;
+    bottom: 16px;
+    left: 16px;
     background-color: #0C98B4;
     /* Set your desired background color */
     color: #fff;
@@ -33,8 +33,8 @@
 
 @media (max-width: 2200px) and (min-width:1401px) {
     .bottomLeftElement {
-        width: 60px;
-        height: 60px;
+        width: 52px;
+        height: 52px;
     }
     
     .bottomLeftElement img {
