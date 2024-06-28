@@ -75,7 +75,7 @@ export default function Signup(): JSX.Element {
         if (name === 'username') {
             setIsUsernameRegistered(false)
             setAttemptedSubmit(false);
-            axios.post(`${backendUrl}/user/check-username`, {
+            /* axios.post(`${backendUrl}/user/check-username`, {
                 username: value
             })
                 .then(function (response: any) {
@@ -91,7 +91,8 @@ export default function Signup(): JSX.Element {
                 .catch(function (error: any) {
                     setIsUsernameRegistered(true)
                     setIsUsernameValid(false);
-                });
+                }); */
+            setIsUsernameValid(true);
         }
 
         if (name === 'fullname') {
@@ -110,16 +111,15 @@ export default function Signup(): JSX.Element {
                         setIsEmailRegistered(false)
                     }
                 })
-                .catch(function (error) {
-                    if (error.response.status === 409) {
-                        setIsEmailValid(true);
-                        setIsEmailRegistered(true)
+                .catch(function (error: any) {
+                    if (error.response && error.response.status === 409) {
+                      setIsEmailValid(true);
+                      setIsEmailRegistered(true);
+                    } else {
+                      // Handle other errors or set a default behavior
+                      console.error("An error occurred:", error);
                     }
-                    else {
-                        setIsEmailValid(false);
-                        setIsEmailRegistered(false)
-                    }
-                });
+                  });
         }
 
         if (name === 'password') {

@@ -1704,3 +1704,78 @@
     height: 17.07px;
   }
 }
+
+
+/* Modify the existing .moveLeft class */
+.moveLeft {
+  transition: opacity 1s ease-in-out, transform 0.5s ease-in-out;
+  opacity: 1;
+  transform: translateX(0); /* Reset to original position */
+}
+
+/* Add keyframes for fadeIn animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Class to apply fade-in animation */
+.fadeIn {
+  animation: fadeIn 1s forwards;
+}
+
+
+/* Keyframes for moving the box to the left */
+@keyframes moveLeft {
+  0% {
+    transform: translateX(50%);
+  }
+  100% {
+    transform: translateX(-0.1%);
+  }
+}
+
+/* Class to trigger the animation */
+.moveLeft {
+  animation: moveLeft 0.5s forwards;
+}
+
+
+/* Add keyframes for fadeInUnit animation */
+@keyframes fadeInUnit {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Add keyframes for fadeOutUnit animation */
+@keyframes fadeOutUnit {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Class to apply fade-in animation */
+.fadeInUnit {
+  animation: fadeInUnit 0.5s forwards;
+}
+
+/* Class to apply fade-out animation */
+.fadeOutUnit {
+  animation: fadeOutUnit 0.5s forwards;
+}
+
+/* Hide element after fadeOut animation */
+.hiddenUnit {
+  display: none;
+}

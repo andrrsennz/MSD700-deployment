@@ -1,14 +1,14 @@
 "use client";
 
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 import ConfirmElement from "@/components/confirm-element/confirmElement";
-import { useRouter } from "next/navigation"; // Changed from "next/navigation"
 import CloseButton from "@/components/close-button/closeButton";
 import Footer from "@/components/footer/footer";
 import styles from "./page.module.css";
-import axios from "axios";
 import MobileRegisterUnit from "@/components/mobile-register-unit/mobileRegisterUnit";
 import RegisterUnitSuccess from "@/components/register-unit-success/registerUnitSuccess";
 import RegisterUnitFailed from "@/components/register-unit-failed/registerUnitFailed";
@@ -16,6 +16,24 @@ import RegisterUnitFailure from "@/components/register-unit-failure/registerUnit
 import MobileTopSection from "@/components/mobile-top-section/mobileTopSection";
 
 export default function Home(): JSX.Element {
+
+  /* ADD ANIMATION */
+  const [animateLoginBox, setAnimateLoginBox] = useState(false);
+  const [animateTable, setAnimateTable] = useState(false);
+  const [animateChooseMsdUnit, setAnimateChooseMsdUnit] = useState(false);
+  const [moveLoginBoxLeft, setMoveLoginBoxLeft] = useState(false);
+
+  const [fadeInUnit, setFadeInUnit] = useState(false);
+const [fadeOutUnit, setFadeOutUnit] = useState(false);
+const [animationPlayed, setAnimationPlayed] = useState(false);
+
+
+  useEffect(() => {
+    /* setAnimateLoginBox(true);
+    setAnimateChooseMsdUnit(true); */
+  }, []);
+  
+
   const router = useRouter();
 
   const [showRegisterUnitColumn, setShowRegisterUnitColumn] = useState<boolean>(false);
@@ -122,7 +140,7 @@ export default function Home(): JSX.Element {
   const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");
 
 
-  const onProceedButtonClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
+  /* const onProceedButtonClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
     setShowUtilSection(false);
     setData([]);
@@ -154,9 +172,44 @@ export default function Home(): JSX.Element {
         }, 2000);
       })
 
-  };
+  }; */
 
-  const fetchUnitData = (token: any) => {
+  /* ===== DUMMY (BACKEND DOWN - COMMENT THIS AND UNCOMMENT CODE ABAOVE WHEN BACKEND BACK TO ALIVE) ====== */
+  const onProceedButtonClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
+    event.preventDefault();
+    setShowUtilSection(false);
+    setData([]);
+    
+    const username = (document.getElementById("username") as HTMLInputElement).value;
+    const password = (document.getElementById("password") as HTMLInputElement).value;
+    
+    // Simulate successful login by directly setting session storage values
+    sessionStorage.setItem("username", username);
+    sessionStorage.setItem("full_name", "John Doe"); // You can set a default name
+    sessionStorage.setItem("token", "fake-token"); // Set a fake token
+    
+    // Trigger animations
+    
+    if (!animationPlayed) {
+      setAnimateTable(true);
+      setAnimateChooseMsdUnit(true);
+      setMoveLoginBoxLeft(true); // Set the move left animation state
+      setAnimationPlayed(true); // Set the animation played state to true
+      setTimeout(() => setMoveLoginBoxLeft(false), 1000); // Adjust timeout as needed to match animation duration
+    }
+
+    // Fetch unit data and show the utility section immediately
+    fetchUnitData("fake-token");
+    setShowUtilSection(true);
+
+  };
+  
+  
+  
+  
+  
+
+  /* const fetchUnitData = (token: any) => {
     axios.get(`${backendUrl}/unit/all`, {
       headers: {
         Authorization: `Bearer ${token}`
@@ -181,7 +234,16 @@ export default function Home(): JSX.Element {
       .catch((error) => {
         console.error("Error fetching unit data: ", error);
       });
+  }; */
+
+  /* ===== DUMMY (BACKEND DOWN - COMMENT THIS AND UNCOMMENT CODE ABAOVE WHEN BACKEND BACK TO ALIVE) ====== */
+  const fetchUnitData = (token: any) => {
+    // Simulate fetching data by using dummy data
+    setData(dummyData);
+    console.log(dummyData);
+    setShowUtilSection(true);
   };
+  
 
 
   const onConfirmButtonClick = (): void => {
@@ -269,12 +331,17 @@ export default function Home(): JSX.Element {
 
   // Handler to show registerUnitColumn
   const handleShowRegisterUnitColumn = () => {
+    setFadeInUnit(true);
     setShowRegisterUnitColumn(true);
   };
 
   // Handler to hide registerUnitColumn
   const handleHideRegisterUnitColumn = () => {
-    setShowRegisterUnitColumn(false);
+    setFadeOutUnit(true);
+    setTimeout(() => {
+      setShowRegisterUnitColumn(false);
+      setFadeOutUnit(false); // Reset the state
+    }, 500);
   };
 
   const handleRowClick = (idx: any) => {
@@ -411,7 +478,7 @@ export default function Home(): JSX.Element {
         <>
           <div className={`${styles.mobileRegisterUnit} ${styles.displayNone} ${styles.mobileDisplay} `}>
             <div className={styles.confirmationDialog}>
-              <div className={styles.registerUnitColumn}>
+            <div className={`${styles.registerUnitColumn} ${fadeInUnit ? styles.fadeInUnit : ''} ${fadeOutUnit ? styles.fadeOutUnit : ''}`}>
                 <div className={styles.inputUnit}>
                   <label htmlFor="username">Unit ID</label>
                   <p className={styles.separateElement}>:</p>
@@ -502,8 +569,10 @@ export default function Home(): JSX.Element {
 
           <div className={styles.dataSection}>
 
-            <div className={styles.loginSection}>
-              <div className={styles.labelSection}>
+          <div className={`${styles.loginSection} ${moveLoginBoxLeft ? styles.moveLeft : ''}`}>
+
+          <div className={`${styles.labelSection} ${animateLoginBox ? styles.moveLeft : ''}`}>
+
                 <p>
                   <span>
                     <img src="/icons/information-circle-svgrepo-com.svg"
@@ -511,7 +580,7 @@ export default function Home(): JSX.Element {
                   </span>
                   Please input your login data.
                 </p>
-              </div>
+              
 
               <div className={styles.inputSection}>
                 <form action="#" method="post">
@@ -564,15 +633,20 @@ export default function Home(): JSX.Element {
                   </div>
                 )
               }
+            
+            </div>
 
             </div>
+
+            
 
 
             {
               showUtilSection ? (
                 <>
-                  <div className={styles.tableUnit}>
-                    <div className={styles.tableSection}>
+                  <div className={`${styles.tableUnit} ${animateTable ? styles.fadeIn : ''}`}>
+
+                  <div className={`${styles.tableUnit} ${animateTable ? styles.fadeIn : ''}`}>
                       <table className={styles.table}>
                         <thead className={styles.headerTable}>
                           <tr >
@@ -660,235 +734,172 @@ export default function Home(): JSX.Element {
             <Footer status={true} />
           </div>
         </div>
-        {/* -----------------------------------------------------------------------*/}
-
-        <div className={`${styles.centerSection} ${styles.mobileHide}`}>
-
-          <div className={styles.greetings}>
-            <p>Hello, welcome to the MSD700 application!</p>
-          </div>
-
-          <div className={styles.dataSection}>
-
-            <div className={styles.loginSection}>
-              <div className={styles.labelSection}>
-                <Image
-                  src="/icons/information-circle-svgrepo-com.svg"
-                  alt="Picture of the author"
-                  width={500}
-                  height={500}
-                />
-                <p>
-                  Please input your login data.
-                </p>
+        
+                    <div className={`${styles.centerSection} ${styles.mobileHide}`}>
+              <div className={styles.greetings}>
+                
+                <p>Hello, welcome to the MSD700 application!</p>
               </div>
-              <div className={styles.leftSection}>
-                <div className={styles.inputSection}>
-                  <form action="#" method="post">
-                    <div className={styles.inputUnit}>
-                      <label htmlFor="username">Username</label>
-                      <p className={styles.separateElement}>:</p>
-                      <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        defaultValue=""
-                        required
-                      // Disable the input if showUtilSection is true
-                      />
-                    </div>
-                    <div className={styles.inputUnit}>
-                      <label htmlFor="password">Password</label>
-                      <p className={styles.separateElement}>:</p>
-                      <div className={styles.passwordInputContainer}>
-                        <input
-                          type={showPassword ? 'text' : 'password'}
-                          id="password"
-                          name="password"
-                          defaultValue=""
-                          required
-                        // Disable the input if showUtilSection is true
-                        />
-                        <div className={styles.passwordStatusButton}>
-                          <Image
-                            src="/icons/Eye.svg"
-                            alt="Picture of the author"
-                            width={30}
-                            height={30}
-                            onClick={() => setShowPassword(!showPassword)}
-                            style={{ cursor: showUtilSection ? 'not-allowed' : 'pointer' }} // Set cursor style based on showUtilSection
+
+              
+
+              <div className={styles.dataSection}>
+              <div className={`${styles.loginSection} ${moveLoginBoxLeft ? styles.moveLeft : ''}`}>
+              <div className={`${styles.labelSection} ${animateLoginBox ? styles.moveLeft : ''}`}>
+                    <Image
+                      src="/icons/information-circle-svgrepo-com.svg"
+                      alt="Picture of the author"
+                      width={500}
+                      height={500}
+                    />
+                    <p>
+                      Please input your login data.
+                    </p>
+                  </div>
+                  <div className={styles.leftSection}>
+                    <div className={styles.inputSection}>
+                      <form action="#" method="post">
+                        <div className={styles.inputUnit}>
+                          <label htmlFor="username">Username</label>
+                          <p className={styles.separateElement}>:</p>
+                          <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            defaultValue=""
+                            required
+                          // Disable the input if showUtilSection is true
                           />
                         </div>
-                      </div>
+                        <div className={styles.inputUnit}>
+                          <label htmlFor="password">Password</label>
+                          <p className={styles.separateElement}>:</p>
+                          <div className={styles.passwordInputContainer}>
+                            <input
+                              type={showPassword ? 'text' : 'password'}
+                              id="password"
+                              name="password"
+                              defaultValue=""
+                              required
+                            // Disable the input if showUtilSection is true
+                            />
+                            <div className={styles.passwordStatusButton}>
+                              <Image
+                                src="/icons/Eye.svg"
+                                alt="Picture of the author"
+                                width={30}
+                                height={30}
+                                onClick={() => setShowPassword(!showPassword)}
+                                style={{ cursor: showUtilSection ? 'not-allowed' : 'pointer' }} // Set cursor style based on showUtilSection
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <button
+                          className={styles.submitButton}
+                          type="submit"
+                          onClick={onProceedButtonClick}
+                        // Disable the button if showUtilSection is true
+                        >
+                          Proceed
+                        </button>
+                      </form>
                     </div>
-                    <button
-                      className={styles.submitButton}
-                      type="submit"
-                      onClick={onProceedButtonClick}
-                    // Disable the button if showUtilSection is true
-                    >
-                      Proceed
-                    </button>
-                  </form>
+                    
+
+                    {
+                      showUtilSection ? (
+                        <>
+                          <div className={`${styles.registerUnit} ${styles.hidexl}`}>
+                            <div className={styles.registerUnitForm}>
+                              <div className={styles.registerUnitText}>
+                                <p>Is the unit not registered yet?</p>
+                              </div>
+                              <div className={styles.buttonRegisterUnit} onClick={handleShowRegisterUnitColumn}>
+                                <Image
+                                  src="/icons/Car.svg"
+                                  alt="Picture of the author"
+                                  width={20}
+                                  height={20}
+                                />
+                                <p>UNIT REGISTER</p>
+                              </div>
+                            </div>
+                            {showRegisterUnitColumn && (
+                              <div className={`${styles.registerUnitColumn} ${fadeInUnit ? styles.fadeInUnit : ''} ${fadeOutUnit ? styles.fadeOutUnit : ''}`}>                                <div className={styles.inputUnit}>
+                                  <label htmlFor="username">Unit ID</label>
+                                  <p className={styles.separateElement}>:</p>
+                                  <input
+                                    type="text"
+                                    id="unitid"
+                                    name="unitid"
+                                    value={unitId} // Bind the input value to the state variable
+                                    onChange={handleUnitIdChange} // Update the state variable on input change
+                                    required
+                                  />
+
+                                </div>
+                                <div className={styles.buttonSection}>
+                                  <button
+                                    className={styles.registerButton}
+                                    type="button"
+                                    onClick={handleRegisterButtonClick}
+                                    disabled={!unitId} // Disable the button if `unitId` is empty
+                                  >
+                                    Register
+                                  </button>
+                                  <button className={styles.cancelButton} type="submit" onClick={handleHideRegisterUnitColumn}>
+                                    Cancel
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                            {
+                              registerSuccess && (
+                                <RegisterUnitSuccess />
+                              )
+                            }
+                            {
+                              registerFailure && (
+                                <RegisterUnitFailed />
+                              )
+                            }
+                            {
+                              registerInvalid && (
+                                <RegisterUnitFailure />
+                              )
+                            }
+                          </div>
+                        </>) : ""}
+                  </div>
+
+                  {
+                    showIncorrectPassword && (
+                      <div className={styles.incorrectPassword}>
+                        <img src="/icons/warning.svg" alt="" />
+                        <p>The username, unit ID, or password you entered is incorrect.</p>
+                      </div>
+                    )
+                  }
+
+                  
+
                 </div>
 
                 {
                   showUtilSection ? (
                     <>
-                      <div className={`${styles.registerUnit} ${styles.hidexl}`}>
-                        <div className={styles.registerUnitForm}>
-                          <div className={styles.registerUnitText}>
-                            <p>Is the unit not registered yet?</p>
-                          </div>
-                          <div className={styles.buttonRegisterUnit} onClick={handleShowRegisterUnitColumn}>
-                            <Image
-                              src="/icons/Car.svg"
-                              alt="Picture of the author"
-                              width={20}
-                              height={20}
-                            />
-                            <p>UNIT REGISTER</p>
-                          </div>
-                        </div>
-                        {showRegisterUnitColumn && (
-                          <div className={`${styles.registerUnitColumn} ${styles.mobileHide}`}>
-                            <div className={styles.inputUnit}>
-                              <label htmlFor="username">Unit ID</label>
-                              <p className={styles.separateElement}>:</p>
-                              <input
-                                type="text"
-                                id="unitid"
-                                name="unitid"
-                                value={unitId} // Bind the input value to the state variable
-                                onChange={handleUnitIdChange} // Update the state variable on input change
-                                required
-                              />
-
-                            </div>
-                            <div className={styles.buttonSection}>
-                              <button
-                                className={styles.registerButton}
-                                type="button"
-                                onClick={handleRegisterButtonClick}
-                                disabled={!unitId} // Disable the button if `unitId` is empty
-                              >
-                                Register
-                              </button>
-                              <button className={styles.cancelButton} type="submit" onClick={handleHideRegisterUnitColumn}>
-                                Cancel
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                        {
-                          registerSuccess && (
-                            <RegisterUnitSuccess />
-                          )
-                        }
-                        {
-                          registerFailure && (
-                            <RegisterUnitFailed />
-                          )
-                        }
-                        {
-                          registerInvalid && (
-                            <RegisterUnitFailure />
-                          )
-                        }
-                      </div>
-                    </>) : ""}
-              </div>
-
-              {
-                showIncorrectPassword && (
-                  <div className={styles.incorrectPassword}>
-                    <img src="/icons/warning.svg" alt="" />
-                    <p>The username, unit ID, or password you entered is incorrect.</p>
-                  </div>
-                )
-              }
-
-            </div>
-
-            {
-              showUtilSection ? (
-                <>
-                  <div className={`${styles.registerUnit} ${styles.displayNone} ${styles.displayxl}`}>
-                    <div className={styles.registerUnitForm}>
-                      <div className={styles.registerUnitText}>
-                        <p>Is the unit not registered yet?</p>
-                      </div>
-                      <div className={styles.buttonRegisterUnit} onClick={handleShowRegisterUnitColumn}>
-                        <Image
-                          src="/icons/Car.svg"
-                          alt="Picture of the author"
-                          width={20}
-                          height={20}
-                        />
-                        <p>UNIT REGISTER</p>
-                      </div>
-                    </div>
-                    {showRegisterUnitColumn && (
-                      <div className={`${styles.registerUnitColumn} ${styles.mobileHide}`}>
-                        <div className={styles.inputUnit}>
-                          <label htmlFor="username">Unit ID</label>
-                          <p className={styles.separateElement}>:</p>
-                          <input
-                            type="text"
-                            id="unitid"
-                            name="unitid"
-                            value={unitId} // Bind the input value to the state variable
-                            onChange={handleUnitIdChange} // Update the state variable on input change
-                            required
-                          />
-
-                        </div>
-                        <div className={styles.buttonSection}>
-                          <button
-                            className={styles.registerButton}
-                            type="button"
-                            onClick={handleRegisterButtonClick}
-                            disabled={!unitId} // Disable the button if `unitId` is empty
-                          >
-                            Register
-                          </button>
-                          <button className={styles.cancelButton} type="submit" onClick={handleHideRegisterUnitColumn}>
-                            Cancel
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                    {
-                      registerSuccess && (
-                        <RegisterUnitSuccess />
-                      )
-                    }
-                    {
-                      registerFailure && (
-                        <RegisterUnitFailed />
-                      )
-                    }
-                    {
-                      registerInvalid && (
-                        <RegisterUnitFailure />
-                      )
-                    }
-                  </div>
-                </>) : ""}
-
-
-            {
-              showUtilSection ? (
-                <>
-                  <div className={styles.tableUnit}>
-                    <div className={styles.labelSection}>
+                      <div className={`${styles.tableUnit} ${animateTable ? styles.fadeIn : ''}`}>
+                      <div className={styles.labelSection}>
                       <Image
                         src="/icons/information-circle-svgrepo-com.svg"
                         alt="Picture of the author"
                         width={500}
                         height={500}
                       />
-                      <p>Please choose your MSD700 unit.</p>
+                      <div className={`${styles.chooseMsdUnit} ${animateChooseMsdUnit ? styles.fadeIn : ''}`}>
+                        <p>Please choose your MSD700 unit.</p>
+                      </div>
                     </div>
                     <div className={styles.tableContainer}>
                       <div className={styles.tableSection}>
@@ -937,18 +948,14 @@ export default function Home(): JSX.Element {
                     </div>
                     <AlertComponent />
                   </div>
-
-
-
-
                 </>
               ) : ""
             }
 
-          </div>
+              </div>
 
+            </div>
 
-        </div>
 
         {/* --------------------------- Mobile Section  ------------------------------*/}
 
