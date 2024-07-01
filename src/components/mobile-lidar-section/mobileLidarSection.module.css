@@ -9,8 +9,8 @@
         align-items: center;
         width: 100%;
         height: auto;
-        margin-top: 60px;
-        justify-content: space-between;
+        margin-top: 65px;
+        justify-content: start;
         gap: 10px;
     }
 
@@ -36,7 +36,7 @@
     }
 
     .routeSection {
-        width: 100%;
+        width: 131px;
         display: flex;
         align-items: center;
         background-color: #60E3D5;
@@ -56,6 +56,8 @@
         text-align: left;
         color: #fff;
 
+        margin-left: 14px;
+
     }
 
     .routeSection img {
@@ -68,15 +70,13 @@
     .lidarSection {
         display: flex;
         align-items: center;
+        justify-content: center;
 
-        width: max-content;
-        height: auto;
+        width: 71px;
+        height: 29px;
         background-color: #0567A6;
         border: 2px solid #60E3D5;
         border-radius: 30px;
-        padding: 0;
-        padding-left: 15px;
-        padding-right: 15px;
 
 
         font-family: Inter;

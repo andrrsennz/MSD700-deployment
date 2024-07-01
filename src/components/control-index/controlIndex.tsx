@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import ConfirmElement from "@/components/confirm-element/confirmElement";
 import Navigation from "../unit-navigation/navigation";
 import styles from "./controlIndex.module.css";
@@ -16,6 +16,8 @@ import MobileTopSection from "../mobile-top-section/mobileTopSection";
 import TokenExpired from "../token-expired/tokenExpired";
 import ControlInstruction from "../control-instruction/controlInstruction";
 import ButtonInformation from "../unit-information-button/unitInformationButton";
+import EmergencyButton from "../emergency-button/emergencyButton";
+import LidarSwitch from "../lidar-switch/lidarSwitch";
 
 var ros: any;
 var viewer: any;
@@ -66,7 +68,14 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
   const [render, setRender] = useState<boolean>(true);
   const [showControlInstruction, setShowControlInstruction] = useState<boolean>(false);
   const [firstLoaded, setFirstLoaded] = useState<string>('false')
-  const [emergencyStatus, setEmergencyStatus] = useState<boolean>(false);
+
+  const [emergencyStatus, setEmergencyStatus] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const savedStatus = localStorage.getItem('emergencyStatus');
+      return savedStatus ? JSON.parse(savedStatus) : false;
+    }
+    return false;
+  });
 
 
   const onConfirmButtonClick = () => {
@@ -93,19 +102,20 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
   const setLidar = (enable: boolean, use_own_map: boolean): void => {
     axios.post(`${backendUrl}/api/lidar`, {
       enable: enable,
-      use_own_map: use_own_map
+      use_own_map: use_own_map,
     }, {
       headers: {
         'Authorization': `Bearer ${sessionStorage.getItem('token')}`
       }
     })
-      .then(function (response: any) {
+      .then(function (response) {
         console.log(response);
       })
-      .catch(function (error: any) {
+      .catch(function (error) {
         console.log(error);
       });
-    showImage = enable
+
+    showImage = enable;
   }
 
   const setRobot = (start: boolean, pause: boolean, stop: boolean): void => {
@@ -153,15 +163,16 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
       });
   }
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setIsChecked(event.target.checked);
-    sessionStorage.setItem('isChecked', `${event.target.checked}`)
 
-    if (event.target.checked) {
-      setOwnMap(true, sessionStorage.getItem("mapName") || '');
-      setLidar(true, true);
+    console.log("event.target.checked 1111 : ", event.target.checked);
+
+
+    sessionStorage.setItem('isChecked', `${event.target.checked}`)
+    if (!event.target.checked) {
+      setLidar(true, false);
     } else {
-      setOwnMap(false, '');
       setLidar(false, false);
     }
   };
@@ -593,9 +604,12 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
   };
 
   const handleEmergencyStatus = () => {
-    setEmergencyStatus(!emergencyStatus)
-  }
-
+    setEmergencyStatus((prevStatus) => {
+      const newStatus = !prevStatus;
+      localStorage.setItem('emergencyStatus', JSON.stringify(newStatus));
+      return newStatus;
+    });
+  };
 
   return (
     <>
@@ -628,7 +642,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                 className={`${styles.status} ${status === "Idle" ? styles.idle : ""
                   }`}
               >
-                <img src="/icons/information-circle-svgrepo-com.svg" alt="" />
+                <img src="/icons/info.png" alt="" />
                 <p>
                   Status : <span>{status}</span>
                 </p>
@@ -639,7 +653,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
               </div>
 
               <div className={styles.lidarButton}>
-                <label className={styles.toggleSwitch}>
+                {/* <label className={styles.toggleSwitch}>
                   <input
                     type="checkbox"
                     className={styles.toggleInput}
@@ -647,8 +661,10 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                     onChange={handleCheckboxChange}
                   />
                   <span className={styles.slider}></span>
-                </label>
+                </label> */}
+                <LidarSwitch backendUrl={backendUrl} />
               </div>
+
             </div>
           </div>
 
@@ -676,7 +692,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                   className={`${styles.playButton} ${status === "On Progress" ? styles.buttonActive : ""
                     }`}
                   onClick={() => {
-                    if (isChecked) {
+                    if (!isChecked) {
                       setRobot(true, false, false);
                       console.log("Play request sent");
                     }
@@ -693,7 +709,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                   className={`${styles.pauseButton} ${status === "Paused" ? styles.buttonActive : ""
                     }`}
                   onClick={(() => {
-                    if (isChecked) {
+                    if (!isChecked) {
                       setRobot(false, true, false);
                       console.log("Pause request sent");
                     } else {
@@ -708,7 +724,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                 <div
                   className={styles.stopButton}
                   onClick={() => {
-                    if (isChecked) {
+                    if (!isChecked) {
                       setRobot(false, true, false);
                       console.log("Stop request sent");
                     } else {
@@ -838,10 +854,9 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
 
                   <div id="mode-list-5" className={`
                 ${showOptions || selectedOption == "mode-list-1" || selectedOption == "mode-list-2" ? styles.modeListButton : styles.displayNone} 
-                ${styles.deleteOption} 
                 ${selectedOption !== "mode-list-1" && selectedOption !== "mode-list-2" ? styles.disableModeListButton : ""} 
                 ${deleteConfirmation ? styles.deleteConfirmationTrue : ""} 
-                ${styles.modeListButtonIcon}`} onClick={deletePinPoint}>
+                ${styles.modeListButtonIcon} ${styles.deleteOption} `} onClick={deletePinPoint}>
                     <img src="/icons/delete_mode_list.svg" alt="" />
                     <p>{deleteConfirmation ? "Click To Delete" : "Delete All Pinpoints"}</p>
                   </div>
@@ -944,10 +959,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                 </div>
 
                 <div className={`${styles.footerMap} ${styles.mobileDisplayNone}`}>
-                  <div className={`${styles.emergencyButton} ${emergencyStatus ? styles.emergencyButtonActive : ''}`} onClick={handleEmergencyStatus}>
-                    <img src="/icons/emergency.svg" alt="" />
-                    <p>Emergency Stop</p>
-                  </div>
+                  <EmergencyButton />
                   <div className={styles.mapName}>Mapping Preview</div>
                 </div>
 
@@ -966,13 +978,13 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
               handleMapPreview={handleMapPreview}
               handleMobileInstruction={handleMobileInstruction}
               handleMobileSorterDisplay={handlePseudo}
-              mapIndex={false}
+              mapIndex={true}
             />
 
             <ButtonInformation onClick={handleInfoIconClick} />
           </div>
 
-          <div className={styles.mobileDisplayNone}>
+          <div className={`${styles.footerSection} ${styles.mobileDisplayNone}`}>
             <Footer status={false} />
           </div>
 

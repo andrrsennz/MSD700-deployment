@@ -1,7 +1,8 @@
 // MobileLidarSection.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './mobileLidarSection.module.css';
 import { usePathname } from 'next/navigation';
+import LidarSwitch from '../lidar-switch/lidarSwitch';
 
 interface MobileLidarSectionProps {
   isChecked: boolean;
@@ -27,8 +28,7 @@ const MobileLidarSection: React.FC<MobileLidarSectionProps> = ({ isChecked, hand
     iconPage = "/icons/database.svg"
   }
 
-  console.log(pathname);
-  console.log(pathname == "/unit/database");
+  const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");
 
   return (
     <div className={`${styles.displayNone} ${styles.mobileLidarSection}`}>
@@ -48,7 +48,7 @@ const MobileLidarSection: React.FC<MobileLidarSectionProps> = ({ isChecked, hand
               <p>LIDAR</p>
             </div>
             <div className={styles.lidarButton}>
-              <label className={styles.toggleSwitch}>
+              {/* <label className={styles.toggleSwitch}>
                 <input
                   type="checkbox"
                   className={styles.toggleInput}
@@ -56,7 +56,9 @@ const MobileLidarSection: React.FC<MobileLidarSectionProps> = ({ isChecked, hand
                   onChange={handleCheckboxChange}
                 />
                 <span className={styles.slider}></span>
-              </label>
+              </label> */}
+
+              <LidarSwitch backendUrl={backendUrl} />
             </div>
           </>
       }

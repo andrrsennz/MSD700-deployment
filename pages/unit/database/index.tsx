@@ -37,9 +37,9 @@ export default function Database(): JSX.Element {
 
     let mapIndex: number = -1;
 
-    // if (typeof window !== 'undefined' && window.sessionStorage) {
-    //     mapIndex = parseInt(sessionStorage.getItem('mapIndex') || '', 10);
-    // }
+    if (typeof window !== 'undefined' && window.sessionStorage) {
+        mapIndex = parseInt(sessionStorage.getItem('mapIndex') || '', 10);
+    }
 
     const [isChecked, setIsChecked] = useState<boolean>(false);
     const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
@@ -47,28 +47,28 @@ export default function Database(): JSX.Element {
         {
             "mapId": "1",
             "map_name": "20230804_Room A",
-            "modified_time": "2023/08/04 11:35 AM",
+            "modified_time": "2023/08/04 11:30 AM",
             "file_type": "PGM",
             "file_size": "120 MB"
         },
         {
             "mapId": "2",
             "map_name": "20230804_Room B",
-            "modified_time": "2023/08/04 11:35 AM",
+            "modified_time": "2023/08/04 11:37 AM",
             "file_type": "PGM",
             "file_size": "120 MB"
         },
         {
             "mapId": "3",
             "map_name": "20230804_Room C",
-            "modified_time": "2023/08/04 11:35 AM",
+            "modified_time": "2023/08/04 11:53 AM",
             "file_type": "PGM",
             "file_size": "120 MB"
         },
         {
             "mapId": "4",
             "map_name": "20230804_Room D",
-            "modified_time": "2023/08/04 11:35 AM",
+            "modified_time": "2023/08/04 11:23 AM",
             "file_type": "PGM",
             "file_size": "120 MB"
         },
@@ -193,6 +193,22 @@ export default function Database(): JSX.Element {
 
     }, []);
 
+    const convertTo24HourFormat = (timeString: string) => {
+        const [date, time, period] = timeString.split(/[\s:]+/);
+        let hours = parseInt(time, 10);
+
+        const minutes = timeString.split(' ')[1].split(':')[1];
+
+        if (period === 'PM' && hours !== 12) {
+            hours += 12;
+        } else if (period === 'AM' && hours === 12) {
+            hours = 0;
+        }
+        const newTime = `${date} ${hours.toString().padStart(2, '0')}:${minutes}`;
+
+        return newTime
+    };
+
     function sortByDate(data: DataItem[], sortDateOrder: 'asc' | 'desc'): DataItem[] {
         return data.sort((a, b) => {
             const dateA = new Date(a.modified_time);
@@ -235,7 +251,7 @@ export default function Database(): JSX.Element {
         return sortedData;
     };
 
-    const handleSortClick = (status: any, condition: any) => {
+    const handleMobileSortClick = (status: any, condition: any) => {
         if (status == "date") {
             setSortOrderStatus('date')
             if (condition.length > 0) {
@@ -257,6 +273,18 @@ export default function Database(): JSX.Element {
             setData(sortedData);
 
         }
+    };
+
+    const handleSortClick = () => {
+        setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+        const sortedData = sortDataByMapName(data, sortOrder);
+        setData(sortedData);
+    };
+
+    const handleDateSortClick = () => {
+        setDateSortOrder(sortDateOrder === "asc" ? "desc" : "asc");
+        const sortedDataByDate = sortByDate(data, sortDateOrder);
+        setData(sortedDataByDate);
     };
 
 
@@ -292,17 +320,12 @@ export default function Database(): JSX.Element {
     };
 
     const handleCheckboxChange = (index: string) => {
-
-
-        if (mapIndex == parseInt(index)) {
+        if (mapIndex == startIndex + parseInt(index)) {
             sessionStorage.setItem("mapIndex", "-1");
             setCheckedIndex(-1);
         } else {
-            console.log("CCCC");
             setCheckedIndex(startIndex + parseInt(index));
             sessionStorage.setItem("mapIndex", String(startIndex + parseInt(index)));
-            // console.log("nnnn : ", data[startIndex + parseInt(index)].map_name);
-
             sessionStorage.setItem("mapName", data[startIndex + parseInt(index)].map_name)
         }
     };
@@ -651,10 +674,10 @@ export default function Database(): JSX.Element {
                                         <p>Map Name</p>
                                     </div>
                                     <div className={styles.iconSection}>
-                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'name' && sortOrder == 'asc' ? styles.sortIconActive : ""}`} onClick={() => handleSortClick('name', 'asc')}>
+                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'name' && sortOrder == 'asc' ? styles.sortIconActive : ""}`} onClick={() => handleMobileSortClick('name', 'asc')}>
                                             <img src="/icons/dsc_icon.svg" alt="" />
                                         </div>
-                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'name' && sortOrder == 'desc' ? styles.sortIconActive : ""}`} onClick={() => handleSortClick('name', 'desc')}>
+                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'name' && sortOrder == 'desc' ? styles.sortIconActive : ""}`} onClick={() => handleMobileSortClick('name', 'desc')}>
                                             <img src="/icons/asc_icon.svg" alt="" />
                                         </div>
                                     </div>
@@ -664,10 +687,10 @@ export default function Database(): JSX.Element {
                                         <p>Date Modified</p>
                                     </div>
                                     <div className={styles.iconSection}>
-                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'date' && sortOrder == 'asc' ? styles.sortIconActive : ""}`} onClick={() => handleSortClick('date', 'asc')}>
+                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'date' && sortOrder == 'asc' ? styles.sortIconActive : ""}`} onClick={() => handleMobileSortClick('date', 'asc')}>
                                             <img src="/icons/dsc_icon.svg" alt="" />
                                         </div>
-                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'date' && sortOrder == 'desc' ? styles.sortIconActive : ""}`} onClick={() => handleSortClick('date', 'desc')}>
+                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'date' && sortOrder == 'desc' ? styles.sortIconActive : ""}`} onClick={() => handleMobileSortClick('date', 'desc')}>
                                             <img src="/icons/asc_icon.svg" alt="" />
                                         </div>
                                     </div>
@@ -688,7 +711,8 @@ export default function Database(): JSX.Element {
                                 <img src="/images/map.png" alt="" />
                             </div>
                             <div className={`${styles.mobileMapName}`}>
-                                <p>{mobileMapName}</p>
+                                {/* <p>{mobileMapName}</p> */}
+                                <p>MAP_NAME</p>
                             </div>
                             <div className={`${styles.mobileMapButtonSection}`}>
                                 <div className={`${styles.editNameButton}`} onClick={handleMobileEditName}>
@@ -721,7 +745,7 @@ export default function Database(): JSX.Element {
                                     Current
                                 </div>
                                 <div className={styles.input}>
-                                    <p>:</p>
+                                    <p className={styles.separatedElement}>:</p>
                                     <input type="text" placeholder={mobileMapName} disabled />
                                 </div>
                             </div>
@@ -731,7 +755,7 @@ export default function Database(): JSX.Element {
                                     New Name
                                 </div>
                                 <div className={styles.input}>
-                                    <p>:</p>
+                                    <p className={styles.separatedElement}>:</p>
                                     <input
                                         type="text"
                                         autoFocus
@@ -812,7 +836,7 @@ export default function Database(): JSX.Element {
                                         <table className={styles.theTable}>
                                             <thead>
                                                 <tr className={styles.header}>
-                                                    <th className={styles.idColumn} >No.</th>
+                                                    <th className={styles.idColumn} style={{ borderTopLeftRadius: '5px' }}>No.</th>
                                                     <th className={`${styles.sortableHeader} ${styles.mapNameColumn} `}>
                                                         <div className={`${styles.sortableHeaderContainer}`}>
                                                             <div className={`${styles.headerContent} ${styles.spanSorter} `}>
@@ -824,23 +848,23 @@ export default function Database(): JSX.Element {
                                                                 src={`/icons/${sortOrder}ending.svg`}
                                                                 width={40}
                                                                 height={40}
-                                                                onClick={() => handleSortClick('name', '')}
+                                                                onClick={handleSortClick}
                                                             />
                                                         </div>
                                                     </th>
 
-                                                    <th className={`${styles.sortableHeader} ${styles.dateModifiedColumn}`}>
-                                                        <div className={`${styles.sortableHeaderContainer}`}>
-                                                            <div className={`${styles.headerContent} ${styles.spanSorter} `}>
+                                                    <th className={`${styles.sortableHeader} ${styles.dateModifiedColumn}`} style={{ borderTopRightRadius: '5px' }}>
+                                                        <div className={`${styles.sortableHeaderContainer}`} >
+                                                            <div className={`${styles.headerContent} ${styles.spanSorter} `} >
                                                                 <span>Date Modified</span>
                                                             </div>
                                                             <Image
                                                                 className={styles.mobileDisplayNone}
                                                                 alt=""
-                                                                src={`/icons/${sortOrder}ending.svg`}
+                                                                src={`/icons/${sortDateOrder}ending.svg`}
                                                                 width={40}
                                                                 height={40}
-                                                                onClick={() => handleSortClick('date', '')}
+                                                                onClick={handleDateSortClick}
                                                             /></div>
 
                                                     </th>
@@ -872,7 +896,7 @@ export default function Database(): JSX.Element {
                                                                     )}
                                                                 </td>
 
-                                                                <td className={styles.sortableHeader}>{item.modified_time}</td>
+                                                                <td className={styles.sortableHeader}>{convertTo24HourFormat(item.modified_time)}</td>
                                                                 <td className={`${styles.mobileDisplayNone}`}>{item.file_type}</td>
                                                                 <td className={`${styles.fileSize} ${styles.mobileDisplayNone}`}>{item.file_size}</td>
                                                                 <td className={`${styles.dark} ${styles.mobileDisplayNone}`}>
@@ -917,30 +941,46 @@ export default function Database(): JSX.Element {
 
                                         <div className={styles.pagination}>
                                             <button
-                                                className={`${styles.bottonPagination} ${currentPage === 1 ? styles.buttonDisable : ""
+                                                className={`${styles.buttonPagination} ${currentPage === 1 ? styles.buttonDisable : ""
                                                     }`}
                                                 onClick={() => handlePaginationButtonClick("first")}
                                                 disabled={currentPage === 1}
                                             >
-                                                <Image
-                                                    src="/icons/2 left.svg"
-                                                    alt="button left"
-                                                    width={10}
-                                                    height={10}
-                                                />
+                                                {currentPage === 1 ?
+                                                    <Image
+                                                        src="/icons/arrow-left-green-2.png"
+                                                        alt="button left"
+                                                        width={10}
+                                                        height={10}
+                                                    /> :
+                                                    <Image
+                                                        src="/icons/2 left.svg"
+                                                        alt="button left"
+                                                        width={10}
+                                                        height={10}
+                                                    />
+                                                }
                                             </button>
                                             <button
-                                                className={`${styles.bottonPagination} ${currentPage === 1 ? styles.buttonDisable : ""
+                                                className={`${styles.buttonPagination} ${currentPage === 1 ? styles.buttonDisable : ""
                                                     }`}
                                                 onClick={() => handlePaginationButtonClick("prev")}
                                                 disabled={currentPage === 1}
                                             >
-                                                <Image
-                                                    src="/icons/1 left.svg"
-                                                    alt="button left"
-                                                    width={10}
-                                                    height={10}
-                                                />
+                                                {currentPage === 1 ?
+                                                    <Image
+                                                        src="/icons/arrow-left-green-1.png"
+                                                        alt="button left"
+                                                        width={10}
+                                                        height={10}
+                                                    /> :
+                                                    <Image
+                                                        src="/icons/1 left.svg"
+                                                        alt="button left"
+                                                        width={10}
+                                                        height={10}
+                                                    />
+                                                }
                                             </button>
 
                                             <div className={styles.currentPage}>
@@ -964,30 +1004,50 @@ export default function Database(): JSX.Element {
                                             <p>of</p>
                                             <p>{totalPages}</p>
                                             <button
-                                                className={`${styles.bottonPagination} ${currentPage === totalPages ? styles.buttonDisable : ""
+                                                className={`${styles.buttonPagination} ${currentPage === totalPages ? styles.buttonDisable : ""
                                                     }`}
                                                 onClick={() => handlePaginationButtonClick("next")}
                                                 disabled={currentPage === totalPages}
                                             >
-                                                <Image
-                                                    src="/icons/1 right.svg"
-                                                    alt="button 1 right"
-                                                    width={10}
-                                                    height={10}
-                                                />
+                                                {currentPage === totalPages ?
+                                                    <Image
+                                                        src="/icons/arrow-right-green-1.png"
+                                                        alt="button left"
+                                                        width={10}
+                                                        height={10}
+                                                    />
+                                                    :
+
+                                                    <Image
+                                                        src="/icons/1 right.svg"
+                                                        alt="button left"
+                                                        width={10}
+                                                        height={10}
+                                                    />
+                                                }
                                             </button>
                                             <button
-                                                className={`${styles.bottonPagination} ${currentPage === totalPages ? styles.buttonDisable : ""
+                                                className={`${styles.buttonPagination} ${currentPage === totalPages ? styles.buttonDisable : ""
                                                     }`}
                                                 onClick={() => handlePaginationButtonClick("last")}
                                                 disabled={currentPage === totalPages}
                                             >
-                                                <Image
-                                                    src="/icons/2 right.svg"
-                                                    alt="button 2 right"
-                                                    width={10}
-                                                    height={10}
-                                                />
+                                                {currentPage === totalPages ?
+                                                    <Image
+                                                        src="/icons/arrow-right-green-2.png"
+                                                        alt="button left"
+                                                        width={10}
+                                                        height={10}
+                                                    />
+                                                    :
+
+                                                    <Image
+                                                        src="/icons/2 right.svg"
+                                                        alt="button left"
+                                                        width={10}
+                                                        height={10}
+                                                    />
+                                                }
                                             </button>
                                         </div>
                                     </div>
@@ -1006,7 +1066,7 @@ export default function Database(): JSX.Element {
                             <ButtonInformation onClick={handleInfoIconClick} />
 
 
-                            <div className={`${styles.mobileDisplayNone}`}>
+                            <div className={`${styles.mobileDisplayNone} ${styles.footerSection}`}>
                                 <Footer status={false} />
                             </div>
                         </div>

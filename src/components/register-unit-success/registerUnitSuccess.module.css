@@ -28,6 +28,18 @@
 
 }
 
+@media (max-width:1400px) {
+  .registerResponseBox {
+    width: 251px;
+    height: 35px;
+  }
+
+  .registerUnitSuccessInformation img{
+    width: 23px;
+    height: 23px;
+  }
+}
+
 @media (min-width:2201px) {
   .registerResponseBox {
     font-family: Inter;

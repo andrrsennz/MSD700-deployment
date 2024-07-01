@@ -16,9 +16,6 @@ import RegisterUnitFailure from "@/components/register-unit-failure/registerUnit
 import MobileTopSection from "@/components/mobile-top-section/mobileTopSection";
 import TableComponent from "@/components/table/tableComponent";
 
-//tes push
-
-
 export default function Home(): JSX.Element {
   const router = useRouter();
 
@@ -134,10 +131,11 @@ export default function Home(): JSX.Element {
       : "";
   }
 
-  const [showUtilSection, setShowUtilSection] = useState<boolean>(false);
+  const [showUtilSection, setShowUtilSection] = useState<boolean>(true);
   const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");
+
 
 
   const onProceedButtonClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
@@ -357,7 +355,8 @@ export default function Home(): JSX.Element {
             width={20}
             height={20}
           />
-          <p>You haven't selected the unit yet.</p>
+          <p className={`${styles.displayNone} ${styles.mobileDisplay}`}>You haven’t chose the unit.</p>
+          <p className={styles.mobileHide}>You haven't selected the unit yet.</p>
         </div>
       </div>
     );
@@ -600,7 +599,7 @@ export default function Home(): JSX.Element {
 
           </div>
 
-          <div className={styles.registerSection}>
+          <div className={`${styles.registerSection} ${showUtilSection ? styles.anyUtils : styles.withoutUtils}`}>
             {showUtilSection ? (<>
               <div className={styles.textSection}>
                 <p>Is the unit not registered yet?</p>
@@ -620,7 +619,7 @@ export default function Home(): JSX.Element {
 
 
             {!showUtilSection ? <>
-              <div className={styles.textSection}>
+              <div className={`${styles.textSection}`}>
                 <p>Don't have an account yet?</p>
               </div>
             </> : <></>}
@@ -870,10 +869,6 @@ export default function Home(): JSX.Element {
 
                     <AlertComponent />
                   </div>
-
-
-
-
                 </>
               ) : ""
             }

@@ -142,7 +142,7 @@
 }
 
 .theTable td {
-    height: 50px;
+    height: 53px;
     color: #D0E1E7;
     background-color: hsla(190, 40%, 60%, 1);
 
@@ -231,7 +231,7 @@
 /* bottom section */
 .bottomSection {
     position: absolute;
-    bottom: 3%;
+    bottom: 1%;
     left: 75px;
     right: 75px;
     display: flex;
@@ -282,7 +282,7 @@
 
 }
 
-.bottonPagination {
+.buttonPagination {
     background-color: #0C98B4;
     border: 2px solid #60E3D5;
     width: 30px;
@@ -290,7 +290,7 @@
     border-radius: 3px;
 }
 
-.bottonPagination:hover {
+.buttonPagination:hover {
     box-shadow: -5px 5px 4px 0px #00000040;
     transition: 0.5s;
 
@@ -493,10 +493,13 @@
     transform: translateX(30%);
 }
 
-
 @media (max-width:1400px) {
+
     .container {
         background-image: url('/images/Walpaper_without_watermark.png');
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
     .parents {
@@ -505,8 +508,15 @@
         display: flex;
         margin-left: auto;
         margin-right: auto;
-        width: 90%;
+        width: 100%;
+    }
 
+    .mapSection .mainSection {
+        position: absolute;
+        /* top: 15%; */
+        top: 15px;
+        left: 7.5px;
+        right: 7.5px;
     }
 
     .unitParents {
@@ -514,240 +524,73 @@
         flex-direction: column;
         height: 99%;
         align-items: center;
+        gap: 0;
     }
 
-    /* ${styles.mobileDisplayNone} */
-    .mobileDisplayNone {
-        display: none !important;
+    .lidarButton {
+        margin-left: 0;
     }
 
-    .mobileLidarSection {
-        display: flex;
-        align-items: center;
-        width: 90%;
-        height: auto;
-        margin-top: 60px;
-        padding-left: 5px;
-        justify-content: space-between;
-        gap: 10px;
-    }
-
-    .mobileLidarSection div {
-        max-height: 38px;
-    }
-
-
-    .routeSection {
-        display: flex;
-        align-items: center;
-        background-color: #60E3D5;
-        border: 2px solid #0567A6;
-        border-radius: 30px;
-        padding-left: 20px;
-        padding-right: 20px;
-        /* padding-top: 10px;
-        padding-bottom: 10px; */
-        gap: 8px;
-
+    .centerDiv {
         font-family: Inter;
         font-size: 16px;
         font-weight: 500;
         line-height: 19px;
         letter-spacing: 0em;
-        text-align: left;
-        color: #fff;
-    }
+        text-align: center;
 
-    .routeSection img {
-        width: 18px;
-        height: 18px;
-    }
-
-    .lidarSection {
-        display: flex;
-        align-items: center;
-
-        width: max-content;
-        height: auto;
-        background-color: #0567A6;
-        border: 2px solid #60E3D5;
-        border-radius: 30px;
-        padding: 0;
-        padding-left: 15px;
-        padding-right: 15px;
-
-        font-family: Inter;
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 17px;
-        letter-spacing: 0em;
-        text-align: left;
-        color: #FFFFFF;
+        gap: 20px;
     }
 
 
-    /* MAP SECTION */
+    .mobileDisplayNone {
+        display: none !important;
+    }
 
     .mapSection {
-        min-width: 330px;
+        min-width: 326px;
         width: 90%;
         min-height: 0;
-        height: 396px;
+        height: 590px;
 
         border-radius: 6px;
         position: relative;
 
         margin-top: 8px;
-        margin-bottom: 5px;
+        margin-bottom: 10px;
+        padding-top: 0;
 
-        box-shadow: 0px 0px 0px 0px #00000040;
+        box-shadow: -1px 1px 1px 0px #00000040;
 
-        justify-content: start;
+        border: 2px solid #0C98B4;
 
-    }
-
-    .mainSection {
-        position: relative !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-
-        width: 90%;
-
-        padding: 7.5px;
-        padding-right: 7.5px;
-    }
-
-
-    .searchBarMobile {
-        width: auto;
-        background-color: #D9FEFA;
-        border: 3px solid #0C98B4;
-        border-radius: 3px;
         display: flex;
+    }
 
-        margin-top: 15px;
-        margin-bottom: 17.5px;
+    .mapSectionWithoutPreview {
+        height: 590px;
+    }
 
+    .centerDiv {
+        width: 100%;
         font-family: Inter;
         font-size: 16px;
-        font-weight: 500;
-        line-height: 19px;
-        letter-spacing: 0em;
-        text-align: left;
-
-        color: #7C8DA5;
-
-        justify-content: space-between;
-
-    }
-
-    .searchBarMobile input {
-        background-color: #D9FEFA;
-        border: none;
-        text-decoration: none;
-        font-size: 16px;
-        width: 100%;
-        margin-left: 15px;
-    }
-
-    .mapSection {
-        height: 594px;
-    }
-
-    .mapSection .topSection .searchBarMobile input:focus {
-        outline: none;
-        border: none;
-    }
-
-    .searchBarMobile .largeScreenImage {
-        width: 20px;
-        height: 20px;
-        padding-top: 12px;
-        padding-bottom: 12px;
-        padding-left: 15px;
-        padding-right: 15px;
-    }
-
-
-    .theTable .sortableHeader {
-        padding-right: 0;
-
-        width: max-content !important;
-        padding-left: 4.5px;
-        padding-right: 4.5px;
-
-        display: flex;
-        flex-direction: column;
-    }
-
-    .theTable .idColumn {
-        width: auto;
-    }
-
-    .headerContent {
-        justify-content: center !important;
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-        width: max-content;
-        text-align: center !important;
-        width: auto;
-    }
-
-    .header th {
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
-
-    .theTable td {
-        width: max-content !important;
-        height: auto;
-        padding-left: 4.5px;
-        padding-right: 4.5px;
-        padding-top: 11.5px;
-        padding-bottom: 11.5px;
-
-        font-family: Inter;
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 17px;
-        letter-spacing: 0em;
-
-    }
-
-    .bottomSection {
-        left: 0;
-        right: 0;
-        width: 100%;
-    }
-
-    .bottomSection .pagination {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        font-family: 'Inter', sans-serif;
-        font-size: 14px;
         font-weight: 500;
         line-height: 19px;
         letter-spacing: 0em;
         text-align: center;
-        color: #0567A6;
-        margin-right: auto;
-        margin-left: auto;
+        border-radius: 0;
+        border: none;
     }
 
-    /* bottom navigation */
     .mobileBottomSection {
-        width: 90%;
-        height: auto;
-
         display: flex;
+        justify-content: space-evenly;
         gap: 8px;
     }
 
-
     .bottomSectionButton {
-        height: 50px;
+        height: 90%;
         width: 50px;
         background-color: #0C98B4;
         border: 2px solid #60E3D5;
@@ -760,20 +603,273 @@
     }
 
     .bottomSectionButton img {
-        height: 18px;
-        width: 18px;
+        height: 50%;
+        width: 50%;
         margin: 0;
         padding: 0;
     }
 
     .webcamIcon img {
         width: 80%;
-        height: 40%;
+        height: 80%;
+        margin: 0;
+        padding: 0;
     }
 
-    .sircleIcon img {
-        width: 70%;
-        height: 70%;
+    .controlLidarButton {
+        width: auto;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        height: 20px;
+        display: flex;
+        gap: 3px;
+    }
+
+    .lidarButton {
+        width: 46px;
+        height: 46px;
+        border-radius: 100%;
+        background-color: #0C98B4;
+        border: 2px solid #60E3D5;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    .lidarButton img {
+        width: 50%;
+        height: 50%;
+    }
+
+    .mainLidarButtonActive {
+        background-color: #60E3D5;
+    }
+
+    .lidarButtonActive {
+        background-color: #8DAAC0;
+    }
+
+    .controlButtonSection {
+        width: auto;
+        height: auto;
+        top: 70px;
+        left: 10px;
+        position: absolute;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .controlButton {
+        width: 46px;
+        height: 46px;
+        border-radius: 100%;
+        background-color: #0C98B4;
+        border: 2px solid #60E3D5;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .controlButtonNonMain {
+        width: 36px;
+        height: 36px;
+    }
+
+    .controlButton img {
+        width: 50%;
+        height: 50%;
+    }
+
+    .mainControlButtonActive {
+        background-color: #60E3D5;
+    }
+
+    .focusButton {
+        width: 95px;
+        height: 34px;
+
+        margin: 0;
+        padding: 0;
+
+        position: absolute;
+        top: 12px;
+        right: 10px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-family: Inter;
+        font-size: 10px;
+        font-weight: 500;
+        line-height: 15px;
+        letter-spacing: 0em;
+        text-align: center;
+        color: #FFFFFF;
+
+        background-color: #0C98B4;
+        border: 2px solid #60E3D5;
+        border-radius: 15px;
+
+    }
+
+    .focusButton p {
+        margin: 0;
+        padding: 0;
+    }
+
+    .focusButton img {
+        width: 15px;
+        height: 15px;
+    }
+
+    .mobileStatus {
+        width: 138px;
+        height: 35px;
+        position: absolute;
+
+        bottom: 10px;
+        left: 10px;
+
+        background-color: #0C98B4;
+        border: 2px solid #60E3D5;
+        border-radius: 20px;
+
+        display: flex;
+        align-items: center;
+
+        font-family: Inter;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 14.52px;
+        text-align: left;
+        color: #FFFFFF;
+    }
+
+    .mobileStatus p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .theTable {
+        background-color: #ECF4F6;
+        border-radius: 5px;
+    }
+
+    .theTable .header th {
+        font-family: Inter;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 19.36px;
+        text-align: center;
+
+        color: #ECF4F6;
+
+
+        height: 43px;
+    }
+
+    .idColumn {
+        width: 33px;
+    }
+
+    .mapNameColumn {
+        min-width: 140px;
+    }
+
+    .dateModifiedColumn {
+        min-width: 125px;
+    }
+
+    .theTable td {
+        height: 36px;
+
+        font-family: Inter;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 16.94px;
+        text-align: center;
+
+        width: max-content;
+    }
+
+    .bottomSection {
+        position: relative;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: auto;
+        margin-bottom: 15px;
+        height: 40px;
+    }
+
+    .bottomSection .currentPage {
+        width: 36px;
+        height: 36px;
+    }
+
+    .buttonPagination {
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+    }
+
+    .searchBarMobile {
+        width: 305px;
+        height: 38px;
+        background-color: #D9FEFA;
+        border: 3px solid #0C98B4;
+        border-radius: 3px;
+        display: flex;
+
+        /* margin-top: 15px; */
+        margin-bottom: 17.5px;
+
+        font-family: Inter;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 19px;
+        letter-spacing: 0em;
+        text-align: left;
+
+        color: #7C8DA5;
+
+        justify-content: space-between;
+        align-items: center;
+
+    }
+
+    .searchBarMobile input {
+        background-color: #D9FEFA;
+        border: none;
+        text-decoration: none;
+        font-size: 16px;
+        width: 100%;
+        margin-left: 15px;
+    }
+
+    .mapSection .topSection .searchBarMobile input:focus {
+        outline: none;
+        border: none;
+    }
+
+    .searchBarMobile .largeScreenImage {
+        margin-right: 15px;
+    }
+
+    .mobileDisplayFlex {
+        display: flex;
+        z-index: 1000;
     }
 
     /* Mobile Sorting */
@@ -912,8 +1008,9 @@
     }
 
     .mobileMapSelector {
-        width: max-content;
-        height: auto;
+        width: 229px;
+        height: 381.8px;
+
         position: fixed;
         top: 50%;
         left: 50%;
@@ -958,8 +1055,8 @@
     .mobileMapSelector .mobileMapButtonSection div {
         background-color: #0C98B4;
         border: 2px solid #60E3D5;
-        height: 44px;
-        width: 44px;
+        height: 40px;
+        width: 40px;
         border-radius: 100%;
 
         display: flex;
@@ -967,16 +1064,22 @@
         justify-content: center;
     }
 
+    .mobileMapSelector .mobileMapButtonSection div img {
+        width: 14px;
+        height: 15px;
+    }
+
     .mobileMapSelector .confirmMappingChoosed {
-        width: fit-content;
+        width: 146px;
+        height: 36.9px;
+
         background-color: #0C98B4;
         display: flex;
         align-items: center;
         justify-content: center;
+
         gap: 8.36px;
         border: 2.09px solid #60E3D5;
-        padding-left: 12px;
-        padding-right: 12px;
         border-radius: 6px;
 
         font-family: Inter;
@@ -988,9 +1091,22 @@
         color: #FFFFFF;
     }
 
+    .mobileMapSelector .confirmMappingChoosed img {
+        width: 12.54px;
+        height: 15.23px;
+    }
+
     .mobileMapSelector .mobileMapSelectorButton {
         background-color: #8DAAC0;
         border: 2.09px solid #60E3D5;
+
+        width: 179.9px;
+        height: 35.9px; 
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 6px;
 
         font-family: Inter;
         font-size: 16px;
@@ -999,8 +1115,6 @@
         letter-spacing: 0em;
         text-align: center;
         color: #FFFFFF;
-        padding-left: 10.45px;
-        padding-right: 10.45px;
     }
 
     .mobileEditNameBackground::before {
@@ -1020,8 +1134,8 @@
     }
 
     .mobileEditName {
-        width: 75%;
-        height: auto;
+        width: 324px;
+        height: 163px;
         position: fixed;
         top: 50%;
         left: 50%;
@@ -1029,19 +1143,17 @@
         text-align: center;
         z-index: 5;
 
-        overflow-y: auto;
+       overflow: hidden;
 
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: 20px;
+        gap: 5px;
 
         background-color: #D9FEFA;
         border: 2px solid #60E3D5;
-        border-radius: 20px;
-
-        padding: 20px;
+        border-radius: 3px;
     }
 
     .mobileEditName .columnName {
@@ -1054,13 +1166,13 @@
         font-size: 16px;
         font-weight: 500;
         line-height: 19.36px;
-        text-align: center;
+        text-align: left;
         gap: 16px;
         color: #0567A6;
     }
 
     .mobileEditName .columnName .input {
-        width: 60%;
+        /* width: 60%; */
         margin-left: auto;
         display: flex;
         justify-content: space-between;
@@ -1068,8 +1180,12 @@
 
     }
 
+    .mobileEditName .columnName .title{
+        width: 84px;
+    }
+
     .mobileEditName .columnName input {
-        width: 90%;
+        width: 176px;
         background-color: #0C98B4;
         outline: none;
 
@@ -1092,12 +1208,12 @@
         height: max-content;
         display: flex;
         justify-content: end;
-        gap: 15px;
+        gap: 25px;
+        margin-right: 30px;
     }
 
     .mobileEditName .buttonSection div {
-        height: auto;
-        width: auto;
+        height: 31px;
         border: 2px solid #60E3D5;
         border-radius: 5px;
 
@@ -1115,6 +1231,10 @@
         padding-right: 8px;
     }
 
+    .mobileEditName .buttonSection div p{
+        margin: 0;
+    }
+
     .mobileEditName .buttonSection .rename {
         background-color: #0C98B4;
     }
@@ -1122,9 +1242,42 @@
     .mobileEditName .buttonSection .cancel {
         background-color: #8DAAC0;
     }
+
+    .mobileMapPreview {
+        background: #ECF4F6;
+        padding: 12px 6.5px 12px 6.5px;
+        border: 2px solid #60E3D5;
+    }
+
+    .mobileMapPreview img {
+        width: 212px;
+        height: 142.13px;
+    }
+
+    .mobileMapName {
+        font-family: Inter;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 19.36px;
+        text-align: center;
+        color: #0C98B4;
+    }
+
+    .mobileMapName p {
+        margin: 0;
+        margin-top: 5px;
+    }
+
+    .separatedElement{
+        margin-right: 10px; 
+    }
 }
 
-@media (max-width: 2200px) and (min-width:1401px) {}
+@media (max-width: 2200px) and (min-width:1401px) {
+    .footerSection {
+        margin-top: 6px;
+    }
+}
 
 @media (min-width:2201px) {
     .unitParents {
@@ -1219,10 +1372,10 @@
         padding: 10px, 0px, 10px, 0px;
     }
 
-    .theTable .header th { 
+    .theTable .header th {
         color: #ECF4F6;
         height: 106px;
-    
+
     }
 
     .theTable td {
@@ -1294,6 +1447,13 @@
     .bottomSection .confirmMappingChoosed {
         height: 47px;
         width: 171px;
+
+        font-family: Inter;
+        font-size: 19px;
+        font-weight: 500;
+        line-height: 22.99px;
+        text-align: center;
+
     }
 
     .bottomSection .warning {
@@ -1310,7 +1470,7 @@
         height: 30px;
     }
 
-    .bottonPagination {
+    .buttonPagination {
         border: 2px solid #60E3D5;
         width: 41.47px;
         height: 41.47px;
@@ -1372,7 +1532,7 @@
         /* Position the second div 40px to the right of the center */
         /* transform: translateX(100%); */
     }
-    
+
     .dateModifiedColumn img {
         top: -5px;
         position: absolute;

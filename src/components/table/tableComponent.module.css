@@ -1,19 +1,21 @@
 /* src/components/tableComponent.module.css */
 .tableWrapper {
-  width: 395px;
+  width: 400px;
   max-height: 713px;
   border: 3px solid #60E3D5;
-  padding: 4px 7px 4px 7px;
+  /* padding: 4px 7px 4px 7px; */
   border-radius: 5px;
 
   background-color: #ECF4F6;
 
-  font-family: Inter;
+  font-family: 'Inter', sans-serif;
   font-size: 16px;
   font-weight: 500;
   line-height: 19.36px;
   text-align: center;
   color: #FFFFFF;
+
+  padding-right: 7px;
 }
 
 .tableHeaderContainer table,
@@ -25,23 +27,36 @@
   /* Add spacing between columns */
 }
 
+.tableBodyContainer table {
+  margin-top: -5px;
+}
+
 .tableHeaderContainer {
   /* overflow: hidden; */
   height: 40px;
   /* height: fit-content; */
-  margin-bottom: 8px;
-  width: 385px;
+  margin-bottom: 10px;
+  margin-left: 5px;
+  width: 382px;
 }
 
 .tableHeaderContainer th {
   background: #0C98B4;
   border-radius: 3px;
+
+  font-family: Inter;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 19.36px;
+  text-align: center;
+
 }
 
 .tableBodyContainer {
-  max-height: 465px;
+  max-height: 460px;
   /* 713px - 56px (header height) */
   overflow-y: scroll;
+  margin-left: 5px;
 }
 
 .tableHeaderContainer table,
@@ -50,6 +65,8 @@
   border-collapse: separate;
   border-spacing: 2px 6px;
   table-layout: fixed;
+  padding-right: 5px;
+  /* background-color: red; */
 }
 
 .tableBodyContainer table td {
@@ -104,7 +121,7 @@
 
 .tableBodyContainer::-webkit-scrollbar-thumb {
   background-color: #0C98B4;
-  border-radius: 6px;
+  border-radius: 5px;
   border: 1px solid #0C98B4;
 }
 
@@ -159,8 +176,11 @@
 
 @media (max-width:1400px) {
   .tableWrapper {
-    width: 307px;
+    width: 302px;
     padding: 0;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-bottom: 6px;
     border-radius: 5px;
 
     font-family: Inter;
@@ -172,14 +192,23 @@
 
   .tableHeaderContainer {
     height: 34px;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
     width: auto;
+    margin-left: 0px;
   }
 
   .tableHeaderContainer table,
   .tableBodyContainer table {
     width: 100%;
     border-spacing: 2px 6px;
+  }
+
+  .tableHeaderContainer table th {
+    font-family: Inter;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 14.52px;
+    text-align: center;
   }
 
   .tableHeaderContainer th {
@@ -194,8 +223,17 @@
   }
 
   .tableBodyContainer {
-    max-height: 646px;
-    overflow: hidden;
+    max-height: 455px;
+    overflow-y: auto;
+    margin-left: 0px;
+  }
+
+  .tableBodyContainer table{
+    padding-right: 0;
+  }
+
+  .tableBodyContainer::-webkit-scrollbar {
+    display: none;
   }
 
   .id {
@@ -239,7 +277,7 @@
     font-weight: 500;
     line-height: 14.52px;
     text-align: center;
-    
+
 
     padding-top: 10px;
     padding-bottom: 10px;
@@ -254,13 +292,15 @@
     height: 14.57px;
     gap: 0px;
     border: 2px 0px 0px 0px;
-    opacity: 0px;    
+    opacity: 0px;
   }
+
+  
 }
 
 @media (min-width:2201px) {
   .tableWrapper {
-    width: 530px;
+    width: 537px;
     max-height: 713px;
     border: 3px solid #60E3D5;
     padding: 6px 9px 6px 9px;
@@ -286,6 +326,15 @@
     border-spacing: 3px 8px;
   }
 
+  .tableBodyContainer table {
+    margin-top: -5px;
+    width: calc(100% - 5px);
+  }
+
+  .tableHeaderContainer {
+    margin-bottom: 28px;
+  }
+
   .tableHeaderContainer th {
     border-radius: 4px;
   }
@@ -299,8 +348,9 @@
   }
 
   .tableBodyContainer {
-    max-height: 646px;
+    max-height: 640px;
   }
+
 
   .id {
     width: 49px;

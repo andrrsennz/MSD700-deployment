@@ -130,13 +130,17 @@
     }
 
     .centerDiv .text img {
-        width: 13px;
-        height: 13px;
+        width: 20px;
+        height: 20px;
         margin-left: 10px;
     }
 
+    .text p{
+        margin: 0;
+    }
+
     .text {
-        width: 235px;
+        width: 239px;
         height: 50px;
 
         border: 2px solid #60E3D5;
@@ -190,7 +194,7 @@
 
     .footer {
         position: fixed;
-        bottom: 1px;
+        bottom: 0px;
         right: 0;
         padding: 0px;
 
@@ -251,7 +255,7 @@
     }
 
     .footer {
-        padding-bottom: 30px;
+        padding-bottom: 20px;
         /* padding: 20px; */
     }
 

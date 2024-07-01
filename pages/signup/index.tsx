@@ -15,7 +15,6 @@ import axios from "axios";
 import Head from "next/head";
 import ConfirmRegister from "@/components/confirm-register-user/confirmRegister";
 import MobileTopSection from "@/components/mobile-top-section/mobileTopSection";
-import RegisterUnitSuccess from "@/components/register-unit-success/registerUnitSuccess";
 
 export default function Signup(): JSX.Element {
     const router = useRouter();
@@ -89,13 +88,17 @@ export default function Signup(): JSX.Element {
 
             if (passwordColumn == confirmPasswordColumn) {
                 setIsConfirmPasswordValid(true)
+            } else {
+                setIsConfirmPasswordValid(false)
             }
         }
 
         if (name === 'confirmPassword') {
             setConfirmPasswordColumn(value)
-            if (passwordColumn == confirmPasswordColumn) {
+            if (passwordColumn == value) {
                 setIsConfirmPasswordValid(true)
+            } else {
+                setIsConfirmPasswordValid(false)
             }
             // setIsConfirmPasswordValid(true)
         }
@@ -117,18 +120,18 @@ export default function Signup(): JSX.Element {
                 username: usernameColumn
             })
                 .then(function (response: any) {
-                    if (response.status === 200) {
-                        setIsUsernameRegistered(false);
-                        setIsUsernameValid(true);
-                    }
-                    else {
-                        setIsUsernameRegistered(true)
-                        setIsUsernameValid(false);
-                    }
+                    // if (response.status === 200) {
+                    //     setIsUsernameRegistered(false);
+                    //     setIsUsernameValid(true);
+                    // }
+                    // else {
+                    //     setIsUsernameRegistered(true)
+                    //     setIsUsernameValid(false);
+                    // }
                 })
                 .catch(function (error: any) {
-                    setIsUsernameRegistered(true)
-                    setIsUsernameValid(false);
+                    // setIsUsernameRegistered(true)
+                    // setIsUsernameValid(false);
                 });
         }
 
@@ -267,7 +270,7 @@ export default function Signup(): JSX.Element {
                                     <div className={styles.label}>
                                         <label htmlFor="username">Username</label>
                                     </div>
-                                    <div className={`${styles.iconStatusColumn} ${!isUsernameValid || isUsernameRegistered && formValues.username.trim() !== '' ? styles.invalid : ''}`}>
+                                    <div className={`${styles.iconStatusColumn} ${!isUsernameValid || isUsernameRegistered && formValues.username.trim() !== '' ? styles.invalid : ''} ${isUsernameValid ? "" : styles.redPlaceholder}`}>
                                         <input
                                             type="text"
                                             id="username"
@@ -306,7 +309,7 @@ export default function Signup(): JSX.Element {
                                     <div className={styles.label}>
                                         <label htmlFor="fullname">Full Name</label>
                                     </div>
-                                    <div className={`${styles.iconStatusColumn} ${!isFullNameValid ? styles.invalid : ''}`}>
+                                    <div className={`${styles.iconStatusColumn} ${!isFullNameValid ? styles.invalid : ''} ${isUsernameValid ? "" : styles.redPlaceholder}`}>
                                         <input
                                             type="text"
                                             id="fullname"
@@ -421,7 +424,7 @@ export default function Signup(): JSX.Element {
                                             <label htmlFor="confirmPassword">Confirm Password</label>
                                         </div>
 
-                                        <div className={`${styles.iconStatusColumn} ${passwordColumn.length >= 0 && passwordColumn !== confirmPasswordColumn || !isConfirmPasswordValid ? styles.invalid : ''}`}>
+                                        <div className={`${styles.iconStatusColumn} ${!isConfirmPasswordValid && confirmPasswordColumn.length !== 0 ? styles.invalid : ''}`}>
                                             <input
                                                 type="password"
                                                 id="confirmPassword"
@@ -431,24 +434,25 @@ export default function Signup(): JSX.Element {
                                                 onChange={handleChange}
                                             />
                                             <div className={`${styles.iconStatusColumnButton} ${styles.iconStatusColumnPasswordButton}`}>
-                                                {passwordColumn.length >= 0 && passwordColumn !== confirmPasswordColumn || !isConfirmPasswordValid ? (
-                                                    <Image
-                                                        src="/icons/Info-alert.svg"
-                                                        alt="Alert icon"
-                                                        width={30}
-                                                        height={30}
-                                                    />
-                                                ) : formValues.password.trim() !== '' && confirmPasswordColumn == passwordColumn ? (
-                                                    <Image
-                                                        src="/icons/Check-circle.svg"
-                                                        alt="Check icon"
-                                                        width={30}
-                                                        height={30}
-                                                    />
-                                                ) : null}
+                                                {
+                                                    !isConfirmPasswordValid && confirmPasswordColumn.length !== 0 ?
+                                                        (<Image
+                                                            src="/icons/Info-alert.svg"
+                                                            alt="Alert icon"
+                                                            width={30}
+                                                            height={30}
+                                                        />
+                                                        ) : confirmPasswordColumn.length > 0 && isConfirmPasswordValid ? (
+                                                            <Image
+                                                                src="/icons/Check-circle.svg"
+                                                                alt="Check icon"
+                                                                width={30}
+                                                                height={30}
+                                                            />
+                                                        ) : null}
                                             </div>
                                         </div>
-                                        {passwordColumn.length >= 0 && passwordColumn !== confirmPasswordColumn ? (
+                                        {!isConfirmPasswordValid && confirmPasswordColumn.length !== 0  ? (
                                             <div className={`${styles.tooltip} ${styles.tooltipPassword}`}>
                                                 <p>Wrong Password</p>
                                             </div>

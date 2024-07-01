@@ -34,7 +34,7 @@ const Footer: React.FC<FooterProps> = (props) => {
         ''
       )}
 
-      <div className={`${styles.copyright} ${pathname?.includes('/unit') || pathname?.includes('control') || pathname?.includes('mapping') || pathname?.includes('database') ? styles.copyrightUnit : ''}`}>
+      <div className={`${styles.copyright} ${pathname?.includes('/unit') || pathname?.includes('control') || pathname?.includes('mapping') || pathname?.includes('database') ? styles.unit : ''} ${styles.copyrightUnit}`}>
         <p>
           <span>&#169;</span> 2023 ITBdeLabo
         </p>

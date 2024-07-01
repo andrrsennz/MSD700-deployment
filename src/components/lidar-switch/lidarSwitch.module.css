@@ -1,0 +1,106 @@
+
+.toggleSwitch {
+    display: inline-block;
+    position: relative;
+}
+
+.toggleInput {
+    display: none;
+}
+
+.slider {
+    height: 37.52px;
+    width: 75.03px;
+    position: absolute;
+    cursor: pointer;
+    top: 0px;
+    left: 10px;
+    bottom: 0;
+    background-color: #0567A6;
+    border-radius: 20px;
+    transition: 0.4s;
+}
+
+.slider::before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%) translateX(100%);
+    border: 7px solid #0567A6;
+    border-radius: 50%;
+    transition: 0.4s;
+}
+
+.toggleInput:checked+.slider {
+    background-color: #0567A6;
+}
+
+.toggleInput:checked+.slider {
+    background-color: #60E3D5;
+}
+
+
+.toggleInput:not(:checked)+.slider::before {
+    transform: translateY(-50%) translateX(-10px);
+    background-color: #60E3D5;
+    border: 7px solid #60E3D5;
+}
+
+@media (max-width:1400px) {
+    .slider {
+        left: -2px;
+        top: -21px;
+
+        height: 31.52px;
+        width: 64.03px;
+    }
+
+    .slider::before {
+        position: absolute;
+        content: "";
+        height: 10px;
+        width: 10px;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%) translateX(100%);
+        border: 7px solid #0567A6;
+        border-radius: 50%;
+        transition: 0.4s;
+    }
+
+    .toggleInput:not(:checked)+.slider::before {
+        transform: translateY(-50%) translateX(-5px);
+        background-color: #60E3D5;
+        border: 7px solid #60E3D5;
+    }
+}
+
+@media (min-width:2201px) {
+    .slider {
+        width: 112.55px;
+        height: 56.28px;
+
+        border-radius: 54.28px;
+
+        top: 0;
+        left: 0;
+    }
+
+    /* Style for the slider when the toggle is "on" */
+    .slider::before {
+        height: 28px;
+        width: 28px;
+        border: 11px solid #0567A6;
+    }
+
+    .toggleInput:checked+.slider::before {
+        transform: translateY(-50%) translateX(50px);
+        height: 20px;
+        width: 20px;
+        border: 11px solid #0567A6;
+    }
+
+}

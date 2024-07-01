@@ -20,6 +20,8 @@ import MobileBottomSection from "@/components/mobile-bottom-section/mobileBottom
 import MobileNavigation from "@/components/mobile-navigation/mobileNavigation";
 import MobileInstruction from "@/components/mobile-instruction/mobileInstruction";
 import GreetingsUnit from "@/components/greetings-unit/greetingsUnit";
+import EmergencyButton from "@/components/emergency-button/emergencyButton";
+import LidarSwitch from "@/components/lidar-switch/lidarSwitch";
 
 interface MappingProps {
     handleMobileNavigation: () => void; // Define handleMobileNavigation prop
@@ -85,8 +87,16 @@ const Mapping: React.FC<MappingProps> = () => {
     const [mobileInstruction, setMobileInstruction] = useState<boolean>(false);
     const [buttonMapStatus, setButtonMapStatus] = useState<string>()
     const [playButtonClicked, setPlayButtonClicked] = useState<boolean>(false);
+
     const [emergencyStatus, setEmergencyStatus] = useState<boolean>(false);
 
+    useEffect(() => {
+        // Read value from localStorage when the component mounts
+        const savedStatus = localStorage.getItem('emergencyStatus');
+        if (savedStatus !== null) {
+            setEmergencyStatus(JSON.parse(savedStatus));
+        }
+    }, []);
 
     const onConfirmButtonClick = (): void => {
         setShowConfirmClosePageDialog(true);
@@ -134,41 +144,44 @@ const Mapping: React.FC<MappingProps> = () => {
         sessionStorage.setItem('mappingPause', pause.toString());
         sessionStorage.setItem('mappingStop', stop.toString());
 
-        axios.post(`${backendUrl}/api/mapping`, {
-            start: start,
-            pause: pause,
-            stop: stop,
-            unit_name: sessionStorage.getItem('unit_name')
-        }, {
-            headers: {
-                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
-            }
-        })
-            .then(function (response) {
-                if (start) {
-                    changeStatus("On Progress");
-                    setButtonMapStatus('start');
-                    setPlayButtonClicked(true)
-                }
-                else if (pause) {
-                    changeStatus("Idle");
-                    setButtonMapStatus('pause')
-                }
-                else if (stop && playButtonClicked) {
-                    changeStatus("Idle");
-                    alert("Map saved successfully");
-                    setStopButton(false)
-                    setButtonMapStatus('')
-                    setPlayButtonClicked(false)
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        // axios.post(`${backendUrl}/api/mapping`, {
+        //     start: start,
+        //     pause: pause,
+        //     stop: stop,
+        //     unit_name: sessionStorage.getItem('unit_name')
+        // }, {
+        //     headers: {
+        //         'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+        //     }
+        // })
+        //     .then(function (response) {
+        if (start) {
+            changeStatus("On Progress");
+            setButtonMapStatus('play');
+            setPlayButtonClicked(true)
+        }
+        else if (pause) {
+            changeStatus("Idle");
+            setButtonMapStatus('pause')
+        }
+        else if (stop && playButtonClicked) {
+            changeStatus("Idle");
+            // alert("Map saved successfully");
+            setStopButton(false)
+            setButtonMapStatus('')
+            setPlayButtonClicked(false)
+        }
+        // })
+        // .catch(function (error) {
+        //     console.log(error);
+        // });
     }
 
     const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>): void => {
         setIsChecked(event.target.checked);
+
+        console.log(" event.target.checked : ", event.target.checked);
+
 
         sessionStorage.setItem('isChecked', `${event.target.checked}`)
         if (event.target.checked) {
@@ -484,8 +497,12 @@ const Mapping: React.FC<MappingProps> = () => {
     const handleLidarChecked = () => { }
 
     const handleEmergencyStatus = () => {
-        setEmergencyStatus(!emergencyStatus)
-    }
+        setEmergencyStatus((prevStatus) => {
+            const newStatus = !prevStatus;
+            localStorage.setItem('emergencyStatus', JSON.stringify(newStatus));
+            return newStatus;
+        });
+    };
 
     return (
         <> {render ?
@@ -523,7 +540,7 @@ const Mapping: React.FC<MappingProps> = () => {
                                         className={`${styles.status} ${status === "Idle" ? styles.idle : ""
                                             }`}
                                     >
-                                        <img src="/icons/information-circle-svgrepo-com.svg" alt="" />
+                                        <img src="/icons/info.png" alt="" />
                                         <p>
                                             Status : <span>{status}</span>
                                         </p>
@@ -534,6 +551,9 @@ const Mapping: React.FC<MappingProps> = () => {
                                     </div>
 
                                     <div className={styles.lidarButton}>
+                                        <LidarSwitch backendUrl={backendUrl} />
+                                    </div>
+                                    {/* <div className={styles.lidarButton}>
                                         <label className={styles.toggleSwitch}>
                                             <input
                                                 type="checkbox"
@@ -543,7 +563,7 @@ const Mapping: React.FC<MappingProps> = () => {
                                             />
                                             <span className={styles.slider}></span>
                                         </label>
-                                    </div>
+                                    </div> */}
 
                                 </div>
                             </div>
@@ -566,7 +586,7 @@ const Mapping: React.FC<MappingProps> = () => {
 
                                 <div className={`${styles.mapSection} ${mapPreview ? "" : styles.mapSectionWithoutPreview}`}>
                                     <div className={`${styles.topDiv} ${styles.mobileDisplayNone}`}>
-                                        <p>Create a New Map</p>
+                                        <p className={styles.runThePrototype}>Create a New Map</p>
                                         <div
                                             className={`${styles.playButton} ${status == "On Progress" ? styles.buttonActive : ""}`}
                                             onClick={() => {
@@ -603,10 +623,11 @@ const Mapping: React.FC<MappingProps> = () => {
                                         </div>
                                         <div
                                             id="stopButton"
-                                            className={`${styles.stopButton} ${stopButton ? styles.buttonActive : ''}`}
+                                            className={`${styles.stopButton}`}
                                             onClick={() => {
                                                 if (isChecked) {
                                                     if (buttonMapStatus == 'play' || buttonMapStatus == 'pause') {
+                                                        setShowConfirmMappingDialog(true);
                                                         setStopButton(true);
                                                         setMapping(false, false, true);
                                                     }
@@ -671,16 +692,16 @@ const Mapping: React.FC<MappingProps> = () => {
                                                 <img src="/icons/Dots.svg" alt="" />
                                             </div>
                                             {controlExtend ? <>
-                                                <div className={`${styles.controlButton}`} onClick={zoomIn}>
+                                                <div className={`${styles.controlButton} ${styles.controlButtonNonMain}`} onClick={zoomIn}>
                                                     <img src="/icons/zoomin.svg" alt="" />
                                                 </div>
-                                                <div className={`${styles.controlButton}`} onClick={zoomOut}>
+                                                <div className={`${styles.controlButton} ${styles.controlButtonNonMain}`} onClick={zoomOut}>
                                                     <img src="/icons/zoomout.svg" alt="" />
                                                 </div>
-                                                <div className={`${styles.controlButton}`} onClick={restart}>
+                                                <div className={`${styles.controlButton} ${styles.controlButtonNonMain}`} onClick={restart}>
                                                     <img src="/icons/Maximize.svg" alt="" />
                                                 </div>
-                                                <div className={`${styles.controlButton}`} onClick={rotateCW}>
+                                                <div className={`${styles.controlButton} ${styles.controlButtonNonMain}`} onClick={rotateCW}>
                                                     <img src="/icons/new reload.svg" alt="" />
                                                 </div>
                                             </> : ""}
@@ -697,10 +718,7 @@ const Mapping: React.FC<MappingProps> = () => {
 
 
                                         <div className={`${styles.footerMap} ${styles.mobileDisplayNone}`}>
-                                            <div className={`${styles.emergencyButton} ${emergencyStatus ? styles.emergencyButtonActive : ''}`} onClick={handleEmergencyStatus}>
-                                                <img src="/icons/emergency.svg" alt="" />
-                                                <p>Emergency Stop</p>
-                                            </div>
+                                            <EmergencyButton />
                                             <div className={styles.mapName}>Mapping Preview</div>
                                         </div>
                                     </div>
@@ -722,7 +740,7 @@ const Mapping: React.FC<MappingProps> = () => {
 
                             </div>
 
-                            <div className={`${styles.mobileDisplayNone} ${styles.bottomSection}`}>
+                            <div className={`${styles.mobileDisplayNone} ${styles.footerSection}`}>
                                 <Footer status={false} />
                             </div>
 

@@ -96,6 +96,7 @@
 @media (max-width:1400px) {
     .confirmationDialog p{
         margin: 0;
+        width: 200px;
         padding-left: 10px;
         padding-right: 10px;
     }

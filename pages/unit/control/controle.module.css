@@ -42,6 +42,7 @@
 }
 
 
+
 @media (max-width:1400px) {
     .mobileHide {
         display: none;
@@ -60,7 +61,7 @@
         display: flex;
         margin-left: auto;
         margin-right: auto;
-        width: 90%;
+        /* width: 90%; */
     }
 
     .unitParents{
@@ -68,11 +69,16 @@
         flex-direction: column;
         height: 99%;
         align-items: center;
+
+        gap: 0;
     }
 
 }
 
 @media (max-width: 2200px) and (min-width:1401px) {
+    .footerSection{
+        margin-top:6px;
+    }
 }
 
 @media (min-width:2201px) {

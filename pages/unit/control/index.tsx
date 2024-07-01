@@ -118,7 +118,7 @@ const Control: React.FC = () => {
           {mobileNavigation ? <MobileNavigation onClick={handleMobileNavigation} /> : ""}
           {mobileInstruction || firstLoaded == 'true' ? <MobileInstruction onClick={handleMobileInstruction} imgUrl={"/images/mobile_instruction_control.svg"} /> : ""}
 
-          {mapIndex < -1 ? (
+          {mapIndex < 0 ? (
           // {true ? (
             <div className={styles.container}>
               {/* --------------------------- Mobile Section  ------------------------------*/}
@@ -144,7 +144,7 @@ const Control: React.FC = () => {
 
                   <ControlNonIndex handleMobileSorterDisplay={handlePseudo} handleMobileNavigation={handleMobileNavigation} handleMobileInstruction={handleMobileInstruction} />
                 </div>
-                <div className={`${styles.mobileHide} ${styles.bottomSection}`}>
+                <div className={`${styles.mobileHide} ${styles.footerSection}`}>
                   <Footer status={false} />
                 </div>
               </div>
