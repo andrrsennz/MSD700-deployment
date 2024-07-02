@@ -20,29 +20,39 @@ export default function Signup(): JSX.Element {
     const router = useRouter();
 
     const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
+
     const [showRegisterDialog, setShowRegisterDialog] = useState<boolean>(false);
 
     const [usernameColumn, setUsernameColumn] = useState<string>("");
+
     const [isUsernameValid, setIsUsernameValid] = useState(true);
+
     const [isUsernameRegistered, setIsUsernameRegistered] = useState<boolean>(false);
 
     const [fullNameColumn, setFullNameColumn] = useState<string>("");
+
     const [isFullNameValid, setIsFullNameValid] = useState(true);
 
     const [emailColumn, setEmailColumn] = useState<string>("");
+
     const [isEmailValid, setIsEmailValid] = useState(true);
+
     const [isEmailRegistered, setIsEmailRegistered] = useState<boolean>(false);
 
     const [passwordColumn, setPasswordColumn] = useState<string>("");
+
     const [confirmPasswordColumn, setConfirmPasswordColumn] = useState<string>("");
+    const [registerConfirmPassword, setRegisterConfirmPassword] = useState<boolean>(true);
+
     const [isPasswordValid, setIsPasswordValid] = useState(true);
+
     const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(true);
 
     const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 
     const [instructionShowed, setInstructionShowed] = useState<boolean>(false);
-    const [mobileShowAnimation, setMobileShowAnimation] = useState<boolean>(false);
 
+    const [mobileShowAnimation, setMobileShowAnimation] = useState<boolean>(false);
 
     const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");
 
@@ -94,6 +104,7 @@ export default function Signup(): JSX.Element {
         }
 
         if (name === 'confirmPassword') {
+            setRegisterConfirmPassword(true)
             setConfirmPasswordColumn(value)
             if (passwordColumn == value) {
                 setIsConfirmPasswordValid(true)
@@ -103,7 +114,6 @@ export default function Signup(): JSX.Element {
             // setIsConfirmPasswordValid(true)
         }
     };
-
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
@@ -153,11 +163,13 @@ export default function Signup(): JSX.Element {
         const isConfirmPasswordFilled = formValues.confirmPassword.trim() !== '';
         if (!isConfirmPasswordFilled) {
             setIsConfirmPasswordValid(false);
+            setRegisterConfirmPassword(false)
         }
+
 
         // If any input is invalid, return early and don't proceed with form submission
         if (!isUsernameFilled || !isUsernameValid || isUsernameRegistered || !isFullNameFilled ||
-            !isEmailFilled || !isEmailValid || isEmailRegistered || !isPasswordValid || !isConfirmPasswordValid) {
+            !isEmailFilled || !isEmailValid || isEmailRegistered || !isPasswordValid || !isConfirmPasswordValid || !registerConfirmPassword) {
             alert("Error creating user");
             return;
         }
@@ -186,11 +198,11 @@ export default function Signup(): JSX.Element {
 
     const goToSigninPage = (): void => {
         router.push("/");
-    }
+    };
 
     const setMobileAnimation = () => {
         setMobileShowAnimation(!mobileShowAnimation)
-    }
+    };
 
     const handleCloseButtonClick = () => {
         setShowConfirmDialog(true); // or false, depending on your logic
@@ -230,8 +242,6 @@ export default function Signup(): JSX.Element {
 
                 </div >) : ""
             }
-
-
 
             <div className={styles.container}>
                 {/* --------------------------- Mobile Section  ------------------------------*/}
@@ -424,18 +434,18 @@ export default function Signup(): JSX.Element {
                                             <label htmlFor="confirmPassword">Confirm Password</label>
                                         </div>
 
-                                        <div className={`${styles.iconStatusColumn} ${!isConfirmPasswordValid && confirmPasswordColumn.length !== 0 ? styles.invalid : ''}`}>
+                                        <div className={`${styles.iconStatusColumn} ${!isConfirmPasswordValid && confirmPasswordColumn.length !== 0 ? styles.invalid : ''} ${!registerConfirmPassword ? styles.invalid : ''}`}>
                                             <input
                                                 type="password"
                                                 id="confirmPassword"
                                                 name="confirmPassword"
-                                                placeholder={isConfirmPasswordValid ? "" : "Fill in this data"}
+                                                placeholder={registerConfirmPassword ? "" : "Fill in this data"}
                                                 required
                                                 onChange={handleChange}
                                             />
                                             <div className={`${styles.iconStatusColumnButton} ${styles.iconStatusColumnPasswordButton}`}>
                                                 {
-                                                    !isConfirmPasswordValid && confirmPasswordColumn.length !== 0 ?
+                                                    !isConfirmPasswordValid && confirmPasswordColumn.length !== 0 || !registerConfirmPassword?
                                                         (<Image
                                                             src="/icons/Info-alert.svg"
                                                             alt="Alert icon"
@@ -452,7 +462,7 @@ export default function Signup(): JSX.Element {
                                                         ) : null}
                                             </div>
                                         </div>
-                                        {!isConfirmPasswordValid && confirmPasswordColumn.length !== 0  ? (
+                                        {!isConfirmPasswordValid && confirmPasswordColumn.length !== 0 ? (
                                             <div className={`${styles.tooltip} ${styles.tooltipPassword}`}>
                                                 <p>Wrong Password</p>
                                             </div>

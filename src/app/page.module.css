@@ -203,6 +203,7 @@
   padding: 0;
 }
 
+
 .registerUnit input[type="text"] {
   gap: 5px;
   padding: 10px;
@@ -218,6 +219,11 @@
 
   width: 230px;
 }
+
+.registerUnitColumn .inputFailed input[type="text"] {
+  background-color: hsla(343, 41%, 71%, 1) !important;
+}
+
 
 
 .registerUnitColumn .buttonSection input[type="text"]:focus {

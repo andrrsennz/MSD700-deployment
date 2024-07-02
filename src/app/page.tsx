@@ -26,6 +26,7 @@ export default function Home(): JSX.Element {
   const [registerFailure, setRegisterFailure] = useState(false);
   const [unitId, setUnitId] = useState(''); // Add this line to create a state variable for the unit ID input
   const [instructionShowed, setInstructionShowed] = useState<boolean>(false);
+  const [registerUnitFailed, setRegisterUnitFailed] = useState<boolean>(false);
 
   const [registerInvalid, setRegisterInvalid] = useState(false);
 
@@ -117,8 +118,6 @@ export default function Home(): JSX.Element {
       },
     ]
   );
-
-
 
   const [showIncorrectPassword, setShowIncorrectPassword] = useState<boolean>(false);
 
@@ -366,6 +365,12 @@ export default function Home(): JSX.Element {
     const unitInput = document.getElementById('unitid') as HTMLInputElement | null;
     const token = sessionStorage.getItem('token'); // Retrieve the token from sessionStorage
 
+    if (unitInput?.value == "") {
+      setRegisterUnitFailed(true)
+      return
+    }
+
+
     if (unitInput && token) {
       try {
         const response = await axios.post(`${backendUrl}/unit/register`, {
@@ -405,11 +410,17 @@ export default function Home(): JSX.Element {
 
   const handleUnitIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUnitId(event.target.value);
+    setRegisterUnitFailed(false)
   };
 
-  const setInstructionShow = () => {
-    setInstructionShowed(!instructionShowed)
+  const setInstructionShowActive = () => {
+    setInstructionShowed(true)
   }
+
+  const setInstructionShowInactive = () => {
+    setInstructionShowed(false)
+  }
+
 
   const handleCloseButtonClick = () => {
     setShowConfirmDialog(true); // or false, depending on your logic
@@ -429,7 +440,7 @@ export default function Home(): JSX.Element {
           <div className={`${styles.mobileRegisterUnit} ${styles.displayNone} ${styles.mobileDisplay} `}>
             <div className={styles.confirmationDialog}>
               <div className={styles.registerUnitColumn}>
-                <div className={styles.inputUnit}>
+                <div className={`${styles.inputUnit} ${registerUnitFailed ? styles.inputFailed : ''}`}>
                   <label htmlFor="username">Unit ID</label>
                   <p className={styles.separateElement}>:</p>
                   <input
@@ -447,7 +458,7 @@ export default function Home(): JSX.Element {
                     className={styles.registerButton}
                     type="button"
                     onClick={handleRegisterButtonClick}
-                    disabled={!unitId} // Disable the button if `unitId` is empty
+                  // Disable the button if `unitId` is empty
                   >
                     Register
                   </button>
@@ -511,7 +522,7 @@ export default function Home(): JSX.Element {
         </div>
 
         {/* --------------------------- Mobile Section  ------------------------------*/}
-        <div className={`${styles.centerSection} ${styles.displayNone} ${styles.mobileDisplayFlex}`}>
+        <div className={`${styles.centerSection} ${styles.displayNone} ${styles.mobileDisplayFlex}`} onClick={setInstructionShowInactive}>
 
           <div className={styles.greetings}>
             <p>Hello, welcome to the MSD700 application!</p>
@@ -726,7 +737,7 @@ export default function Home(): JSX.Element {
                         </div>
                         {showRegisterUnitColumn && (
                           <div className={`${styles.registerUnitColumn} ${styles.mobileHide}`}>
-                            <div className={styles.inputUnit}>
+                            <div className={`${styles.inputUnit} ${registerUnitFailed ? styles.inputFailed : ''}`}>
                               <label htmlFor="username">Unit ID</label>
                               <p className={styles.separateElement}>:</p>
                               <input
@@ -744,7 +755,7 @@ export default function Home(): JSX.Element {
                                 className={styles.registerButton}
                                 type="button"
                                 onClick={handleRegisterButtonClick}
-                                disabled={!unitId} // Disable the button if `unitId` is empty
+                              // Disable the button if `unitId` is empty
                               >
                                 Register
                               </button>
@@ -804,7 +815,7 @@ export default function Home(): JSX.Element {
                     </div>
                     {showRegisterUnitColumn && (
                       <div className={`${styles.registerUnitColumn} ${styles.mobileHide}`}>
-                        <div className={styles.inputUnit}>
+                        <div className={`${styles.inputUnit} ${registerUnitFailed ? styles.inputFailed : ''}`}>
                           <label htmlFor="username">Unit ID</label>
                           <p className={styles.separateElement}>:</p>
                           <input
@@ -822,7 +833,7 @@ export default function Home(): JSX.Element {
                             className={styles.registerButton}
                             type="button"
                             onClick={handleRegisterButtonClick}
-                            disabled={!unitId} // Disable the button if `unitId` is empty
+                          // Disable the button if `unitId` is empty
                           >
                             Register
                           </button>
@@ -898,7 +909,7 @@ export default function Home(): JSX.Element {
             </div>
           </div>) : ""}
 
-          <div onClick={setInstructionShow} className={`${styles.buttonInstruction}`}>
+          <div onClick={setInstructionShowActive} className={`${styles.buttonInstruction}`}>
             <img src="/icons/document.svg" alt="" />
           </div>
         </div>

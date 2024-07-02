@@ -98,7 +98,21 @@
     background-color: #8DAAC0 !important;
 }
 
-@media (max-width:1400px) {}
+@media (max-width:1400px) {
+    .confirmationDialog {
+        width: 194px;
+        height: 106px;
+        font-family: Inter;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 16.94px;
+        text-align: center;
+    }
+
+    .confirmationDialog p{
+        width: 150px;
+    }
+}
 
 @media (min-width:2201px) {
     .confirmationDialog {

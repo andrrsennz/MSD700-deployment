@@ -769,7 +769,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
     }
 
     .controlButton {
@@ -782,6 +782,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+
+    .controlButtonOption{
+        width: 40px;
+        height: 40px;
     }
 
     .controlButtonNonMain {
@@ -799,14 +804,14 @@
     }
 
     .focusButton {
-        width: 95px;
-        height: 34px;
+        width: 110px;
+        height: 36px;
 
         margin: 0;
         padding: 0;
 
         position: absolute;
-        top: 12px;
+        top: 8px;
         right: 10px;
 
         display: flex;
@@ -814,11 +819,11 @@
         justify-content: center;
 
         font-family: Inter;
-        font-size: 10px;
+        font-size: 12px;
         font-weight: 500;
-        line-height: 15px;
-        letter-spacing: 0em;
+        line-height: 14.52px;
         text-align: center;
+
         color: #FFFFFF;
 
         background-color: #0C98B4;
@@ -863,6 +868,129 @@
     .mobileStatus p {
         margin-left: auto;
         margin-right: auto;
+    }
+
+    .modeListButtonSection {
+        position: absolute;
+        top: 58px;
+        right: 10px;
+
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        width: auto;
+        height: auto;
+    }
+
+    .modeListButton {
+        width: 86px;
+        height: 36px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-left: 12px;
+        padding-right: 12px;
+
+        font-family: Inter;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 14.52px;
+        text-align: left;
+
+        color: #FFFFFF;
+
+        background-color: #0567A6;
+        border: 2px solid #60E3D5;
+        border-radius: 15px;
+    }
+
+
+    .textMarginMobileSection p {
+        padding-left: 10px;
+    }
+
+    .modeListButton img {
+        width: 12px;
+        height: 6px;
+    }
+
+    .modeListButtonIcon img {
+        width: 15px;
+        height: 15px;
+    }
+
+    .modeListButtonIcon p {
+        margin: 0;
+        padding: 0;
+        width: max-content;
+    }
+
+    .modeListParents {
+        padding: 0;
+    }
+
+    .bottomSection {
+        height: auto;
+        width: 100%;
+        position: absolute;
+        bottom: -2px;
+        left: -2px;
+        display: flex;
+    }
+
+    .mobileStatus {
+        height: 35px;
+        width: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 20px;
+
+        background-color: #0C98B4;
+        border: 2px solid #60E3D5;
+
+        margin: 0;
+        padding-left: 10px;
+        padding-right: 10px;
+
+        font-family: Inter;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 15px;
+        letter-spacing: 0em;
+        text-align: left;
+        color: #FFFFFF;
+
+    }
+
+    .mobileMapName {
+        display: flex;
+        align-items: end;
+        margin-left: auto;
+
+        padding-right: 20px;
+
+        font-family: Inter;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 15px;
+        letter-spacing: 0em;
+        text-align: left;
+        color: #0567A6;
+
+        padding-bottom: 10px;
+
+    }
+
+    .textMarginMobileSection p {
+        margin-left: 8px;
+    }
+
+    .deleteOption {
+        background-color: #C66E87;
+        border: 2px solid #FF7582;
     }
 }
 

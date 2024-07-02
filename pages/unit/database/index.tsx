@@ -18,6 +18,7 @@ import MobileInstruction from '@/components/mobile-instruction/mobileInstruction
 import GreetingsUnit from '@/components/greetings-unit/greetingsUnit';
 import MobileBottomSection from '@/components/mobile-bottom-section/mobileBottomSection';
 import MobileLidarSection from '@/components/mobile-lidar-section/mobileLidarSection';
+import { ReduxProvider } from '@/app/reduxProvider';
 
 interface DataItem {
     mapId: any;
@@ -113,6 +114,146 @@ export default function Database(): JSX.Element {
             "modified_time": "2023/08/04 11:35 AM",
             "file_type": "PGM",
             "file_size": "120 MB"
+        },
+        {
+            "mapId": "1",
+            "map_name": "20230804_Room A",
+            "modified_time": "2023/08/04 11:30 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "2",
+            "map_name": "20230804_Room B",
+            "modified_time": "2023/08/04 11:37 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "3",
+            "map_name": "20230804_Room C",
+            "modified_time": "2023/08/04 11:53 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "4",
+            "map_name": "20230804_Room D",
+            "modified_time": "2023/08/04 11:23 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "5",
+            "map_name": "20230804_Room E",
+            "modified_time": "2023/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "6",
+            "map_name": "20230804_Room F",
+            "modified_time": "2023/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "7",
+            "map_name": "20230804_Room G",
+            "modified_time": "2023/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "8",
+            "map_name": "20230804_Room H",
+            "modified_time": "2023/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "9",
+            "map_name": "20230804_Room I",
+            "modified_time": "2023/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "10",
+            "map_name": "20230804_Room J",
+            "modified_time": "2023/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "1",
+            "map_name": "20230804_Room A",
+            "modified_time": "2023/08/04 11:30 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "2",
+            "map_name": "20230804_Room B",
+            "modified_time": "2023/08/04 11:37 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "3",
+            "map_name": "20230804_Room C",
+            "modified_time": "2023/08/04 11:53 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "4",
+            "map_name": "20230804_Room D",
+            "modified_time": "2023/08/04 11:23 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "5",
+            "map_name": "20230804_Room E",
+            "modified_time": "2023/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "6",
+            "map_name": "20230804_Room F",
+            "modified_time": "2023/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "7",
+            "map_name": "20230804_Room G",
+            "modified_time": "2023/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "8",
+            "map_name": "20230804_Room H",
+            "modified_time": "2023/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "9",
+            "map_name": "20230804_Room I",
+            "modified_time": "2023/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
+        },
+        {
+            "mapId": "10",
+            "map_name": "tes",
+            "modified_time": "2021/08/04 11:35 AM",
+            "file_type": "PGM",
+            "file_size": "120 MB"
         }
     ]);
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -135,6 +276,7 @@ export default function Database(): JSX.Element {
     const [mobileMapName, setMobileMapName] = useState<string>('');
     const [mobileEditNameDisplay, setMobileEditNameDisplay] = useState<boolean>(false);
     const [newName, setNewName] = useState('');
+    const [indexMapChoosed, setIndexMapChoosed] = useState();
 
 
 
@@ -320,6 +462,7 @@ export default function Database(): JSX.Element {
     };
 
     const handleCheckboxChange = (index: string) => {
+
         if (mapIndex == startIndex + parseInt(index)) {
             sessionStorage.setItem("mapIndex", "-1");
             setCheckedIndex(-1);
@@ -420,14 +563,10 @@ export default function Database(): JSX.Element {
 
     const pageOfDataChecker = (data: any) => {
         if (data.length <= 10 && data.length > 0) {
-            console.log("1111");
             return 1
         } else if (data.length > 10) {
-            console.log("2222");
-
             return Math.ceil(totalItems / itemsPerPage)
         } else {
-            console.log("3333");
             return 0
         }
     }
@@ -598,6 +737,8 @@ export default function Database(): JSX.Element {
 
     // Check if the media query matches and call the function if it does
     function handleMobileMapDisplay(mapName: any, index: any) {
+        setIndexMapChoosed(index)
+
         const width = window.innerWidth;
 
         if (width < 1400) {
@@ -611,7 +752,7 @@ export default function Database(): JSX.Element {
 
             let dotIndex = mapName.lastIndexOf(".");
 
-            setMobileMapName(mapName.substring(0, dotIndex))
+            setMobileMapName(mapName)
             setCheckedIndex(startIndex + parseInt(index));
             setMobileMapDisplay(!mobileMapDisplay)
         }
@@ -623,6 +764,11 @@ export default function Database(): JSX.Element {
         setMobileMapDisplay(!mobileMapDisplay)
     }
 
+    const handleMobileRemoveItem = () => {
+        setMobileMapDisplay(!mobileMapDisplay)
+        setDeleteItemConfirm(!deleteItemConfirm)
+    }
+
     const handleNewNameChange = (event: any) => {
         setNewName(event.target.value);
     };
@@ -632,447 +778,449 @@ export default function Database(): JSX.Element {
     const handlePseudo = () => { }
 
     return (
-        <>  {render ?
-            (
-                <>
-                    {' '}
-                    <Head>
-                        <title>Database</title>
-                        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-                    </Head>
-                    <ConfirmElement
-                        message="Are you sure you want to close this app?"
-                        status={showConfirmDialog}
-                        onCancel={handleCancel}
-                    />
-                    <ConfirmDelete
-                        message="Are you sure you want to delete the map?"
-                        status={deleteItemConfirm}
-                        onCancel={handleCancelDelete}
-                        onConfirm={() => deleteItem(indexDelete)}
-                    />
+        <ReduxProvider>
+            {render ?
+                (
+                    <>
+                        {' '}
+                        <Head>
+                            <title>Database</title>
+                            <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+                        </Head>
+                        <ConfirmElement
+                            message="Are you sure you want to close this app?"
+                            status={showConfirmDialog}
+                            onCancel={handleCancel}
+                        />
+                        <ConfirmDelete
+                            message="Are you sure you want to delete the map?"
+                            status={deleteItemConfirm}
+                            onCancel={handleCancelDelete}
+                            onConfirm={() => deleteItem(indexDelete)}
+                        />
 
-                    {mobileNavigation ? <MobileNavigation onClick={handleMobileNavigation} /> : ""}
-                    {mobileInstruction || firstLoaded == 'true' ? <MobileInstruction onClick={handleMobileInstruction} imgUrl={"/images/mobile_instruction_database.svg"} /> : ""}
+                        {mobileNavigation ? <MobileNavigation onClick={handleMobileNavigation} /> : ""}
+                        {mobileInstruction || firstLoaded == 'true' ? <MobileInstruction onClick={handleMobileInstruction} imgUrl={"/images/mobile_instruction_database.svg"} /> : ""}
 
 
-                    <TokenExpired status={tokenExpired} />
+                        <TokenExpired status={tokenExpired} />
 
-                    {/* MOBILE SECTION */}
-                    <div
-                        className={`${styles.displayNone}  ${mobileSorterDisplay ? styles.mobileSortingnBackground : ""} ${mobileSorterDisplay ? styles.mobileDisplayFlex : ""}`}
-                        onClick={handleMobileSorterDisplay}
-                    >
-                        <div className={`${styles.mobileSorting}`}>
-                            <div className={styles.topSection}>
-                                <p>Sort By</p>
-                            </div>
+                        {/* MOBILE SECTION */}
+                        <div
+                            className={`${styles.displayNone}  ${mobileSorterDisplay ? styles.mobileSortingnBackground : ""} ${mobileSorterDisplay ? styles.mobileDisplayFlex : ""}`}
+                            onClick={handleMobileSorterDisplay}
+                        >
+                            <div className={`${styles.mobileSorting}`}>
+                                <div className={styles.topSection}>
+                                    <p>Sort By</p>
+                                </div>
 
-                            <div className={styles.mainSection}>
-                                <div className={`${styles.mapNameSection} ${styles.columnSection}`}>
-                                    <div className={styles.title}>
-                                        <p>Map Name</p>
-                                    </div>
-                                    <div className={styles.iconSection}>
-                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'name' && sortOrder == 'asc' ? styles.sortIconActive : ""}`} onClick={() => handleMobileSortClick('name', 'asc')}>
-                                            <img src="/icons/dsc_icon.svg" alt="" />
+                                <div className={styles.mainSection}>
+                                    <div className={`${styles.mapNameSection} ${styles.columnSection}`}>
+                                        <div className={styles.title}>
+                                            <p>Map Name</p>
                                         </div>
-                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'name' && sortOrder == 'desc' ? styles.sortIconActive : ""}`} onClick={() => handleMobileSortClick('name', 'desc')}>
-                                            <img src="/icons/asc_icon.svg" alt="" />
+                                        <div className={styles.iconSection}>
+                                            <div className={`${styles.sortIcon} ${sortOrderStatus == 'name' && sortOrder == 'asc' ? styles.sortIconActive : ""}`} onClick={() => handleMobileSortClick('name', 'asc')}>
+                                                <img src="/icons/dsc_icon.svg" alt="" />
+                                            </div>
+                                            <div className={`${styles.sortIcon} ${sortOrderStatus == 'name' && sortOrder == 'desc' ? styles.sortIconActive : ""}`} onClick={() => handleMobileSortClick('name', 'desc')}>
+                                                <img src="/icons/asc_icon.svg" alt="" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className={`${styles.dateModifiedSection} ${styles.columnSection}`}>
+                                        <div className={styles.title}>
+                                            <p>Date Modified</p>
+                                        </div>
+                                        <div className={styles.iconSection}>
+                                            <div className={`${styles.sortIcon} ${sortOrderStatus == 'date' && sortOrder == 'asc' ? styles.sortIconActive : ""}`} onClick={() => handleMobileSortClick('date', 'asc')}>
+                                                <img src="/icons/dsc_icon.svg" alt="" />
+                                            </div>
+                                            <div className={`${styles.sortIcon} ${sortOrderStatus == 'date' && sortOrder == 'desc' ? styles.sortIconActive : ""}`} onClick={() => handleMobileSortClick('date', 'desc')}>
+                                                <img src="/icons/asc_icon.svg" alt="" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div className={`${styles.dateModifiedSection} ${styles.columnSection}`}>
-                                    <div className={styles.title}>
-                                        <p>Date Modified</p>
-                                    </div>
-                                    <div className={styles.iconSection}>
-                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'date' && sortOrder == 'asc' ? styles.sortIconActive : ""}`} onClick={() => handleMobileSortClick('date', 'asc')}>
-                                            <img src="/icons/dsc_icon.svg" alt="" />
-                                        </div>
-                                        <div className={`${styles.sortIcon} ${sortOrderStatus == 'date' && sortOrder == 'desc' ? styles.sortIconActive : ""}`} onClick={() => handleMobileSortClick('date', 'desc')}>
-                                            <img src="/icons/asc_icon.svg" alt="" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div className={styles.titleBottomSection}>
-                                <p>Tap outside this box to exit</p>
+                                <div className={styles.titleBottomSection}>
+                                    <p>Tap outside this box to exit</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div
-                        className={`${styles.displayNone}  ${mobileMapDisplay ? styles.mobileMapSelectorBackground : ""} ${mobileMapDisplay ? styles.mobileDisplayFlex : ""}`}
-                    >
-                        <div className={`${styles.mobileMapSelector}`}>
-                            <div className={`${styles.mobileMapPreview}`}>
-                                <img src="/images/map.png" alt="" />
-                            </div>
-                            <div className={`${styles.mobileMapName}`}>
-                                {/* <p>{mobileMapName}</p> */}
-                                <p>MAP_NAME</p>
-                            </div>
-                            <div className={`${styles.mobileMapButtonSection}`}>
-                                <div className={`${styles.editNameButton}`} onClick={handleMobileEditName}>
-                                    <img src="/icons/pencil.svg" alt="" />
+                        <div
+                            className={`${styles.displayNone}  ${mobileMapDisplay ? styles.mobileMapSelectorBackground : ""} ${mobileMapDisplay ? styles.mobileDisplayFlex : ""}`}
+                        >
+                            <div className={`${styles.mobileMapSelector}`}>
+                                <div className={`${styles.mobileMapPreview}`}>
+                                    <img src="/images/map.png" alt="" />
                                 </div>
-                                <div className={`${styles.removeButton}`}>
-                                    <img src="/icons/delete_mode_list.svg" alt="" />
+                                <div className={`${styles.mobileMapName}`}>
+                                    <p>{mobileMapName}</p>
+                                    {/* <p>MAP_NAME</p> */}
                                 </div>
-                            </div>
-                            <div className={`${styles.mobileGoToMap}`}>
-                                <div
-                                    className={`${styles.confirmMappingChoosed}`}
-                                    onClick={goToControlWithIndex}
-                                >
-                                    <p>Go to the Map</p>
-                                    <Image src="/icons/3.svg" width={20} height={20} alt="play" />
+                                <div className={`${styles.mobileMapButtonSection}`}>
+                                    <div className={`${styles.editNameButton}`} onClick={handleMobileEditName}>
+                                        <img src="/icons/pencil.svg" alt="" />
+                                    </div>
+                                    <div className={`${styles.removeButton}`}>
+                                        <img src="/icons/delete_mode_list.svg" alt="" onClick={handleMobileRemoveItem} />
+                                    </div>
                                 </div>
-                            </div>
-                            <div className={`${styles.mobileMapSelectorButton}`} onClick={() => handleMobileMapDisplay("", "-1")}>
-                                <p>Choose Another Map</p>
+                                <div className={`${styles.mobileGoToMap}`}>
+                                    <div
+                                        className={`${styles.confirmMappingChoosed}`}
+                                        onClick={goToControlWithIndex}
+                                    >
+                                        <p>Go to the Map</p>
+                                        <Image src="/icons/3.svg" width={20} height={20} alt="play" />
+                                    </div>
+                                </div>
+                                <div className={`${styles.mobileMapSelectorButton}`} onClick={() => handleMobileMapDisplay("", "-1")}>
+                                    <p>Choose Another Map</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div className={`${styles.displayNone}  ${mobileEditNameDisplay ? styles.mobileEditNameBackground : ""} ${mobileEditNameDisplay ? styles.mobileDisplayFlex : ""}`}>
-                        <div className={styles.mobileEditName}>
+                        <div className={`${styles.displayNone}  ${mobileEditNameDisplay ? styles.mobileEditNameBackground : ""} ${mobileEditNameDisplay ? styles.mobileDisplayFlex : ""}`}>
+                            <div className={styles.mobileEditName}>
 
-                            <div className={styles.columnName}>
-                                <div className={styles.title}>
-                                    Current
+                                <div className={styles.columnName}>
+                                    <div className={styles.title}>
+                                        Current
+                                    </div>
+                                    <div className={styles.input}>
+                                        <p className={styles.separatedElement}>:</p>
+                                        <input type="text" value={mobileMapName} placeholder={mobileMapName} disabled />
+                                    </div>
                                 </div>
-                                <div className={styles.input}>
-                                    <p className={styles.separatedElement}>:</p>
-                                    <input type="text" placeholder={mobileMapName} disabled />
+
+                                <div className={`${styles.columnName} ${styles.newNameColumn}`}>
+                                    <div className={`${styles.title} `}>
+                                        New Name
+                                    </div>
+                                    <div className={styles.input}>
+                                        <p className={styles.separatedElement}>:</p>
+                                        <input
+                                            type="text"
+                                            autoFocus
+                                            value={newName}
+                                            onChange={handleNewNameChange}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className={`${styles.buttonSection}`}>
+                                    <div className={`${styles.rename}`} onClick={() => updateMapNameMobile(checkedIndex, newName, mobileMapName)}>
+                                        <p>Rename</p>
+                                    </div>
+                                    <div className={`${styles.cancel}`} onClick={handleMobileEditName}>
+                                        <p>Cancel</p>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
+                        {/* ----------------- */}
 
-                            <div className={styles.columnName}>
-                                <div className={styles.title}>
-                                    New Name
+                        <div className={styles.container}>
+                            {showControlInstruction || firstLoaded == 'true' ? <ControlInstruction onClick={handleControlInstructionClick} height={80} imgUrl='/images/instruction_database.svg' /> : ''}
+
+                            <div className={styles.parents}>
+                                <div className={`${styles.topSection} ${styles.mobileDisplayNone}`}>
+                                    <GreetingsUnit />
                                 </div>
-                                <div className={styles.input}>
-                                    <p className={styles.separatedElement}>:</p>
-                                    <input
-                                        type="text"
-                                        autoFocus
-                                        value={newName}
-                                        onChange={handleNewNameChange}
+
+                                <MobileTopSection onConfirmButtonClick={handleCloseButtonClick} />
+
+                                <div className={styles.mobileDisplayNone}>
+                                    <CloseButton onClick={onConfirmButtonClick} />
+                                </div>
+
+
+                                <div className={styles.unitParents}>
+                                    <div className={`${styles.navigation} ${styles.mobileDisplayNone}`}>
+                                        <Navigation />
+                                    </div>
+
+                                    <MobileLidarSection // Use the new component here
+                                        isChecked={isChecked}
+                                        handleCheckboxChange={handleLidarChecked}
                                     />
-                                </div>
-                            </div>
 
-                            <div className={`${styles.buttonSection}`}>
-                                <div className={`${styles.rename}`} onClick={() => updateMapNameMobile(checkedIndex, newName, mobileMapName)}>
-                                    <p>Rename</p>
-                                </div>
-                                <div className={`${styles.cancel}`} onClick={handleMobileEditName}>
-                                    <p>Cancel</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {/* ----------------- */}
-
-                    <div className={styles.container}>
-                        {showControlInstruction || firstLoaded == 'true' ? <ControlInstruction onClick={handleControlInstructionClick} height={80} imgUrl='/images/instruction_database.svg' /> : ''}
-
-                        <div className={styles.parents}>
-                            <div className={`${styles.topSection} ${styles.mobileDisplayNone}`}>
-                                <GreetingsUnit />
-                            </div>
-
-                            <MobileTopSection onConfirmButtonClick={handleCloseButtonClick} />
-
-                            <div className={styles.mobileDisplayNone}>
-                                <CloseButton onClick={onConfirmButtonClick} />
-                            </div>
-
-
-                            <div className={styles.unitParents}>
-                                <div className={`${styles.navigation} ${styles.mobileDisplayNone}`}>
-                                    <Navigation />
-                                </div>
-
-                                <MobileLidarSection // Use the new component here
-                                    isChecked={isChecked}
-                                    handleCheckboxChange={handleLidarChecked}
-                                />
-
-                                {/* MOBILE SECTION */}
-                                <div className={styles.mapSection}>
-                                    <div className={`${styles.topSection} ${styles.mobileDisplayNone}`}>
-                                        <div className="">
-                                            <p>Map Collection</p>
-                                        </div>
-
-                                        <div className={styles.searchBar}>
-                                            <input
-                                                type="text"
-                                                placeholder="Search..."
-                                                value={searchQuery}
-                                                onChange={handleSearchInputChange}
-                                            />
-                                            <img src="/icons/search_icon.svg" alt="" className={styles.largeScreenImage} />
-                                        </div>
-                                    </div>
-
-
-                                    <div className={styles.mainSection}>
-
-                                        <div className={`${styles.displayNone} ${styles.searchBarMobile} `}>
-                                            <input
-                                                type="text"
-                                                placeholder="Search..."
-                                                value={searchQuery} // Set the input value to searchQuery
-                                                onChange={handleSearchInputChange} // Call the handler on input change
-                                            />
-                                            <img src="/icons/search_icon.svg" alt="" className={styles.largeScreenImage} />
-                                        </div>
-
-                                        <table className={styles.theTable}>
-                                            <thead>
-                                                <tr className={styles.header}>
-                                                    <th className={styles.idColumn} style={{ borderTopLeftRadius: '5px' }}>No.</th>
-                                                    <th className={`${styles.sortableHeader} ${styles.mapNameColumn} `}>
-                                                        <div className={`${styles.sortableHeaderContainer}`}>
-                                                            <div className={`${styles.headerContent} ${styles.spanSorter} `}>
-                                                                <span>Map Name</span>
-                                                            </div>
-                                                            <Image
-                                                                className={styles.mobileDisplayNone}
-                                                                alt=""
-                                                                src={`/icons/${sortOrder}ending.svg`}
-                                                                width={40}
-                                                                height={40}
-                                                                onClick={handleSortClick}
-                                                            />
-                                                        </div>
-                                                    </th>
-
-                                                    <th className={`${styles.sortableHeader} ${styles.dateModifiedColumn}`} style={{ borderTopRightRadius: '5px' }}>
-                                                        <div className={`${styles.sortableHeaderContainer}`} >
-                                                            <div className={`${styles.headerContent} ${styles.spanSorter} `} >
-                                                                <span>Date Modified</span>
-                                                            </div>
-                                                            <Image
-                                                                className={styles.mobileDisplayNone}
-                                                                alt=""
-                                                                src={`/icons/${sortDateOrder}ending.svg`}
-                                                                width={40}
-                                                                height={40}
-                                                                onClick={handleDateSortClick}
-                                                            /></div>
-
-                                                    </th>
-                                                    <th className={`${styles.fileType} ${styles.mobileDisplayNone}`}>File Type</th>
-                                                    <th className={`${styles.fileSize} ${styles.mobileDisplayNone}`}>Size</th>
-                                                    <th className={`${styles.selectedMap} ${styles.mobileDisplayNone}`}>Selected<br /> Map to Load</th>
-                                                    <th className={`${styles.delete} ${styles.mobileDisplayNone}`}>Delete</th>
-                                                </tr>
-                                            </thead>
-
-                                            <tbody>
-                                                {currentData.map((item, index) => {
-                                                    return (
-                                                        (
-                                                            <tr key={index} onClick={() => handleMobileMapDisplay(item.map_name, index)}>
-                                                                <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-
-                                                                <td onDoubleClick={() => handleDoubleClick(index)}>
-                                                                    {isEditing[index] ? (
-                                                                        <input
-                                                                            type="text"
-                                                                            id={`mapNameInput${index}`} // Assign the ID here
-                                                                            defaultValue={getBaseName(item.map_name)} // Remove the extension before editing
-                                                                            onBlur={() => updateMapName(index)}
-                                                                            autoFocus
-                                                                        />
-                                                                    ) : (
-                                                                        getBaseName(item.map_name) // Display the name without the extension
-                                                                    )}
-                                                                </td>
-
-                                                                <td className={styles.sortableHeader}>{convertTo24HourFormat(item.modified_time)}</td>
-                                                                <td className={`${styles.mobileDisplayNone}`}>{item.file_type}</td>
-                                                                <td className={`${styles.fileSize} ${styles.mobileDisplayNone}`}>{item.file_size}</td>
-                                                                <td className={`${styles.dark} ${styles.mobileDisplayNone}`}>
-                                                                    <div className={`${styles.inputContainer}`}>
-                                                                        <input
-                                                                            type="checkbox"
-                                                                            id={`checklistItem${index}`}
-                                                                            checked={checkedIndex == item.mapId}
-                                                                            onChange={() => handleCheckboxChange(item.mapId)}
-                                                                        />
-                                                                        <label htmlFor={`checklistItem${index}`}></label>
-                                                                    </div>
-                                                                </td>
-                                                                <td className={`${styles.dark} ${styles.delete} ${styles.mobileDisplayNone}`}>
-                                                                    <Image
-                                                                        src="/icons/Delete.svg"
-                                                                        alt="Delete icons"
-                                                                        height={30}
-                                                                        width={30}
-                                                                        onClick={() => handleDeleteItem(index)}
-                                                                    />
-                                                                </td>
-                                                            </tr>
-                                                        )
-                                                    )
-                                                })}
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                    <div className={styles.bottomSection}>
-                                        <div
-                                            className={`${styles.confirmMappingChoosed} ${(initialCheckedIndex !== null && parseInt(initialCheckedIndex) > -1) || mapIndex > -1
-                                                ? ""
-                                                : styles.disable
-                                                } ${styles.mobileDisplayNone}`}
-                                            onClick={goToControlWithIndex}
-                                        >
-                                            <p>Go to the Map</p>
-                                            <Image src="/icons/3.svg" width={20} height={20} alt="play" />
-                                        </div>
-
-                                        <div className={styles.pagination}>
-                                            <button
-                                                className={`${styles.buttonPagination} ${currentPage === 1 ? styles.buttonDisable : ""
-                                                    }`}
-                                                onClick={() => handlePaginationButtonClick("first")}
-                                                disabled={currentPage === 1}
-                                            >
-                                                {currentPage === 1 ?
-                                                    <Image
-                                                        src="/icons/arrow-left-green-2.png"
-                                                        alt="button left"
-                                                        width={10}
-                                                        height={10}
-                                                    /> :
-                                                    <Image
-                                                        src="/icons/2 left.svg"
-                                                        alt="button left"
-                                                        width={10}
-                                                        height={10}
-                                                    />
-                                                }
-                                            </button>
-                                            <button
-                                                className={`${styles.buttonPagination} ${currentPage === 1 ? styles.buttonDisable : ""
-                                                    }`}
-                                                onClick={() => handlePaginationButtonClick("prev")}
-                                                disabled={currentPage === 1}
-                                            >
-                                                {currentPage === 1 ?
-                                                    <Image
-                                                        src="/icons/arrow-left-green-1.png"
-                                                        alt="button left"
-                                                        width={10}
-                                                        height={10}
-                                                    /> :
-                                                    <Image
-                                                        src="/icons/1 left.svg"
-                                                        alt="button left"
-                                                        width={10}
-                                                        height={10}
-                                                    />
-                                                }
-                                            </button>
-
-                                            <div className={styles.currentPage}>
-                                                <input
-                                                    className={styles.pageInput}
-                                                    type="text"
-                                                    value={currentPage}
-                                                    onChange={(e) => {
-                                                        const newValue = e.target.value;
-                                                        if (
-                                                            /^[0-9]*$/.test(newValue) &&
-                                                            parseInt(newValue) >= 1 &&
-                                                            parseInt(newValue) <= totalPages
-                                                        ) {
-                                                            setCurrentPage(parseInt(newValue));
-                                                        }
-                                                    }}
-                                                />
+                                    {/* MOBILE SECTION */}
+                                    <div className={styles.mapSection}>
+                                        <div className={`${styles.topSection} ${styles.mobileDisplayNone}`}>
+                                            <div className="">
+                                                <p>Map Collection</p>
                                             </div>
 
-                                            <p>of</p>
-                                            <p>{totalPages}</p>
-                                            <button
-                                                className={`${styles.buttonPagination} ${currentPage === totalPages ? styles.buttonDisable : ""
-                                                    }`}
-                                                onClick={() => handlePaginationButtonClick("next")}
-                                                disabled={currentPage === totalPages}
-                                            >
-                                                {currentPage === totalPages ?
-                                                    <Image
-                                                        src="/icons/arrow-right-green-1.png"
-                                                        alt="button left"
-                                                        width={10}
-                                                        height={10}
-                                                    />
-                                                    :
+                                            <div className={styles.searchBar}>
+                                                <input
+                                                    type="text"
+                                                    placeholder="Search..."
+                                                    value={searchQuery}
+                                                    onChange={handleSearchInputChange}
+                                                />
+                                                <img src="/icons/search_icon.svg" alt="" className={styles.largeScreenImage} />
+                                            </div>
+                                        </div>
 
-                                                    <Image
-                                                        src="/icons/1 right.svg"
-                                                        alt="button left"
-                                                        width={10}
-                                                        height={10}
-                                                    />
-                                                }
-                                            </button>
-                                            <button
-                                                className={`${styles.buttonPagination} ${currentPage === totalPages ? styles.buttonDisable : ""
-                                                    }`}
-                                                onClick={() => handlePaginationButtonClick("last")}
-                                                disabled={currentPage === totalPages}
-                                            >
-                                                {currentPage === totalPages ?
-                                                    <Image
-                                                        src="/icons/arrow-right-green-2.png"
-                                                        alt="button left"
-                                                        width={10}
-                                                        height={10}
-                                                    />
-                                                    :
 
-                                                    <Image
-                                                        src="/icons/2 right.svg"
-                                                        alt="button left"
-                                                        width={10}
-                                                        height={10}
+                                        <div className={styles.mainSection}>
+
+                                            <div className={`${styles.displayNone} ${styles.searchBarMobile} `}>
+                                                <input
+                                                    type="text"
+                                                    placeholder="Search..."
+                                                    value={searchQuery} // Set the input value to searchQuery
+                                                    onChange={handleSearchInputChange} // Call the handler on input change
+                                                />
+                                                <img src="/icons/search_icon.svg" alt="" className={styles.largeScreenImage} />
+                                            </div>
+
+                                            <table className={styles.theTable}>
+                                                <thead>
+                                                    <tr className={styles.header}>
+                                                        <th className={styles.idColumn} style={{ borderTopLeftRadius: '5px' }}>No.</th>
+                                                        <th className={`${styles.sortableHeader} ${styles.mapNameColumn} `}>
+                                                            <div className={`${styles.sortableHeaderContainer}`}>
+                                                                <div className={`${styles.headerContent} ${styles.spanSorter} `}>
+                                                                    <span>Map Name</span>
+                                                                </div>
+                                                                <Image
+                                                                    className={styles.mobileDisplayNone}
+                                                                    alt=""
+                                                                    src={`/icons/${sortOrder}ending.svg`}
+                                                                    width={40}
+                                                                    height={40}
+                                                                    onClick={handleSortClick}
+                                                                />
+                                                            </div>
+                                                        </th>
+
+                                                        <th className={`${styles.sortableHeader} ${styles.dateModifiedColumn}`} style={{ borderTopRightRadius: '5px' }}>
+                                                            <div className={`${styles.sortableHeaderContainer}`} >
+                                                                <div className={`${styles.headerContent} ${styles.spanSorter} `} >
+                                                                    <span>Date Modified</span>
+                                                                </div>
+                                                                <Image
+                                                                    className={styles.mobileDisplayNone}
+                                                                    alt=""
+                                                                    src={`/icons/${sortDateOrder}ending.svg`}
+                                                                    width={40}
+                                                                    height={40}
+                                                                    onClick={handleDateSortClick}
+                                                                /></div>
+
+                                                        </th>
+                                                        <th className={`${styles.fileType} ${styles.mobileDisplayNone}`}>File Type</th>
+                                                        <th className={`${styles.fileSize} ${styles.mobileDisplayNone}`}>Size</th>
+                                                        <th className={`${styles.selectedMap} ${styles.mobileDisplayNone}`}>Selected<br /> Map to Load</th>
+                                                        <th className={`${styles.delete} ${styles.mobileDisplayNone}`}>Delete</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    {currentData.map((item, index) => {
+                                                        return (
+                                                            (
+                                                                <tr key={index} onClick={() => handleMobileMapDisplay(item.map_name, index)} className={indexMapChoosed == index ? styles.mapMobileSelected : ''}>
+                                                                    <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
+
+                                                                    <td onDoubleClick={() => handleDoubleClick(index)}>
+                                                                        {isEditing[index] ? (
+                                                                            <input
+                                                                                type="text"
+                                                                                id={`mapNameInput${index}`} // Assign the ID here
+                                                                                defaultValue={getBaseName(item.map_name)} // Remove the extension before editing
+                                                                                onBlur={() => updateMapName(index)}
+                                                                                autoFocus
+                                                                            />
+                                                                        ) : (
+                                                                            getBaseName(item.map_name) // Display the name without the extension
+                                                                        )}
+                                                                    </td>
+
+                                                                    <td className={styles.sortableHeader}>{convertTo24HourFormat(item.modified_time)}</td>
+                                                                    <td className={`${styles.mobileDisplayNone}`}>{item.file_type}</td>
+                                                                    <td className={`${styles.fileSize} ${styles.mobileDisplayNone}`}>{item.file_size}</td>
+                                                                    <td className={`${styles.dark} ${styles.mobileDisplayNone}`}>
+                                                                        <div className={`${styles.inputContainer}`}>
+                                                                            <input
+                                                                                type="checkbox"
+                                                                                id={`checklistItem${index}`}
+                                                                                checked={checkedIndex == item.mapId}
+                                                                                onChange={() => handleCheckboxChange(item.mapId)}
+                                                                            />
+                                                                            <label htmlFor={`checklistItem${index}`}></label>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td className={`${styles.dark} ${styles.delete} ${styles.mobileDisplayNone}`}>
+                                                                        <Image
+                                                                            src="/icons/Delete.svg"
+                                                                            alt="Delete icons"
+                                                                            height={30}
+                                                                            width={30}
+                                                                            onClick={() => handleDeleteItem(index)}
+                                                                        />
+                                                                    </td>
+                                                                </tr>
+                                                            )
+                                                        )
+                                                    })}
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div className={styles.bottomSection}>
+                                            <div
+                                                className={`${styles.confirmMappingChoosed} 
+                                                ${(initialCheckedIndex !== null
+                                                        && parseInt(initialCheckedIndex) > -1) || mapIndex > -1 ? ""
+                                                        : styles.disable
+                                                    } ${styles.mobileDisplayNone}`}
+                                                onClick={goToControlWithIndex}
+                                            >
+                                                <p>Go to the Map</p>
+                                                <Image src="/icons/3.svg" width={20} height={20} alt="play" />
+                                            </div>
+
+                                            <div className={styles.pagination}>
+                                                <button
+                                                    className={`${styles.buttonPagination} ${currentPage === 1 ? styles.buttonDisable : ""
+                                                        }`}
+                                                    onClick={() => handlePaginationButtonClick("first")}
+                                                    disabled={currentPage === 1}
+                                                >
+                                                    {currentPage === 1 ?
+                                                        <Image
+                                                            src="/icons/arrow-left-green-2.png"
+                                                            alt="button left"
+                                                            width={10}
+                                                            height={10}
+                                                        /> :
+                                                        <Image
+                                                            src="/icons/2 left.svg"
+                                                            alt="button left"
+                                                            width={10}
+                                                            height={10}
+                                                        />
+                                                    }
+                                                </button>
+                                                <button
+                                                    className={`${styles.buttonPagination} ${currentPage === 1 ? styles.buttonDisable : ""
+                                                        }`}
+                                                    onClick={() => handlePaginationButtonClick("prev")}
+                                                    disabled={currentPage === 1}
+                                                >
+                                                    {currentPage === 1 ?
+                                                        <Image
+                                                            src="/icons/arrow-left-green-1.png"
+                                                            alt="button left"
+                                                            width={10}
+                                                            height={10}
+                                                        /> :
+                                                        <Image
+                                                            src="/icons/1 left.svg"
+                                                            alt="button left"
+                                                            width={10}
+                                                            height={10}
+                                                        />
+                                                    }
+                                                </button>
+
+                                                <div className={styles.currentPage}>
+                                                    <input
+                                                        className={styles.pageInput}
+                                                        type="text"
+                                                        value={currentPage}
+                                                        onChange={(e) => {
+                                                            const newValue = e.target.value;
+                                                            if (
+                                                                /^[0-9]*$/.test(newValue) &&
+                                                                parseInt(newValue) >= 1 &&
+                                                                parseInt(newValue) <= totalPages
+                                                            ) {
+                                                                setCurrentPage(parseInt(newValue));
+                                                            }
+                                                        }}
                                                     />
-                                                }
-                                            </button>
+                                                </div>
+
+                                                <p>of</p>
+                                                <p>{totalPages}</p>
+                                                <button
+                                                    className={`${styles.buttonPagination} ${currentPage === totalPages ? styles.buttonDisable : ""
+                                                        }`}
+                                                    onClick={() => handlePaginationButtonClick("next")}
+                                                    disabled={currentPage === totalPages}
+                                                >
+                                                    {currentPage === totalPages ?
+                                                        <Image
+                                                            src="/icons/arrow-right-green-1.png"
+                                                            alt="button left"
+                                                            width={10}
+                                                            height={10}
+                                                        />
+                                                        :
+
+                                                        <Image
+                                                            src="/icons/1 right.svg"
+                                                            alt="button left"
+                                                            width={10}
+                                                            height={10}
+                                                        />
+                                                    }
+                                                </button>
+                                                <button
+                                                    className={`${styles.buttonPagination} ${currentPage === totalPages ? styles.buttonDisable : ""
+                                                        }`}
+                                                    onClick={() => handlePaginationButtonClick("last")}
+                                                    disabled={currentPage === totalPages}
+                                                >
+                                                    {currentPage === totalPages ?
+                                                        <Image
+                                                            src="/icons/arrow-right-green-2.png"
+                                                            alt="button left"
+                                                            width={10}
+                                                            height={10}
+                                                        />
+                                                        :
+
+                                                        <Image
+                                                            src="/icons/2 right.svg"
+                                                            alt="button left"
+                                                            width={10}
+                                                            height={10}
+                                                        />
+                                                    }
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
+
+                                    <MobileBottomSection
+                                        handleMobileNavigation={handleMobileNavigation}
+                                        handleMapPreview={handleMapPreview}
+                                        handleMobileInstruction={handleMobileInstruction}
+                                        handleMobileSorterDisplay={handleMobileSorterDisplay}
+                                        mapIndex={false}
+                                    />
+
                                 </div>
 
-                                <MobileBottomSection
-                                    handleMobileNavigation={handleMobileNavigation}
-                                    handleMapPreview={handleMapPreview}
-                                    handleMobileInstruction={handleMobileInstruction}
-                                    handleMobileSorterDisplay={handleMobileSorterDisplay}
-                                    mapIndex={false}
-                                />
-
-                            </div>
-
-                            <ButtonInformation onClick={handleInfoIconClick} />
+                                <ButtonInformation onClick={handleInfoIconClick} />
 
 
-                            <div className={`${styles.mobileDisplayNone} ${styles.footerSection}`}>
-                                <Footer status={false} />
+                                <div className={`${styles.mobileDisplayNone} ${styles.footerSection}`}>
+                                    <Footer status={false} />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </>
-            ) : <></>}
-        </>
+                    </>
+                ) : <></>}
+        </ReduxProvider>
     );
 }

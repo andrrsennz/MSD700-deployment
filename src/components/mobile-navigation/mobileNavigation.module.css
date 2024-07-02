@@ -78,7 +78,12 @@
         border: 2px solid #FF7582;
     }
 
-    .emergencyButton:hover {
-        background-color: #FF7582;
+    .emergencyActive {
+        background-color: hsla(354, 100%, 73%, 1);
     }
+
+    /* .emergencyButton:hover {
+        cursor: pointer;
+        background-color: #FF7582;
+    } */
 }

@@ -169,6 +169,10 @@
     width: auto;
 }
 
-.inputUnit label{
+.inputUnit label {
     width: max-content;
+}
+
+.registerUnitColumn .inputFailed input[type="text"] {
+    background-color: hsla(343, 41%, 71%, 1) !important;
 }

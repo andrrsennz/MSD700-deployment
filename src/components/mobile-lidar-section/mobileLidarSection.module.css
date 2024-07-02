@@ -89,6 +89,10 @@
 
     }
 
+    .lidarSection p{
+        margin: 0;
+    }
+
 
     .toggleSwitch {
         position: relative;

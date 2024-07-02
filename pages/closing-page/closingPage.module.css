@@ -186,10 +186,8 @@
     }
 
     .loginButton:hover {
-        cursor: pointer;
-        box-shadow: 0px 4px 4px 0px #0567A680;
-        transition: 0.5s;
-
+        box-shadow: 0;
+        transition: none;
     }
 
     .footer {

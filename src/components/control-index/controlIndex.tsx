@@ -781,16 +781,16 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                     <img src="/icons/Dots.svg" alt="" />
                   </div>
                   {controlExtend ? <>
-                    <div className={`${styles.controlButton}`} onClick={zoomIn}>
+                    <div className={`${styles.controlButton} ${styles.controlButtonOption}`} onClick={zoomIn}>
                       <img src="/icons/zoomin.svg" alt="" />
                     </div>
-                    <div className={`${styles.controlButton}`} onClick={zoomOut}>
+                    <div className={`${styles.controlButton} ${styles.controlButtonOption}`} onClick={zoomOut}>
                       <img src="/icons/zoomout.svg" alt="" />
                     </div>
-                    <div className={`${styles.controlButton}`} onClick={restart}>
+                    <div className={`${styles.controlButton} ${styles.controlButtonOption}`} onClick={restart}>
                       <img src="/icons/Maximize.svg" alt="" />
                     </div>
-                    <div className={`${styles.controlButton}`} onClick={rotateCW}>
+                    <div className={`${styles.controlButton} ${styles.controlButtonOption}`} onClick={rotateCW}>
                       <img src="/icons/new reload.svg" alt="" />
                     </div>
                   </> : ""}
@@ -821,7 +821,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                   ${showOptions || selectedOption === "mode-list-1" ? styles.modeListButton : styles.displayNone} 
                   ${selectedOption !== "" ? styles.disableModeListButton : ""} 
                   ${selectedOption !== "" && selectedOption === "mode-list-1" ? styles.activeDisableModeListButton : ""} 
-                  ${styles.modeListButtonIcon}`}
+                  ${styles.modeListButtonIcon} ${styles.textMarginMobileSection}`}
                     onClick={ModeListFunction("mode-list-1")}
                   >
                     <img src="/icons/Marker.svg" alt="" />
@@ -829,7 +829,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                   </div>
 
                   <div id="mode-list-2"
-                    className={`${showOptions || selectedOption == "mode-list-2" ? styles.modeListButton : styles.displayNone}  ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-2" ? styles.activeDisableModeListButton : ""} ${styles.modeListButtonIcon}`}
+                    className={`${showOptions || selectedOption == "mode-list-2" ? styles.modeListButton : styles.displayNone}  ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-2" ? styles.activeDisableModeListButton : ""} ${styles.modeListButtonIcon} ${styles.textMarginMobileSection} `}
                     onClick={ModeListFunction("mode-list-2")}
                   >
                     <img src="/icons/Marker.svg" alt="" />
@@ -837,7 +837,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                   </div>
 
                   <div id="mode-list-3"
-                    className={`${showOptions || selectedOption == "mode-list-3" ? styles.modeListButton : styles.displayNone}  ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-3" ? styles.activeDisableModeListButton : ""} ${styles.modeListButtonIcon}`}
+                    className={`${showOptions || selectedOption == "mode-list-3" ? styles.modeListButton : styles.displayNone}  ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-3" ? styles.activeDisableModeListButton : ""} ${styles.modeListButtonIcon} ${styles.textMarginMobileSection} `}
                     onClick={ModeListFunction("mode-list-3")}
                   >
                     <img src="/icons/Home.svg" alt="" />
@@ -845,7 +845,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                   </div>
 
                   <div id="mode-list-4"
-                    className={`${showOptions || selectedOption == "mode-list-4" ? styles.modeListButton : styles.displayNone}  ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-4" ? styles.activeDisableModeListButton : ""} ${styles.modeListButtonIcon}`}
+                    className={`${showOptions || selectedOption == "mode-list-4" ? styles.modeListButton : styles.displayNone}  ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-4" ? styles.activeDisableModeListButton : ""} ${styles.modeListButtonIcon} ${styles.textMarginMobileSection} `}
                     onClick={ModeListFunction("mode-list-4")}
                   >
                     <img src="/icons/Position.svg" alt="" />
@@ -856,7 +856,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                 ${showOptions || selectedOption == "mode-list-1" || selectedOption == "mode-list-2" ? styles.modeListButton : styles.displayNone} 
                 ${selectedOption !== "mode-list-1" && selectedOption !== "mode-list-2" ? styles.disableModeListButton : ""} 
                 ${deleteConfirmation ? styles.deleteConfirmationTrue : ""} 
-                ${styles.modeListButtonIcon} ${styles.deleteOption} `} onClick={deletePinPoint}>
+                ${styles.modeListButtonIcon} ${styles.deleteOption} ${styles.textMarginMobileSection}`} onClick={deletePinPoint}>
                     <img src="/icons/delete_mode_list.svg" alt="" />
                     <p>{deleteConfirmation ? "Click To Delete" : "Delete All Pinpoints"}</p>
                   </div>
@@ -875,7 +875,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                     </p>
                   </div>
 
-                  <div className={styles.mobileMapName}>{mapName}</div>
+                  <div className={styles.mobileMapName}>ROOM_A</div>
                 </div>
 
                 {/* </div> */}
