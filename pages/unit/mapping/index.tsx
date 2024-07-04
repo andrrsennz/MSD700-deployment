@@ -65,7 +65,7 @@ const Mapping: React.FC<MappingProps> = () => {
     const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");
     const [brokerUrl, setBrokerUrl] = useState<string>(process.env.WS_MQTT_BROKER_URL || "ws://localhost:9001");
     const [rosUrl, setRosUrl] = useState<string>(process.env.WS_ROSBRIDGE_URL || "ws://localhost:9090");
-    const [topic, setTopic] = useState<string>(`${sessionStorage.getItem("username")}/${sessionStorage.getItem("unit_name")}/camera`);
+    // const [topic, setTopic] = useState<string>(`${sessionStorage.getItem("username")}/${sessionStorage.getItem("unit_name")}/camera`);
     const [count, setcount] = useState<Number>(0);
     const [stopButton, setStopButton] = useState<boolean>(false);
     const [render, setRender] = useState<boolean>(true);
@@ -194,29 +194,29 @@ const Mapping: React.FC<MappingProps> = () => {
 
     useEffect(() => {
         var enableRos = false;
-        async function checkToken() {
-            await axios.get(`${backendUrl}`, {
-                headers: {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
-                }
-            })
-                .then((response) => {
-                    if (response.status === 200) {
-                        setRender(true);
-                        enableRos = true;
-                    }
-                    else {
-                        setTokenExpired(true);
-                    }
-                })
-                .catch((error) => {
-                    setTokenExpired(true)
-                });
-        }
-        checkToken();
+        // async function checkToken() {
+        //     await axios.get(`${backendUrl}`, {
+        //         headers: {
+        //             'Authorization': `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
+        //         }
+        //     })
+        //         .then((response) => {
+        //             if (response.status === 200) {
+        //                 setRender(true);
+        //                 enableRos = true;
+        //             }
+        //             else {
+        //                 setTokenExpired(true);
+        //             }
+        //         })
+        //         .catch((error) => {
+        //             setTokenExpired(true)
+        //         });
+        // }
+        // checkToken();
         const ROSLIB = (window as any).ROSLIB;
         const ros = new ROSLIB.Ros({
-            url: rosUrl,
+            url: "ws://192.168.1.55:9090",
         });
 
         // Handle ROS connection errors
@@ -271,22 +271,22 @@ const Mapping: React.FC<MappingProps> = () => {
         });
 
         // MQTT Client Setup
-        const mqtt_client = mqtt.connect(brokerUrl);
-        mqtt_client.on('connect', () => {
-            // mqtt_client.subscribe(topic);
-            console.log('Connected to MQTT broker');
-        });
+        // const mqtt_client = mqtt.connect(brokerUrl);
+        // mqtt_client.on('connect', () => {
+        //     // mqtt_client.subscribe(topic);
+        //     console.log('Connected to MQTT broker');
+        // });
 
-        mqtt_client.on('message', (receivedTopic, message) => {
-            // if (receivedTopic === topic) {
-            //     const receivedImageBlob = new Blob([message]);
-            //     setImageBlob(showImage ? receivedImageBlob : null);
-            // }
-        });
+        // mqtt_client.on('message', (receivedTopic, message) => {
+        //     // if (receivedTopic === topic) {
+        //     //     const receivedImageBlob = new Blob([message]);
+        //     //     setImageBlob(showImage ? receivedImageBlob : null);
+        //     // }
+        // });
 
-        mqtt_client.on('close', () => {
-            console.log('Connection to MQTT is closed');
-        })
+        // mqtt_client.on('close', () => {
+        //     console.log('Connection to MQTT is closed');
+        // })
 
         const mapNameFromSession = sessionStorage.getItem('mapName');
         setMapName(mapNameFromSession ?? ''); // If mapNameFromSession is null, use an empty string
@@ -296,7 +296,7 @@ const Mapping: React.FC<MappingProps> = () => {
         return () => {
             // clean up when exiting the page
             ros.close();
-            mqtt_client.end();
+            // mqtt_client.end();
             setLidar(false, false);
         };
     }, []);
@@ -315,6 +315,7 @@ const Mapping: React.FC<MappingProps> = () => {
         zoom.zoom(zoomInConst);
         zoomCrossConst.push(zoomInConst);
         gridClient.navigator.reScale();
+        gridClient.navigator.setZoom(firstZoomVar);
     }
 
     const zoomOut = () => {
@@ -328,6 +329,7 @@ const Mapping: React.FC<MappingProps> = () => {
         zoom.zoom(zoomOutConst);
         zoomCrossConst.push(zoomOutConst);
         gridClient.navigator.reScale();
+        gridClient.navigator.setZoom(firstZoomVar);
     }
 
     const rotateCW = () => {
@@ -354,6 +356,7 @@ const Mapping: React.FC<MappingProps> = () => {
         firstZoomVar = 1;
         zoomCrossConst = [];
         gridClient.navigator.reScale();
+        gridClient.navigator.setZoom(firstZoomVar);
     }
 
     const whenMouseDown = (event: MouseEvent) => {
@@ -416,7 +419,7 @@ const Mapping: React.FC<MappingProps> = () => {
             gridClient.navigator.setFocusView(true);
             var button = document.getElementById("setFocusBtn")
             if (button != null) {
-                button.innerText = "Focus View On"
+                button.style.backgroundColor = "#60E3D5";
                 console.log("button changes")
             }
         }
@@ -425,7 +428,7 @@ const Mapping: React.FC<MappingProps> = () => {
             gridClient.navigator.setFocusView(false);
             var button = document.getElementById("setFocusBtn")
             if (button != null) {
-                button.innerText = "Focus View Off"
+                button.style.backgroundColor = "#0C98B4";
                 console.log("button changes")
             }
         }
@@ -609,7 +612,8 @@ const Mapping: React.FC<MappingProps> = () => {
                                             focusView();
                                         }}
                                     >
-                                        <p>Focus View Mode Off</p>
+                                        <p>Focus View</p>
+                                        <img src="/icons/focus_button.svg" alt="" />
                                     </div>
 
                                     {/* <div className={styles.settingsButton}>
@@ -672,7 +676,10 @@ const Mapping: React.FC<MappingProps> = () => {
                                         </> : ""}
                                     </div>
 
-                                    <div className={`${styles.displayNone} ${styles.focusButton}`}>
+                                    <div id="setFocusBtn"                                         
+                                        onClick={() => {
+                                            focusView();
+                                        }}  className={`${styles.displayNone} ${styles.focusButton}`}>
                                         <p>Focus View</p>
                                         <img src="/icons/focus_button.svg" alt="" />
                                     </div>

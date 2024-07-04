@@ -34,7 +34,7 @@
     display: none;
 }
 
-@media (max-width:361px) {
+@media (max-width:500px) {
     .displayFlex {
         display: flex;
         gap: 10px;

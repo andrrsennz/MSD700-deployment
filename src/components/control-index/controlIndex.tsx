@@ -11,22 +11,26 @@ import mqtt from "mqtt";
 import MobileLidarSection from "@/components/mobile-lidar-section/mobileLidarSection";
 import MapPreviewSection from "@/components/mobile-map-preview-section/mobileMapPreviewSection";
 import MobileBottomSection from "@/components/mobile-bottom-section/mobileBottomSection";
+import { json } from "stream/consumers";
 
 var ros: any;
 var viewer: any;
 var prevViewer: any;
-var paN: any
+var mobprevViewer: any;
+var paN: any;
 var isDrag = false;
 var startcoor: any = [];
 var showImage: boolean = false;
 var gridClient: any;
 var prevGridClient: any;
+var mobprevGridClient: any;
 var multiPointMode = false;
 var singlePointMode = false;
 var getInit = false;
 var setHomeBaseMode = false;
 var homePoint: any = null;
 var focusViewMode = false;
+var pathPlan: any;
 
 interface ControlIndexProps {
   handleMobileNavigation: () => void; // Define handleMobileNavigation prop
@@ -161,7 +165,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
     // Connect to ROS.
     const ROSLIB = (window as any).ROSLIB;
     ros = new ROSLIB.Ros({
-      url: rosUrl,
+      url: "ws://localhost:9090",
     });
 
     // Handle ROS connection errors
@@ -178,8 +182,8 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
     // Create the main viewer.
     viewer = new (window as any).ROS2D.Viewer({
       divID: 'map',
-      width: mapRef.current?.clientWidth || 1070,
-      height: mapRef.current?.clientHeight || 1070,
+      width: mapRef.current?.clientWidth || 1000,
+      height: mapRef.current?.clientHeight || 1000,
       background: "#7F7F7F",
     });
 
@@ -189,6 +193,26 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
       height: mapRef.current?.clientHeight || 180,
       background: "#7F7F7F",
     });
+
+    if(document.getElementById("mobilepreview-map") != null) {
+      mobprevViewer = new (window as any).ROS2D.Viewer({
+        divID: 'mobilepreview-map',
+        width: mapRef.current?.clientWidth || 180,
+        height: mapRef.current?.clientHeight || 180,
+        background: "#7F7F7F",
+      });
+
+      mobprevGridClient = new (window as any).NAV2D.PreviewGridClientNav({
+        ros: ros,
+        rootObject: mobprevViewer.scene,
+        viewer: mobprevViewer,
+        withOrientation: true,
+        withCommand: false,
+        continuous: true
+      });
+    }
+
+
 
 
     paN = new (window as any).ROS2D.PanView({
@@ -205,6 +229,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
       withCommand: true,
       continuous: true
     });
+
 
     prevGridClient = new (window as any).NAV2D.PreviewGridClientNav({
       ros: ros,
@@ -226,22 +251,22 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
     });
 
     // MQTT Client Setup
-    const mqtt_client = mqtt.connect(brokerUrl);
-    mqtt_client.on('connect', () => {
-      mqtt_client.subscribe(topic);
-      console.log('Connected to MQTT broker');
-    });
+    // const mqtt_client = mqtt.connect(brokerUrl);
+    // mqtt_client.on('connect', () => {
+    //   mqtt_client.subscribe(topic);
+    //   console.log('Connected to MQTT broker');
+    // });
 
-    mqtt_client.on('message', (receivedTopic, message) => {
-      if (receivedTopic === topic) {
-        const receivedImageBlob = new Blob([message]);
-        setImageBlob(showImage ? receivedImageBlob : null);
-      }
-    });
+    // mqtt_client.on('message', (receivedTopic, message) => {
+    //   if (receivedTopic === topic) {
+    //     const receivedImageBlob = new Blob([message]);
+    //     setImageBlob(showImage ? receivedImageBlob : null);
+    //   }
+    // });
 
-    mqtt_client.on('close', () => {
-      console.log('Connection to MQTT is closed');
-    })
+    // mqtt_client.on('close', () => {
+    //   console.log('Connection to MQTT is closed');
+    // })
 
     const mapNameFromSession = sessionStorage.getItem('mapName');
     setMapName(mapNameFromSession ?? ''); // If mapNameFromSession is null, use an empty string
@@ -270,6 +295,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
     zoom.zoom(zoomInConst);
     zoomCrossConst.push(zoomInConst);
     gridClient.navigator.reScale();
+    gridClient.navigator.setZoom(firstZoomVar);
   }
 
   const zoomOut = () => {
@@ -283,6 +309,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
     zoom.zoom(zoomOutConst);
     zoomCrossConst.push(zoomOutConst);
     gridClient.navigator.reScale();
+    gridClient.navigator.setZoom(firstZoomVar);
   }
 
   const restart = () => {
@@ -302,6 +329,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
     firstZoomVar = 1;
     zoomCrossConst = [];
     gridClient.navigator.reScale();
+    gridClient.navigator.setZoom(firstZoomVar);
   }
 
   const whenMouseDown = (event: MouseEvent) => {
@@ -445,6 +473,12 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
         // gridClient.navigator.changeRoot(viewer.scene);
 
       }
+            if (mobprevGridClient.prevNavigator != null) {
+        // gridClient.navigator.changeRoot(prevViewer.scene);
+        mobprevGridClient.prevNavigator.updateHome(homePoint);
+        // gridClient.navigator.changeRoot(viewer.scene);
+
+      }
     }
   }
   //command robot to return to home point
@@ -461,7 +495,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
       gridClient.navigator.setFocusView(true);
       var button = document.getElementById("setFocusBtn")
       if (button != null) {
-        button.innerText = "Focus View On"
+        button.style.backgroundColor = "#60E3D5";
         console.log("button changes")
       }
     }
@@ -470,11 +504,26 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
       gridClient.navigator.setFocusView(false);
       var button = document.getElementById("setFocusBtn")
       if (button != null) {
-        button.innerText = "Focus View Off"
+        button.style.backgroundColor = "#0C98B4";
         console.log("button changes")
       }
     }
   }
+
+  //post multi pinpoint path plan
+  const savePathplan = () => {
+    pathPlan = gridClient.navigator.getPathplan();
+    axios.post("http://0.0.0.0:5000/pathplan",JSON.stringify(pathPlan))
+    .then(function (response: any) {
+      if (response.status === 201) {
+        console.log("Path plan saved")
+      }
+  })
+  .catch(function (error: any) {
+      alert("Error saving path plan");
+  });
+  }
+
   const toggleOptions = () => {
     setShowOptions(!showOptions);
     setIsRotated(!isRotated);
@@ -643,8 +692,19 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                   focusView();
                 }}
               >
-                <p>Focus View Mode Off</p>
+                <p>Focus View</p>
+                <img src="/icons/focus_button.svg" alt="" />
               </div>
+
+              <div
+                className={styles.stopButton}
+                onClick={() => {
+                  savePathplan();
+                }}
+              >
+                <p>Save Path Plan</p>
+              </div>
+              
             </div>
 
             <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp} onTouchStart={whenTouchDown} onTouchMove={whenTouchMove} onTouchEnd={whenTouchUp}>
@@ -656,13 +716,13 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                 </div>
                 {lidarExtend ? (
                   <>
-                    <div className={`${styles.lidarButton}`}>
+                    <div className={`${styles.lidarButton}`} onClick={startNavigation}>
                       <img src="/icons/3.svg" alt="" />
                     </div>
-                    <div className={`${styles.lidarButton}`}>
+                    <div className={`${styles.lidarButton}`} onClick={pauseNavigation}>
                       <img src="/icons/1.svg" alt="" />
                     </div>
-                    <div className={`${styles.lidarButton} ${styles.lidarButtonActive}`}>
+                    <div className={`${styles.lidarButton}`} onClick={returnToHome}>
                       <img src="/icons/Home.svg" alt="" />
                     </div>
                   </>
@@ -690,7 +750,10 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
               </div>
 
 
-              <div className={`${styles.displayNone} ${styles.focusButton}`}>
+              <div id="setFocusBtn" className={`${styles.displayNone} ${styles.focusButton}`}
+              onClick={() => {
+                focusView();
+              }}>
                 <p>Focus View</p>
                 <img src="/icons/focus_button.svg" alt="" />
               </div>
@@ -742,7 +805,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                   onClick={ModeListFunction("mode-list-4")}
                 >
                   <img src="/icons/Position.svg" alt="" />
-                  {selectedOption == "mode-list-4" ? <p>Finish Home Base</p> : <p>Set Home Base</p>}
+                  {selectedOption == "mode-list-4" ? <p>Finish Initial Pose</p> : <p>Initial Pose </p>}
                 </div>
 
                 <div id="mode-list-5" className={`
@@ -866,7 +929,57 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
             </div>
           </div>
 
-          <MapPreviewSection
+          <div className={`${styles.displayNone} ${mapPreview ? styles.liveMapSection : ""}`}>
+            <div className={styles.buttonLiveMapSection}>
+              <div onClick={() => handleMapPreviewStatus(0)} className={`${styles.cameraButton} ${styles.buttonLiveMap} ${mapPreviewStatus === 0 ? styles.buttonActive : ""}`}>
+                <img src="/icons/Camera.svg" alt="" />
+                <p>Camera</p>
+              </div>
+              <div onClick={() => handleMapPreviewStatus(1)} className={`${styles.previewButton} ${styles.buttonLiveMap} ${mapPreviewStatus === 1 ? styles.buttonActive : ""}`}>
+                <img src="/icons/mapping.svg" alt="" />
+                <p>Preview</p>
+              </div>
+            </div>
+            <div className={styles.previewMapLiveSection}>
+            <div>
+              <div style={{ display: mapPreviewStatus !== 0 ? 'none' : 'block' }}>
+                 <img src="/images/camera.png" alt="" />
+              </div>
+              <div style={{ display: mapPreviewStatus !== 1 ? 'none' : 'block' }}>
+                 <div id="mobilepreview-map" className={styles.map}></div>
+              </div>
+              {/* {mapPreviewStatus === 0 && (
+                <div>
+                  <img src="/images/camera.png" alt="" />
+                </div>
+              )}
+              {mapPreviewStatus === 1 && (
+                <div>
+                  <div id="mobilepreview-map" className={styles.map}></div>
+                </div>
+              )} */}
+            </div>
+              {/* {mapPreviewStatus === 0 ? (<img src="/images/camera.png" alt="" />) : (<div id="mobilepreview-map" className={styles.map}></div>)} */}
+            </div>
+          </div>
+
+          <div className={`${styles.displayNone} ${styles.mobileBottomSection}`}>
+            <div className={`${styles.navigationMobileButton} ${styles.bottomSectionButton}`} onClick={() => handleMobileNavigation()}>
+                <img src="/icons/list.svg" alt="" />
+            </div>
+
+            <div className={`${styles.webcamButton} ${styles.webcamIcon} ${styles.bottomSectionButton}`} onClick={handleMapPreview}>
+                <img src="/icons/Webcam.svg" alt="" />
+            </div>
+
+            <div className={`${styles.webcamButton} ${styles.webcamIcon} ${styles.bottomSectionButton}`} onClick={() => handleMobileInstruction()}>
+                <img src="/icons/information-circle-svgrepo-com.svg" alt="" />
+            </div>
+
+            <Footer status={false /* or false */} />
+        </div>
+
+          {/* <MapPreviewSection
             mapPreview={mapPreview}
             mapPreviewStatus={mapPreviewStatus}
             handleMapPreviewStatus={handleMapPreviewStatus}
@@ -876,7 +989,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
             handleMobileNavigation={handleMobileNavigation}
             handleMapPreview={handleMapPreview}
             handleMobileInstruction={handleMobileInstruction}
-          />
+          /> */}
           <div className={styles.mobileDisplayNone}>
             {/* <Footer status={false} /> */}
           </div>
