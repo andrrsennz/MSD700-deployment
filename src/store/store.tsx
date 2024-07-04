@@ -1,4 +1,4 @@
-// store/store.js
+// store/store.ts
 import { configureStore } from "@reduxjs/toolkit";
 import { rootReducer, RootState } from "./types"; // Adjust import path as needed
 

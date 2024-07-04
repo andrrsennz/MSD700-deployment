@@ -68,6 +68,11 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
   const [render, setRender] = useState<boolean>(true);
   const [showControlInstruction, setShowControlInstruction] = useState<boolean>(false);
   const [firstLoaded, setFirstLoaded] = useState<string>('false')
+  const [lidarStatus, setLidarStatus] = useState(false);
+
+  const handleLidarStatus = (childData: any) => {
+    setLidarStatus(childData);
+  };
 
   const [emergencyStatus, setEmergencyStatus] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
@@ -92,7 +97,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
   };
 
   const changeStatus = (newStatus: string) => {
-    isChecked === true ? setStatus(newStatus) : setStatus("Idle");
+    lidarStatus === true ? setStatus(newStatus) : setStatus("Idle");
   };
 
   const onConfirmSaveMappingButtonClick = () => {
@@ -119,31 +124,33 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
   }
 
   const setRobot = (start: boolean, pause: boolean, stop: boolean): void => {
-    axios.post(`${backendUrl}/api/mapping`, {
-      start: start,
-      pause: pause,
-      stop: stop
-    }, {
-      headers: {
-        'Authorization': `Bearer ${sessionStorage.getItem('token')}`
-      }
-    })
-      .then(function (response: any) {
-        console.log(response);
-        if (start) {
-          changeStatus("On Progress");
-        }
-        else if (pause) {
-          changeStatus("Paused");
-        }
-        else if (stop) {
-          changeStatus("Idle");
-          alert("Map saved successfully");
-        }
-      })
-      .catch(function (error: any) {
-        console.log(error);
-      });
+    // axios.post(`${backendUrl}/api/mapping`, {
+    //   start: start,
+    //   pause: pause,
+    //   stop: stop
+    // }, {
+    //   headers: {
+    //     'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+    //   }
+    // })
+    //   .then(function (response: any) {
+    // console.log(response);
+    if (start) {
+      console.log("VVVV");
+
+      changeStatus("On Progress");
+    }
+    else if (pause) {
+      changeStatus("Paused");
+    }
+    else if (stop) {
+      changeStatus("Idle");
+      alert("Map saved successfully");
+    }
+    // })
+    // .catch(function (error: any) {
+    //   console.log(error);
+    // });
   }
 
   const setOwnMap = (enable: boolean, map_name: string): void => {
@@ -662,7 +669,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                   />
                   <span className={styles.slider}></span>
                 </label> */}
-                <LidarSwitch backendUrl={backendUrl} />
+                <LidarSwitch backendUrl={backendUrl} onData={handleLidarStatus} />
               </div>
 
             </div>
@@ -692,9 +699,11 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                   className={`${styles.playButton} ${status === "On Progress" ? styles.buttonActive : ""
                     }`}
                   onClick={() => {
-                    if (!isChecked) {
-                      setRobot(true, false, false);
-                      console.log("Play request sent");
+                    if (lidarStatus) {
+                      if (status != "On Progress") {
+                        setRobot(true, false, false);
+                        console.log("Play request sent");
+                      }
                     }
                     else {
                       alert("Please turn on LIDAR first.")
@@ -709,7 +718,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                   className={`${styles.pauseButton} ${status === "Paused" ? styles.buttonActive : ""
                     }`}
                   onClick={(() => {
-                    if (!isChecked) {
+                    if (lidarStatus) {
                       setRobot(false, true, false);
                       console.log("Pause request sent");
                     } else {
@@ -724,7 +733,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                 <div
                   className={styles.stopButton}
                   onClick={() => {
-                    if (!isChecked) {
+                    if (lidarStatus) {
                       setRobot(false, true, false);
                       console.log("Stop request sent");
                     } else {

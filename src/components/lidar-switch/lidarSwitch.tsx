@@ -1,53 +1,32 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import styles from './lidarSwitch.module.css'; // Adjust the path as needed
+import { useSelector, useDispatch } from 'react-redux';
+import { changeStatus, setStatus } from '@/store/stateLidar'; // Adjust import path as needed
+import { RootState } from '@/store/types';
 
 interface LidarSwitchProps {
     backendUrl: string;
+    onData: (data: any) => void; // Adjust the type of data as needed
 }
 
-const LidarSwitch: React.FC<LidarSwitchProps> = ({ backendUrl }) => {
-    const [isChecked, setIsChecked] = useState<boolean>(false);
+const LidarSwitch: React.FC<LidarSwitchProps> = ({ backendUrl, onData }) => {
+    const { value } = useSelector((state: RootState) => state.lidarState);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const saved = sessionStorage.getItem('isChecked');
-            if (saved) {
-                setIsChecked(JSON.parse(saved));
-            }
+        // Initialize state from localStorage
+        const savedStatus = localStorage.getItem('isChecked');
+        if (savedStatus !== null) {
+            dispatch(setStatus(JSON.parse(savedStatus)));
         }
-    }, []);
+    }, [dispatch]);
 
-    const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>): void => {
-        const checked = event.target.checked;
-        setIsChecked(checked);
-
-        if (typeof window !== 'undefined') {
-            sessionStorage.setItem('isChecked', JSON.stringify(checked));
-        }
-
-        setLidar(checked, false);
-    };
-
-    const setLidar = (enable: boolean, use_own_map: boolean): void => {
-        axios.post(`${backendUrl}/api/lidar`, {
-            enable: enable,
-            use_own_map: use_own_map,
-            unit_name: sessionStorage.getItem('unit_name')
-        }, {
-            headers: {
-                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
-            }
-        })
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
-        // Assuming showImage is a global variable or state
-        // showImage = enable;
+    const handleCheckboxChange = () => {
+        dispatch(changeStatus());
+        // Save state to localStorage
+        localStorage.setItem('isChecked', JSON.stringify(!value));
+        onData(!value);
     };
 
     return (
@@ -55,7 +34,7 @@ const LidarSwitch: React.FC<LidarSwitchProps> = ({ backendUrl }) => {
             <input
                 type="checkbox"
                 className={styles.toggleInput}
-                checked={isChecked}
+                checked={value}
                 onChange={handleCheckboxChange}
             />
             <span className={styles.slider}></span>

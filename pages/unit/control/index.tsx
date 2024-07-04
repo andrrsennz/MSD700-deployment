@@ -17,6 +17,7 @@ import ControlNonIndex from '@/components/control-non-index/controlNonIndex';
 import MobileInstruction from '@/components/mobile-instruction/mobileInstruction';
 import GreetingsUnit from '@/components/greetings-unit/greetingsUnit';
 import { ReduxProvider } from '@/app/reduxProvider';
+import Head from 'next/head';
 
 const Control: React.FC = () => {
   const [mapIndex, setMapIndex] = useState<number>(-1);
@@ -97,6 +98,10 @@ const Control: React.FC = () => {
 
   return (
     <ReduxProvider>
+      <Head>
+        <title>Control Mode</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       {render ? (
         <>
           <ConfirmElement

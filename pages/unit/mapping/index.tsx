@@ -88,8 +88,13 @@ const Mapping: React.FC<MappingProps> = () => {
     const [mobileInstruction, setMobileInstruction] = useState<boolean>(false);
     const [buttonMapStatus, setButtonMapStatus] = useState<string>()
     const [playButtonClicked, setPlayButtonClicked] = useState<boolean>(false);
+    const [lidarStatus, setLidarStatus] = useState(false);
 
     const [emergencyStatus, setEmergencyStatus] = useState<boolean>(false);
+
+    const handleLidarStatus = (childData: any) => {
+        setLidarStatus(childData);
+    };
 
     useEffect(() => {
         // Read value from localStorage when the component mounts
@@ -112,7 +117,7 @@ const Mapping: React.FC<MappingProps> = () => {
     };
 
     const changeStatus = (newStatus: string): void => {
-        isChecked === true ? setStatus(newStatus) : setStatus("Idle");
+        lidarStatus === true ? setStatus(newStatus) : setStatus("Idle");
     };
 
     const onConfirmSaveMappingButtonClick = (): void => {
@@ -553,7 +558,7 @@ const Mapping: React.FC<MappingProps> = () => {
                                         </div>
 
                                         <div className={styles.lidarButton}>
-                                            <LidarSwitch backendUrl={backendUrl} />
+                                            <LidarSwitch backendUrl={backendUrl} onData={handleLidarStatus} />
                                         </div>
                                         {/* <div className={styles.lidarButton}>
                                         <label className={styles.toggleSwitch}>
@@ -592,7 +597,7 @@ const Mapping: React.FC<MappingProps> = () => {
                                             <div
                                                 className={`${styles.playButton} ${status == "On Progress" ? styles.buttonActive : ""}`}
                                                 onClick={() => {
-                                                    if (isChecked) {
+                                                    if (lidarStatus) {
                                                         if (status != "On Progress") {
                                                             setMapping(true, false, false);
                                                         }
@@ -607,7 +612,7 @@ const Mapping: React.FC<MappingProps> = () => {
                                             <div
                                                 className={`${styles.pauseButton} ${status == "Paused" && count != 0 || buttonMapStatus == 'pause' ? styles.buttonActive : ""}`}
                                                 onClick={() => {
-                                                    if (isChecked) {
+                                                    if (lidarStatus) {
                                                         if (status != "Idle") {
                                                             setcount(1)
                                                             setMapping(false, true, false);
@@ -627,7 +632,7 @@ const Mapping: React.FC<MappingProps> = () => {
                                                 id="stopButton"
                                                 className={`${styles.stopButton}`}
                                                 onClick={() => {
-                                                    if (isChecked) {
+                                                    if (lidarStatus) {
                                                         if (buttonMapStatus == 'play' || buttonMapStatus == 'pause') {
                                                             setShowConfirmMappingDialog(true);
                                                             setStopButton(true);
