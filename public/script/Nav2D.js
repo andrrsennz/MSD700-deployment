@@ -154,6 +154,8 @@ NAV2D.Navigator = function (options) {
   var inputMode = false;
   var mapRotated = false;
   var degreeRot = 0;
+  var zoomConst = 1;
+  var zoomState = false;
 
   this.multigoalMark = [];
   this.multiPose = [];
@@ -601,11 +603,20 @@ NAV2D.Navigator = function (options) {
       console.log("y coordinate: ",pose.y);
       if (mapRotated) {
         var posroted = rotateCoordinates(pose.x,pose.y,-degreeRot);
-        var posex = posroted.x;
-        var posey = posroted.y;
-        focusV.updateStagePos(posex,-posey);
+        var poseX = posroted.x;
+        var poseY = posroted.y;
+        if (zoomState) {
+          focusV.updateStagePosZoomed(poseX,-poseY,zoomConst);
+        } else {
+          focusV.updateStagePos(poseX,-poseY);
+        }
+        
       } else {
-        focusV.updateStagePos(pose.x,-pose.y);
+        if (zoomState) {
+          focusV.updateStagePosZoomed(pose.x,-pose.y,zoomConst);
+        } else {
+          focusV.updateStagePos(pose.x,-pose.y);
+        }
       }
     }
     // console.log(initScaleSet);
@@ -1152,6 +1163,23 @@ NAV2D.Navigator = function (options) {
   NAV2D.Navigator.prototype.resetRotateMap = function() {
     mapRotated = false;
     degreeRot = 0;
+
+  }
+
+  NAV2D.Navigator.prototype.setZoom = function(cnst) {
+    if (cnst == 1) {
+      zoomState = false;
+      zoomConst = 1;
+    }
+    else {
+      zoomState = true;
+      zoomConst = cnst;
+    }
+
+  }
+
+  NAV2D.Navigator.prototype.getPathplan = function() {
+    return(that.multiPose);
 
   }
 

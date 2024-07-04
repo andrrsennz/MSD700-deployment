@@ -1,5 +1,5 @@
 // MapPreviewSection.tsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './mobileMapPreviewSection.module.css';
 
 interface MapPreviewSectionProps {
@@ -7,6 +7,26 @@ interface MapPreviewSectionProps {
   mapPreviewStatus: number;
   handleMapPreviewStatus: (status: number) => void;
 }
+
+var ros:any;
+
+// useEffect(() => {
+//       // Connect to ROS.
+//       const ROSLIB = (window as any).ROSLIB;
+//       ros = new ROSLIB.Ros({
+//         url: "ws://192.168.1.55:9090",
+//       });
+  
+//       // Handle ROS connection errors
+//       ros.on('error', (error: Error) => {
+//         console.error('Error connecting to ROS:', error);
+//       });
+  
+//       // Handle ROS connection closure
+//       ros.on('close', () => {
+//         console.log('Connection to ROS is closed.');
+//       });
+// },[])
 
 const MapPreviewSection: React.FC<MapPreviewSectionProps> = ({
   mapPreview,

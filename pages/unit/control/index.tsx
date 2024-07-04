@@ -33,13 +33,13 @@ const Control: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    setMapIndex(
-      sessionStorage.getItem('mapIndex') === null
-        ? -1
-        : parseInt(sessionStorage.getItem('mapIndex') || '0', 10)
-    );
+    // setMapIndex(
+    //   sessionStorage.getItem('mapIndex') === null
+    //     ? -1
+    //     : parseInt(sessionStorage.getItem('mapIndex') || '0', 10)
+    // );
 
-    setFirstLoaded(sessionStorage.getItem('firstLoadControlPage') === null ? 'true' : 'false');
+    // setFirstLoaded(sessionStorage.getItem('firstLoadControlPage') === null ? 'true' : 'false');
 
     async function checkToken() {
       // Uncomment and use this block if you need to check the token

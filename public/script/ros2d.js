@@ -1220,6 +1220,7 @@ ROS2D.Viewer = function (options) {
 
   // change Y axis center
   this.scene.y = this.height;
+  // this.scene.x = this.width;
 
   // add the renderer to the page
   document.getElementById(divID).appendChild(canvas);
@@ -1400,8 +1401,34 @@ ROS2D.FocusView = function(options) {
 ROS2D.FocusView.prototype.updateStagePos = function(x,y) {
   var containerWidth = this.stage.canvas.width;
   var containerHeight = this.stage.canvas.height;
-  this.stage.x = containerWidth/2 - x*50;
-  this.stage.y = containerHeight/2 - y*50 - (containerHeight/1070*120);
+  var displayWidth = window.innerWidth;
+  if (displayWidth < 400 ) {
+    this.stage.x = containerWidth/2 - x*50 - 330;
+    this.stage.y = containerHeight/2 - y*50 - 210;
+  }
+  else {
+    this.stage.x = containerWidth/2 - x*50;
+    this.stage.y = containerHeight/2 - y*50 - 180;
+    // this.stage.y = containerHeight/2 - y*50 - (containerHeight/1070*120 + 50);
+  }
+  console.log("stage x: ",this.stage.x);
+  console.log("stage y: ",this.stage.y);
+  console.log("position updated");
+
+};
+
+ROS2D.FocusView.prototype.updateStagePosZoomed = function(x,y,cnst) {
+  var containerWidth = this.stage.canvas.width;
+  var containerHeight = this.stage.canvas.height;
+  var displayWidth = window.innerWidth;
+  if (displayWidth < 400 ) {
+    this.stage.x = containerWidth/2 - x*50*cnst - 330;
+    this.stage.y = containerHeight/2 - y*50*cnst - 210;
+  }
+  else {
+    this.stage.x = containerWidth/2 - x*50*cnst;
+    this.stage.y = containerHeight/2 - y*50*cnst - 180;
+  }
   console.log("stage x: ",this.stage.x);
   console.log("stage y: ",this.stage.y);
   console.log("position updated");

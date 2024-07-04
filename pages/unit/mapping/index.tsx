@@ -231,7 +231,7 @@ const Mapping: React.FC<MappingProps> = () => {
         checkToken();
         const ROSLIB = (window as any).ROSLIB;
         const ros = new ROSLIB.Ros({
-            url: rosUrl,
+            url: "ws://192.168.1.55:9090",
         });
 
         // Handle ROS connection errors
@@ -284,22 +284,22 @@ const Mapping: React.FC<MappingProps> = () => {
         });
 
         // MQTT Client Setup
-        const mqtt_client = mqtt.connect(brokerUrl);
-        mqtt_client.on('connect', () => {
-            // mqtt_client.subscribe(topic);
-            console.log('Connected to MQTT broker');
-        });
+        // const mqtt_client = mqtt.connect(brokerUrl);
+        // mqtt_client.on('connect', () => {
+        //     // mqtt_client.subscribe(topic);
+        //     console.log('Connected to MQTT broker');
+        // });
 
-        mqtt_client.on('message', (receivedTopic, message) => {
-            // if (receivedTopic === topic) {
-            //     const receivedImageBlob = new Blob([message]);
-            //     setImageBlob(showImage ? receivedImageBlob : null);
-            // }
-        });
+        // mqtt_client.on('message', (receivedTopic, message) => {
+        //     // if (receivedTopic === topic) {
+        //     //     const receivedImageBlob = new Blob([message]);
+        //     //     setImageBlob(showImage ? receivedImageBlob : null);
+        //     // }
+        // });
 
-        mqtt_client.on('close', () => {
-            console.log('Connection to MQTT is closed');
-        })
+        // mqtt_client.on('close', () => {
+        //     console.log('Connection to MQTT is closed');
+        // })
 
         const mapNameFromSession = sessionStorage.getItem('mapName');
 
@@ -326,7 +326,7 @@ const Mapping: React.FC<MappingProps> = () => {
         return () => {
             // clean up when exiting the page
             ros.close();
-            mqtt_client.end();
+            // mqtt_client.end();
             setLidar(false, false);
         };
     }, []);
@@ -345,6 +345,7 @@ const Mapping: React.FC<MappingProps> = () => {
         zoom.zoom(zoomInConst);
         zoomCrossConst.push(zoomInConst);
         gridClient.navigator.reScale();
+        gridClient.navigator.setZoom(firstZoomVar);
     }
 
     const zoomOut = () => {
@@ -358,6 +359,7 @@ const Mapping: React.FC<MappingProps> = () => {
         zoom.zoom(zoomOutConst);
         zoomCrossConst.push(zoomOutConst);
         gridClient.navigator.reScale();
+        gridClient.navigator.setZoom(firstZoomVar);
     }
 
     const rotateCW = () => {
@@ -384,6 +386,7 @@ const Mapping: React.FC<MappingProps> = () => {
         firstZoomVar = 1;
         zoomCrossConst = [];
         gridClient.navigator.reScale();
+        gridClient.navigator.setZoom(firstZoomVar);
     }
 
     const whenMouseDown = (event: MouseEvent) => {
@@ -714,9 +717,13 @@ const Mapping: React.FC<MappingProps> = () => {
                                                 </> : ""}
                                             </div>
 
-                                            <div className={`${styles.displayNone} ${styles.focusButton}`}>
-                                                <p>Focus View</p>
-                                                <img src="/icons/focus_button.svg" alt="" />
+                                    <div className={`${styles.displayNone} ${styles.focusButton}`}>
+                                        <p>Focus View</p>
+                                        <img src="/icons/focus_button.svg" alt="" />
+                                    </div>
+
+                                            <div className={`${styles.displayNone} ${styles.mobileStatus}`}>
+                                                <p>Status : On progress</p>
                                             </div>
 
                                             <div className={`${styles.displayNone} ${styles.mobileStatus}`}>

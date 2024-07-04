@@ -2,7 +2,11 @@
     display: none;
 }
 
+<<<<<<< HEAD
+@media (max-width:500px) {
+=======
 @media (max-width:1400px) {
+>>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
     .mobileInstructionBackground::before {
         content: "";
         display: block;
