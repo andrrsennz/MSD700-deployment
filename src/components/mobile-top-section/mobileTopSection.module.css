@@ -5,9 +5,9 @@
     /* Position it at the top of the viewport */
     left: 0;
     /* Align it to the left */
-    z-index: 1000;
+    z-index: 0;
     /* Set a high z-index to ensure it stays on top of other content */
-    height: 52px;
+    height: 50px;
     width: 100%;
     background: #0C98B480;
     border-bottom: 2px solid #0C98B4;
@@ -22,6 +22,7 @@
     color: #0567A6;
 }
 
+
 /* No need to change other styles */
 
 
@@ -34,7 +35,11 @@
     display: none;
 }
 
+<<<<<<< HEAD
 @media (max-width:500px) {
+=======
+@media (max-width:1400px) {
+>>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
     .displayFlex {
         display: flex;
         gap: 10px;
@@ -69,7 +74,9 @@
     }
 
     .greetings img {
-        width: 13px;
-        height: 15px;
+        width: 20px;
+        height: 20px;
     }
+
+    .greetingsMessage img {}
 }

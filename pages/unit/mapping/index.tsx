@@ -9,7 +9,6 @@ import ConfirmSaving from "@/components/confirm-saving-mapping/confirmSaving";
 import Script from "next/script";
 import axios from "axios";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import mqtt from "mqtt";
 import ButtonInformation from "@/components/unit-information-button/unitInformationButton";
 import ControlInstruction from "@/components/control-instruction/controlInstruction";
@@ -20,6 +19,10 @@ import MapPreviewSection from "@/components/mobile-map-preview-section/mobileMap
 import MobileBottomSection from "@/components/mobile-bottom-section/mobileBottomSection";
 import MobileNavigation from "@/components/mobile-navigation/mobileNavigation";
 import MobileInstruction from "@/components/mobile-instruction/mobileInstruction";
+import GreetingsUnit from "@/components/greetings-unit/greetingsUnit";
+import EmergencyButton from "@/components/emergency-button/emergencyButton";
+import LidarSwitch from "@/components/lidar-switch/lidarSwitch";
+import { ReduxProvider } from "@/app/reduxProvider";
 
 interface MappingProps {
     handleMobileNavigation: () => void; // Define handleMobileNavigation prop
@@ -60,7 +63,7 @@ const Mapping: React.FC<MappingProps> = () => {
     const [showConfirmMappingDialog, setShowConfirmMappingDialog] =
         useState<boolean>(false);
     const [savingConfirmDialog, setSavingConfirmDialog] = useState<boolean>(false);
-    const [isChecked, setIsChecked] = useState<boolean>(false);
+    const [isChecked, setIsChecked] = useState<boolean>(true);
     const [status, setStatus] = useState<string>("Idle");
     const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");
     const [brokerUrl, setBrokerUrl] = useState<string>(process.env.WS_MQTT_BROKER_URL || "ws://localhost:9001");
@@ -83,34 +86,21 @@ const Mapping: React.FC<MappingProps> = () => {
     const [controlExtend, setControlExtend] = useState<Boolean>(false);
     const [mobileNavigation, setMobileNavigation] = useState<boolean>(false);
     const [mobileInstruction, setMobileInstruction] = useState<boolean>(false);
+    const [buttonMapStatus, setButtonMapStatus] = useState<string>()
+    const [playButtonClicked, setPlayButtonClicked] = useState<boolean>(false);
 
-    const handleOptionClick = (text: string): void => {
-        if (text === 'Delete All Pinpoints') {
-            // Check if options 1 to 4 have been selected
-            if (selectedOptions.length === 4) {
-                setSelectedOptions(options.map((option) => option.text));
-            }
-        } else {
-            // Check if the option is not already selected
-            if (!selectedOptions.includes(text)) {
-                setSelectedOptions((prevSelected) => [...prevSelected, text]);
-            }
+    const [emergencyStatus, setEmergencyStatus] = useState<boolean>(false);
+
+    useEffect(() => {
+        // Read value from localStorage when the component mounts
+        const savedStatus = localStorage.getItem('emergencyStatus');
+        if (savedStatus !== null) {
+            setEmergencyStatus(JSON.parse(savedStatus));
         }
-    };
-
-    const handleToggleMenu = (): void => {
-        setShowMenu((prevShowMenu) => !prevShowMenu);
-    };
-
-    const router = useRouter();
-
+    }, []);
 
     const onConfirmButtonClick = (): void => {
         setShowConfirmClosePageDialog(true);
-    };
-
-    const onConfirmMappingButtonClick = (): void => {
-        setShowConfirmMappingDialog(true);
     };
 
     const handleCancel = (): void => {
@@ -150,39 +140,51 @@ const Mapping: React.FC<MappingProps> = () => {
     }
 
     const setMapping = (start: boolean, pause: boolean, stop: boolean): void => {
-        axios.post(`${backendUrl}/api/mapping`, {
-            start: start,
-            pause: pause,
-            stop: stop,
-            unit_name: sessionStorage.getItem('unit_name')
-        }, {
-            headers: {
-                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
-            }
-        })
-            .then(function (response) {
-                console.log(response);
-                if (start) {
-                    changeStatus("On Progress");
-                }
-                else if (pause) {
-                    changeStatus("Paused");
-                }
-                else if (stop) {
-                    changeStatus("Idle");
-                    alert("Map saved successfully");
-                    setStopButton(false)
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
 
+        sessionStorage.setItem('mappingStart', start.toString());
+        sessionStorage.setItem('mappingPause', pause.toString());
+        sessionStorage.setItem('mappingStop', stop.toString());
 
+        // axios.post(`${backendUrl}/api/mapping`, {
+        //     start: start,
+        //     pause: pause,
+        //     stop: stop,
+        //     unit_name: sessionStorage.getItem('unit_name')
+        // }, {
+        //     headers: {
+        //         'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+        //     }
+        // })
+        //     .then(function (response) {
+        if (start) {
+            changeStatus("On Progress");
+            setButtonMapStatus('play');
+            setPlayButtonClicked(true)
+        }
+        else if (pause) {
+            changeStatus("Idle");
+            setButtonMapStatus('pause')
+        }
+        else if (stop && playButtonClicked) {
+            changeStatus("Idle");
+            // alert("Map saved successfully");
+            setStopButton(false)
+            setButtonMapStatus('')
+            setPlayButtonClicked(false)
+        }
+        // })
+        // .catch(function (error) {
+        //     console.log(error);
+        // });
     }
 
     const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>): void => {
         setIsChecked(event.target.checked);
+
+        console.log(" event.target.checked : ", event.target.checked);
+
+
+        sessionStorage.setItem('isChecked', `${event.target.checked}`)
         if (event.target.checked) {
             setLidar(true, false);
         } else {
@@ -192,28 +194,36 @@ const Mapping: React.FC<MappingProps> = () => {
 
     const mapRef = useRef<HTMLDivElement>(null);
 
+    const booleanConverter = (status: any) => {
+        if (status == 'true') {
+            return true
+        } else {
+            return false
+        }
+    }
+
     useEffect(() => {
         var enableRos = false;
-        // async function checkToken() {
-        //     await axios.get(`${backendUrl}`, {
-        //         headers: {
-        //             'Authorization': `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
-        //         }
-        //     })
-        //         .then((response) => {
-        //             if (response.status === 200) {
-        //                 setRender(true);
-        //                 enableRos = true;
-        //             }
-        //             else {
-        //                 setTokenExpired(true);
-        //             }
-        //         })
-        //         .catch((error) => {
-        //             setTokenExpired(true)
-        //         });
-        // }
-        // checkToken();
+        async function checkToken() {
+            // await axios.get(`${backendUrl}`, {
+            //     headers: {
+            //         'Authorization': `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
+            //     }
+            // })
+            //     .then((response) => {
+            //         if (response.status === 200) {
+            //             setRender(true);
+            //             enableRos = true;
+            //         }
+            //         else {
+            //             setTokenExpired(true);
+            //         }
+            //     })
+            //     .catch((error) => {
+            //         setTokenExpired(true)
+            //     });
+        }
+        checkToken();
         const ROSLIB = (window as any).ROSLIB;
         const ros = new ROSLIB.Ros({
             url: "ws://192.168.1.55:9090",
@@ -232,15 +242,14 @@ const Mapping: React.FC<MappingProps> = () => {
         // Create the main viewer.
         viewer = new (window as any).ROS2D.Viewer({
             divID: 'map',
-            width: mapRef.current?.clientWidth || 1070,
-            height: mapRef.current?.clientHeight || 1070,
+            width: mapRef.current?.clientWidth || window.innerWidth,
+            height: mapRef.current?.clientHeight || window.innerHeight,
             background: "#7F7F7F",
         });
 
         paN = new (window as any).ROS2D.PanView({
             rootObject: viewer.scene,
         });
-
 
         // Setup the map client.
         gridClient = new (window as any).NAV2D.OccupancyGridClientNav({
@@ -259,7 +268,6 @@ const Mapping: React.FC<MappingProps> = () => {
         //         console.log("get home point")
         //       },1000);
         // }
-
 
         var zoomView = new (window as any).ROS2D.ZoomView({
             rootObject: viewer.scene
@@ -289,9 +297,26 @@ const Mapping: React.FC<MappingProps> = () => {
         // })
 
         const mapNameFromSession = sessionStorage.getItem('mapName');
+
         setMapName(mapNameFromSession ?? ''); // If mapNameFromSession is null, use an empty string
 
         setFirstLoaded(sessionStorage.getItem('firstLoadMappingPage') === null ? 'true' : 'false');
+
+        if (sessionStorage.getItem('isChecked')) {
+            const isCheckedBoolean = booleanConverter(sessionStorage.getItem('isChecked'))
+            setIsChecked(isCheckedBoolean)
+        } else {
+            setIsChecked(false)
+        }
+
+        // Check and set mapping status
+        const mappingStart = sessionStorage.getItem('mappingStart') === 'true';
+        const mappingPause = sessionStorage.getItem('mappingPause') === 'true';
+        const mappingStop = sessionStorage.getItem('mappingStop') === 'true';
+
+        if (mappingStart !== null || mappingPause !== null || mappingStop !== null) {
+            setMapping(mappingStart, mappingPause, mappingStop);
+        }
 
         return () => {
             // clean up when exiting the page
@@ -402,15 +427,14 @@ const Mapping: React.FC<MappingProps> = () => {
     };
 
     //get home base point from SLAM initial point
-    const getHomeBasePoint = () => {
-        if (gridClient.navigator != null) {
-            homePoint = gridClient.navigator.getHomeBasePoint();
-            console.log(homePoint);
-        } else {
-            console.log("navigator null")
-        }
-
-    }
+    // const getHomeBasePoint = () => {
+    //     if (gridClient.navigator != null) {
+    //         homePoint = gridClient.navigator.getHomeBasePoint();
+    //         console.log(homePoint);
+    //     } else {
+    //         console.log("navigator null")
+    //     }
+    // }
 
     //set focus view on robot
     const focusView = () => {
@@ -419,7 +443,7 @@ const Mapping: React.FC<MappingProps> = () => {
             gridClient.navigator.setFocusView(true);
             var button = document.getElementById("setFocusBtn")
             if (button != null) {
-                button.style.backgroundColor = "#60E3D5";
+                // button.innerText = "Focus View On"
                 console.log("button changes")
             }
         }
@@ -428,7 +452,7 @@ const Mapping: React.FC<MappingProps> = () => {
             gridClient.navigator.setFocusView(false);
             var button = document.getElementById("setFocusBtn")
             if (button != null) {
-                button.style.backgroundColor = "#0C98B4";
+                // button.innerText = "Focus View Off"
                 console.log("button changes")
             }
         }
@@ -474,266 +498,274 @@ const Mapping: React.FC<MappingProps> = () => {
         setFirstLoaded('false')
     }
 
+    const handleLidarChecked = () => { }
+
+    const handleEmergencyStatus = () => {
+        setEmergencyStatus((prevStatus) => {
+            const newStatus = !prevStatus;
+            localStorage.setItem('emergencyStatus', JSON.stringify(newStatus));
+            return newStatus;
+        });
+    };
+
     return (
-        <> {render ?
-            (
-                <>
-                    <Head>
-                        <title>Mapping</title>
-                        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-                    </Head>
-                    <ConfirmElement
-                        message="Are you sure you want to close this app?"
-                        status={showConfirmClosePageDialog}
-                        onCancel={handleCancel}
-                    />
-                    <ConfirmSaving
-                        message="Are you sure you want to stop and save the map?"
-                        status={showConfirmMappingDialog}
-                        onCancel={handleDatabaseCancel}
-                        onConfirm={onConfirmSaveMappingButtonClick}
-                    />
-                    <MapSaving status={savingConfirmDialog} />
-                    <TokenExpired status={tokenExpired} />
-                    {mobileNavigation ? <MobileNavigation onClick={handleMobileNavigation} /> : ""}
-                    {mobileInstruction || firstLoaded == 'true' ? <MobileInstruction onClick={handleMobileInstruction} imgUrl={"/images/mobile_instruction_mapping.svg"} /> : ""}
+        <ReduxProvider>
+            {render ?
+                (
+                    <>
+                        <Head>
+                            <title>Mapping</title>
+                            <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+                        </Head>
+                        <ConfirmElement
+                            message="Are you sure you want to close this app?"
+                            status={showConfirmClosePageDialog}
+                            onCancel={handleCancel}
+                        />
+                        <ConfirmSaving
+                            message="Are you sure you want to stop and save the map?"
+                            status={showConfirmMappingDialog}
+                            onCancel={handleDatabaseCancel}
+                            onConfirm={onConfirmSaveMappingButtonClick}
+                        />
+                        <MapSaving status={savingConfirmDialog} />
+                        <TokenExpired status={tokenExpired} />
+                        {mobileNavigation ? <MobileNavigation onClick={handleMobileNavigation} /> : ""}
+                        {mobileInstruction || firstLoaded == 'true' ? <MobileInstruction onClick={handleMobileInstruction} imgUrl={"/images/mobile_instruction_mapping.svg"} /> : ""}
 
-                    <div className={styles.container}>
-                        {showControlInstruction || firstLoaded == 'true' ? <ControlInstruction onClick={handleControlInstructionClick} height={80} width={90} imgUrl='/images/instruction_mapping.svg' /> : ''}
+                        <div className={styles.container}>
+                            {showControlInstruction || firstLoaded == 'true' ? <ControlInstruction onClick={handleControlInstructionClick} height={80} imgUrl='/images/instruction_mapping.svg' /> : ''}
 
-                        <div className={styles.parents}>
-                            <MobileTopSection onConfirmButtonClick={handleCloseButtonClick} />
-                            <MobileLidarSection // Use the new component here
-                                isChecked={isChecked}
-                                handleCheckboxChange={handleCheckboxChange}
-                            />
+                            <div className={styles.parents}>
+                                <div className={`${styles.topSection} ${styles.mobileDisplayNone}`}>
+                                    <GreetingsUnit />
 
-                            <div className={`${styles.statusSection} ${styles.mobileDisplayNone}`}>
-                                <div
-                                    className={`${styles.status} ${status === "Idle" ? styles.idle : ""
-                                        }`}
-                                >
-                                    <img src="/icons/information-circle-svgrepo-com.svg" alt="" />
-                                    <p>
-                                        Status : <span>{status}</span>
-                                    </p>
-                                </div>
+                                    <div className={`${styles.statusSection} ${styles.mobileDisplayNone}`}>
+                                        <div
+                                            className={`${styles.status} ${status === "Idle" ? styles.idle : ""
+                                                }`}
+                                        >
+                                            <img src="/icons/info.png" alt="" />
+                                            <p>
+                                                Status : <span>{status}</span>
+                                            </p>
+                                        </div>
 
-                                <div className={styles.lidar}>
-                                    <p>LIDAR</p>
-                                </div>
+                                        <div className={styles.lidar}>
+                                            <p>LIDAR</p>
+                                        </div>
 
-                                <div className={styles.lidarButton}>
-                                    <label className={styles.toggleSwitch}>
-                                        <input
-                                            type="checkbox"
-                                            className={styles.toggleInput}
-                                            checked={isChecked}
-                                            onChange={handleCheckboxChange}
-                                        />
-                                        <span className={styles.slider}></span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div className={styles.mobileDisplayNone}>
-                                <CloseButton onClick={onConfirmButtonClick} />
-                            </div>
-
-                            <div className={`${styles.navigation} ${styles.mobileDisplayNone}`}>
-                                <Navigation imageSrc={imageBlob ? URL.createObjectURL(imageBlob) : undefined} />
-                            </div>
-
-                            <div className={`${styles.mapSection} ${mapPreview ? "" : styles.mapSectionWithoutPreview}`}>
-                                <div className={`${styles.topDiv} ${styles.mobileDisplayNone}`}>
-                                    <p>Create a New Map</p>
-                                    <div
-                                        className={`${styles.playButton} ${status == "On Progress" ? styles.buttonActive : ""
-                                            }`}
-                                        onClick={() => {
-                                            if (isChecked) {
-                                                if (status != "On Progress") {
-                                                    console.log("Play request sent");
-                                                    setMapping(true, false, false);
-                                                }
-                                            } else {
-                                                alert("Please turn on the LIDAR before mapping.");
-                                            }
-                                        }}
-                                    >
-                                        <p>Play</p>
-                                        <img src="/icons/3.svg" alt="" />
-                                    </div>
-                                    <div
-                                        className={`${styles.pauseButton} ${status == "Paused" && count != 0 ? styles.buttonActive : ""}`}
-                                        onClick={() => {
-                                            if (isChecked) {
-                                                if (status != "Idle") {
-                                                    setcount(1)
-                                                    console.log("Pause request sent");
-                                                    setMapping(false, true, false);
-                                                }
-                                                else {
-                                                    alert("Cannot pause when Lidar button turned on");
-                                                }
-                                            } else {
-                                                alert("Please turn on the LIDAR before mapping.");
-                                            }
-                                        }}
-                                    >
-                                        <p>Pause</p>
-                                        <img src="/icons/1.svg" alt="" />
-                                    </div>
-                                    <div
-                                        id="stopButton"
-                                        className={`${styles.stopButton} ${stopButton ? styles.buttonActive : ''}`}
-                                        onClick={() => {
-                                            if (isChecked) {
-                                                if (status !== "Idle") {
-                                                    setStopButton(true); // Toggle the active state
-                                                    console.log("Stop request sent");
-                                                    setMapping(false, false, true);
-                                                } else {
-                                                    alert("Cannot stop when Lidar button turned on");
-                                                }
-                                            } else {
-                                                alert("Please turn on the LIDAR before mapping.");
-                                            }
-                                            // setStopButton(false);
-                                        }}
-                                    >
-                                        <p>Stop</p>
-                                        <img src="/icons/2.svg" alt="" />
-                                    </div>
-                                    <div
-                                        id="setFocusBtn"
-                                        className={styles.stopButton}
-                                        onClick={() => {
-                                            focusView();
-                                        }}
-                                    >
-                                        <p>Focus View</p>
-                                        <img src="/icons/focus_button.svg" alt="" />
-                                    </div>
-
-                                    {/* <div className={styles.settingsButton}>
-                                        <img src="/icons/Setting.svg" alt="" />
-                                        <p>Please turn on the LIDAR before mapping.</p>
+                                        <div className={styles.lidarButton}>
+                                            <LidarSwitch backendUrl={backendUrl} />
+                                        </div>
+                                        {/* <div className={styles.lidarButton}>
+                                        <label className={styles.toggleSwitch}>
+                                            <input
+                                                type="checkbox"
+                                                className={styles.toggleInput}
+                                                checked={isChecked}
+                                                onChange={handleCheckboxChange}
+                                            />
+                                            <span className={styles.slider}></span>
+                                        </label>
                                     </div> */}
+
+                                    </div>
                                 </div>
-                                <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp} onTouchStart={whenTouchDown} onTouchMove={whenTouchMove} onTouchEnd={whenTouchUp}>
-                                    <div className={styles.buttonNavigation}>
-                                        <div className={styles.zoomIn} onClick={zoomIn}>
-                                            <img src="/icons/zoomin.svg" alt="" />
-                                        </div>
-                                        <div className={styles.zoomOut} onClick={zoomOut}>
-                                            <img src="/icons/zoomout.svg" alt="" />
-                                        </div>
-                                        <div className={styles.restart} onClick={restart}>
-                                            <img src="/icons/Maximize.svg" alt="" />
-                                        </div>
-                                        <div className={styles.restart} onClick={rotateCW}>
-                                            <img src="/icons/new reload.svg" alt="" />
-                                        </div>
+
+                                <MobileTopSection onConfirmButtonClick={handleCloseButtonClick} />
+
+
+                                <div className={styles.mobileDisplayNone}>
+                                    <CloseButton onClick={onConfirmButtonClick} />
+                                </div>
+
+                                <div className={styles.unitParents}>
+                                    <MobileLidarSection // Use the new component here
+                                        isChecked={isChecked}
+                                        handleCheckboxChange={handleCheckboxChange}
+                                    />
+                                    <div className={`${styles.navigation} ${styles.mobileDisplayNone}`}>
+                                        <Navigation imageSrc={imageBlob ? URL.createObjectURL(imageBlob) : undefined} />
                                     </div>
 
-                                    <div className={`${styles.displayNone} ${styles.controlLidarButton}`}>
-                                        <div className={`${styles.lidarButton} ${lidarExtend ? styles.mainLidarButtonActive : ""}`} onClick={handleLidarExtend}>
-                                            {lidarExtend ? <img src="/icons/plus.svg" alt="" /> : <img src="/icons/minus.svg" alt="" />}
-                                        </div>
-                                        {lidarExtend ? (
-                                            <>
-                                                <div className={`${styles.lidarButton}`}>
-                                                    <img src="/icons/3.svg" alt="" />
-                                                </div>
-                                                <div className={`${styles.lidarButton}`}>
-                                                    <img src="/icons/1.svg" alt="" />
-                                                </div>
-                                                <div className={`${styles.lidarButton} ${styles.lidarButtonActive}`}>
-                                                    <img src="/icons/Home.svg" alt="" />
-                                                </div>
-                                            </>
-                                        ) : ""}
-                                    </div>
+                                    <div className={`${styles.mapSection} ${mapPreview ? "" : styles.mapSectionWithoutPreview}`}>
+                                        <div className={`${styles.topDiv} ${styles.mobileDisplayNone}`}>
+                                            <p className={styles.runThePrototype}>Create a New Map</p>
+                                            <div
+                                                className={`${styles.playButton} ${status == "On Progress" ? styles.buttonActive : ""}`}
+                                                onClick={() => {
+                                                    if (isChecked) {
+                                                        if (status != "On Progress") {
+                                                            setMapping(true, false, false);
+                                                        }
+                                                    } else {
+                                                        alert("Please turn on the LIDAR before mapping.");
+                                                    }
+                                                }}
+                                            >
+                                                <p>Play</p>
+                                                <img src="/icons/3.svg" alt="" />
+                                            </div>
+                                            <div
+                                                className={`${styles.pauseButton} ${status == "Paused" && count != 0 || buttonMapStatus == 'pause' ? styles.buttonActive : ""}`}
+                                                onClick={() => {
+                                                    if (isChecked) {
+                                                        if (status != "Idle") {
+                                                            setcount(1)
+                                                            setMapping(false, true, false);
+                                                        }
+                                                        else {
+                                                            alert("Cannot pause when Lidar button turned on");
+                                                        }
+                                                    } else {
+                                                        alert("Please turn on the LIDAR before mapping.");
+                                                    }
+                                                }}
+                                            >
+                                                <p>Pause</p>
+                                                <img src="/icons/1.svg" alt="" />
+                                            </div>
+                                            <div
+                                                id="stopButton"
+                                                className={`${styles.stopButton}`}
+                                                onClick={() => {
+                                                    if (isChecked) {
+                                                        if (buttonMapStatus == 'play' || buttonMapStatus == 'pause') {
+                                                            setShowConfirmMappingDialog(true);
+                                                            setStopButton(true);
+                                                            setMapping(false, false, true);
+                                                        }
+                                                    } else {
+                                                        alert("Please turn on the LIDAR before mapping.");
+                                                    }
+                                                }}
+                                            >
+                                                <p>Stop</p>
+                                                <img src="/icons/2.svg" alt="" />
+                                            </div>
+                                            <div
+                                                id="setFocusBtn"
+                                                className={styles.focusButton}
+                                                onClick={() => {
+                                                    focusView();
+                                                }}
+                                            >
+                                                <p>Focus View</p>
+                                                <img src="/icons/Position.svg" alt="" />
+                                            </div>
 
-                                    <div className={`${styles.displayNone} ${styles.controlButtonSection} `}>
-                                        <div className={`${styles.controlButton} ${controlExtend ? styles.mainControlButtonActive : ""}`} onClick={handleControlExtend}>
-                                            <img src="/icons/Dots.svg" alt="" />
                                         </div>
-                                        {controlExtend ? <>
-                                            <div className={`${styles.controlButton}`} onClick={zoomIn}>
-                                                <img src="/icons/zoomin.svg" alt="" />
-                                            </div>
-                                            <div className={`${styles.controlButton}`} onClick={zoomOut}>
-                                                <img src="/icons/zoomout.svg" alt="" />
-                                            </div>
-                                            <div className={`${styles.controlButton}`} onClick={restart}>
-                                                <img src="/icons/Maximize.svg" alt="" />
-                                            </div>
-                                            <div className={`${styles.controlButton}`} onClick={rotateCW}>
-                                                <img src="/icons/new reload.svg" alt="" />
-                                            </div>
-                                        </> : ""}
-                                    </div>
 
-                                    <div id="setFocusBtn"                                         
-                                        onClick={() => {
-                                            focusView();
-                                        }}  className={`${styles.displayNone} ${styles.focusButton}`}>
+                                        <div className={`${styles.centerDiv}`} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp} onTouchStart={whenTouchDown} onTouchMove={whenTouchMove} onTouchEnd={whenTouchUp}>
+                                            <div className={`${styles.buttonNavigation} ${styles.mobileDisplayNone}`}>
+                                                <div className={styles.zoomIn} onClick={zoomIn}>
+                                                    <img src="/icons/zoomin.svg" alt="" />
+                                                </div>
+                                                <div className={styles.zoomOut} onClick={zoomOut}>
+                                                    <img src="/icons/zoomout.svg" alt="" />
+                                                </div>
+                                                <div className={styles.restart} onClick={restart}>
+                                                    <img src="/icons/Maximize.svg" alt="" />
+                                                </div>
+                                                <div className={styles.restart} onClick={rotateCW}>
+                                                    <img src="/icons/new reload.svg" alt="" />
+                                                </div>
+                                            </div>
+
+                                            <div className={`${styles.displayNone} ${styles.controlLidarButton}`}>
+                                                <div className={`${styles.lidarButton} ${lidarExtend ? styles.mainLidarButtonActive : ""}`} onClick={handleLidarExtend}>
+                                                    {lidarExtend ? <img src="/icons/minus.svg" alt="" /> : <img src="/icons/plus.svg" alt="" />}
+                                                </div>
+                                                {lidarExtend ? (
+                                                    <>
+                                                        <div className={`${styles.lidarButton}`}>
+                                                            <img src="/icons/3.svg" alt="" />
+                                                        </div>
+                                                        <div className={`${styles.lidarButton}`}>
+                                                            <img src="/icons/1.svg" alt="" />
+                                                        </div>
+                                                        <div className={`${styles.lidarButton} ${styles.lidarButtonActive}`}>
+                                                            <img src="/icons/Home.svg" alt="" />
+                                                        </div>
+                                                    </>
+                                                ) : ""}
+                                            </div>
+
+                                            <div className={`${styles.displayNone} ${styles.controlButtonSection} `}>
+                                                <div className={`${styles.controlButton} ${controlExtend ? styles.mainControlButtonActive : ""}`} onClick={handleControlExtend}>
+                                                    <img src="/icons/Dots.svg" alt="" />
+                                                </div>
+                                                {controlExtend ? <>
+                                                    <div className={`${styles.controlButton} ${styles.controlButtonNonMain}`} onClick={zoomIn}>
+                                                        <img src="/icons/zoomin.svg" alt="" />
+                                                    </div>
+                                                    <div className={`${styles.controlButton} ${styles.controlButtonNonMain}`} onClick={zoomOut}>
+                                                        <img src="/icons/zoomout.svg" alt="" />
+                                                    </div>
+                                                    <div className={`${styles.controlButton} ${styles.controlButtonNonMain}`} onClick={restart}>
+                                                        <img src="/icons/Maximize.svg" alt="" />
+                                                    </div>
+                                                    <div className={`${styles.controlButton} ${styles.controlButtonNonMain}`} onClick={rotateCW}>
+                                                        <img src="/icons/new reload.svg" alt="" />
+                                                    </div>
+                                                </> : ""}
+                                            </div>
+
+                                    <div className={`${styles.displayNone} ${styles.focusButton}`}>
                                         <p>Focus View</p>
                                         <img src="/icons/focus_button.svg" alt="" />
                                     </div>
 
+                                            <div className={`${styles.displayNone} ${styles.mobileStatus}`}>
+                                                <p>Status : On progress</p>
+                                            </div>
 
-                                    <div className={`${styles.footerMap} ${styles.mobileDisplayNone}`}>
-                                        <div className={styles.emergencyButton}>
-                                            <img src="/icons/emergency.svg" alt="" />
-                                            <p>Emergency Button</p>
+                                            <div className={`${styles.displayNone} ${styles.mobileStatus}`}>
+                                                <p>Status : On progress</p>
+                                            </div>
+
+
+                                            <div className={`${styles.footerMap} ${styles.mobileDisplayNone}`}>
+                                                <EmergencyButton />
+                                                <div className={styles.mapName}>Mapping Preview</div>
+                                            </div>
                                         </div>
-                                        <div className={styles.mapName}>{mapName}</div>
                                     </div>
-                                    {/* <img src="/icons/Frame.svg" alt="" /> */}
+
+                                    <MapPreviewSection
+                                        mapPreview={mapPreview}
+                                        mapPreviewStatus={mapPreviewStatus}
+                                        handleMapPreviewStatus={handleMapPreviewStatus}
+                                    />
+
+                                    <MobileBottomSection
+                                        handleMobileNavigation={handleMobileNavigation}
+                                        handleMapPreview={handleMapPreview}
+                                        handleMobileInstruction={handleMobileInstruction}
+                                        handleMobileSorterDisplay={handleLidarChecked}
+                                        mapIndex={false}
+                                    />
+
                                 </div>
+
+                                <div className={`${styles.mobileDisplayNone} ${styles.footerSection}`}>
+                                    <Footer status={false} />
+                                </div>
+
                             </div>
+                        </div >
 
-                            <MapPreviewSection
-                                mapPreview={mapPreview}
-                                mapPreviewStatus={mapPreviewStatus}
-                                handleMapPreviewStatus={handleMapPreviewStatus}
-                            />
-
-                            <div className={`${styles.displayNone} ${styles.mobileBottomSection}`}>
-                                <div className={`${styles.navigationMobileButton} ${styles.bottomSectionButton}`} onClick={handleMobileNavigation}>
-                                    <img src="/icons/list.svg" alt="" />
-                                </div>
-
-                                <div className={`${styles.webcamButton} ${styles.webcamIcon} ${styles.bottomSectionButton}`} onClick={handleMapPreview}>
-                                    <img src="/icons/Webcam.svg" alt="" />
-                                </div>
-
-                                <div className={`${styles.webcamButton} ${styles.webcamIcon} ${styles.bottomSectionButton}`} onClick={handleMobileInstruction}>
-                                    <img src="/icons/information-circle-svgrepo-com.svg" alt="" />
-                                </div>
-
-                                <Footer status={false /* or false */} />
-                            </div>
-
-                            <div className={styles.mobileDisplayNone}>
-                                {/* <Footer status={false} /> */}
-                            </div>
-                        </div>
-                    </div >
-
-                    <ButtonInformation onClick={handleInfoIconClick} />
-                    <Script src="/script/Nav2D.js" strategy="beforeInteractive" />
-                    <Script src="/script/roslib.js" strategy="beforeInteractive" />
-                    <Script src="/script/eventemitter2.min.js" strategy="beforeInteractive" />
-                    <Script src="/script/easeljs.js" strategy="beforeInteractive" />
-                    <Script src="/script/ros2d.js" strategy="beforeInteractive" />
-                </>
-            ) : (<>
-            </>)}
-        </>
+                        <ButtonInformation onClick={handleInfoIconClick} />
+                        <Script src="/script/Nav2D.js" strategy="beforeInteractive" />
+                        <Script src="/script/roslib.js" strategy="beforeInteractive" />
+                        <Script src="/script/eventemitter2.min.js" strategy="beforeInteractive" />
+                        <Script src="/script/easeljs.js" strategy="beforeInteractive" />
+                        <Script src="/script/ros2d.js" strategy="beforeInteractive" />
+                    </>
+                ) : (<>
+                </>)}
+        </ReduxProvider>
     );
 }
 

@@ -1,36 +1,31 @@
-import React, { useState } from 'react';
+// components/MobileNavigation.tsx
+import React from 'react';
 import styles from './mobileNavigation.module.css';
 import { usePathname, useRouter } from 'next/navigation';
-import Link from 'next/link';
-
-interface mobileNavigation {
-    onClick: () => void;
-}
+import { useSelector, useDispatch } from 'react-redux';
+import { changeStatus } from "@/store/stateEmeregencyButton"; // Adjust import path as needed
+import { RootState } from '@/store/types';
+// import { RootState } from "@/store/store"; // Adjust import path as needed
 
 interface NavLink {
     href: string;
     text: string;
 }
 
-const MobileNavigation: React.FC<mobileNavigation> = ({ onClick }) => {
+const MobileNavigation: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+    const [buttonActive, setButtonActive] = React.useState(false);
     const pathname = usePathname() || '/unit/control';
     const router = useRouter();
 
-    function isActive(href: string) {
-        return pathname === href;
-    }
+    const { value } = useSelector((state: RootState) => state.emergencyState);
+    const dispatch = useDispatch();
 
-    const goToControlPage = () => {
-        router.push('/unit/control');
-    };
 
-    const goToMappingPage = () => {
-        router.push('/unit/mapping');
-    };
+    const isActive = (href: string) => pathname === href;
 
-    const goToDatabasePage = () => {
-        router.push('/unit/database');
-    };
+    const goToControlPage = () => router.push('/unit/control');
+    const goToMappingPage = () => router.push('/unit/mapping');
+    const goToDatabasePage = () => router.push('/unit/database');
 
     const navLinks: NavLink[] = [
         { href: '/unit/control', text: 'Control Mode' },
@@ -38,13 +33,12 @@ const MobileNavigation: React.FC<mobileNavigation> = ({ onClick }) => {
         { href: '/unit/database', text: 'Database' },
     ];
 
-    return (
+    const handleEmergencyButton = () => setButtonActive(!buttonActive);
+    const pseudoHandle = (e: React.MouseEvent) => e.stopPropagation();
 
-        <div
-            className={`${styles.displayNone} ${styles.mobileNavigation} ${styles.mobileDisplayFlex}`}
-            onClick={onClick}
-        >
-            <div className={styles.navigationSection}>
+    return (
+        <div className={`${styles.displayNone} ${styles.mobileNavigation} ${styles.mobileDisplayFlex}`} onClick={onClick}>
+            <div className={styles.navigationSection} onClick={pseudoHandle}>
                 <div onClick={goToControlPage} className={`${styles.divNavigation} ${isActive(navLinks[0].href) && styles.active}`}>
                     <img src="/icons/Marker.svg" alt="" />
                     <p>{navLinks[0].text}</p>
@@ -59,7 +53,8 @@ const MobileNavigation: React.FC<mobileNavigation> = ({ onClick }) => {
                     <img src="/icons/Database.svg" alt="" />
                     <p>{navLinks[2].text}</p>
                 </div>
-                <div className={`${styles.divNavigation} ${styles.emergencyButton}`}>
+
+                <div className={`${styles.divNavigation} ${styles.emergencyButton} ${value ? styles.emergencyActive : ''}`} onClick={() => dispatch(changeStatus())}>
                     <img src="/icons/emergency.svg" alt="" />
                     <p>Emergency Stop</p>
                 </div>

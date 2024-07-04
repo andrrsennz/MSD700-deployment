@@ -6,14 +6,14 @@
 .registerResponseBox {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   border-radius: 5px;
-  padding-left: 15px;
-  padding-right: 15px;
+  
   margin: 0;
   margin-top: 10px;
-  font-size: 14px;
-  width: max-content;
+  margin-left: auto;
+  margin-right: auto;
 
   color: #0C98B4;
   font-family: Inter;
@@ -23,4 +23,41 @@
   letter-spacing: 0em;
   text-align: left;
 
+  width: 259px;
+  height: 35px;
+
+}
+
+@media (max-width:1400px) {
+  .registerResponseBox {
+    width: 251px;
+    height: 35px;
+  }
+
+  .registerUnitSuccessInformation img{
+    width: 23px;
+    height: 23px;
+  }
+}
+
+@media (min-width:2201px) {
+  .registerResponseBox {
+    font-family: Inter;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 26.63px;
+    text-align: left;
+    
+    border-radius: 5px;
+
+    margin-top: 20px;
+
+    height: 52px;
+    width: 375px;
+  }
+
+  .registerUnitSuccessInformation img {
+    width: 30px;
+    height: 30px;
+  }
 }

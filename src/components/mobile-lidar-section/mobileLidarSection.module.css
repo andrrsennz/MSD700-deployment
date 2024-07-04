@@ -2,15 +2,19 @@
     display: none;
 }
 
+<<<<<<< HEAD
 @media (max-width:500px) {
+=======
+
+@media (max-width:1400px) {
+>>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
     .mobileLidarSection {
         display: flex;
         align-items: center;
-        width: auto;
+        width: 100%;
         height: auto;
-        margin-top: 60px;
-        padding-left: 5px;
-        justify-content: space-between;
+        margin-top: 65px;
+        justify-content: start;
         gap: 10px;
     }
 
@@ -18,7 +22,25 @@
         max-height: 38px;
     }
 
+    .mapCollection {
+        width: max-content;
+        font-family: Inter;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 19px;
+        letter-spacing: 0em;
+        text-align: left;
+        color: #0567A6;
+    }
+
+    .mapCollection p {
+        padding: 0;
+        margin: 0;
+        width: max-content;
+    }
+
     .routeSection {
+        width: 131px;
         display: flex;
         align-items: center;
         background-color: #60E3D5;
@@ -38,6 +60,8 @@
         text-align: left;
         color: #fff;
 
+        margin-left: 14px;
+
     }
 
     .routeSection img {
@@ -50,15 +74,13 @@
     .lidarSection {
         display: flex;
         align-items: center;
+        justify-content: center;
 
-        width: max-content;
-        height: auto;
+        width: 71px;
+        height: 29px;
         background-color: #0567A6;
         border: 2px solid #60E3D5;
         border-radius: 30px;
-        padding: 0;
-        padding-left: 15px;
-        padding-right: 15px;
 
 
         font-family: Inter;
@@ -69,6 +91,10 @@
         text-align: left;
         color: #FFFFFF;
 
+    }
+
+    .lidarSection p{
+        margin: 0;
     }
 
 

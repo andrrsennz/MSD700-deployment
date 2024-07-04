@@ -9,22 +9,61 @@
     border: 3px solid #FF7582;
 }
 
+.registerResponseBox p {
+    margin: 0;
+}
+
 .registerResponseBox {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     border-radius: 5px;
-    padding-left: 15px;
-    padding-right: 15px;
+
     margin: 0;
     margin-top: 10px;
     font-size: 14px;
 
-    width: max-content;
     font-family: Inter;
     font-size: 14px;
     font-weight: 500;
     line-height: 17px;
     letter-spacing: 0em;
     text-align: left;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    width: 329px;
+    height: 37px;
+}
+
+@media (max-width:1400px) {
+    .registerResponseBox {
+        width: 319px;
+        height: 38px;
+    }
+}
+
+
+@media (min-width:2201px) {
+    .registerResponseBox {
+        font-family: Inter;
+        font-size: 22px;
+        font-weight: 500;
+        line-height: 26.63px;
+        text-align: left;
+
+        border-radius: 5px;
+
+        margin-top: 20px;
+
+        width: 495px;
+        height: 54px;
+    }
+
+    .registerResponseBox img {
+        width: 30px;
+        height: 30px;
+    }
 }

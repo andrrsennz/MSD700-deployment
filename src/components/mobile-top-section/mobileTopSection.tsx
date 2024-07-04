@@ -26,7 +26,7 @@ const MobileTopSection: FC<MobileTopSectionProps> = ({ onConfirmButtonClick }) =
             <div className={`${styles.topSection} ${styles.displayFlex} ${styles.displayNone}`}>
                 <img src="/images/Backhoe.png" alt="" />
                 <p className={pathname !== "/" && pathname !== "/signup" ? styles.mobileDisplayNone : ''}>Loc Map</p>
-                <div className={`${styles.displayNone} ${pathname !== "/" && pathname !== "/signup" ? styles.greetings : ""}`}>
+                <div className={`${styles.displayNone} ${pathname !== "/" && pathname !== "/signup" ? styles.greetings : ""} ${styles.greetingsMessage}`}>
                     <img src="/icons/Icon-person-white.svg" alt="" />
                     <p>{`Welcome, ${full_name} - (${unit_name})!`}</p>
                 </div>

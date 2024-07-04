@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import ConfirmElement from "@/components/confirm-element/confirmElement";
 import Navigation from "../unit-navigation/navigation";
 import styles from "./controlIndex.module.css";
@@ -11,7 +11,17 @@ import mqtt from "mqtt";
 import MobileLidarSection from "@/components/mobile-lidar-section/mobileLidarSection";
 import MapPreviewSection from "@/components/mobile-map-preview-section/mobileMapPreviewSection";
 import MobileBottomSection from "@/components/mobile-bottom-section/mobileBottomSection";
+<<<<<<< HEAD
 import { json } from "stream/consumers";
+=======
+import GreetingsUnit from "../greetings-unit/greetingsUnit";
+import MobileTopSection from "../mobile-top-section/mobileTopSection";
+import TokenExpired from "../token-expired/tokenExpired";
+import ControlInstruction from "../control-instruction/controlInstruction";
+import ButtonInformation from "../unit-information-button/unitInformationButton";
+import EmergencyButton from "../emergency-button/emergencyButton";
+import LidarSwitch from "../lidar-switch/lidarSwitch";
+>>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
 
 var ros: any;
 var viewer: any;
@@ -35,6 +45,7 @@ var pathPlan: any;
 interface ControlIndexProps {
   handleMobileNavigation: () => void; // Define handleMobileNavigation prop
   handleMobileInstruction: () => void;
+
 }
 
 const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, handleMobileInstruction }) => {
@@ -59,6 +70,20 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
   const [mapPreviewStatus, setMapPreviewStatus] = useState(0);
   const [lidarExtend, setLidarExtend] = useState<Boolean>(false);
   const [controlExtend, setControlExtend] = useState<Boolean>(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
+  const [tokenExpired, setTokenExpired] = useState<boolean>(false);
+  const [render, setRender] = useState<boolean>(true);
+  const [showControlInstruction, setShowControlInstruction] = useState<boolean>(false);
+  const [firstLoaded, setFirstLoaded] = useState<string>('false')
+
+  const [emergencyStatus, setEmergencyStatus] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const savedStatus = localStorage.getItem('emergencyStatus');
+      return savedStatus ? JSON.parse(savedStatus) : false;
+    }
+    return false;
+  });
+
 
   const onConfirmButtonClick = () => {
     setShowConfirmClosePageDialog(true);
@@ -84,26 +109,23 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
   const setLidar = (enable: boolean, use_own_map: boolean): void => {
     axios.post(`${backendUrl}/api/lidar`, {
       enable: enable,
-      use_own_map: use_own_map
+      use_own_map: use_own_map,
     }, {
       headers: {
         'Authorization': `Bearer ${sessionStorage.getItem('token')}`
       }
     })
-      .then(function (response: any) {
+      .then(function (response) {
         console.log(response);
       })
-      .catch(function (error: any) {
+      .catch(function (error) {
         console.log(error);
       });
-    showImage = enable
+
+    showImage = enable;
   }
 
   const setRobot = (start: boolean, pause: boolean, stop: boolean): void => {
-    /*for now the logic is the same as pause because sending stop
-      because sending stop will save the map to the robot
-      also, the API should be a path planning API not exploration
-      mapping API.*/
     axios.post(`${backendUrl}/api/mapping`, {
       start: start,
       pause: pause,
@@ -148,20 +170,52 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
       });
   }
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setIsChecked(event.target.checked);
-    if (event.target.checked) {
-      setOwnMap(true, sessionStorage.getItem("mapName") || '');
-      setLidar(true, true);
+
+    console.log("event.target.checked 1111 : ", event.target.checked);
+
+
+    sessionStorage.setItem('isChecked', `${event.target.checked}`)
+    if (!event.target.checked) {
+      setLidar(true, false);
     } else {
-      setOwnMap(false, '');
       setLidar(false, false);
     }
   };
 
   const mapRef = useRef<HTMLDivElement>(null);
 
+  const booleanConverter = (status: any) => {
+    if (status == 'true') {
+      return true
+    } else {
+      return false
+    }
+  }
+
   useEffect(() => {
+    var enableRos = false;
+    async function checkToken() {
+      // await axios.get(`${backendUrl}`, {
+      //   headers: {
+      //     'Authorization': `Bearer ${sessionStorage.getItem('token') ? sessionStorage.getItem('token') : ''}`
+      //   }
+      // })
+      //   .then((response) => {
+      //     if (response.status === 200) {
+      //       setRender(true);
+      //       enableRos = true;
+      //     }
+      //     else {
+      //       setTokenExpired(true);
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     setTokenExpired(true)
+      //   });
+    }
+    checkToken();
     // Connect to ROS.
     const ROSLIB = (window as any).ROSLIB;
     ros = new ROSLIB.Ros({
@@ -182,15 +236,21 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
     // Create the main viewer.
     viewer = new (window as any).ROS2D.Viewer({
       divID: 'map',
+<<<<<<< HEAD
       width: mapRef.current?.clientWidth || 1000,
       height: mapRef.current?.clientHeight || 1000,
+=======
+      width: mapRef.current?.clientWidth || window.innerWidth,
+      height: mapRef.current?.clientHeight || window.innerHeight,
+>>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
       background: "#7F7F7F",
     });
 
+
     prevViewer = new (window as any).ROS2D.Viewer({
       divID: 'preview-map',
-      width: mapRef.current?.clientWidth || 180,
-      height: mapRef.current?.clientHeight || 180,
+      width: mapRef.current?.clientWidth || window.innerWidth * 20 / 100,
+      height: mapRef.current?.clientHeight || window.innerHeight * 20 / 100,
       background: "#7F7F7F",
     });
 
@@ -270,6 +330,13 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
 
     const mapNameFromSession = sessionStorage.getItem('mapName');
     setMapName(mapNameFromSession ?? ''); // If mapNameFromSession is null, use an empty string
+
+    if (sessionStorage.getItem('isChecked')) {
+      const isCheckedBoolean = booleanConverter(sessionStorage.getItem('isChecked'))
+      setIsChecked(isCheckedBoolean)
+    } else {
+      setIsChecked(false)
+    }
 
     return () => {
       //clean up when exiting page
@@ -495,7 +562,11 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
       gridClient.navigator.setFocusView(true);
       var button = document.getElementById("setFocusBtn")
       if (button != null) {
+<<<<<<< HEAD
         button.style.backgroundColor = "#60E3D5";
+=======
+        // button.innerText = "Focus View On"
+>>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
         console.log("button changes")
       }
     }
@@ -504,12 +575,17 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
       gridClient.navigator.setFocusView(false);
       var button = document.getElementById("setFocusBtn")
       if (button != null) {
+<<<<<<< HEAD
         button.style.backgroundColor = "#0C98B4";
+=======
+        // button.innerText = "Focus View Off"
+>>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
         console.log("button changes")
       }
     }
   }
 
+<<<<<<< HEAD
   //post multi pinpoint path plan
   const savePathplan = () => {
     pathPlan = gridClient.navigator.getPathplan();
@@ -524,6 +600,8 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
   });
   }
 
+=======
+>>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
   const toggleOptions = () => {
     setShowOptions(!showOptions);
     setIsRotated(!isRotated);
@@ -576,6 +654,30 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
     setControlExtend(!controlExtend)
   }
 
+  const handlePseudo = () => { }
+
+  const handleCloseButtonClick = () => {
+    setShowConfirmDialog(true); // or false, depending on your logic
+  };
+
+  const handleControlInstructionClick = () => {
+    setShowControlInstruction(false);
+    sessionStorage.setItem('firstLoadMappingPage', 'false')
+    setFirstLoaded('false')
+  };
+
+  const handleInfoIconClick = () => {
+    setShowControlInstruction(!showControlInstruction); // Toggle the state
+  };
+
+  const handleEmergencyStatus = () => {
+    setEmergencyStatus((prevStatus) => {
+      const newStatus = !prevStatus;
+      localStorage.setItem('emergencyStatus', JSON.stringify(newStatus));
+      return newStatus;
+    });
+  };
+
   return (
     <>
       {" "}
@@ -592,99 +694,31 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
         onConfirm={onConfirmSaveMappingButtonClick}
       />
       <MapSaving status={savingConfirmDialog} />
+      <TokenExpired status={tokenExpired} />
 
       <div className={styles.container}>
+        {showControlInstruction || firstLoaded == 'true' ? <ControlInstruction onClick={handleControlInstructionClick} height={80} imgUrl='/images/instruction_mapping.svg' /> : ''}
+
         <div className={styles.parents}>
-          <div className={`${styles.statusSection} ${styles.mobileDisplayNone}`}>
-            <div
-              className={`${styles.status} ${status === "Idle" ? styles.idle : ""
-                }`}
-            >
-              <img src="/icons/information-circle-svgrepo-com.svg" alt="" />
-              <p>
-                Status : <span>{status}</span>
-              </p>
-            </div>
-            <div className={styles.lidar}>
-              <p>LIDAR</p>
-            </div>
-            <div className={styles.lidarButton}>
-              <label className={styles.toggleSwitch}>
-                <input
-                  type="checkbox"
-                  className={styles.toggleInput}
-                  checked={isChecked}
-                  onChange={handleCheckboxChange}
-                />
-                <span className={styles.slider}></span>
-              </label>
-            </div>
-          </div>
 
-          <MobileLidarSection // Use the new component here
-            isChecked={isChecked}
-            handleCheckboxChange={handleCheckboxChange}
-          />
+          <div className={`${styles.topSection} ${styles.mobileDisplayNone}`}>
+            <GreetingsUnit />
 
-          <div className={styles.mobileDisplayNone}>
-            <CloseButton onClick={onConfirmButtonClick} />
-          </div>
-
-          <div className={`${styles.navigation} ${styles.mobileDisplayNone}`}>
-            <Navigation imageSrc={imageBlob ? URL.createObjectURL(imageBlob) : undefined} />
-          </div>
-
-          <div className={`${styles.mapSection} ${mapPreview ? "" : styles.mapSectionWithoutPreview}`}>
-            <div className={`${styles.topDiv} ${styles.mobileDisplayNone}`}>
-              <p>Run the Prototype</p>
+            <div className={`${styles.statusSection} ${styles.mobileDisplayNone}`}>
               <div
-                className={`${styles.playButton} ${status === "On Progress" ? styles.buttonActive : ""
+                className={`${styles.status} ${status === "Idle" ? styles.idle : ""
                   }`}
-                onClick={() => {
-                  if (isChecked) {
-                    setRobot(true, false, false);
-                    console.log("Play request sent");
-                  }
-                  else {
-                    alert("Please turn on LIDAR first.")
-                  }
-                  startNavigation();
-                }}
               >
-                <p>Play</p>
-                <img src="/icons/3.svg" alt="" />
+                <img src="/icons/info.png" alt="" />
+                <p>
+                  Status : <span>{status}</span>
+                </p>
               </div>
-              <div
-                className={`${styles.pauseButton} ${status === "Paused" ? styles.buttonActive : ""
-                  }`}
-                onClick={(() => {
-                  if (isChecked) {
-                    setRobot(false, true, false);
-                    console.log("Pause request sent");
-                  } else {
-                    alert("Please turn on LIDAR first.")
-                  }
-                  pauseNavigation();
-                })}
-              >
-                <p>Pause</p>
-                <img src="/icons/1.svg" alt="" />
+
+              <div className={styles.lidar}>
+                <p>LIDAR</p>
               </div>
-              <div
-                className={styles.stopButton}
-                onClick={() => {
-                  if (isChecked) {
-                    setRobot(false, true, false);
-                    console.log("Stop request sent");
-                  } else {
-                    alert("Please turn on LIDAR first.")
-                  }
-                  returnToHome();
-                }}
-              >
-                <p>Return Home</p>
-                <img src="/icons/Home.svg" alt="" />
-              </div>
+<<<<<<< HEAD
               <div
                 id="setFocusBtn"
                 className={styles.stopButton}
@@ -705,10 +739,28 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                 <p>Save Path Plan</p>
               </div>
               
+=======
+
+              <div className={styles.lidarButton}>
+                {/* <label className={styles.toggleSwitch}>
+                  <input
+                    type="checkbox"
+                    className={styles.toggleInput}
+                    checked={isChecked}
+                    onChange={handleCheckboxChange}
+                  />
+                  <span className={styles.slider}></span>
+                </label> */}
+                <LidarSwitch backendUrl={backendUrl} />
+              </div>
+
+>>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
             </div>
+          </div>
 
-            <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp} onTouchStart={whenTouchDown} onTouchMove={whenTouchMove} onTouchEnd={whenTouchUp}>
+          <MobileTopSection onConfirmButtonClick={handleCloseButtonClick} />
 
+<<<<<<< HEAD
               {/* <div className={`${styles.mobileNavigationSection}`}> */}
               <div className={`${styles.displayNone} ${styles.controlLidarButton}`}>
                 <div className={`${styles.lidarButton} ${lidarExtend ? styles.mainLidarButtonActive : ""}`} onClick={handleLidarExtend}>
@@ -728,28 +780,20 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                   </>
                 ) : ""}
               </div>
-
-              <div className={`${styles.displayNone} ${styles.controlButtonSection}`}>
-                <div className={`${styles.controlButton} ${controlExtend ? styles.mainControlButtonActive : ""}`} onClick={handleControlExtend}>
-                  <img src="/icons/Dots.svg" alt="" />
-                </div>
-                {controlExtend ? <>
-                  <div className={`${styles.controlButton}`} onClick={zoomIn}>
-                    <img src="/icons/zoomin.svg" alt="" />
-                  </div>
-                  <div className={`${styles.controlButton}`} onClick={zoomOut}>
-                    <img src="/icons/zoomout.svg" alt="" />
-                  </div>
-                  <div className={`${styles.controlButton}`} onClick={restart}>
-                    <img src="/icons/Maximize.svg" alt="" />
-                  </div>
-                  <div className={`${styles.controlButton}`} onClick={rotateCW}>
-                    <img src="/icons/new reload.svg" alt="" />
-                  </div>
-                </> : ""}
-              </div>
+=======
+          <div className={styles.mobileDisplayNone}>
+            <CloseButton onClick={onConfirmButtonClick} />
+          </div>
+>>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
 
 
+          <div className={styles.unitParents}>
+            <MobileLidarSection // Use the new component here
+              isChecked={isChecked}
+              handleCheckboxChange={handleCheckboxChange}
+            />
+
+<<<<<<< HEAD
               <div id="setFocusBtn" className={`${styles.displayNone} ${styles.focusButton}`}
               onClick={() => {
                 focusView();
@@ -757,111 +801,153 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                 <p>Focus View</p>
                 <img src="/icons/focus_button.svg" alt="" />
               </div>
+=======
+            <div className={`${styles.navigation} ${styles.mobileDisplayNone}`}>
+              <Navigation imageSrc={imageBlob ? URL.createObjectURL(imageBlob) : undefined} />
+            </div>
+>>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
 
-              <div className={`${styles.displayNone} ${styles.modeListButtonSection}`}>
+            <div className={`${styles.mapSection} ${mapPreview ? "" : styles.mapSectionWithoutPreview}`}>
+              <div className={`${styles.topDiv} ${styles.mobileDisplayNone}`}>
+                <p className={styles.runThePrototype}>Run the Prototype</p>
                 <div
-                  className={`${styles.modeListButton}`}
-                  onClick={toggleOptions}
-                >
-                  <p>Mode List</p>
-                  <img
-                    src="/icons/down-arrow.svg"
-                    alt=""
-                    className={` ${isRotated ? styles.rotated : ''}`}
-                  />
-                </div>
-
-                <div
-                  id="mode-list-1"
-                  className={`
-                  ${showOptions || selectedOption === "mode-list-1" ? styles.modeListButton : styles.displayNone} 
-                  ${selectedOption !== "" ? styles.disableModeListButton : ""} 
-                  ${selectedOption !== "" && selectedOption === "mode-list-1" ? styles.activeDisableModeListButton : ""} 
-                  ${styles.modeListButtonIcon}`}
-                  onClick={ModeListFunction("mode-list-1")}
-                >
-                  <img src="/icons/Marker.svg" alt="" />
-                  {selectedOption === "mode-list-1" ? <p>Finish Pinpoint</p> : <p>Single Pinpoint</p>}
-                </div>
-
-                <div id="mode-list-2"
-                  className={`${showOptions || selectedOption == "mode-list-2" ? styles.modeListButton : styles.displayNone}  ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-2" ? styles.activeDisableModeListButton : ""} ${styles.modeListButtonIcon}`}
-                  onClick={ModeListFunction("mode-list-2")}
-                >
-                  <img src="/icons/Marker.svg" alt="" />
-                  {selectedOption == "mode-list-2" ? <p>Finish Pinpoint</p> : <p>Multiple Pinpoint</p>}
-                </div>
-
-                <div id="mode-list-3"
-                  className={`${showOptions || selectedOption == "mode-list-3" ? styles.modeListButton : styles.displayNone}  ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-3" ? styles.activeDisableModeListButton : ""} ${styles.modeListButtonIcon}`}
-                  onClick={ModeListFunction("mode-list-3")}
-                >
-                  <img src="/icons/Home.svg" alt="" />
-                  {selectedOption == "mode-list-3" ? <p>Finish Home Base</p> : <p>Set Home Base</p>}
-                </div>
-
-                <div id="mode-list-4"
-                  className={`${showOptions || selectedOption == "mode-list-4" ? styles.modeListButton : styles.displayNone}  ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-4" ? styles.activeDisableModeListButton : ""} ${styles.modeListButtonIcon}`}
-                  onClick={ModeListFunction("mode-list-4")}
-                >
-                  <img src="/icons/Position.svg" alt="" />
-                  {selectedOption == "mode-list-4" ? <p>Finish Initial Pose</p> : <p>Initial Pose </p>}
-                </div>
-
-                <div id="mode-list-5" className={`
-                ${showOptions || selectedOption == "mode-list-1" || selectedOption == "mode-list-2" ? styles.modeListButton : styles.displayNone} 
-                ${styles.deleteOption} 
-                ${selectedOption !== "mode-list-1" && selectedOption !== "mode-list-2" ? styles.disableModeListButton : ""} 
-                ${deleteConfirmation ? styles.deleteConfirmationTrue : ""} 
-                ${styles.modeListButtonIcon}`} onClick={deletePinPoint}>
-                  <img src="/icons/delete_mode_list.svg" alt="" />
-                  <p>{deleteConfirmation ? "Click To Delete" : "Delete All Pinpoints"}</p>
-                </div>
-
-              </div>
-
-
-              <div className={`${styles.displayNone} ${styles.bottomSection}`}>
-
-                <div
-                  className={`${styles.mobileStatus} ${status === "Idle" ? styles.idle : ""
+                  className={`${styles.playButton} ${status === "On Progress" ? styles.buttonActive : ""
                     }`}
+                  onClick={() => {
+                    if (!isChecked) {
+                      setRobot(true, false, false);
+                      console.log("Play request sent");
+                    }
+                    else {
+                      alert("Please turn on LIDAR first.")
+                    }
+                    startNavigation();
+                  }}
                 >
-                  <p>
-                    Status : <span>{status}</span>
-                  </p>
+                  <p>Play</p>
+                  <img src="/icons/3.svg" alt="" />
+                </div>
+                <div
+                  className={`${styles.pauseButton} ${status === "Paused" ? styles.buttonActive : ""
+                    }`}
+                  onClick={(() => {
+                    if (!isChecked) {
+                      setRobot(false, true, false);
+                      console.log("Pause request sent");
+                    } else {
+                      alert("Please turn on LIDAR first.")
+                    }
+                    pauseNavigation();
+                  })}
+                >
+                  <p>Pause</p>
+                  <img src="/icons/1.svg" alt="" />
+                </div>
+                <div
+                  className={styles.stopButton}
+                  onClick={() => {
+                    if (!isChecked) {
+                      setRobot(false, true, false);
+                      console.log("Stop request sent");
+                    } else {
+                      alert("Please turn on LIDAR first.")
+                    }
+                    returnToHome();
+                  }}
+                >
+                  <p>Return Home</p>
+                  <img src="/icons/Home.svg" alt="" />
                 </div>
 
-                <div className={styles.mobileMapName}>{mapName}</div>
+                <div
+                  id="setFocusBtn"
+                  className={styles.focusButton}
+                  onClick={() => {
+                    focusView();
+                  }}
+                >
+                  <p>Focus View</p>
+                  <img src="/icons/Position.svg" alt="" />
+<<<<<<< HEAD
+                  {selectedOption == "mode-list-4" ? <p>Finish Initial Pose</p> : <p>Initial Pose </p>}
+=======
+>>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
+                </div>
+
+                <div className={styles.topDivInformation}>
+                  <img src="/icons/information-circle-svgrepo-com (1).svg" alt="" />
+                  <p>Please add pinpoint(s) inside the pinpoint mode then exit to run the robot.</p>
+                </div>
+
               </div>
 
-              {/* </div> */}
-
-              <div className={`${styles.navigationSection}  ${styles.mobileDisplayNone}`}>
-
-              <div className={styles.mapPreview}>
-                  <div id="preview-map" className={styles.map}>
-                    {/* <div id="preview-map"></div> */}
-                    {/* <img src="/images/map.png" alt="" /> */}
+              <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp} onTouchStart={whenTouchDown} onTouchMove={whenTouchMove} onTouchEnd={whenTouchUp}>
+                {/* <div className={`${styles.mobileNavigationSection}`}> */}
+                <div className={`${styles.displayNone} ${styles.controlLidarButton}`}>
+                  <div className={`${styles.lidarButton} ${lidarExtend ? styles.mainLidarButtonActive : ""}`} onClick={handleLidarExtend}>
+                    {lidarExtend ? <img src="/icons/plus.svg" alt="" /> : <img src="/icons/minus.svg" alt="" />}
                   </div>
+                  {lidarExtend ? (
+                    <>
+                      <div className={`${styles.lidarButton}`}>
+                        <img src="/icons/3.svg" alt="" />
+                      </div>
+                      <div className={`${styles.lidarButton}`}>
+                        <img src="/icons/1.svg" alt="" />
+                      </div>
+                      <div className={`${styles.lidarButton} ${styles.lidarButtonActive}`}>
+                        <img src="/icons/Home.svg" alt="" />
+                      </div>
+                    </>
+                  ) : ""}
                 </div>
 
-                <div className={`${styles.modeListSection}`}>
+                <div className={`${styles.displayNone} ${styles.controlButtonSection}`}>
+                  <div className={`${styles.controlButton} ${controlExtend ? styles.mainControlButtonActive : ""}`} onClick={handleControlExtend}>
+                    <img src="/icons/Dots.svg" alt="" />
+                  </div>
+                  {controlExtend ? <>
+                    <div className={`${styles.controlButton} ${styles.controlButtonOption}`} onClick={zoomIn}>
+                      <img src="/icons/zoomin.svg" alt="" />
+                    </div>
+                    <div className={`${styles.controlButton} ${styles.controlButtonOption}`} onClick={zoomOut}>
+                      <img src="/icons/zoomout.svg" alt="" />
+                    </div>
+                    <div className={`${styles.controlButton} ${styles.controlButtonOption}`} onClick={restart}>
+                      <img src="/icons/Maximize.svg" alt="" />
+                    </div>
+                    <div className={`${styles.controlButton} ${styles.controlButtonOption}`} onClick={rotateCW}>
+                      <img src="/icons/new reload.svg" alt="" />
+                    </div>
+                  </> : ""}
+                </div>
+
+
+                <div className={`${styles.displayNone} ${styles.focusButton}`}>
+                  <p>Focus View</p>
+                  <img src="/icons/focus_button.svg" alt="" />
+                </div>
+
+                <div className={`${styles.displayNone} ${styles.modeListButtonSection}`}>
                   <div
-                    className={`${styles.modeListParents} ${styles.modeListOption}`}
+                    className={`${styles.modeListButton}`}
                     onClick={toggleOptions}
                   >
                     <p>Mode List</p>
                     <img
                       src="/icons/down-arrow.svg"
                       alt=""
-                      className={`${styles.modeList} ${isRotated ? styles.rotated : ''}`}
+                      className={` ${isRotated ? styles.rotated : ''}`}
                     />
                   </div>
 
                   <div
                     id="mode-list-1"
-                    className={`${showOptions || selectedOption === "mode-list-1" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption !== "" ? styles.disableModeListButton : ""} ${selectedOption !== "" && selectedOption === "mode-list-1" ? styles.activeDisableModeListButton : ""}`}
+                    className={`
+                  ${showOptions || selectedOption === "mode-list-1" ? styles.modeListButton : styles.displayNone} 
+                  ${selectedOption !== "" ? styles.disableModeListButton : ""} 
+                  ${selectedOption !== "" && selectedOption === "mode-list-1" ? styles.activeDisableModeListButton : ""} 
+                  ${styles.modeListButtonIcon} ${styles.textMarginMobileSection}`}
                     onClick={ModeListFunction("mode-list-1")}
                   >
                     <img src="/icons/Marker.svg" alt="" />
@@ -869,7 +955,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                   </div>
 
                   <div id="mode-list-2"
-                    className={`${showOptions || selectedOption == "mode-list-2" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-2" ? styles.activeDisableModeListButton : ""}`}
+                    className={`${showOptions || selectedOption == "mode-list-2" ? styles.modeListButton : styles.displayNone}  ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-2" ? styles.activeDisableModeListButton : ""} ${styles.modeListButtonIcon} ${styles.textMarginMobileSection} `}
                     onClick={ModeListFunction("mode-list-2")}
                   >
                     <img src="/icons/Marker.svg" alt="" />
@@ -877,7 +963,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                   </div>
 
                   <div id="mode-list-3"
-                    className={`${showOptions || selectedOption == "mode-list-3" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-3" ? styles.activeDisableModeListButton : ""}`}
+                    className={`${showOptions || selectedOption == "mode-list-3" ? styles.modeListButton : styles.displayNone}  ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-3" ? styles.activeDisableModeListButton : ""} ${styles.modeListButtonIcon} ${styles.textMarginMobileSection} `}
                     onClick={ModeListFunction("mode-list-3")}
                   >
                     <img src="/icons/Home.svg" alt="" />
@@ -885,13 +971,18 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                   </div>
 
                   <div id="mode-list-4"
-                    className={`${showOptions || selectedOption == "mode-list-4" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-4" ? styles.activeDisableModeListButton : ""}`}
+                    className={`${showOptions || selectedOption == "mode-list-4" ? styles.modeListButton : styles.displayNone}  ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-4" ? styles.activeDisableModeListButton : ""} ${styles.modeListButtonIcon} ${styles.textMarginMobileSection} `}
                     onClick={ModeListFunction("mode-list-4")}
                   >
                     <img src="/icons/Position.svg" alt="" />
-                    {selectedOption == "mode-list-4" ? <p>Finish Initial Pose</p> : <p>Initial Pose</p>}
+                    {selectedOption == "mode-list-4" ? <p>Finish Home Base</p> : <p>Set Home Base</p>}
                   </div>
-                  <div id="mode-list-5" className={`${showOptions || selectedOption == "mode-list-1" || selectedOption == "mode-list-2" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.deleteOption} ${selectedOption !== "mode-list-1" && selectedOption !== "mode-list-2" ? styles.disableModeListButton : ""} ${deleteConfirmation ? styles.deleteConfirmationTrue : ""}`} onClick={deletePinPoint}>
+
+                  <div id="mode-list-5" className={`
+                ${showOptions || selectedOption == "mode-list-1" || selectedOption == "mode-list-2" ? styles.modeListButton : styles.displayNone} 
+                ${selectedOption !== "mode-list-1" && selectedOption !== "mode-list-2" ? styles.disableModeListButton : ""} 
+                ${deleteConfirmation ? styles.deleteConfirmationTrue : ""} 
+                ${styles.modeListButtonIcon} ${styles.deleteOption} ${styles.textMarginMobileSection}`} onClick={deletePinPoint}>
                     <img src="/icons/delete_mode_list.svg" alt="" />
                     <p>{deleteConfirmation ? "Click To Delete" : "Delete All Pinpoints"}</p>
                   </div>
@@ -899,36 +990,127 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                 </div>
 
 
-                <div className={styles.buttonNavigation}>
-                  <div className={styles.zoomIn} onClick={zoomIn}>
-                    <img src="/icons/zoomin.svg" alt="" />
+                <div className={`${styles.displayNone} ${styles.bottomSection}`}>
+
+                  <div
+                    className={`${styles.mobileStatus} ${status === "Idle" ? styles.idle : ""
+                      }`}
+                  >
+                    <p>
+                      Status : <span>{status}</span>
+                    </p>
                   </div>
-                  <div className={styles.zoomOut} onClick={zoomOut}>
-                    <img src="/icons/zoomout.svg" alt="" />
+
+                  <div className={styles.mobileMapName}>ROOM_A</div>
+                </div>
+
+                {/* </div> */}
+
+                <div className={`${styles.navigationSection}  ${styles.mobileDisplayNone}`}>
+
+                  <div className={styles.mapPreview}>
+                    <div id="preview-map" className={styles.map}>
+                    </div>
                   </div>
-                  <div className={styles.restart} onClick={restart}>
-                    <img src="/icons/Maximize.svg" alt="" />
+
+                  <div className={`${styles.modeListSection}`}>
+                    <div
+                      className={`${styles.modeListParents} ${styles.modeListOption}`}
+                      onClick={toggleOptions}
+                    >
+                      <p>Mode List</p>
+                      <img
+                        src="/icons/down-arrow.svg"
+                        alt=""
+                        className={`${styles.modeList} ${isRotated ? styles.rotated : ''}`}
+                      />
+                    </div>
+
+                    <div
+                      id="mode-list-1"
+                      className={`${showOptions || selectedOption === "mode-list-1" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption !== "" ? styles.disableModeListButton : ""} ${selectedOption !== "" && selectedOption === "mode-list-1" ? styles.activeDisableModeListButton : ""}`}
+                      onClick={ModeListFunction("mode-list-1")}
+                    >
+                      <img src="/icons/Marker.svg" alt="" />
+                      {selectedOption === "mode-list-1" ? <p>Finish Pinpoint</p> : <p>Single Pinpoint</p>}
+                    </div>
+
+                    <div id="mode-list-2"
+                      className={`${showOptions || selectedOption == "mode-list-2" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-2" ? styles.activeDisableModeListButton : ""}`}
+                      onClick={ModeListFunction("mode-list-2")}
+                    >
+                      <img src="/icons/Marker.svg" alt="" />
+                      {selectedOption == "mode-list-2" ? <p>Finish Pinpoint</p> : <p>Multiple Pinpoint</p>}
+                    </div>
+
+                    <div id="mode-list-3"
+                      className={`${showOptions || selectedOption == "mode-list-3" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-3" ? styles.activeDisableModeListButton : ""}`}
+                      onClick={ModeListFunction("mode-list-3")}
+                    >
+                      <img src="/icons/Home.svg" alt="" />
+                      {selectedOption == "mode-list-3" ? <p>Finish Home Base</p> : <p>Set Home Base</p>}
+                    </div>
+
+                    <div id="mode-list-4"
+                      className={`${showOptions || selectedOption == "mode-list-4" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.option} ${selectedOption != "" ? styles.disableModeListButton : ""} ${selectedOption != "" && selectedOption == "mode-list-4" ? styles.activeDisableModeListButton : ""}`}
+                      onClick={ModeListFunction("mode-list-4")}
+                    >
+                      <img src="/icons/Position.svg" alt="" />
+                      {selectedOption == "mode-list-4" ? <p>Finish Initial Pose</p> : <p>Initial Pose</p>}
+                    </div>
+                    <div id="mode-list-5" className={`${showOptions || selectedOption == "mode-list-1" || selectedOption == "mode-list-2" ? "" : styles.displayNone} ${styles.modeListParents} ${styles.deleteOption} ${selectedOption !== "mode-list-1" && selectedOption !== "mode-list-2" ? styles.disableModeListButton : ""} ${deleteConfirmation ? styles.deleteConfirmationTrue : ""}`} onClick={deletePinPoint}>
+                      <img src="/icons/delete_mode_list.svg" alt="" />
+                      <p>{deleteConfirmation ? "Click To Delete" : "Delete All Pinpoints"}</p>
+                    </div>
+
                   </div>
-                  <div className={styles.restart} onClick={rotateCW}>
-                    <img src="/icons/new reload.svg" alt="" />
+
+
+                  <div className={`${styles.buttonNavigation} ${styles.mobileDisplayNone}`}>
+                    <div className={styles.zoomIn} onClick={zoomIn}>
+                      <img src="/icons/zoomin.svg" alt="" />
+                    </div>
+                    <div className={styles.zoomOut} onClick={zoomOut}>
+                      <img src="/icons/zoomout.svg" alt="" />
+                    </div>
+                    <div className={styles.restart} onClick={restart}>
+                      <img src="/icons/Maximize.svg" alt="" />
+                    </div>
+                    <div className={styles.restart} onClick={rotateCW}>
+                      <img src="/icons/new reload.svg" alt="" />
+                    </div>
                   </div>
+
+
+                </div>
+
+                <div className={`${styles.footerMap} ${styles.mobileDisplayNone}`}>
+                  <EmergencyButton />
+                  <div className={styles.mapName}>Mapping Preview</div>
                 </div>
 
 
               </div>
-
-              <div className={`${styles.footerMap}  ${styles.mobileDisplayNone}`}>
-                <div className={styles.emergencyButton}>
-                  <img src="/icons/emergency.svg" alt="" />
-                  <p>Emergency Button</p>
-                </div>
-                <div className={styles.mapName}>{mapName}</div>
-              </div>
-
-
             </div>
+
+            <MapPreviewSection
+              mapPreview={mapPreview}
+              mapPreviewStatus={mapPreviewStatus}
+              handleMapPreviewStatus={handleMapPreviewStatus}
+            />
+
+            <MobileBottomSection
+              handleMobileNavigation={handleMobileNavigation}
+              handleMapPreview={handleMapPreview}
+              handleMobileInstruction={handleMobileInstruction}
+              handleMobileSorterDisplay={handlePseudo}
+              mapIndex={true}
+            />
+
+            <ButtonInformation onClick={handleInfoIconClick} />
           </div>
 
+<<<<<<< HEAD
           <div className={`${styles.displayNone} ${mapPreview ? styles.liveMapSection : ""}`}>
             <div className={styles.buttonLiveMapSection}>
               <div onClick={() => handleMapPreviewStatus(0)} className={`${styles.cameraButton} ${styles.buttonLiveMap} ${mapPreviewStatus === 0 ? styles.buttonActive : ""}`}>
@@ -992,6 +1174,10 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
           /> */}
           <div className={styles.mobileDisplayNone}>
             {/* <Footer status={false} /> */}
+=======
+          <div className={`${styles.footerSection} ${styles.mobileDisplayNone}`}>
+            <Footer status={false} />
+>>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
           </div>
 
         </div>

@@ -1,0 +1,62 @@
+.emergencyButton {
+    width: 150.5px;
+    height: 37.1px;
+
+    background-color: #C66E87;
+    display: flex;
+    border-radius: 14px;
+    border: 2.1px solid #FF7582;
+    color: #FFFFFF;
+
+    font-family: Inter;
+    font-size: 13.3px;
+    font-weight: 500;
+    line-height: 16.1px;
+    text-align: left;
+
+    align-items: center;
+    gap: 7px;
+    justify-content: center;
+}
+
+.emergencyButton p {
+    margin: 0;
+}
+
+.emergencyButton img {
+    width: 16px;
+    height: 16px;
+}
+
+.emergencyButton:hover {
+    cursor: pointer;
+}
+
+.emergencyButtonActive {
+    background-color: #FF7582;
+}
+
+@media (min-width:2201px) {
+
+    .emergencyButton {
+        width: 221px;
+        height: 51px;
+
+        border-radius: 20px;
+        border: 2.1px solid #FF7582;
+
+        font-family: Inter;
+        font-size: 19px;
+        font-weight: 500;
+        line-height: 22.99px;
+        text-align: left;
+
+        align-items: center;
+        gap: 10px;
+    }
+
+    .emergencyButton img {
+        width: 25px;
+        height: 25px;
+    }
+}

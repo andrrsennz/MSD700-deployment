@@ -20,7 +20,7 @@ const MobileRegisterUnit: FC<MobileRegisterUnitProps> = (props) => {
         >
             <div className={styles.confirmationDialog}>
                 <div className={styles.registerUnitColumn}>
-                    <div className={styles.inputUnit}>
+                    <div className={`${styles.inputUnit} ${true ? styles.inputFailed : ''}`}>
                         <label htmlFor="username">Unit ID</label>
                         <p className={styles.separateElement}>:</p>
                         <input

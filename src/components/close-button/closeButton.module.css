@@ -1,52 +1,78 @@
 .closeButton {
     position: absolute;
-    right: 10px;
+    right: 20px;
     top: 10px;
     background-color: #0C98B4;
-    border: 3.5px solid #60E3D5;
-    color: #FFFFFF;
-    padding-top: 5px;
-    border-radius: 10px;
-    cursor: pointer;
 
-    font-family: 'Inter', sans-serif;
-    font-size: 1em;
-    font-weight: 500;
-    line-height: 19px;
-    letter-spacing: 0em;
-    z-index: 3;
+    color: #FFFFFF;
+    cursor: pointer;
+    border: 2px solid #60E3D5;
+    border-radius: 5px;
+
+    padding: 17px;
+
+    width: 35px;
+    height: 35px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
 }
 
 .closeButton img {
-    width: 30px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
 }
+
 
 .closeButton:hover {
     box-shadow: -4px 4px 4px 0px #00000040;
     transition: 1s;
 }
 
-@media (min-width:2560px) {
-    .closeButton {
-        margin-right: 30px;
-        height: 60px;
-        width: 60px;
-        border-radius: 8.11px;
-    }
-}
 
-@media (max-width:361px) {
+
+@media (max-width:1400px) {
     .mobileHide {
         display: none;
     }
 
     .closeButton {
         border-radius: 5px;
+        right: 10px;
+
+        width: 32px;
+        height: 32px;
+
+        padding: 0;
     }
 
     .closeButton img {
-        width: 20px;
-        height: 20px;
+        width: 16px;
+        height: 16px;
+    }
+}
+
+@media (max-width: 2200px) and (min-width:1401px) {
+    .closeButton {
+        margin-top: 10px;
+    }
+}
+
+@media (min-width:2201px) {
+    .closeButton {
+        width: 50px;
+        height: 50px;
+
+        margin-right: 10px;
+        border-radius: 8.11px;
+
+        margin-top: 20px;
+    }
+
+    .closeButton img {
+        width: 30px;
+        height: 30px;
     }
 }

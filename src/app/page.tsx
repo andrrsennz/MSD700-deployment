@@ -14,6 +14,7 @@ import RegisterUnitSuccess from "@/components/register-unit-success/registerUnit
 import RegisterUnitFailed from "@/components/register-unit-failed/registerUnitFailed";
 import RegisterUnitFailure from "@/components/register-unit-failure/registerUnitFailure";
 import MobileTopSection from "@/components/mobile-top-section/mobileTopSection";
+import TableComponent from "@/components/table/tableComponent";
 
 export default function Home(): JSX.Element {
   const router = useRouter();
@@ -25,11 +26,98 @@ export default function Home(): JSX.Element {
   const [registerFailure, setRegisterFailure] = useState(false);
   const [unitId, setUnitId] = useState(''); // Add this line to create a state variable for the unit ID input
   const [instructionShowed, setInstructionShowed] = useState<boolean>(false);
+  const [registerUnitFailed, setRegisterUnitFailed] = useState<boolean>(false);
 
   const [registerInvalid, setRegisterInvalid] = useState(false);
 
-  const [data, setData] = useState<any[]>([]);
-
+  const [data, setData] = useState<any[]>(
+    [
+      {
+        "id": 1,
+        "unit": "unit1",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 2,
+        "unit": "tes",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 3,
+        "unit": "tes1",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 4,
+        "unit": "asdd",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 5,
+        "unit": "njjjjj",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 6,
+        "unit": "ttt",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 7,
+        "unit": "asd",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 8,
+        "unit": "asdss",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 9,
+        "unit": "asdssvvv",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 10,
+        "unit": "sdsdsd",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 11,
+        "unit": "asdssvvv",
+        "status": "off",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 12,
+        "unit": "sdsdsd",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+    ]
+  );
 
   const [showIncorrectPassword, setShowIncorrectPassword] = useState<boolean>(false);
 
@@ -42,10 +130,11 @@ export default function Home(): JSX.Element {
       : "";
   }
 
-  const [showUtilSection, setShowUtilSection] = useState<boolean>(false);
+  const [showUtilSection, setShowUtilSection] = useState<boolean>(true);
   const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");
+
 
 
   const onProceedButtonClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
@@ -55,30 +144,29 @@ export default function Home(): JSX.Element {
 
     const username = document.getElementById("username") as HTMLInputElement;
     const password = document.getElementById("password") as HTMLInputElement;
-    axios.post(`${backendUrl}/user/login`, {
-      username: username.value,
-      password: password.value
-    })
-      .then(function (response: any) {
-        if (response.status === 200) {
-          sessionStorage.setItem("username", response.data.username);
-          sessionStorage.setItem("full_name", response.data.full_name);
-          sessionStorage.setItem("token", response.data.token);
 
-          fetchUnitData(response.data.token);
-          setShowUtilSection(true);
-        }
-        else {
-          alert("Invalid username or password");
-        }
-      })
-      .catch(function (error: any) {
-        console.log(error);
-        setShowIncorrectPassword(true);
-        setTimeout(() => {
-          setShowIncorrectPassword(false);
-        }, 2000);
-      })
+    // axios.post(`${backendUrl}/user/login`, {
+    //   username: username.value,
+    //   password: password.value
+    // })
+    //   .then(function (response: any) {
+    //     if (response.status === 200) {
+    //       sessionStorage.setItem("username", response.data.username);
+    //       sessionStorage.setItem("full_name", response.data.full_name);
+    //       sessionStorage.setItem("token", response.data.token);
+
+    //       fetchUnitData(response.data.token);
+    //       setShowUtilSection(true);
+    //       setShowIncorrectPassword(false);
+    //     }
+    //     else {
+    //       alert("Invalid username or password");
+    //     }
+    //   })
+    //   .catch(function (error: any) {
+    //     console.log(error);
+    //     setShowIncorrectPassword(true);
+    //   })
 
   };
 
@@ -99,6 +187,8 @@ export default function Home(): JSX.Element {
           }));
 
           setData(formattedData); // Update your state
+          console.log(formattedData);
+
           setShowUtilSection(true);
         }
       })
@@ -202,6 +292,7 @@ export default function Home(): JSX.Element {
   };
 
   const handleRowClick = (idx: any) => {
+
     if (selectedRowIdx === idx) {
       // If the row is already selected, unselect it
       setSelectedRowIdx(null);
@@ -263,7 +354,8 @@ export default function Home(): JSX.Element {
             width={20}
             height={20}
           />
-          <p>You haven't selected the unit yet.</p>
+          <p className={`${styles.displayNone} ${styles.mobileDisplay}`}>You haven’t chose the unit.</p>
+          <p className={styles.mobileHide}>You haven't selected the unit yet.</p>
         </div>
       </div>
     );
@@ -272,6 +364,12 @@ export default function Home(): JSX.Element {
   const handleRegisterButtonClick = async () => {
     const unitInput = document.getElementById('unitid') as HTMLInputElement | null;
     const token = sessionStorage.getItem('token'); // Retrieve the token from sessionStorage
+
+    if (unitInput?.value == "") {
+      setRegisterUnitFailed(true)
+      return
+    }
+
 
     if (unitInput && token) {
       try {
@@ -285,7 +383,7 @@ export default function Home(): JSX.Element {
 
         if (response.data.success) {
           setRegisterSuccess(true);
-          setShowRegisterUnitColumn(false);
+          setUnitId('')
           setTimeout(() => setRegisterSuccess(false), 2000); // Hide the success message after 2 seconds
           fetchUnitData(token); // Fetch unit data again to update the list
         } else {
@@ -312,11 +410,17 @@ export default function Home(): JSX.Element {
 
   const handleUnitIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUnitId(event.target.value);
+    setRegisterUnitFailed(false)
   };
 
-  const setInstructionShow = () => {
-    setInstructionShowed(!instructionShowed)
+  const setInstructionShowActive = () => {
+    setInstructionShowed(true)
   }
+
+  const setInstructionShowInactive = () => {
+    setInstructionShowed(false)
+  }
+
 
   const handleCloseButtonClick = () => {
     setShowConfirmDialog(true); // or false, depending on your logic
@@ -336,7 +440,7 @@ export default function Home(): JSX.Element {
           <div className={`${styles.mobileRegisterUnit} ${styles.displayNone} ${styles.mobileDisplay} `}>
             <div className={styles.confirmationDialog}>
               <div className={styles.registerUnitColumn}>
-                <div className={styles.inputUnit}>
+                <div className={`${styles.inputUnit} ${registerUnitFailed ? styles.inputFailed : ''}`}>
                   <label htmlFor="username">Unit ID</label>
                   <p className={styles.separateElement}>:</p>
                   <input
@@ -354,7 +458,7 @@ export default function Home(): JSX.Element {
                     className={styles.registerButton}
                     type="button"
                     onClick={handleRegisterButtonClick}
-                    disabled={!unitId} // Disable the button if `unitId` is empty
+                  // Disable the button if `unitId` is empty
                   >
                     Register
                   </button>
@@ -418,7 +522,7 @@ export default function Home(): JSX.Element {
         </div>
 
         {/* --------------------------- Mobile Section  ------------------------------*/}
-        <div className={`${styles.centerSection} ${styles.displayNone} ${styles.mobileDisplayFlex}`}>
+        <div className={`${styles.centerSection} ${styles.displayNone} ${styles.mobileDisplayFlex}`} onClick={setInstructionShowInactive}>
 
           <div className={styles.greetings}>
             <p>Hello, welcome to the MSD700 application!</p>
@@ -430,12 +534,8 @@ export default function Home(): JSX.Element {
               <div className={styles.labelSection}>
                 <p>
                   <span>
-                    <Image
-                      src="/icons/information-circle-svgrepo-com.svg"
-                      alt="Picture of the author"
-                      width={500}
-                      height={500}
-                    />
+                    <img src="/icons/information-circle-svgrepo-com.svg"
+                      alt="Picture of the author" />
                   </span>
                   Please input your login data.
                 </p>
@@ -456,7 +556,7 @@ export default function Home(): JSX.Element {
                     />
                   </div>
                   <div className={styles.inputUnit}>
-                    <label htmlFor="password">Password</label>
+                    <label htmlFor="password" className={styles.passwordLabel}>Password</label>
                     <p className={styles.separateElement}>:</p>
                     <div className={`${styles.passwordInputContainer} ${showIncorrectPassword ? styles.passwordInputInvalid : ''}`}>
                       <input
@@ -469,15 +569,7 @@ export default function Home(): JSX.Element {
                       // Disable the input if showUtilSection is true
                       />
                       <div className={styles.passwordStatusButton}>
-                        <img src="/icons/Eye.svg" alt="Picture of the author" onClick={() => setShowPassword(!showPassword)} style={{ cursor: showUtilSection ? 'not-allowed' : 'pointer' }} />
-                        {/* <Image
-                          src="/icons/Eye.svg"
-                          alt="Picture of the author"
-                          width={30}
-                          height={30}
-                          
-                           // Set cursor style based on showUtilSection
-                        /> */}
+                        <img src={showPassword ? "/icons/Eye-off.svg" : "/icons/Eye.svg"} alt="Picture of the author" onClick={() => setShowPassword(!showPassword)} style={{ cursor: showUtilSection ? 'not-allowed' : 'pointer' }} />
                       </div>
                     </div>
                   </div>
@@ -508,50 +600,7 @@ export default function Home(): JSX.Element {
               showUtilSection ? (
                 <>
                   <div className={styles.tableUnit}>
-                    <div className={styles.tableSection}>
-                      <table className={styles.table}>
-                        <thead className={styles.headerTable}>
-                          <tr >
-                            <th>No.</th>
-                            <th>MSD700 Unit</th>
-                            <th>Status</th>
-                            <th>Battery</th>
-                            <th>Uptime</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {data.map((item, idx) => (
-                            <tr
-                              key={idx}
-                              onClick={() => handleRowClick(idx)}
-                              className={`${item.status == 'off' ? styles.offRow : styles.onRow} ${selectedRowIdx === idx ? styles.selectedRow : ''}`}
-                            >
-                              <td data-column="0">{idx + 1}</td>
-                              <td data-column="1">{item.unit}</td>
-                              <td data-column="2">{item.status}</td>
-                              <td data-column="3">{item.battery}</td>
-                              <td data-column="4">{item.uptime}</td>
-                            </tr>
-                          ))}
-
-                        </tbody>
-                      </table>
-
-                    </div>
-                    <button
-                      // onClick={goToUnitPage}
-                      aria-label="Submit form Button"
-                      className={styles.loginFormButton}
-                      onClick={handleStartButtonClick}
-                    >
-                      <p>Start</p>
-                      <Image
-                        src="/icons/arrow-right-3-svgrepo-com (1).svg"
-                        alt=""
-                        width={500}
-                        height={500}
-                      />
-                    </button>
+                    <TableComponent data={data} handleRowClick={handleRowClick} selectedRowIdx={selectedRowIdx} handleStartButtonClick={handleStartButtonClick} />
 
                     <AlertComponent />
                   </div>
@@ -561,7 +610,7 @@ export default function Home(): JSX.Element {
 
           </div>
 
-          <div className={styles.registerSection}>
+          <div className={`${styles.registerSection} ${showUtilSection ? styles.anyUtils : styles.withoutUtils}`}>
             {showUtilSection ? (<>
               <div className={styles.textSection}>
                 <p>Is the unit not registered yet?</p>
@@ -581,7 +630,7 @@ export default function Home(): JSX.Element {
 
 
             {!showUtilSection ? <>
-              <div className={styles.textSection}>
+              <div className={`${styles.textSection}`}>
                 <p>Don't have an account yet?</p>
               </div>
             </> : <></>}
@@ -592,7 +641,7 @@ export default function Home(): JSX.Element {
             </div>
           </div>
 
-          <div className={styles.footer}>
+          <div className={`${styles.footer}`}>
             <Footer status={true} />
           </div>
         </div>
@@ -608,65 +657,131 @@ export default function Home(): JSX.Element {
 
             <div className={styles.loginSection}>
               <div className={styles.labelSection}>
+                <Image
+                  src="/icons/information-circle-svgrepo-com.svg"
+                  alt="Picture of the author"
+                  width={500}
+                  height={500}
+                />
                 <p>
-                  <span>
-                    <Image
-                      src="/icons/information-circle-svgrepo-com.svg"
-                      alt="Picture of the author"
-                      width={500}
-                      height={500}
-                    />
-                  </span>
                   Please input your login data.
                 </p>
               </div>
-              <div className={styles.inputSection}>
-                <form action="#" method="post">
-                  <div className={styles.inputUnit}>
-                    <label htmlFor="username">Username</label>
-                    <p className={styles.separateElement}>:</p>
-                    <input
-                      type="text"
-                      id="username"
-                      name="username"
-                      defaultValue=""
-                      required
-                    // Disable the input if showUtilSection is true
-                    />
-                  </div>
-                  <div className={styles.inputUnit}>
-                    <label htmlFor="password">Password</label>
-                    <p className={styles.separateElement}>:</p>
-                    <div className={styles.passwordInputContainer}>
+              <div className={styles.leftSection}>
+                <div className={styles.inputSection}>
+                  <form autoComplete="none" action="#" method="post">
+                    <div className={styles.inputUnit}>
+                      <label htmlFor="username">Username</label>
+                      <p className={styles.separateElement}>:</p>
                       <input
-                        type={showPassword ? 'text' : 'password'}
-                        id="password"
-                        name="password"
+                        type="text"
+                        id="username"
+                        name="username"
                         defaultValue=""
                         required
                       // Disable the input if showUtilSection is true
                       />
-                      <div className={styles.passwordStatusButton}>
-                        <Image
-                          src="/icons/Eye.svg"
-                          alt="Picture of the author"
-                          width={30}
-                          height={30}
-                          onClick={() => setShowPassword(!showPassword)}
-                          style={{ cursor: showUtilSection ? 'not-allowed' : 'pointer' }} // Set cursor style based on showUtilSection
+                    </div>
+                    <div className={styles.inputUnit}>
+                      <label htmlFor="password">Password</label>
+                      <p className={styles.separateElement}>:</p>
+                      <div className={styles.passwordInputContainer}>
+                        <input
+                          type={showPassword ? 'text' : 'password'}
+                          id="password"
+                          name="password"
+                          defaultValue=""
+                          required
+                        // Disable the input if showUtilSection is true
                         />
+                        <div className={styles.passwordStatusButton}>
+                          <Image
+                            src={showPassword ? "/icons/Eye-off.svg" : "/icons/Eye.svg"}
+                            alt="Picture of the author"
+                            width={30}
+                            height={30}
+                            onClick={() => setShowPassword(!showPassword)}
+                            style={{ cursor: showUtilSection ? 'not-allowed' : 'pointer' }} // Set cursor style based on showUtilSection
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <button
-                    className={styles.submitButton}
-                    type="submit"
-                    onClick={onProceedButtonClick}
-                  // Disable the button if showUtilSection is true
-                  >
-                    Proceed
-                  </button>
-                </form>
+                    <button
+                      className={styles.submitButton}
+                      type="submit"
+                      onClick={onProceedButtonClick}
+                    // Disable the button if showUtilSection is true
+                    >
+                      Proceed
+                    </button>
+                  </form>
+                </div>
+
+                {
+                  showUtilSection ? (
+                    <>
+                      <div className={`${styles.registerUnit} ${styles.hidexl}`}>
+                        <div className={styles.registerUnitForm}>
+                          <div className={styles.registerUnitText}>
+                            <p>Is the unit not registered yet?</p>
+                          </div>
+                          <div className={styles.buttonRegisterUnit} onClick={handleShowRegisterUnitColumn}>
+                            <Image
+                              src="/icons/Car.svg"
+                              alt="Picture of the author"
+                              width={20}
+                              height={20}
+                            />
+                            <p>UNIT REGISTER</p>
+                          </div>
+                        </div>
+                        {showRegisterUnitColumn && (
+                          <div className={`${styles.registerUnitColumn} ${styles.mobileHide}`}>
+                            <div className={`${styles.inputUnit} ${registerUnitFailed ? styles.inputFailed : ''}`}>
+                              <label htmlFor="username">Unit ID</label>
+                              <p className={styles.separateElement}>:</p>
+                              <input
+                                type="text"
+                                id="unitid"
+                                name="unitid"
+                                value={unitId} // Bind the input value to the state variable
+                                onChange={handleUnitIdChange} // Update the state variable on input change
+                                required
+                              />
+
+                            </div>
+                            <div className={styles.buttonSection}>
+                              <button
+                                className={styles.registerButton}
+                                type="button"
+                                onClick={handleRegisterButtonClick}
+                              // Disable the button if `unitId` is empty
+                              >
+                                Register
+                              </button>
+                              <button className={styles.cancelButton} type="submit" onClick={handleHideRegisterUnitColumn}>
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                        {
+                          registerSuccess && (
+                            <RegisterUnitSuccess />
+                          )
+                        }
+                        {
+                          registerFailure && (
+                            <RegisterUnitFailed />
+                          )
+                        }
+                        {
+                          registerInvalid && (
+                            <RegisterUnitFailure />
+                          )
+                        }
+                      </div>
+                    </>) : ""}
               </div>
 
               {
@@ -680,73 +795,10 @@ export default function Home(): JSX.Element {
 
             </div>
 
-
             {
               showUtilSection ? (
                 <>
-                  <div className={styles.tableUnit}>
-                    <div className={styles.labelSection}>
-                      <p>
-                        <span>
-                          <Image
-                            src="/icons/information-circle-svgrepo-com.svg"
-                            alt="Picture of the author"
-                            width={500}
-                            height={500}
-                          />
-                        </span>
-                        Please choose your MSD700 unit.
-                      </p>
-                    </div>
-                    <div className={styles.tableSection}>
-                      <table className={styles.table}>
-                        <thead className={styles.headerTable}>
-                          <tr >
-                            <th>No.</th>
-                            <th>MSD700 Unit</th>
-                            <th>Status</th>
-                            <th>Battery</th>
-                            <th>Uptime</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {data.map((item, idx) => (
-                            <tr
-                              key={idx}
-                              onClick={() => handleRowClick(idx)}
-                              className={`${item.status == 'off' ? styles.offRow : styles.onRow} ${selectedRowIdx === idx ? styles.selectedRow : ''}`}
-                            >
-                              <td data-column="0">{idx + 1}</td>
-                              <td data-column="1">{item.unit}</td>
-                              <td data-column="2">{item.status}</td>
-                              <td data-column="3">{item.battery}</td>
-                              <td data-column="4">{item.uptime}</td>
-                            </tr>
-                          ))}
-
-                        </tbody>
-                      </table>
-
-                    </div>
-                    <button
-                      // onClick={goToUnitPage}
-                      aria-label="Submit form Button"
-                      className={styles.loginFormButton}
-                      onClick={handleStartButtonClick}
-                    >
-                      <p>Start</p>
-                      <Image
-                        src="/icons/arrow-right-3-svgrepo-com (1).svg"
-                        alt=""
-                        width={500}
-                        height={500}
-                      />
-                    </button>
-
-                    <AlertComponent />
-                  </div>
-
-                  <div className={styles.registerUnit}>
+                  <div className={`${styles.registerUnit} ${styles.displayNone} ${styles.displayxl}`}>
                     <div className={styles.registerUnitForm}>
                       <div className={styles.registerUnitText}>
                         <p>Is the unit not registered yet?</p>
@@ -763,7 +815,7 @@ export default function Home(): JSX.Element {
                     </div>
                     {showRegisterUnitColumn && (
                       <div className={`${styles.registerUnitColumn} ${styles.mobileHide}`}>
-                        <div className={styles.inputUnit}>
+                        <div className={`${styles.inputUnit} ${registerUnitFailed ? styles.inputFailed : ''}`}>
                           <label htmlFor="username">Unit ID</label>
                           <p className={styles.separateElement}>:</p>
                           <input
@@ -781,7 +833,7 @@ export default function Home(): JSX.Element {
                             className={styles.registerButton}
                             type="button"
                             onClick={handleRegisterButtonClick}
-                            disabled={!unitId} // Disable the button if `unitId` is empty
+                          // Disable the button if `unitId` is empty
                           >
                             Register
                           </button>
@@ -806,6 +858,27 @@ export default function Home(): JSX.Element {
                         <RegisterUnitFailure />
                       )
                     }
+                  </div>
+                </>) : ""}
+
+
+            {
+              showUtilSection ? (
+                <>
+                  <div className={styles.tableUnit}>
+                    <div className={styles.labelSection}>
+                      <Image
+                        src="/icons/information-circle-svgrepo-com.svg"
+                        alt="Picture of the author"
+                        width={500}
+                        height={500}
+                      />
+                      <p>Please choose your MSD700 unit.</p>
+                    </div>
+
+                    <TableComponent data={data} handleRowClick={handleRowClick} selectedRowIdx={selectedRowIdx} handleStartButtonClick={handleStartButtonClick} />
+
+                    <AlertComponent />
                   </div>
                 </>
               ) : ""
@@ -836,7 +909,7 @@ export default function Home(): JSX.Element {
             </div>
           </div>) : ""}
 
-          <div onClick={setInstructionShow} className={`${styles.buttonInstruction}`}>
+          <div onClick={setInstructionShowActive} className={`${styles.buttonInstruction}`}>
             <img src="/icons/document.svg" alt="" />
           </div>
         </div>
