@@ -1,8 +1,10 @@
-// store/stateLidar.ts
-
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
+export interface LidarState {
+    value: boolean;
+}
+
+const initialState: LidarState = {
     value: false,
 };
 

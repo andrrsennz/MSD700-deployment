@@ -19,6 +19,9 @@ import GreetingsUnit from '@/components/greetings-unit/greetingsUnit';
 import MobileBottomSection from '@/components/mobile-bottom-section/mobileBottomSection';
 import MobileLidarSection from '@/components/mobile-lidar-section/mobileLidarSection';
 import { ReduxProvider } from '@/app/reduxProvider';
+import { useSelector, useDispatch } from 'react-redux';
+import { changeStatus, setStatus } from '@/store/stateMapSelected'; // Adjust import path as needed
+import { RootState } from '@/store/types';
 
 interface DataItem {
     mapId: any;
@@ -254,8 +257,8 @@ export default function Database(): JSX.Element {
             "modified_time": "2021/08/04 11:35 AM",
             "file_type": "PGM",
             "file_size": "120 MB"
-        }
-    ]);
+        }]);
+
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
     const [sortOrderStatus, setSortOrderStatus] = useState<String>('name');
@@ -276,7 +279,26 @@ export default function Database(): JSX.Element {
     const [mobileMapName, setMobileMapName] = useState<string>('');
     const [mobileEditNameDisplay, setMobileEditNameDisplay] = useState<boolean>(false);
     const [newName, setNewName] = useState('');
-    const [indexMapChoosed, setIndexMapChoosed] = useState();
+    const [indexMapChoosed, setIndexMapChoosed] = useState(-1);
+
+    const { value } = useSelector((state: RootState) => state.mapSelected);
+    const dispatch = useDispatch();
+
+
+
+    useEffect(() => {
+        // Initialize state from localStorage
+        const mapSelected = localStorage.getItem('mapSelected');
+        if (mapSelected !== null) {
+            dispatch(setStatus(JSON.parse(mapSelected)));
+        }
+    }, [dispatch]);
+
+    const handleMapSelectedChange = (index: string) => {
+        dispatch(changeStatus(parseInt(index)));
+        // Save state to localStorage
+        localStorage.setItem('mapSelected', JSON.stringify(parseInt(index)));
+    };
 
 
 
@@ -463,21 +485,36 @@ export default function Database(): JSX.Element {
 
     const handleCheckboxChange = (index: string) => {
 
-        if (mapIndex == startIndex + parseInt(index)) {
-            sessionStorage.setItem("mapIndex", "-1");
-            setCheckedIndex(-1);
+        if (currentIndex == parseInt(index)) {
+
         } else {
-            setCheckedIndex(startIndex + parseInt(index));
-            sessionStorage.setItem("mapIndex", String(startIndex + parseInt(index)));
-            sessionStorage.setItem("mapName", data[startIndex + parseInt(index)].map_name)
+            dispatch(changeStatus(parseInt(index)));
+            handleMapSelectedChange(index)
         }
+
+        // if (startIndex == parseInt(index)) {
+        // } else {
+        //     if (mapIndex == startIndex + parseInt(index)) {
+        //         sessionStorage.setItem("mapIndex", "-1");
+        //         setCheckedIndex(-1);
+        //     } else {
+        //         setCheckedIndex(startIndex + parseInt(index));
+        //         sessionStorage.setItem("mapIndex", String(startIndex + parseInt(index)));
+        //         sessionStorage.setItem("mapName", data[startIndex + parseInt(index)].map_name)
+        //     }
+        // }
+
     };
 
     const handleLidarChecked = () => { }
 
     const goToControlWithIndex = () => {
-        if (checkedIndex != -1) {
-            router.push(`/unit/control?index=${checkedIndex}`);
+        if (indexMapChoosed !== -1) {
+            dispatch(changeStatus(indexMapChoosed));
+            // Save state to localStorage
+            localStorage.setItem('mapSelected', JSON.stringify(indexMapChoosed));
+            router.push(`/unit/control?index=${indexMapChoosed}`);
+
         }
     };
 
@@ -593,6 +630,8 @@ export default function Database(): JSX.Element {
     const handleDoubleClick = (index: number) => {
         setIsEditing({ ...isEditing, [index]: true });
     };
+
+    const currentIndex = startIndex + Number(value);
 
     const updateMapName = (index: number) => {
         const inputElement = document.getElementById(`mapNameInput${index}`);
@@ -733,29 +772,32 @@ export default function Database(): JSX.Element {
         setMobileSorterDisplay(!mobileSorterDisplay)
     }
 
-    // Define the media query for max-width: 360px
-
     // Check if the media query matches and call the function if it does
     function handleMobileMapDisplay(mapName: any, index: any) {
-        setIndexMapChoosed(index)
-
-        const width = window.innerWidth;
-
-        if (width < 1400) {
-            if (mapIndex == startIndex + parseInt(index)) {
-                sessionStorage.setItem("mapIndex", "-1");
-                setCheckedIndex(-1);
-            } else {
-                setCheckedIndex(startIndex + parseInt(index));
-                sessionStorage.setItem("mapIndex", String(startIndex + parseInt(index)));
-            }
-
-            let dotIndex = mapName.lastIndexOf(".");
-
+        if (index == "-1") {
+            setIndexMapChoosed(index)
             setMobileMapName(mapName)
-            setCheckedIndex(startIndex + parseInt(index));
+            // setCheckedIndex(startIndex + parseInt(index));
             setMobileMapDisplay(!mobileMapDisplay)
+        } else {
+            setIndexMapChoosed(index)
+
+            const width = window.innerWidth;
+
+            if (width < 1400) {
+                // if (mapIndex == startIndex + parseInt(index)) {
+                //     sessionStorage.setItem("mapIndex", "-1");
+                //     setCheckedIndex(-1);
+                // } else {
+                //     setCheckedIndex(startIndex + parseInt(index));
+                //     sessionStorage.setItem("mapIndex", String(startIndex + parseInt(index)));
+                // }    
+                setMobileMapName(mapName)
+                // setCheckedIndex(startIndex + parseInt(index));
+                setMobileMapDisplay(!mobileMapDisplay)
+            }
         }
+
     }
 
 
@@ -776,6 +818,7 @@ export default function Database(): JSX.Element {
     const handleMapPreview = () => { }
 
     const handlePseudo = () => { }
+
 
     return (
         <ReduxProvider>
@@ -913,7 +956,7 @@ export default function Database(): JSX.Element {
                                 </div>
 
                                 <div className={`${styles.buttonSection}`}>
-                                    <div className={`${styles.rename}`} onClick={() => updateMapNameMobile(checkedIndex, newName, mobileMapName)}>
+                                    <div className={`${styles.rename}`} onClick={() => updateMapNameMobile(indexMapChoosed, newName, mobileMapName)}>
                                         <p>Rename</p>
                                     </div>
                                     <div className={`${styles.cancel}`} onClick={handleMobileEditName}>
@@ -1026,7 +1069,7 @@ export default function Database(): JSX.Element {
                                                     {currentData.map((item, index) => {
                                                         return (
                                                             (
-                                                                <tr key={index} onClick={() => handleMobileMapDisplay(item.map_name, index)} className={indexMapChoosed == index ? styles.mapMobileSelected : ''}>
+                                                                <tr key={index} onClick={() => handleMobileMapDisplay(item.map_name, item.mapId)} className={` ${currentIndex == item.mapId ? styles.mapMobileSelected : ''}`}>
                                                                     <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
 
                                                                     <td onDoubleClick={() => handleDoubleClick(index)}>
@@ -1051,7 +1094,8 @@ export default function Database(): JSX.Element {
                                                                             <input
                                                                                 type="checkbox"
                                                                                 id={`checklistItem${index}`}
-                                                                                checked={checkedIndex == item.mapId}
+                                                                                // checked={checkedIndex == item.mapId}
+                                                                                checked={currentIndex == item.mapId}
                                                                                 onChange={() => handleCheckboxChange(item.mapId)}
                                                                             />
                                                                             <label htmlFor={`checklistItem${index}`}></label>
@@ -1075,12 +1119,13 @@ export default function Database(): JSX.Element {
                                         </div>
 
                                         <div className={styles.bottomSection}>
+                                            {/* ${(initialCheckedIndex !== null && parseInt(initialCheckedIndex) > -1) || mapIndex > -1 ? "" : styles.disable}  */}
                                             <div
-                                                className={`${styles.confirmMappingChoosed} 
-                                                ${(initialCheckedIndex !== null
-                                                        && parseInt(initialCheckedIndex) > -1) || mapIndex > -1 ? ""
-                                                        : styles.disable
-                                                    } ${styles.mobileDisplayNone}`}
+                                                className={`
+                                                    ${styles.confirmMappingChoosed} 
+                                                ${Number(value) > -1 ? "" : styles.disable}
+                                                        
+                                                ${styles.mobileDisplayNone}`}
                                                 onClick={goToControlWithIndex}
                                             >
                                                 <p>Go to the Map</p>
