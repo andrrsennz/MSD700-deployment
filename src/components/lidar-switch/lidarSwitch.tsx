@@ -7,10 +7,9 @@ import { RootState } from '@/store/types';
 
 interface LidarSwitchProps {
     backendUrl: string;
-    onData: (data: any) => void; // Adjust the type of data as needed
 }
 
-const LidarSwitch: React.FC<LidarSwitchProps> = ({ backendUrl, onData }) => {
+const LidarSwitch: React.FC<LidarSwitchProps> = ({ backendUrl }) => {
     const { value } = useSelector((state: RootState) => state.lidarState);
     const dispatch = useDispatch();
 
@@ -26,7 +25,6 @@ const LidarSwitch: React.FC<LidarSwitchProps> = ({ backendUrl, onData }) => {
         dispatch(changeStatus());
         // Save state to localStorage
         localStorage.setItem('isChecked', JSON.stringify(!value));
-        onData(!value);
     };
 
     return (

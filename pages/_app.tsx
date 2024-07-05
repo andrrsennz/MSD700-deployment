@@ -1,15 +1,15 @@
 "use client";
 
-import Providers from "@/redux/provider";
 import { useEffect } from "react";
 import Script from "next/script";
 
 import createjs from 'createjs-module';
+import { ReduxProvider } from "@/app/reduxProvider";
 
-export default function MyApp({ Component, pageProps }) {
+export default function MyApp({ Component, pageProps }: any) {
   return (
-    <Providers>
+    <ReduxProvider>
       <Component {...pageProps} />
-    </Providers>
+    </ReduxProvider>
   );
 }

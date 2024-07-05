@@ -22,7 +22,9 @@ import MobileInstruction from "@/components/mobile-instruction/mobileInstruction
 import GreetingsUnit from "@/components/greetings-unit/greetingsUnit";
 import EmergencyButton from "@/components/emergency-button/emergencyButton";
 import LidarSwitch from "@/components/lidar-switch/lidarSwitch";
-import { ReduxProvider } from "@/app/reduxProvider";
+import { changeStatus, setStatus } from '@/store/stateLidar'; // Adjust import path as needed
+import { RootState } from '@/store/types';
+import { useSelector, useDispatch } from 'react-redux';
 
 interface MappingProps {
     handleMobileNavigation: () => void; // Define handleMobileNavigation prop
@@ -88,13 +90,11 @@ const Mapping: React.FC<MappingProps> = () => {
     const [mobileInstruction, setMobileInstruction] = useState<boolean>(false);
     const [buttonMapStatus, setButtonMapStatus] = useState<string>()
     const [playButtonClicked, setPlayButtonClicked] = useState<boolean>(false);
-    const [lidarStatus, setLidarStatus] = useState(false);
 
     const [emergencyStatus, setEmergencyStatus] = useState<boolean>(false);
 
-    const handleLidarStatus = (childData: any) => {
-        setLidarStatus(childData);
-    };
+    const { value } = useSelector((state: RootState) => state.lidarState);
+
 
     useEffect(() => {
         // Read value from localStorage when the component mounts
@@ -117,7 +117,7 @@ const Mapping: React.FC<MappingProps> = () => {
     };
 
     const changeStatus = (newStatus: string): void => {
-        lidarStatus === true ? setStatus(newStatus) : setStatus("Idle");
+        value === true ? setStatus(newStatus) : setStatus("Idle");
     };
 
     const onConfirmSaveMappingButtonClick = (): void => {
@@ -513,8 +513,10 @@ const Mapping: React.FC<MappingProps> = () => {
         });
     };
 
+
+
     return (
-        <ReduxProvider>
+        <>
             {render ?
                 (
                     <>
@@ -561,7 +563,7 @@ const Mapping: React.FC<MappingProps> = () => {
                                         </div>
 
                                         <div className={styles.lidarButton}>
-                                            <LidarSwitch backendUrl={backendUrl} onData={handleLidarStatus} />
+                                            <LidarSwitch backendUrl={backendUrl}  />
                                         </div>
                                         {/* <div className={styles.lidarButton}>
                                         <label className={styles.toggleSwitch}>
@@ -600,7 +602,7 @@ const Mapping: React.FC<MappingProps> = () => {
                                             <div
                                                 className={`${styles.playButton} ${status == "On Progress" ? styles.buttonActive : ""}`}
                                                 onClick={() => {
-                                                    if (lidarStatus) {
+                                                    if (value) {
                                                         if (status != "On Progress") {
                                                             setMapping(true, false, false);
                                                         }
@@ -615,7 +617,7 @@ const Mapping: React.FC<MappingProps> = () => {
                                             <div
                                                 className={`${styles.pauseButton} ${status == "Paused" && count != 0 || buttonMapStatus == 'pause' ? styles.buttonActive : ""}`}
                                                 onClick={() => {
-                                                    if (lidarStatus) {
+                                                    if (value) {
                                                         if (status != "Idle") {
                                                             setcount(1)
                                                             setMapping(false, true, false);
@@ -635,7 +637,7 @@ const Mapping: React.FC<MappingProps> = () => {
                                                 id="stopButton"
                                                 className={`${styles.stopButton}`}
                                                 onClick={() => {
-                                                    if (lidarStatus) {
+                                                    if (value) {
                                                         if (buttonMapStatus == 'play' || buttonMapStatus == 'pause') {
                                                             setShowConfirmMappingDialog(true);
                                                             setStopButton(true);
@@ -717,10 +719,10 @@ const Mapping: React.FC<MappingProps> = () => {
                                                 </> : ""}
                                             </div>
 
-                                    <div className={`${styles.displayNone} ${styles.focusButton}`}>
-                                        <p>Focus View</p>
-                                        <img src="/icons/focus_button.svg" alt="" />
-                                    </div>
+                                            <div className={`${styles.displayNone} ${styles.focusButton}`}>
+                                                <p>Focus View</p>
+                                                <img src="/icons/focus_button.svg" alt="" />
+                                            </div>
 
                                             <div className={`${styles.displayNone} ${styles.mobileStatus}`}>
                                                 <p>Status : On progress</p>
@@ -770,7 +772,7 @@ const Mapping: React.FC<MappingProps> = () => {
                     </>
                 ) : (<>
                 </>)}
-        </ReduxProvider>
+        </>
     );
 }
 

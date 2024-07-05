@@ -11,9 +11,6 @@ import mqtt from "mqtt";
 import MobileLidarSection from "@/components/mobile-lidar-section/mobileLidarSection";
 import MapPreviewSection from "@/components/mobile-map-preview-section/mobileMapPreviewSection";
 import MobileBottomSection from "@/components/mobile-bottom-section/mobileBottomSection";
-<<<<<<< HEAD
-import { json } from "stream/consumers";
-=======
 import GreetingsUnit from "../greetings-unit/greetingsUnit";
 import MobileTopSection from "../mobile-top-section/mobileTopSection";
 import TokenExpired from "../token-expired/tokenExpired";
@@ -21,7 +18,9 @@ import ControlInstruction from "../control-instruction/controlInstruction";
 import ButtonInformation from "../unit-information-button/unitInformationButton";
 import EmergencyButton from "../emergency-button/emergencyButton";
 import LidarSwitch from "../lidar-switch/lidarSwitch";
->>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
+import { RootState } from '@/store/types';
+import { useSelector, useDispatch } from 'react-redux';
+
 
 var ros: any;
 var viewer: any;
@@ -75,11 +74,8 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
   const [render, setRender] = useState<boolean>(true);
   const [showControlInstruction, setShowControlInstruction] = useState<boolean>(false);
   const [firstLoaded, setFirstLoaded] = useState<string>('false')
-  const [lidarStatus, setLidarStatus] = useState(false);
 
-  const handleLidarStatus = (childData: any) => {
-    setLidarStatus(childData);
-  };
+  const { value } = useSelector((state: RootState) => state.lidarState);
 
   const [emergencyStatus, setEmergencyStatus] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
@@ -104,7 +100,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
   };
 
   const changeStatus = (newStatus: string) => {
-    lidarStatus === true ? setStatus(newStatus) : setStatus("Idle");
+    value === true ? setStatus(newStatus) : setStatus("Idle");
   };
 
   const onConfirmSaveMappingButtonClick = () => {
@@ -243,13 +239,8 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
     // Create the main viewer.
     viewer = new (window as any).ROS2D.Viewer({
       divID: 'map',
-<<<<<<< HEAD
-      width: mapRef.current?.clientWidth || 1000,
-      height: mapRef.current?.clientHeight || 1000,
-=======
       width: mapRef.current?.clientWidth || window.innerWidth,
       height: mapRef.current?.clientHeight || window.innerHeight,
->>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
       background: "#7F7F7F",
     });
 
@@ -261,7 +252,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
       background: "#7F7F7F",
     });
 
-    if(document.getElementById("mobilepreview-map") != null) {
+    if (document.getElementById("mobilepreview-map") != null) {
       mobprevViewer = new (window as any).ROS2D.Viewer({
         divID: 'mobilepreview-map',
         width: mapRef.current?.clientWidth || 180,
@@ -547,7 +538,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
         // gridClient.navigator.changeRoot(viewer.scene);
 
       }
-            if (mobprevGridClient.prevNavigator != null) {
+      if (mobprevGridClient.prevNavigator != null) {
         // gridClient.navigator.changeRoot(prevViewer.scene);
         mobprevGridClient.prevNavigator.updateHome(homePoint);
         // gridClient.navigator.changeRoot(viewer.scene);
@@ -569,11 +560,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
       gridClient.navigator.setFocusView(true);
       var button = document.getElementById("setFocusBtn")
       if (button != null) {
-<<<<<<< HEAD
-        button.style.backgroundColor = "#60E3D5";
-=======
         // button.innerText = "Focus View On"
->>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
         console.log("button changes")
       }
     }
@@ -582,33 +569,12 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
       gridClient.navigator.setFocusView(false);
       var button = document.getElementById("setFocusBtn")
       if (button != null) {
-<<<<<<< HEAD
-        button.style.backgroundColor = "#0C98B4";
-=======
         // button.innerText = "Focus View Off"
->>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
         console.log("button changes")
       }
     }
   }
 
-<<<<<<< HEAD
-  //post multi pinpoint path plan
-  const savePathplan = () => {
-    pathPlan = gridClient.navigator.getPathplan();
-    axios.post("http://0.0.0.0:5000/pathplan",JSON.stringify(pathPlan))
-    .then(function (response: any) {
-      if (response.status === 201) {
-        console.log("Path plan saved")
-      }
-  })
-  .catch(function (error: any) {
-      alert("Error saving path plan");
-  });
-  }
-
-=======
->>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
   const toggleOptions = () => {
     setShowOptions(!showOptions);
     setIsRotated(!isRotated);
@@ -725,28 +691,6 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
               <div className={styles.lidar}>
                 <p>LIDAR</p>
               </div>
-<<<<<<< HEAD
-              <div
-                id="setFocusBtn"
-                className={styles.stopButton}
-                onClick={() => {
-                  focusView();
-                }}
-              >
-                <p>Focus View</p>
-                <img src="/icons/focus_button.svg" alt="" />
-              </div>
-
-              <div
-                className={styles.stopButton}
-                onClick={() => {
-                  savePathplan();
-                }}
-              >
-                <p>Save Path Plan</p>
-              </div>
-              
-=======
 
               <div className={styles.lidarButton}>
                 {/* <label className={styles.toggleSwitch}>
@@ -758,40 +702,17 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                   />
                   <span className={styles.slider}></span>
                 </label> */}
-                <LidarSwitch backendUrl={backendUrl} onData={handleLidarStatus} />
+                <LidarSwitch backendUrl={backendUrl} />
               </div>
 
->>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
             </div>
           </div>
 
           <MobileTopSection onConfirmButtonClick={handleCloseButtonClick} />
 
-<<<<<<< HEAD
-              {/* <div className={`${styles.mobileNavigationSection}`}> */}
-              <div className={`${styles.displayNone} ${styles.controlLidarButton}`}>
-                <div className={`${styles.lidarButton} ${lidarExtend ? styles.mainLidarButtonActive : ""}`} onClick={handleLidarExtend}>
-                  {lidarExtend ? <img src="/icons/plus.svg" alt="" /> : <img src="/icons/minus.svg" alt="" />}
-                </div>
-                {lidarExtend ? (
-                  <>
-                    <div className={`${styles.lidarButton}`} onClick={startNavigation}>
-                      <img src="/icons/3.svg" alt="" />
-                    </div>
-                    <div className={`${styles.lidarButton}`} onClick={pauseNavigation}>
-                      <img src="/icons/1.svg" alt="" />
-                    </div>
-                    <div className={`${styles.lidarButton}`} onClick={returnToHome}>
-                      <img src="/icons/Home.svg" alt="" />
-                    </div>
-                  </>
-                ) : ""}
-              </div>
-=======
           <div className={styles.mobileDisplayNone}>
             <CloseButton onClick={onConfirmButtonClick} />
           </div>
->>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
 
 
           <div className={styles.unitParents}>
@@ -800,19 +721,9 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
               handleCheckboxChange={handleCheckboxChange}
             />
 
-<<<<<<< HEAD
-              <div id="setFocusBtn" className={`${styles.displayNone} ${styles.focusButton}`}
-              onClick={() => {
-                focusView();
-              }}>
-                <p>Focus View</p>
-                <img src="/icons/focus_button.svg" alt="" />
-              </div>
-=======
             <div className={`${styles.navigation} ${styles.mobileDisplayNone}`}>
               <Navigation imageSrc={imageBlob ? URL.createObjectURL(imageBlob) : undefined} />
             </div>
->>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
 
             <div className={`${styles.mapSection} ${mapPreview ? "" : styles.mapSectionWithoutPreview}`}>
               <div className={`${styles.topDiv} ${styles.mobileDisplayNone}`}>
@@ -821,7 +732,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                   className={`${styles.playButton} ${status === "On Progress" ? styles.buttonActive : ""
                     }`}
                   onClick={() => {
-                    if (lidarStatus) {
+                    if (value) {
                       if (status != "On Progress") {
                         setRobot(true, false, false);
                         console.log("Play request sent");
@@ -840,7 +751,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                   className={`${styles.pauseButton} ${status === "Paused" ? styles.buttonActive : ""
                     }`}
                   onClick={(() => {
-                    if (lidarStatus) {
+                    if (value) {
                       setRobot(false, true, false);
                       console.log("Pause request sent");
                     } else {
@@ -855,7 +766,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                 <div
                   className={styles.stopButton}
                   onClick={() => {
-                    if (lidarStatus) {
+                    if (value) {
                       setRobot(false, true, false);
                       console.log("Stop request sent");
                     } else {
@@ -877,10 +788,6 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                 >
                   <p>Focus View</p>
                   <img src="/icons/Position.svg" alt="" />
-<<<<<<< HEAD
-                  {selectedOption == "mode-list-4" ? <p>Finish Initial Pose</p> : <p>Initial Pose </p>}
-=======
->>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
                 </div>
 
                 <div className={styles.topDivInformation}>
@@ -1093,7 +1000,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
 
                 </div>
 
-                <div className={`${styles.footerMap} ${styles.mobileDisplayNone}`}>
+                <div className={`${styles.footerMap} ${styles.mobileDisplayNone} `}>
                   <EmergencyButton />
                   <div className={styles.mapName}>Mapping Preview</div>
                 </div>
@@ -1119,74 +1026,8 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
             <ButtonInformation onClick={handleInfoIconClick} />
           </div>
 
-<<<<<<< HEAD
-          <div className={`${styles.displayNone} ${mapPreview ? styles.liveMapSection : ""}`}>
-            <div className={styles.buttonLiveMapSection}>
-              <div onClick={() => handleMapPreviewStatus(0)} className={`${styles.cameraButton} ${styles.buttonLiveMap} ${mapPreviewStatus === 0 ? styles.buttonActive : ""}`}>
-                <img src="/icons/Camera.svg" alt="" />
-                <p>Camera</p>
-              </div>
-              <div onClick={() => handleMapPreviewStatus(1)} className={`${styles.previewButton} ${styles.buttonLiveMap} ${mapPreviewStatus === 1 ? styles.buttonActive : ""}`}>
-                <img src="/icons/mapping.svg" alt="" />
-                <p>Preview</p>
-              </div>
-            </div>
-            <div className={styles.previewMapLiveSection}>
-            <div>
-              <div style={{ display: mapPreviewStatus !== 0 ? 'none' : 'block' }}>
-                 <img src="/images/camera.png" alt="" />
-              </div>
-              <div style={{ display: mapPreviewStatus !== 1 ? 'none' : 'block' }}>
-                 <div id="mobilepreview-map" className={styles.map}></div>
-              </div>
-              {/* {mapPreviewStatus === 0 && (
-                <div>
-                  <img src="/images/camera.png" alt="" />
-                </div>
-              )}
-              {mapPreviewStatus === 1 && (
-                <div>
-                  <div id="mobilepreview-map" className={styles.map}></div>
-                </div>
-              )} */}
-            </div>
-              {/* {mapPreviewStatus === 0 ? (<img src="/images/camera.png" alt="" />) : (<div id="mobilepreview-map" className={styles.map}></div>)} */}
-            </div>
-          </div>
-
-          <div className={`${styles.displayNone} ${styles.mobileBottomSection}`}>
-            <div className={`${styles.navigationMobileButton} ${styles.bottomSectionButton}`} onClick={() => handleMobileNavigation()}>
-                <img src="/icons/list.svg" alt="" />
-            </div>
-
-            <div className={`${styles.webcamButton} ${styles.webcamIcon} ${styles.bottomSectionButton}`} onClick={handleMapPreview}>
-                <img src="/icons/Webcam.svg" alt="" />
-            </div>
-
-            <div className={`${styles.webcamButton} ${styles.webcamIcon} ${styles.bottomSectionButton}`} onClick={() => handleMobileInstruction()}>
-                <img src="/icons/information-circle-svgrepo-com.svg" alt="" />
-            </div>
-
-            <Footer status={false /* or false */} />
-        </div>
-
-          {/* <MapPreviewSection
-            mapPreview={mapPreview}
-            mapPreviewStatus={mapPreviewStatus}
-            handleMapPreviewStatus={handleMapPreviewStatus}
-          />
-
-          <MobileBottomSection
-            handleMobileNavigation={handleMobileNavigation}
-            handleMapPreview={handleMapPreview}
-            handleMobileInstruction={handleMobileInstruction}
-          /> */}
-          <div className={styles.mobileDisplayNone}>
-            {/* <Footer status={false} /> */}
-=======
           <div className={`${styles.footerSection} ${styles.mobileDisplayNone}`}>
             <Footer status={false} />
->>>>>>> 9e3ff783c203b69c4228638b5010c9b05710bf64
           </div>
 
         </div>

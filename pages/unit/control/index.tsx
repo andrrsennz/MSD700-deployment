@@ -97,7 +97,7 @@ const Control: React.FC = () => {
   const handlePseudo = () => { };
 
   return (
-    <ReduxProvider>
+    <>
       <Head>
         <title>Control Mode</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -122,7 +122,7 @@ const Control: React.FC = () => {
             ''
           )}
 
-          {mapIndex < 0 ? (
+          {false? (
             <div className={styles.container}>
               <MobileTopSection onConfirmButtonClick={handleCloseButtonClick} />
               <div className={styles.parents}>
@@ -159,7 +159,7 @@ const Control: React.FC = () => {
       ) : (
         <></>
       )}
-    </ReduxProvider>
+    </>
   );
 };
 
