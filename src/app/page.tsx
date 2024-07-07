@@ -17,6 +17,22 @@ import MobileTopSection from "@/components/mobile-top-section/mobileTopSection";
 import TableComponent from "@/components/table/tableComponent";
 
 export default function Home(): JSX.Element {
+  /* ADD ANIMATION */
+  const [animateLoginBox, setAnimateLoginBox] = useState(false);
+  const [animateTable, setAnimateTable] = useState(false);
+  const [animateChooseMsdUnit, setAnimateChooseMsdUnit] = useState(false);
+  const [moveLoginBoxLeft, setMoveLoginBoxLeft] = useState(false);
+
+  const [fadeInUnit, setFadeInUnit] = useState(false);
+  const [fadeOutUnit, setFadeOutUnit] = useState(false);
+  const [animationPlayed, setAnimationPlayed] = useState(false);
+
+
+  useEffect(() => {
+    /* setAnimateLoginBox(true);
+    setAnimateChooseMsdUnit(true); */
+  }, []);
+
   const router = useRouter();
 
   const [showRegisterUnitColumn, setShowRegisterUnitColumn] = useState<boolean>(false);
@@ -137,64 +153,100 @@ export default function Home(): JSX.Element {
 
 
 
+  // const onProceedButtonClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
+  //   event.preventDefault();
+  //   setShowUtilSection(false);
+  //   setData([]);
+
+  //   const username = document.getElementById("username") as HTMLInputElement;
+  //   const password = document.getElementById("password") as HTMLInputElement;
+
+  //   // axios.post(`${backendUrl}/user/login`, {
+  //   //   username: username.value,
+  //   //   password: password.value
+  //   // })
+  //   //   .then(function (response: any) {
+  //   //     if (response.status === 200) {
+  //   //       sessionStorage.setItem("username", response.data.username);
+  //   //       sessionStorage.setItem("full_name", response.data.full_name);
+  //   //       sessionStorage.setItem("token", response.data.token);
+
+  //   //       fetchUnitData(response.data.token);
+  //   //       setShowUtilSection(true);
+  //   //       setShowIncorrectPassword(false);
+  //   //     }
+  //   //     else {
+  //   //       alert("Invalid username or password");
+  //   //     }
+  //   //   })
+  //   //   .catch(function (error: any) {
+  //   //     console.log(error);
+  //   //     setShowIncorrectPassword(true);
+  //   //   })
+
+  // };
+
+  /* ===== DUMMY (BACKEND DOWN - COMMENT THIS AND UNCOMMENT CODE ABAOVE WHEN BACKEND BACK TO ALIVE) ====== */
   const onProceedButtonClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
     setShowUtilSection(false);
     setData([]);
 
-    const username = document.getElementById("username") as HTMLInputElement;
-    const password = document.getElementById("password") as HTMLInputElement;
+    const username = (document.getElementById("username") as HTMLInputElement).value;
+    const password = (document.getElementById("password") as HTMLInputElement).value;
 
-    // axios.post(`${backendUrl}/user/login`, {
-    //   username: username.value,
-    //   password: password.value
-    // })
-    //   .then(function (response: any) {
-    //     if (response.status === 200) {
-    //       sessionStorage.setItem("username", response.data.username);
-    //       sessionStorage.setItem("full_name", response.data.full_name);
-    //       sessionStorage.setItem("token", response.data.token);
+    // Simulate successful login by directly setting session storage values
+    sessionStorage.setItem("username", username);
+    sessionStorage.setItem("full_name", "John Doe"); // You can set a default name
+    sessionStorage.setItem("token", "fake-token"); // Set a fake token
 
-    //       fetchUnitData(response.data.token);
-    //       setShowUtilSection(true);
-    //       setShowIncorrectPassword(false);
-    //     }
-    //     else {
-    //       alert("Invalid username or password");
-    //     }
-    //   })
-    //   .catch(function (error: any) {
-    //     console.log(error);
-    //     setShowIncorrectPassword(true);
-    //   })
+    // Trigger animations
+
+    if (!animationPlayed) {
+      setAnimateTable(true);
+      setAnimateChooseMsdUnit(true);
+      setMoveLoginBoxLeft(true); // Set the move left animation state
+      setAnimationPlayed(true); // Set the animation played state to true
+      setTimeout(() => setMoveLoginBoxLeft(false), 1000); // Adjust timeout as needed to match animation duration
+    }
+
+    // Fetch unit data and show the utility section immediately
+    fetchUnitData("fake-token");
+    setShowUtilSection(true);
 
   };
 
+  // const fetchUnitData = (token: any) => {
+  //   axios.get(`${backendUrl}/unit/all`, {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`
+  //     }
+  //   })
+  //     .then((response) => {
+  //       if (response.data && response.data.success) {
+  //         const formattedData = response.data.data.map((item: any) => ({
+  //           id: item.id,
+  //           unit: item.unit_name,
+  //           status: '', // You can define default values or modify as needed
+  //           battery: '',
+  //           uptime: ''
+  //         }));
+
+  //         setData(formattedData); // Update your state
+  //         console.log(formattedData);
+
+  //         setShowUtilSection(true);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching unit data: ", error);
+  //     });
+  // };
+
   const fetchUnitData = (token: any) => {
-    axios.get(`${backendUrl}/unit/all`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-      .then((response) => {
-        if (response.data && response.data.success) {
-          const formattedData = response.data.data.map((item: any) => ({
-            id: item.id,
-            unit: item.unit_name,
-            status: '', // You can define default values or modify as needed
-            battery: '',
-            uptime: ''
-          }));
-
-          setData(formattedData); // Update your state
-          console.log(formattedData);
-
-          setShowUtilSection(true);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching unit data: ", error);
-      });
+    // Simulate fetching data by using dummy data
+    setData(data);
+    setShowUtilSection(true);
   };
 
 
@@ -283,12 +335,18 @@ export default function Home(): JSX.Element {
 
   // Handler to show registerUnitColumn
   const handleShowRegisterUnitColumn = () => {
+    setFadeInUnit(true);
     setShowRegisterUnitColumn(true);
   };
 
   // Handler to hide registerUnitColumn
   const handleHideRegisterUnitColumn = () => {
-    setShowRegisterUnitColumn(false);
+    // setShowRegisterUnitColumn(false);
+    setFadeOutUnit(true);
+    setTimeout(() => {
+      setShowRegisterUnitColumn(false);
+      setFadeOutUnit(false); // Reset the state
+    }, 500);
   };
 
   const handleRowClick = (idx: any) => {
@@ -439,7 +497,7 @@ export default function Home(): JSX.Element {
         <>
           <div className={`${styles.mobileRegisterUnit} ${styles.displayNone} ${styles.mobileDisplay} `}>
             <div className={styles.confirmationDialog}>
-              <div className={styles.registerUnitColumn}>
+              <div className={`${styles.registerUnitColumn} ${fadeInUnit ? styles.fadeInUnit : ''} ${fadeOutUnit ? styles.fadeOutUnit : ''}`}>
                 <div className={`${styles.inputUnit} ${registerUnitFailed ? styles.inputFailed : ''}`}>
                   <label htmlFor="username">Unit ID</label>
                   <p className={styles.separateElement}>:</p>
@@ -530,8 +588,8 @@ export default function Home(): JSX.Element {
 
           <div className={styles.dataSection}>
 
-            <div className={styles.loginSection}>
-              <div className={styles.labelSection}>
+            <div className={`${styles.loginSection} ${moveLoginBoxLeft ? styles.moveLeft : ''}`}>
+              <div className={`${styles.labelSection} ${animateLoginBox ? styles.moveLeft : ''}`}>
                 <p>
                   <span>
                     <img src="/icons/information-circle-svgrepo-com.svg"
