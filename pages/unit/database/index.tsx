@@ -49,215 +49,216 @@ export default function Database(): JSX.Element {
     const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
     const [data, setData] = useState<DataItem[]>([
         {
-            "mapId": "1",
-            "map_name": "20230804_Room A",
-            "modified_time": "2023/08/04 11:30 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "1",
+            map_name: "20230804_Room A",
+            modified_time: "2023/08/04 11:30 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "2",
-            "map_name": "20230804_Room B",
-            "modified_time": "2023/08/04 11:37 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "2",
+            map_name: "20230804_Room B",
+            modified_time: "2023/08/04 11:37 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "3",
-            "map_name": "20230804_Room C",
-            "modified_time": "2023/08/04 11:53 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "3",
+            map_name: "20230804_Room C",
+            modified_time: "2023/08/04 11:53 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "4",
-            "map_name": "20230804_Room D",
-            "modified_time": "2023/08/04 11:23 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "4",
+            map_name: "20230804_Room D",
+            modified_time: "2023/08/04 11:23 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "5",
-            "map_name": "20230804_Room E",
-            "modified_time": "2023/08/04 11:35 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "5",
+            map_name: "20230804_Room E",
+            modified_time: "2023/08/04 11:35 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "6",
-            "map_name": "20230804_Room F",
-            "modified_time": "2023/08/04 11:35 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "6",
+            map_name: "20230804_Room F",
+            modified_time: "2023/08/04 11:35 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "7",
-            "map_name": "20230804_Room G",
-            "modified_time": "2023/08/04 11:35 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "7",
+            map_name: "20230804_Room G",
+            modified_time: "2023/08/04 11:35 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "8",
-            "map_name": "20230804_Room H",
-            "modified_time": "2023/08/04 11:35 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "8",
+            map_name: "20230804_Room H",
+            modified_time: "2023/08/04 11:35 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "9",
-            "map_name": "20230804_Room I",
-            "modified_time": "2023/08/04 11:35 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "9",
+            map_name: "20230804_Room I",
+            modified_time: "2023/08/04 11:35 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "10",
-            "map_name": "20230804_Room J",
-            "modified_time": "2023/08/04 11:35 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "10",
+            map_name: "20230804_Room J",
+            modified_time: "2023/08/04 11:35 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "1",
-            "map_name": "20230804_Room A",
-            "modified_time": "2023/08/04 11:30 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "11",
+            map_name: "20230805_Room K",
+            modified_time: "2023/08/05 11:30 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "2",
-            "map_name": "20230804_Room B",
-            "modified_time": "2023/08/04 11:37 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "12",
+            map_name: "20230805_Room L",
+            modified_time: "2023/08/05 11:37 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "3",
-            "map_name": "20230804_Room C",
-            "modified_time": "2023/08/04 11:53 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "13",
+            map_name: "20230805_Room M",
+            modified_time: "2023/08/05 11:53 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "4",
-            "map_name": "20230804_Room D",
-            "modified_time": "2023/08/04 11:23 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "14",
+            map_name: "20230805_Room N",
+            modified_time: "2023/08/05 11:23 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "5",
-            "map_name": "20230804_Room E",
-            "modified_time": "2023/08/04 11:35 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "15",
+            map_name: "20230805_Room O",
+            modified_time: "2023/08/05 11:35 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "6",
-            "map_name": "20230804_Room F",
-            "modified_time": "2023/08/04 11:35 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "16",
+            map_name: "20230805_Room P",
+            modified_time: "2023/08/05 11:35 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "7",
-            "map_name": "20230804_Room G",
-            "modified_time": "2023/08/04 11:35 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "17",
+            map_name: "20230805_Room Q",
+            modified_time: "2023/08/05 11:35 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "8",
-            "map_name": "20230804_Room H",
-            "modified_time": "2023/08/04 11:35 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "18",
+            map_name: "20230805_Room R",
+            modified_time: "2023/08/05 11:35 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "9",
-            "map_name": "20230804_Room I",
-            "modified_time": "2023/08/04 11:35 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "19",
+            map_name: "20230805_Room S",
+            modified_time: "2023/08/05 11:35 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "10",
-            "map_name": "20230804_Room J",
-            "modified_time": "2023/08/04 11:35 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "20",
+            map_name: "20230805_Room T",
+            modified_time: "2023/08/05 11:35 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "1",
-            "map_name": "20230804_Room A",
-            "modified_time": "2023/08/04 11:30 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "21",
+            map_name: "20230806_Room U",
+            modified_time: "2023/08/06 11:30 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "2",
-            "map_name": "20230804_Room B",
-            "modified_time": "2023/08/04 11:37 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "22",
+            map_name: "20230806_Room V",
+            modified_time: "2023/08/06 11:37 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "3",
-            "map_name": "20230804_Room C",
-            "modified_time": "2023/08/04 11:53 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "23",
+            map_name: "20230806_Room W",
+            modified_time: "2023/08/06 11:53 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "4",
-            "map_name": "20230804_Room D",
-            "modified_time": "2023/08/04 11:23 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "24",
+            map_name: "20230806_Room X",
+            modified_time: "2023/08/06 11:23 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "5",
-            "map_name": "20230804_Room E",
-            "modified_time": "2023/08/04 11:35 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "25",
+            map_name: "20230806_Room Y",
+            modified_time: "2023/08/06 11:35 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "6",
-            "map_name": "20230804_Room F",
-            "modified_time": "2023/08/04 11:35 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "26",
+            map_name: "20230806_Room Z",
+            modified_time: "2023/08/06 11:35 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "7",
-            "map_name": "20230804_Room G",
-            "modified_time": "2023/08/04 11:35 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "27",
+            map_name: "20230806_Room AA",
+            modified_time: "2023/08/06 11:35 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "8",
-            "map_name": "20230804_Room H",
-            "modified_time": "2023/08/04 11:35 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "28",
+            map_name: "20230806_Room AB",
+            modified_time: "2023/08/06 11:35 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "9",
-            "map_name": "20230804_Room I",
-            "modified_time": "2023/08/04 11:35 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
+            mapId: "29",
+            map_name: "20230806_Room AC",
+            modified_time: "2023/08/06 11:35 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
         },
         {
-            "mapId": "10",
-            "map_name": "tes",
-            "modified_time": "2021/08/04 11:35 AM",
-            "file_type": "PGM",
-            "file_size": "120 MB"
-        }]);
+            mapId: "30",
+            map_name: "20230806_Room AD",
+            modified_time: "2023/08/06 11:35 AM",
+            file_type: "PGM",
+            file_size: "120 MB"
+        }
+    ]);
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
@@ -284,15 +285,21 @@ export default function Database(): JSX.Element {
     const { value } = useSelector((state: RootState) => state.mapSelected);
     const dispatch = useDispatch();
 
-
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery]);
 
     useEffect(() => {
         // Initialize state from localStorage
         const mapSelected = localStorage.getItem('mapSelected');
         if (mapSelected !== null) {
             dispatch(setStatus(JSON.parse(mapSelected)));
+            console.log("JJJJ 3333: ", findPageIndex(mapSelected));
+            setCurrentPage(findPageIndex(mapSelected));
         }
     }, [dispatch]);
+
+
 
     const handleMapSelectedChange = (index: string) => {
         dispatch(changeStatus(parseInt(index)));
@@ -616,11 +623,17 @@ export default function Database(): JSX.Element {
         }
     }, [totalPages, currentPage]);
 
-    // Reset to the first page when the search query changes
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [searchQuery]);
+    const findPageIndex = (mapId: any) => {
+        const index = data.findIndex(item => item.mapId == mapId);
 
+        if (index === -1) {
+            return -1; // Item not found
+        }
+
+        const pageNumber = Math.floor(index / itemsPerPage) + 1;
+
+        return pageNumber;
+    };
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -631,7 +644,7 @@ export default function Database(): JSX.Element {
         setIsEditing({ ...isEditing, [index]: true });
     };
 
-    const currentIndex = startIndex + Number(value);
+    const currentIndex = Number(value);
 
     const updateMapName = (index: number) => {
         const inputElement = document.getElementById(`mapNameInput${index}`);
@@ -781,6 +794,11 @@ export default function Database(): JSX.Element {
             setMobileMapDisplay(!mobileMapDisplay)
         } else {
             setIndexMapChoosed(index)
+
+            console.log("indexMapChoosed : ", indexMapChoosed);
+            console.log("index clicked : ", index);
+
+
 
             const width = window.innerWidth;
 

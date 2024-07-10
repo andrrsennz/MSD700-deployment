@@ -132,6 +132,55 @@ export default function Home(): JSX.Element {
         "battery": "",
         "uptime": ""
       },
+      {
+        "id": 13,
+        "unit": "ttt",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 14,
+        "unit": "asd",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 15,
+        "unit": "asdss",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 16,
+        "unit": "asdssvvv",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 17,
+        "unit": "sdsdsd",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 18,
+        "unit": "asdssvvv",
+        "status": "off",
+        "battery": "",
+        "uptime": ""
+      },
+      {
+        "id": 19,
+        "unit": "sdsdsd",
+        "status": "",
+        "battery": "",
+        "uptime": ""
+      },
     ]
   );
 

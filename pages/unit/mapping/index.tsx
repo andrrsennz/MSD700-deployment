@@ -563,7 +563,7 @@ const Mapping: React.FC<MappingProps> = () => {
                                         </div>
 
                                         <div className={styles.lidarButton}>
-                                            <LidarSwitch backendUrl={backendUrl}  />
+                                            <LidarSwitch backendUrl={backendUrl} />
                                         </div>
                                         {/* <div className={styles.lidarButton}>
                                         <label className={styles.toggleSwitch}>
@@ -681,18 +681,51 @@ const Mapping: React.FC<MappingProps> = () => {
                                             </div>
 
                                             <div className={`${styles.displayNone} ${styles.controlLidarButton}`}>
-                                                <div className={`${styles.lidarButton} ${lidarExtend ? styles.mainLidarButtonActive : ""}`} onClick={handleLidarExtend}>
+                                                <div className={`${styles.lidarButton} ${styles.lidarMainButton} ${lidarExtend ? styles.mainLidarButtonActive : ""}`} onClick={handleLidarExtend}>
                                                     {lidarExtend ? <img src="/icons/minus.svg" alt="" /> : <img src="/icons/plus.svg" alt="" />}
                                                 </div>
                                                 {lidarExtend ? (
                                                     <>
-                                                        <div className={`${styles.lidarButton}`}>
+                                                        <div className={`${styles.lidarButton} ${status == "On Progress" ? styles.buttonActive : ""}`}
+                                                            onClick={() => {
+                                                                if (value) {
+                                                                    if (status != "On Progress") {
+                                                                        setMapping(true, false, false);
+                                                                    }
+                                                                } else {
+                                                                    alert("Please turn on the LIDAR before mapping.");
+                                                                }
+                                                            }}>
                                                             <img src="/icons/3.svg" alt="" />
                                                         </div>
-                                                        <div className={`${styles.lidarButton}`}>
+                                                        <div className={`${styles.lidarButton} ${status == "Paused" && count != 0 || buttonMapStatus == 'pause' ? styles.buttonActive : ""}`}
+                                                            onClick={() => {
+                                                                if (value) {
+                                                                    if (status != "Idle") {
+                                                                        setcount(1)
+                                                                        setMapping(false, true, false);
+                                                                    }
+                                                                    else {
+                                                                        alert("Cannot pause when Lidar button turned on");
+                                                                    }
+                                                                } else {
+                                                                    alert("Please turn on the LIDAR before mapping.");
+                                                                }
+                                                            }}>
                                                             <img src="/icons/1.svg" alt="" />
                                                         </div>
-                                                        <div className={`${styles.lidarButton} ${styles.lidarButtonActive}`}>
+                                                        <div id="stopButton" className={`${styles.lidarButton}`}
+                                                            onClick={() => {
+                                                                if (value) {
+                                                                    if (buttonMapStatus == 'play' || buttonMapStatus == 'pause') {
+                                                                        setShowConfirmMappingDialog(true);
+                                                                        setStopButton(true);
+                                                                        setMapping(false, false, true);
+                                                                    }
+                                                                } else {
+                                                                    alert("Please turn on the LIDAR before mapping.");
+                                                                }
+                                                            }}>
                                                             <img src="/icons/Home.svg" alt="" />
                                                         </div>
                                                     </>
@@ -724,13 +757,27 @@ const Mapping: React.FC<MappingProps> = () => {
                                                 <img src="/icons/focus_button.svg" alt="" />
                                             </div>
 
-                                            <div className={`${styles.displayNone} ${styles.mobileStatus}`}>
-                                                <p>Status : On progress</p>
+                                            <div className={`${styles.displayNone} ${styles.bottomSection}`}>
+
+                                                <div
+                                                    className={`${styles.mobileStatus} ${status === "Idle" ? styles.idle : ""
+                                                        }`}
+                                                >
+                                                    <p>
+                                                        Status : <span>{status}</span>
+                                                    </p>
+                                                </div>
+
+                                                <div className={styles.mobileMapName}>ROOM_A</div>
                                             </div>
 
-                                            <div className={`${styles.displayNone} ${styles.mobileStatus}`}>
+                                            {/* <div className={`${styles.displayNone} ${styles.mobileStatus}`}>
                                                 <p>Status : On progress</p>
-                                            </div>
+                                            </div> */}
+
+                                            {/* <div className={`${styles.displayNone} ${styles.mobileStatus}`}>
+                                                <p>Status : On progress</p>
+                                            </div> */}
 
 
                                             <div className={`${styles.footerMap} ${styles.mobileDisplayNone}`}>

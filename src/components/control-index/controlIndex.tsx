@@ -127,6 +127,9 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
   }
 
   const setRobot = (start: boolean, pause: boolean, stop: boolean): void => {
+    sessionStorage.setItem('controlStart', start.toString());
+    sessionStorage.setItem('controlPause', pause.toString());
+    sessionStorage.setItem('controlStop', stop.toString());
     // axios.post(`${backendUrl}/api/mapping`, {
     //   start: start,
     //   pause: pause,
@@ -334,6 +337,15 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
       setIsChecked(isCheckedBoolean)
     } else {
       setIsChecked(false)
+    }
+
+    // Check and set mapping status
+    const controlStart = sessionStorage.getItem('controlStart') === 'true';
+    const controlPause = sessionStorage.getItem('controlPause') === 'true';
+    const controlStop = sessionStorage.getItem('controlStop') === 'true';
+
+    if (controlStart !== null || controlPause !== null || controlStop !== null) {
+      setRobot(controlStart, controlPause, controlStop);
     }
 
     return () => {
@@ -800,18 +812,48 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
               <div className={styles.centerDiv} id="map" onMouseMove={whenMouseMove} onMouseDown={whenMouseDown} onMouseUp={whenMouseUp} onTouchStart={whenTouchDown} onTouchMove={whenTouchMove} onTouchEnd={whenTouchUp}>
                 {/* <div className={`${styles.mobileNavigationSection}`}> */}
                 <div className={`${styles.displayNone} ${styles.controlLidarButton}`}>
-                  <div className={`${styles.lidarButton} ${lidarExtend ? styles.mainLidarButtonActive : ""}`} onClick={handleLidarExtend}>
-                    {lidarExtend ? <img src="/icons/plus.svg" alt="" /> : <img src="/icons/minus.svg" alt="" />}
+                  <div className={`${styles.lidarButton} ${styles.lidarMainButton} ${lidarExtend ? styles.mainLidarButtonActive : ""}`} onClick={handleLidarExtend}>
+                    {lidarExtend ? <img src="/icons/minus.svg" alt="" /> : <img src="/icons/plus.svg" alt="" />}
                   </div>
                   {lidarExtend ? (
                     <>
-                      <div className={`${styles.lidarButton}`}>
+                      <div className={`${styles.lidarButton} ${status === "On Progress" ? styles.buttonActive : ""}`}
+                        onClick={() => {
+                          if (value) {
+                            if (status != "On Progress") {
+                              setRobot(true, false, false);
+                              console.log("Play request sent");
+                            }
+                          }
+                          else {
+                            alert("Please turn on LIDAR first.")
+                          }
+                          startNavigation();
+                        }}>
                         <img src="/icons/3.svg" alt="" />
                       </div>
-                      <div className={`${styles.lidarButton}`}>
+                      <div className={`${styles.lidarButton} ${status === "Paused" ? styles.buttonActive : ""}`}
+                        onClick={(() => {
+                          if (value) {
+                            setRobot(false, true, false);
+                            console.log("Pause request sent");
+                          } else {
+                            alert("Please turn on LIDAR first.")
+                          }
+                          pauseNavigation();
+                        })}>
                         <img src="/icons/1.svg" alt="" />
                       </div>
-                      <div className={`${styles.lidarButton} ${styles.lidarButtonActive}`}>
+                      <div className={`${styles.lidarButton}`}
+                        onClick={() => {
+                          if (value) {
+                            setRobot(false, true, false);
+                            console.log("Stop request sent");
+                          } else {
+                            alert("Please turn on LIDAR first.")
+                          }
+                          returnToHome();
+                        }}>
                         <img src="/icons/Home.svg" alt="" />
                       </div>
                     </>
@@ -823,16 +865,16 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                     <img src="/icons/Dots.svg" alt="" />
                   </div>
                   {controlExtend ? <>
-                    <div className={`${styles.controlButton} ${styles.controlButtonOption}`} onClick={zoomIn}>
+                    <div className={`${styles.controlButton} ${styles.controlButtonNonMain}`} onClick={zoomIn}>
                       <img src="/icons/zoomin.svg" alt="" />
                     </div>
-                    <div className={`${styles.controlButton} ${styles.controlButtonOption}`} onClick={zoomOut}>
+                    <div className={`${styles.controlButton} ${styles.controlButtonNonMain}`} onClick={zoomOut}>
                       <img src="/icons/zoomout.svg" alt="" />
                     </div>
-                    <div className={`${styles.controlButton} ${styles.controlButtonOption}`} onClick={restart}>
+                    <div className={`${styles.controlButton} ${styles.controlButtonNonMain}`} onClick={restart}>
                       <img src="/icons/Maximize.svg" alt="" />
                     </div>
-                    <div className={`${styles.controlButton} ${styles.controlButtonOption}`} onClick={rotateCW}>
+                    <div className={`${styles.controlButton} ${styles.controlButtonNonMain}`} onClick={rotateCW}>
                       <img src="/icons/new reload.svg" alt="" />
                     </div>
                   </> : ""}
