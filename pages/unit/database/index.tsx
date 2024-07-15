@@ -292,10 +292,13 @@ export default function Database(): JSX.Element {
     useEffect(() => {
         // Initialize state from localStorage
         const mapSelected = localStorage.getItem('mapSelected');
+    
+        console.log("999999999999 : ", mapSelected);
+    
         if (mapSelected !== null) {
-            dispatch(setStatus(JSON.parse(mapSelected)));
-            console.log("JJJJ 3333: ", findPageIndex(mapSelected));
-            setCurrentPage(findPageIndex(mapSelected));
+            const parsedMapSelected = JSON.parse(mapSelected);
+            dispatch(setStatus(parsedMapSelected));
+            setCurrentPage(findPageIndex(parsedMapSelected));
         }
     }, [dispatch]);
 
@@ -623,11 +626,15 @@ export default function Database(): JSX.Element {
         }
     }, [totalPages, currentPage]);
 
-    const findPageIndex = (mapId: any) => {
+    const findPageIndex = (mapId: String) => {
+
         const index = data.findIndex(item => item.mapId == mapId);
 
+        // console.log("MAP ID :", mapId);
+        // console.log("INDEX :", index);
+
         if (index === -1) {
-            return -1; // Item not found
+            return 1; // Item not found
         }
 
         const pageNumber = Math.floor(index / itemsPerPage) + 1;
@@ -795,8 +802,8 @@ export default function Database(): JSX.Element {
         } else {
             setIndexMapChoosed(index)
 
-            console.log("indexMapChoosed : ", indexMapChoosed);
-            console.log("index clicked : ", index);
+            // console.log("indexMapChoosed : ", indexMapChoosed);
+            // console.log("index clicked : ", index);
 
 
 
@@ -1085,6 +1092,10 @@ export default function Database(): JSX.Element {
 
                                                 <tbody>
                                                     {currentData.map((item, index) => {
+                                                        // console.log("currentPage : ", currentPage);
+                                                        // console.log("currentIndex : ", currentIndex);
+
+
                                                         return (
                                                             (
                                                                 <tr key={index} onClick={() => handleMobileMapDisplay(item.map_name, item.mapId)} className={` ${currentIndex == item.mapId ? styles.mapMobileSelected : ''}`}>

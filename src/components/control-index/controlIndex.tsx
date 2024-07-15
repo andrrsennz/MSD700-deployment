@@ -888,7 +888,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
 
                 <div className={`${styles.displayNone} ${styles.modeListButtonSection}`}>
                   <div
-                    className={`${styles.modeListButton}`}
+                    className={`${styles.modeListButton} ${styles.modeListMain}`}
                     onClick={toggleOptions}
                   >
                     <p>Mode List</p>
@@ -933,7 +933,7 @@ const ControlIndex: React.FC<ControlIndexProps> = ({ handleMobileNavigation, han
                     onClick={ModeListFunction("mode-list-4")}
                   >
                     <img src="/icons/Position.svg" alt="" />
-                    {selectedOption == "mode-list-4" ? <p>Finish Home Base</p> : <p>Set Home Base</p>}
+                    {selectedOption == "mode-list-4" ? <p>Finish Home Base</p> : <p>Initial Pose</p>}
                   </div>
 
                   <div id="mode-list-5" className={`

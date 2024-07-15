@@ -650,7 +650,6 @@
         gap: 20px;
     }
 
-
     .mobileDisplayNone {
         display: none !important;
     }
@@ -725,8 +724,8 @@
     .controlLidarButton {
         width: auto;
         position: absolute;
-        top: 22px;
-        left: 10px;
+        top: 26px;
+        left: 7px;
         height: 20px;
         display: flex;
         gap: 3px;
@@ -769,7 +768,7 @@
         width: auto;
         height: auto;
         top: 70px;
-        left: 10px;
+        left: 7px;
         position: absolute;
 
         display: flex;
@@ -806,22 +805,22 @@
     }
 
     .focusButton {
-        width: 95px;
-        height: 34px;
+        width: 86px;
+        height: 38px;
 
         margin: 0;
         padding: 0;
 
         position: absolute;
-        top: 12px;
-        right: 10px;
+        top: 10px;
+        right: 7px;
 
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: space-around;
 
         font-family: Inter;
-        font-size: 10px;
+        font-size: 12px;
         font-weight: 500;
         line-height: 15px;
         letter-spacing: 0em;
@@ -830,8 +829,10 @@
 
         background-color: #0C98B4;
         border: 2px solid #60E3D5;
-        border-radius: 15px;
+        border-radius: 18px;
 
+        padding-left: 12px;
+        padding-right: 12px;
     }
 
     .focusButton p {
@@ -850,7 +851,7 @@
         position: absolute;
 
         bottom: 10px;
-        left: 10px;
+        left: 7px;
 
         padding-left: 10px;
         padding-right: 10px;
@@ -873,6 +874,47 @@
     .mobileStatus p {
         margin-left: auto;
         margin-right: auto;
+    }
+
+
+    .modeListButtonSection {
+        position: absolute;
+        top: 58px;
+        right: 7px;
+
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        width: auto;
+        height: auto;
+    }
+
+    .modeListMain {
+        background-color: #0C98B4 !important;
+    }
+
+    .modeListButton {
+        width: 86px;
+        height: 36px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-left: 12px;
+        padding-right: 12px;
+
+        font-family: Inter;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 14.52px;
+        text-align: left;
+
+        color: #FFFFFF;
+
+        background-color: #0567A6;
+        border: 2px solid #60E3D5;
+        border-radius: 18px;
     }
 
 
@@ -914,7 +956,7 @@
         align-items: end;
         margin-left: auto;
 
-        padding-right: 20px;
+        padding-right: 17px;
 
         font-family: Inter;
         font-size: 12px;
