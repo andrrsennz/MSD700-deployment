@@ -195,7 +195,9 @@ export default function Home(): JSX.Element {
       : "";
   }
 
+  //change this section to passing authentication, between true (display) ||  false (hide) 
   const [showUtilSection, setShowUtilSection] = useState<boolean>(true);
+  
   const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [backendUrl, setBackendUrl] = useState<string>(process.env.BACKEND_URL || "http://localhost:5000");

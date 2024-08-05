@@ -1949,6 +1949,11 @@
 /* =======
 } */
 
+@media (min-width: 2201px) and (max-width: 2320px) {
+  .registerUnitForm {
+    width: 660px;
+  }
+}
 
 /* Modify the existing .moveLeft class */
 .moveLeft {

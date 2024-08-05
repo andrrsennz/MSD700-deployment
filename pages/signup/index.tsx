@@ -78,26 +78,8 @@ export default function Signup(): JSX.Element {
 
         // If we are changing the username, reset the attemptedSubmit and set isUsernameValid to true
         if (name === 'username') {
-            setIsUsernameRegistered(false)
-            setAttemptedSubmit(false);
-            /* axios.post(`${backendUrl}/user/check-username`, {
-                username: value
-            })
-                .then(function (response: any) {
-                    if (response.status === 200) {
-                        setIsUsernameRegistered(false);
-                        setIsUsernameValid(true);
-                    }
-                    else {
-                        setIsUsernameRegistered(true)
-                        setIsUsernameValid(false);
-                    }
-                })
-                .catch(function (error: any) {
-                    setIsUsernameRegistered(true)
-                    setIsUsernameValid(false);
-                }); */
-            setIsUsernameValid(true);
+            setUsernameColumn(value)
+            setIsUsernameValid(true)
         }
 
         if (name === 'fullname') {
@@ -106,25 +88,8 @@ export default function Signup(): JSX.Element {
         }
 
         if (name === 'email') {
-            setAttemptedSubmit(false);
-            axios.post(`${backendUrl}/user/check-email`, {
-                email: value
-            })
-                .then(function (response) {
-                    if (response.status === 200) {
-                        setIsEmailValid(true);
-                        setIsEmailRegistered(false)
-                    }
-                })
-                .catch(function (error: any) {
-                    if (error.response && error.response.status === 409) {
-                      setIsEmailValid(true);
-                      setIsEmailRegistered(true);
-                    } else {
-                      // Handle other errors or set a default behavior
-                      console.error("An error occurred:", error);
-                    }
-                  });
+            setEmailColumn(value)
+            setIsEmailValid(true)
         }
 
         if (name === 'password') {
@@ -480,7 +445,7 @@ export default function Signup(): JSX.Element {
                                             />
                                             <div className={`${styles.iconStatusColumnButton} ${styles.iconStatusColumnPasswordButton}`}>
                                                 {
-                                                    !isConfirmPasswordValid && confirmPasswordColumn.length !== 0 || !registerConfirmPassword?
+                                                    !isConfirmPasswordValid && confirmPasswordColumn.length !== 0 || !registerConfirmPassword ?
                                                         (<Image
                                                             src="/icons/Info-alert.svg"
                                                             alt="Alert icon"

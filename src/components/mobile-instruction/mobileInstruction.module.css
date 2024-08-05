@@ -2,7 +2,7 @@
     display: none;
 }
 
-@media (max-width:500px) {
+@media (max-width:1400px) {
     .mobileInstructionBackground::before {
         content: "";
         display: block;
@@ -26,6 +26,7 @@
 
     .mobileInstruction {
         width: 90%;
+        max-width: 400px;
         height: 80%;
         position: fixed;
         top: 50%;
