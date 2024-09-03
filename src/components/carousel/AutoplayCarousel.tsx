@@ -1,31 +1,29 @@
 import "./carousel.css";
 import { cardDetails } from "./CarouselImages";
 import CarouselItem from "./CarouselItem";
-
 import React, { FC } from 'react';
 
 interface AutoplayCarouselProps {
     cardDetails: {
-        [key: string]: {
-            imgUrl: string;
-            title: string;
-        };
-    };
+        imgUrl: string;
+        title: string;
+    }[];
 }
 
+<<<<<<< HEAD
 const AutoplayCarousel: FC = () => {
+=======
+const AutoplayCarousel: FC<AutoplayCarouselProps> = ({ cardDetails }) => {
+>>>>>>> c5cbee25f61cce40304e76639c6b277d5a4b0a81
 
     const renderCarouselItems = () => {
-        return Object.keys(cardDetails).map((detailKey) => {
-            const key = detailKey as unknown as keyof typeof cardDetails; // Convert to the specific type
-            return (
-                <CarouselItem
-                    key={key}
-                    imgUrl={cardDetails[key].imgUrl}
-                    imgTitle={cardDetails[key].title}
-                />
-            );
-        });
+        return cardDetails.map((detail, index) => (
+            <CarouselItem
+                key={index} // Use index as the key
+                imgUrl={detail.imgUrl}
+                imgTitle={detail.title}
+            />
+        ));
     };
 
     return (
@@ -36,6 +34,5 @@ const AutoplayCarousel: FC = () => {
         </div>
     );
 };
-
 
 export default AutoplayCarousel;
