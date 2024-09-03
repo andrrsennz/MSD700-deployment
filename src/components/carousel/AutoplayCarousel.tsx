@@ -10,7 +10,11 @@ interface AutoplayCarouselProps {
     }[];
 }
 
+<<<<<<< HEAD
+const AutoplayCarousel: FC = () => {
+=======
 const AutoplayCarousel: FC<AutoplayCarouselProps> = ({ cardDetails }) => {
+>>>>>>> c5cbee25f61cce40304e76639c6b277d5a4b0a81
 
     const renderCarouselItems = () => {
         return cardDetails.map((detail, index) => (
