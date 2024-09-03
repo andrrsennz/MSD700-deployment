@@ -3,23 +3,20 @@ import { cardDetails } from "./CarouselImages";
 import CarouselItem from "./CarouselItem";
 import React, { FC } from 'react';
 
-interface AutoplayCarouselProps {
-    cardDetails: {
-        imgUrl: string;
-        title: string;
-    }[];
+interface CarouselItemDetail {
+    imgUrl: string;
+    title: string;
 }
 
-<<<<<<< HEAD
-const AutoplayCarousel: FC = () => {
-=======
-const AutoplayCarousel: FC<AutoplayCarouselProps> = ({ cardDetails }) => {
->>>>>>> c5cbee25f61cce40304e76639c6b277d5a4b0a81
+interface AutoplayCarouselProps {
+    cardDetails: CarouselItemDetail[];
+}
 
+const AutoplayCarousel: FC<AutoplayCarouselProps> = ({ cardDetails }) => {
     const renderCarouselItems = () => {
         return cardDetails.map((detail, index) => (
             <CarouselItem
-                key={index} // Use index as the key
+                key={index} // Use index as the key, which is a number
                 imgUrl={detail.imgUrl}
                 imgTitle={detail.title}
             />
