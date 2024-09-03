@@ -1,33 +1,27 @@
 import "./carousel.css";
 import { cardDetails } from "./CarouselImages";
 import CarouselItem from "./CarouselItem";
-
 import React, { FC } from 'react';
 
 interface AutoplayCarouselProps {
     cardDetails: {
-        [key: string]: {
-            imgUrl: string;
-            title: string;
-        };
-    };
+        imgUrl: string;
+        title: string;
+    }[];
 }
 
-const AutoplayCarousel: FC = () => {
-    
+const AutoplayCarousel: FC<AutoplayCarouselProps> = ({ cardDetails }) => {
+
     const renderCarouselItems = () => {
-        return Object.keys(cardDetails).map((detailKey) => {
-            const key = detailKey as unknown as keyof typeof cardDetails; // Convert to the specific type
-            return (
-                <CarouselItem
-                    key={key}
-                    imgUrl={cardDetails[key].imgUrl}
-                    imgTitle={cardDetails[key].title}
-                />
-            );
-        });
+        return cardDetails.map((detail, index) => (
+            <CarouselItem
+                key={index} // Use index as the key
+                imgUrl={detail.imgUrl}
+                imgTitle={detail.title}
+            />
+        ));
     };
-    
+
     return (
         <div className="carousel-container">
             <div className="carousel-track">
@@ -36,6 +30,5 @@ const AutoplayCarousel: FC = () => {
         </div>
     );
 };
-
 
 export default AutoplayCarousel;

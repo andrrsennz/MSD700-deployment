@@ -10,6 +10,8 @@ import Footer from "@/components/footer/footer";
 import styles from "./signup.module.css";
 
 import AutoplayCarousel from "@/components/carousel/AutoplayCarousel";
+import { cardDetails } from "@/components/carousel/CarouselImages";
+
 import axios from "axios";
 
 import Head from "next/head";
@@ -225,7 +227,8 @@ export default function Signup(): JSX.Element {
                 <div className={`${styles.mobileRegisterUnit} ${styles.displayNone} ${styles.mobileDisplayFlex}`} onClick={setMobileAnimation}>
                     <div className={styles.registerContainer}>
                         <div className={styles.imageAnimation}>
-                            <AutoplayCarousel />
+                            <AutoplayCarousel cardDetails={cardDetails} />
+
                         </div>
                         <div className={styles.information}>
                             <h1 className={styles.mainTitleInformation}>MSD700</h1>
@@ -256,7 +259,7 @@ export default function Signup(): JSX.Element {
 
                     <div className={`${styles.leftSide} ${styles.mobileHide}`}>
                         <div className={styles.imageAnimation}>
-                            <AutoplayCarousel></AutoplayCarousel>
+                            <AutoplayCarousel cardDetails={cardDetails} /> {/* Pass the cardDetails prop */}
                         </div>
                         <div className={styles.information}>
                             <h1>MSD700</h1>
