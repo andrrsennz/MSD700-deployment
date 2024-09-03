@@ -14,7 +14,7 @@ interface AutoplayCarouselProps {
 }
 
 const AutoplayCarousel: FC = () => {
-    
+
     const renderCarouselItems = () => {
         return Object.keys(cardDetails).map((detailKey) => {
             const key = detailKey as unknown as keyof typeof cardDetails; // Convert to the specific type
@@ -27,7 +27,7 @@ const AutoplayCarousel: FC = () => {
             );
         });
     };
-    
+
     return (
         <div className="carousel-container">
             <div className="carousel-track">
